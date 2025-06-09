@@ -46,6 +46,20 @@
 			</header>
 			<!-- card-header end//-->
 			<div class="card-body">
+				<div class="row align-items-center fw-bold text-muted border-bottom pb-2 mb-3" style="font-size: 15px;">
+					<div class="col col-check flex-grow-0">
+						<input class="form-check-input" type="checkbox" disabled>
+					</div>
+					<div class="col-lg-4 col-sm-4 col-8 col-name">Product</div>
+					<div class="col-lg-2 col-sm-2 col-4 col-price text-center">Price</div>
+					<div class="col-lg-2 col-sm-2 col-4 col-status text-center">Status</div>
+					<div class="col-lg-2 col-sm-2 col-4 col-date text-center">Created Date</div>
+					<div class="col-lg-1 col-sm-2 col-4 col-action text-end pe-2">Actions</div>
+				</div>
+
+
+
+
 				<article class="itemlist">
 					<div class="row align-items-center">
 						<div class="col col-check flex-grow-0">
@@ -53,19 +67,21 @@
 								<input class="form-check-input" type="checkbox">
 							</div>
 						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
+						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+							<a class="itemside" href="#">
 								<div class="left"><img class="img-sm img-thumbnail"
 										th:src="@{/admin/assets/imgs/items/1.jpg}" alt="Item"></div>
 								<div class="info">
 									<h6 class="mb-0">T-shirt for men medium size</h6>
 								</div>
-							</a></div>
+							</a>
+						</div>
 						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$34.50</span></div>
 						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
 								class="badge rounded-pill alert-success">Active</span></div>
 						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
 						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
+								class="btn btn-sm font-sm rounded btn-brand mr-5" th:href="@{/vendor/product/edit}"><i
 									class="material-icons md-edit"></i> Edit</a><a
 								class="btn btn-sm font-sm btn-light rounded" href="#"><i
 									class="material-icons md-delete_forever"></i> Delete</a></div>
