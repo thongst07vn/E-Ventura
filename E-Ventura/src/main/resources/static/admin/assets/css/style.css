@@ -993,6 +993,9 @@ textarea.form-control {
   flex-shrink: 0;
   margin-right: 15px;
 }
+.icon i{
+	transform: translateY(50%);
+}
 .icontext .icon.border {
   max-height: 28px;
 }
