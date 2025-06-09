@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{vendor/layouts/layout :: layout('Product List', ~{this :: .content-main})}">
+	th:replace="~{admin/layouts/layout :: layout('Product List', ~{this :: .content-main})}">
 
 <head>
 	<title>Product List</title>
@@ -12,8 +12,7 @@
 				<h2 class="content-title card-title">Products List</h2>
 				<p>Lorem ipsum dolor sit amet.</p>
 			</div>
-			<div><a class="btn btn-light rounded font-md" href="#">Export</a><a class="btn btn-light rounded font-md"
-					href="#">Import</a><a class="btn btn-primary btn-sm rounded" href="#">Create new</a></div>
+			<div><a class="btn btn-primary btn-sm rounded" th:href="@{/admin/category/add}">Create new</a></div>
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
