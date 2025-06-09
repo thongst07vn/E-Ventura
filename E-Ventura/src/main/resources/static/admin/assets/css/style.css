@@ -476,7 +476,9 @@ b {
 .text-body {
   color: #4f5d77 !important;
 }
-
+.menu-link .icon{
+	transform: translateY(0);
+}
 .menu-aside {
   list-style: none;
   margin: 1rem;
@@ -500,9 +502,17 @@ b {
 .menu-aside .menu-item.active .menu-link {
   background-color: rgba(66, 90, 139, 0.2);
 }
+.menu-aside .menu-item.actives .icon {
+  color: #425A8B;
+}
+.menu-aside .menu-item.actives .menu-link {
+  background-color: rgba(66, 90, 139, 0.2);
+}
+
 .menu-aside .menu-item.active .submenu a.active {
   color: #425A8B !important;
 }
+
 .menu-aside .menu-link {
   padding: 10px;
   font-weight: 500;
@@ -993,8 +1003,14 @@ textarea.form-control {
   flex-shrink: 0;
   margin-right: 15px;
 }
+.md-edit{
+	transform: translateY(-25%);
+}
+.md-delete_forever{
+	transform: translateY(-25%);
+}
 .icon i{
-	transform: translateY(50%);
+	transform: translateY(55%);
 }
 .icontext .icon.border {
   max-height: 28px;
