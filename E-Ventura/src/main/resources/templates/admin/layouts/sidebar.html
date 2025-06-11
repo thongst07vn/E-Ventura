@@ -27,16 +27,28 @@
 					<span class="text">Product</span>
 				</a>
 			</li>
+			<li class="menu-item" th:classappend="${currentPage == 'order' ? 'active' : ''}">
+				<a class="menu-link" th:href="@{/admin/order/list}">
+					<i class="icon material-icons md-shopping_cart"></i>
+					<span class="text">Orders</span>
+				</a>
+			</li>
 			<hr>
 			<li class="menu-item has-submenu" th:classappend="${currentPage == 'user' ? 'actives' : ''}">
 				<a class="menu-link" href="page-orders-1.html">
-					<i class="icon material-icons md-shopping_cart"></i>
+					<i class="icon material-icons md-person"></i>
 					<span class="text">Users</span>
 				</a>
 				<div class="submenu">
 					<a th:href="@{/admin/customer/list}">Customer List</a>
 					<a th:href="@{/admin/vendor/list}">Vendor List</a>
 				</div>
+			</li>
+			<li class="menu-item" th:classappend="${currentPage == 'coupon' ? 'active' : ''}">
+				<a class="menu-link" th:href="@{/admin/coupon/list}">
+					<i class="icon material-icons md-local_activity"></i>
+					<span class="text">Coupon</span>
+				</a>
 			</li>
 		</ul>
 	</nav>
