@@ -850,6 +850,7 @@ h6 {
 .section-box {
   display: inline-block;
   width: 100%;
+  height: fit-content;
 }
 
 .font-bold {
@@ -1787,6 +1788,7 @@ a.text-brand-3:hover {
 .box-swiper {
   position: relative;
   width: 100%;
+  height: fit-content;
 }
 .box-swiper .swiper-container {
   position: relative;
@@ -4557,6 +4559,8 @@ a.text-brand-3:hover {
   line-height: 46px !important;
   font-size: 20px;
   color: #fff;
+  transform: translateY(50%);
+
 }
 #scrollUp:hover {
   transform: translateY(-3px);
