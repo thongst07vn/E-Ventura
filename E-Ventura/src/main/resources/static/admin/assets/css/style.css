@@ -993,7 +993,9 @@ textarea.form-control {
   transition-duration: 0.3s;
   box-shadow: none;
 }
-
+.page-link i{
+	transform: translate(-15%,30%);	
+}
 .icontext {
   display: inline-flex;
   align-items: top;

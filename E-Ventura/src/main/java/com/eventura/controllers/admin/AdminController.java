@@ -32,6 +32,7 @@ public class AdminController {
 		model.addAttribute("currentPage", "category");
 		return "admin/page/category/edit";
 	}
+	
 	//======= PRODUCT ========
 	@GetMapping("product/list")
 	public String productList(Model model) {
@@ -51,16 +52,52 @@ public class AdminController {
 		return "admin/page/product/edit";
 	}
 	
+	//======= Order ========
+	@GetMapping("order/list")
+	public String orderList(Model model) {
+		model.addAttribute("currentPage", "order");
+		return "admin/page/order/list";
+	}
+	
 	//======= USER_CUSTOMER ========
 	@GetMapping("customer/list")
 	public String customerList(Model model) {
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/customer/list";
 	}
+	@GetMapping("customer/detail")
+	public String customerDetail(Model model) {
+		model.addAttribute("currentPage", "user");
+		return "admin/page/user/customer/detail";
+	}
+	
 	//======= USER_VENDOR ========
 	@GetMapping("vendor/list")
 	public String vendorList(Model model) {
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/list";
+	}
+	@GetMapping("vendor/detail")
+	public String vendorDetail(Model model) {
+		model.addAttribute("currentPage", "user");
+		return "admin/page/user/vendor/detail";
+	}
+	
+	//======= CATEGORY ========	
+	@GetMapping("coupon/list")
+	public String couponList(Model model) {
+		model.addAttribute("currentPage", "coupon");
+		return "admin/page/coupon/list";
+	}
+	
+	@GetMapping("coupon/add")
+	public String addCoupon(Model model) {
+		model.addAttribute("currentPage", "coupon");
+		return "admin/page/coupon/add";
+	}
+	@GetMapping("coupon/edit")
+	public String editCoupon(Model model) {
+		model.addAttribute("currentPage", "coupon");
+		return "admin/page/coupon/edit";
 	}
 }
