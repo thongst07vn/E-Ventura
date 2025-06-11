@@ -58,6 +58,11 @@ public class AdminController {
 		model.addAttribute("currentPage", "order");
 		return "admin/page/order/list";
 	}
+	@GetMapping("order/detail")
+	public String orderDetail(Model model) {
+		model.addAttribute("currentPage", "order");
+		return "admin/page/order/detail";
+	}
 	
 	//======= USER_CUSTOMER ========
 	@GetMapping("customer/list")
