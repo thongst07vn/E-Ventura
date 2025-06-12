@@ -40,7 +40,7 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>Seller</th>
+								<th class="text-center">Customer</th>
 								<th>Email</th>
 								<th>Status</th>
 								<th>Registered</th>
@@ -49,7 +49,7 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td width="40%"><a class="itemside" href="#">
+								<td width="40%"><a class="itemside" href="#"  style="flex-direction:column;">
 										<div class="left"><img class="img-sm img-avatar"
 												th:src="@{/admin/assets/imgs/people/avatar1.jpg}" alt="Userpic"></div>
 										<div class="info pl-3">
@@ -60,142 +60,7 @@
 								<td>eleanor2022@example.com</td>
 								<td><span class="badge rounded-pill alert-success">Active</span></td>
 								<td>08.07.2022</td>
-								<td class="text-center"><a class="btn btn-sm btn-brand rounded font-sm mt-15" th:href="@{/admin/customer/detail}">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar2.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Mary Monasa</h6><small class="text-muted">Seller ID:
-												#129</small>
-										</div>
-									</a></td>
-								<td>monalisa@example.com</td>
-								<td><span class="badge rounded-pill alert-success">Active</span></td>
-								<td>11.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar3.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Jonatan Ive</h6><small class="text-muted">Seller ID:
-												#400</small>
-										</div>
-									</a></td>
-								<td>mrjohn@example.com</td>
-								<td><span class="badge rounded-pill alert-success">Active</span></td>
-								<td>08.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar4.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Eleanor Pena</h6><small class="text-muted">Seller ID:
-												#439</small>
-										</div>
-									</a></td>
-								<td>eleanor2022@example.com</td>
-								<td><span class="badge rounded-pill alert-danger">Inactive</span></td>
-								<td>08.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar1.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Albert Pushkin</h6><small class="text-muted">Seller
-												ID: #439</small>
-										</div>
-									</a></td>
-								<td>someone@mymail.com</td>
-								<td><span class="badge rounded-pill alert-success">Active</span></td>
-								<td>20.11.2019</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar2.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Alexandra Pena</h6><small class="text-muted">Seller
-												ID: #439</small>
-										</div>
-									</a></td>
-								<td>eleanor2022@example.com</td>
-								<td><span class="badge rounded-pill alert-danger">Inactive</span></td>
-								<td>08.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar3.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Eleanor Pena</h6><small class="text-muted">Seller ID:
-												#439</small>
-										</div>
-									</a></td>
-								<td>eleanor2022@example.com</td>
-								<td><span class="badge rounded-pill alert-danger">Inactive</span></td>
-								<td>08.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar4.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Alex Pushkina</h6><small class="text-muted">Seller
-												ID: #439</small>
-										</div>
-									</a></td>
-								<td>alex@gmail.org</td>
-								<td><span class="badge rounded-pill alert-success">Active</span></td>
-								<td>08.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar1.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Eleanor Pena</h6><small class="text-muted">Seller ID:
-												#439</small>
-										</div>
-									</a></td>
-								<td>eleanor2022@example.com</td>
-								<td><span class="badge rounded-pill alert-success">Active</span></td>
-								<td>08.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
-										details</a></td>
-							</tr>
-							<tr>
-								<td width="40%"><a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar2.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Eleanor Pena</h6><small class="text-muted">Seller ID:
-												#439</small>
-										</div>
-									</a></td>
-								<td>eleanor2022@example.com</td>
-								<td><span class="badge rounded-pill alert-success">Active</span></td>
-								<td>08.07.2022</td>
-								<td class="text-end"><a class="btn btn-sm btn-brand rounded font-sm mt-15" href="#">View
+								<td class="text-center "><a class="btn btn-sm btn-brand rounded font-sm mt-15 d-flex justify-content-center" th:href="@{/admin/customer/detail}">View
 										details</a></td>
 							</tr>
 						</tbody>
