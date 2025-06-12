@@ -12,4 +12,19 @@ public class UserController {
 	public String home() {
 		return "customer/pages/home/index";
 	}
+	
+	@GetMapping({"register"})
+	public String register() {
+		return "customer/pages/login/register";
+	}
+	
+	@GetMapping({"login"})
+	public String login() {
+		return "customer/pages/login/login";
+	}
+	
+	@GetMapping({"shopgrid"})
+	public String shopgrid() {
+		return "customer/pages/home/shopgrid";
+	}
 }
