@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping({"customer","/"})
 
 public class UserController {
-	@GetMapping({"home",""})
+	@GetMapping({"home","/"})
 	public String home() {
 		return "customer/pages/home/index";
 	}
@@ -22,9 +22,16 @@ public class UserController {
 	public String login() {
 		return "customer/pages/login/login";
 	}
-	
-	@GetMapping({"shopgrid"})
-	public String shopgrid() {
-		return "customer/pages/home/shopgrid";
+	// User Cart
+	@GetMapping({"cart"})
+	public String cartList() {
+		return "customer/pages/cart/cartlist";
 	}
+	
+	// User profile
+	@GetMapping({"profile"})
+	public String profile() {
+		return "customer/pages/account/profile";
+	}
+	
 }
