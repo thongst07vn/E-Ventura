@@ -12,4 +12,9 @@ public class ProductController {
 	public String prouctDetails() {
 		return "customer/pages/product/productdetails";
 	}
+
+	@GetMapping({"search"})
+	public String shopgrid() {
+		return "customer/pages/home/shopgrid";
+	}
 }
