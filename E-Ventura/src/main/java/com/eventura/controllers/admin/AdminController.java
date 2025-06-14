@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("admin")
 public class AdminController {
 	
+	//======= Login ========	
+	@GetMapping({"login"})
+	public String login(Model model) {
+		return "admin/page/login/login";
+	}
+	//======= Dashboard ========
 	@GetMapping({"dashboard"})
 	public String home(Model model) {
         model.addAttribute("currentPage", "dashboard");
