@@ -63,7 +63,11 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(a -> {
 				a.requestMatchers(
 					"/admin/login",        // Allow unauthenticated access to the admin login page
-					"/admin/process-login" // Allow unauthenticated access to the admin login processing URL
+					"/admin/process-login",
+					"/admin/dashboard",
+					"/admin/assets/**"
+					
+					// Allow unauthenticated access to the admin login processing URL
 				).permitAll()
 				.requestMatchers("/admin/**").hasAnyRole("ADMIN") // Require ADMIN role for all paths under /admin/
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
@@ -189,40 +193,68 @@ public class SecurityConfiguration {
 			})
 			.build();
 	}
-
-	// --- General/Public Security Configuration Chain ---
-	// This chain acts as a catch-all for any requests not explicitly matched by the more specific chains above.
-	// @Order(3) ensures this chain is processed last.
+	
 	@Bean
 	@Order(3)
-	public SecurityFilterChain generalFilterChain(HttpSecurity httpSecurity)
+	public SecurityFilterChain vendorFilterChain(HttpSecurity httpSecurity)
 			throws Exception {
 		return httpSecurity
-			// No securityMatcher at the top level for this chain.
-			// It will implicitly match '/**' for any requests not already handled by higher-order chains.
-			.cors(c -> c.disable()) // Disables CORS for simplicity.
+			// securityMatcher defines which requests this specific filter chain will handle.
+			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
+			.securityMatcher("/vendor/**", "/vendor/login", "/login", "/vendor/process-login")
+			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
 				a.requestMatchers(
-					"/",             // Allow unauthenticated access to the root
-					"/client/**",
-					"/admin/assets/**",					// Allow unauthenticated access to static resources like CSS/JS
-					"/account/register", // Allow unauthenticated access to registration page
-					"/account/accessdenied" // Allow unauthenticated access to access denied page
+					"/vendor/login",        // Allow unauthenticated access to the customer login page
+					"/vendor/process-login",
+					"/vendor/dashboard/index",
+					"/vendor/assets/**"
 				).permitAll()
-//				.requestMatchers("/account/edit").hasAnyRole("ADMIN","DOCTOR","PATIENT") // Shared path requiring any of these roles
-				.anyRequest().authenticated(); // All other requests not handled by previous chains require authentication
+				.requestMatchers("/vendor/**").hasAnyRole("VENDOR") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
+				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
 			})
-			// This general chain typically does NOT define its own formLogin() as dedicated chains handle authentication.
+			.formLogin(f -> {
+				f.loginPage("/vendor/login") // Specifies the custom customer login page URL
+				.loginProcessingUrl("/account/vendor/process-login") // URL where the customer login form submits
+				.usernameParameter("email") // Name of the username parameter in the login form
+				.passwordParameter("password") // Name of the password parameter in the login form
+				.successHandler(new AuthenticationSuccessHandler() {
+					@Override
+					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+							Authentication authentication) throws IOException, ServletException {
+						System.out.println("Customer/Doctor/Patient Login Success for user: " + authentication.getName());
+						Map<String,String> redirectUrls = new HashMap<>();
+						redirectUrls.put("ROLE_DOCTOR","/doctor/home");  // Redirect DOCTORs to their home
+						redirectUrls.put("ROLE_PATIENT","/patient/home"); // Redirect PATIENTs to their home
+						String url ="/account/customer/login?error"; // Default fallback if no matching role found
+						for(GrantedAuthority authority : authentication.getAuthorities()) {
+							if(redirectUrls.containsKey(authority.getAuthority())) {
+								url = redirectUrls.get(authority.getAuthority());
+								break;
+							}
+						}
+						response.sendRedirect(url);
+					}
+				})
+				.failureHandler(new AuthenticationFailureHandler() {
+					@Override
+					public void onAuthenticationFailure(HttpServletRequest request,
+							HttpServletResponse response, AuthenticationException exception)
+							throws IOException, ServletException {
+						System.out.println("Customer/Doctor/Patient Login Failure for email: " + request.getParameter("email"));
+						response.sendRedirect("/account/vendor/login?error"); // Redirect back to customer login with error
+					}
+				});
+			})
 			.logout(f -> {
-				f.logoutUrl("/account/logout") // General logout URL for users not using specific admin/customer logout
+				f.logoutUrl("/account/customer/logout") // Customer-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
 					@Override
 					public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 							throws IOException, ServletException {
-						System.out.println("General Logout Success");
-						// Redirect to a general login page or home after logout
-						response.sendRedirect("/account/login"); // Or your main application's landing page
+						System.out.println("Customer/Doctor/Patient Logout Success");
+						response.sendRedirect("/account/vendor/login?logout"); // Redirect to customer login page after logout
 					}
 				});
 			})
@@ -231,4 +263,48 @@ public class SecurityConfiguration {
 			})
 			.build();
 	}
+
+
+
+	// --- General/Public Security Configuration Chain ---
+	// This chain acts as a catch-all for any requests not explicitly matched by the more specific chains above.
+	// @Order(3) ensures this chain is processed last.
+//	@Bean
+//	@Order(4)
+//	public SecurityFilterChain generalFilterChain(HttpSecurity httpSecurity)
+//			throws Exception {
+//		return httpSecurity
+//			// No securityMatcher at the top level for this chain.
+//			// It will implicitly match '/**' for any requests not already handled by higher-order chains.
+//			.cors(c -> c.disable()) // Disables CORS for simplicity.
+//			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
+//			.authorizeHttpRequests(a -> {
+//				a.requestMatchers(
+//					"/",             // Allow unauthenticated access to the root
+//					"/client/**",
+//					"/admin/assets/**",					// Allow unauthenticated access to static resources like CSS/JS
+//					"/account/register", // Allow unauthenticated access to registration page
+//					"/account/accessdenied" // Allow unauthenticated access to access denied page
+//				).permitAll()
+////				.requestMatchers("/account/edit").hasAnyRole("ADMIN","DOCTOR","PATIENT") // Shared path requiring any of these roles
+//				.anyRequest().authenticated(); // All other requests not handled by previous chains require authentication
+//			})
+//			// This general chain typically does NOT define its own formLogin() as dedicated chains handle authentication.
+//			.logout(f -> {
+//				f.logoutUrl("/account/logout") // General logout URL for users not using specific admin/customer logout
+//				.logoutSuccessHandler(new LogoutSuccessHandler() {
+//					@Override
+//					public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+//							throws IOException, ServletException {
+//						System.out.println("General Logout Success");
+//						// Redirect to a general login page or home after logout
+//						response.sendRedirect("/account/login"); // Or your main application's landing page
+//					}
+//				});
+//			})
+//			.exceptionHandling(ex -> {
+//				ex.accessDeniedPage("/account/accessdenied"); // Redirect on access denied
+//			})
+//			.build();
+//	}
 }
