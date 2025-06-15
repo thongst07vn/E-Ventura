@@ -201,21 +201,22 @@ public class SecurityConfiguration {
 		return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
-			.securityMatcher("/vendor/**", "/vendor/login", "/login", "/vendor/process-login")
+			.securityMatcher("/vendor/**", "/vendor/account/login", "/vendor/process-login")
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
 				a.requestMatchers(
-					"/vendor/login",        // Allow unauthenticated access to the customer login page
+					"/vendor/account/login",        // Allow unauthenticated access to the customer login page
+					"/vendor/account/register",
 					"/vendor/process-login",
-					"/vendor/dashboard/index",
 					"/vendor/assets/**"
+				
 				).permitAll()
 				.requestMatchers("/vendor/**").hasAnyRole("VENDOR") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
 			})
 			.formLogin(f -> {
-				f.loginPage("/vendor/login") // Specifies the custom customer login page URL
+				f.loginPage("/vendor/account/login") // Specifies the custom customer login page URL
 				.loginProcessingUrl("/account/vendor/process-login") // URL where the customer login form submits
 				.usernameParameter("email") // Name of the username parameter in the login form
 				.passwordParameter("password") // Name of the password parameter in the login form
