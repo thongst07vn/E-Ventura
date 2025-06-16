@@ -133,6 +133,8 @@ public class SecurityConfiguration {
 			.authorizeHttpRequests(a -> {
 				a.requestMatchers(
 					"/",
+					"/customer",
+					"/customer/home",
 					"/customer/login",        // Allow unauthenticated access to the customer login page
 					"/login",        // Allow unauthenticated access to the customer login page
 					"/customer/process-login" // Allow unauthenticated access to the customer login processing URL
