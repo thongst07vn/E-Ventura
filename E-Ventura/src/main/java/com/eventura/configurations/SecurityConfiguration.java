@@ -209,8 +209,8 @@ public class SecurityConfiguration {
 					"/vendor/account/login",        // Allow unauthenticated access to the customer login page
 					"/vendor/account/register",
 					"/vendor/process-login",
-					"/vendor/assets/**"
-				
+					"/vendor/assets/**",
+					"/vendor/**"
 				).permitAll()
 				.requestMatchers("/vendor/**").hasAnyRole("VENDOR") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
