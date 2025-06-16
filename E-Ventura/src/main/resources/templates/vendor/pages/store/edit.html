@@ -1,0 +1,132 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('Add Product', ~{this :: .content-main})}">
+
+<head>
+	<title>Add Promotion</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header"><a href="javascript:history.back()"><i class="material-icons md-arrow_back"></i> Go
+				back</a></div>
+		<div class="card mb-4">
+			<div class="card-header bg-primary" style="height:150px"></div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-xl col-lg flex-grow-0" style="flex-basis:230px">
+						<div class="img-thumbnail shadow w-100 bg-white position-relative text-center"
+							style="height:190px; width:200px; margin-top:-120px"><img class="center-xy img-fluid"
+								th:src="@{/vendor/assets/imgs/brands/brand-3.jpg}" alt="Logo Brand"></div>
+						<a class="btn btn-light rounded font-md mt-3" href="#"><i
+								class="icons material-icons md-backup font-md"></i> Upload</a>
+					</div>
+					<!-- col.//-->
+					<div class="col-xl col-lg">
+						<h3>Cocorico sports shop</h3>
+						<p>3891 Ranchview Dr. Richardson, California 62639</p>
+					</div>
+					<!-- col.//-->
+					<div class="col-xl-4 text-md-end">
+						<select class="form-select w-auto d-inline-block">
+							<option>Actions</option>
+							<option>Disable shop</option>
+							<option>Analyze</option>
+							<option>Something</option>
+						</select><a class="btn btn-primary" href="#">View live<i
+								class="material-icons md-launch"></i></a>
+					</div>
+					<!-- col.//-->
+					<!-- card-body.//-->
+					<hr class="my-4">
+					<form>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="row gx-3">
+									<div class="col-12 mb-3">
+										<label class="form-label">Store name</label>
+										<input class="form-control" type="text" placeholder="Type here">
+									</div>
+									<!-- col .//-->
+
+									<!-- col .//-->
+									<div class="col-lg-6 mb-3">
+										<label class="form-label">Email</label>
+										<input class="form-control" type="email" placeholder="example@mail.com">
+									</div>
+									<!-- col .//-->
+									<div class="col-lg-6 mb-3">
+										<label class="form-label">Phone</label>
+										<input class="form-control" type="tel" placeholder="+1234567890">
+									</div>
+
+									<div class="col-lg-12 mb-4">
+										<label class="form-label">Full description</label>
+										<textarea class="form-control" placeholder="Type here" rows="4"></textarea>
+									</div>
+									<!-- col .//-->
+									<div class="col-lg-12 mb-3">
+										<label class="form-label">Address</label>
+										<input class="form-control mb-2" type="text"
+											placeholder="Street address, building number, etc.">
+
+										<div class="row gx-2">
+											<div class="col-md-6 mb-2">
+												<select class="form-select">
+													<option selected disabled>Country</option>
+													<option>Vietnam</option>
+													<option>USA</option>
+													<option>Japan</option>
+													<!-- More countries -->
+												</select>
+											</div>
+
+											<div class="col-md-6 mb-2">
+												<select class="form-select">
+													<option selected disabled>City</option>
+													<option>Ho Chi Minh</option>
+													<option>Hanoi</option>
+													<option>Da Nang</option>
+													<!-- More cities -->
+												</select>
+											</div>
+
+											<div class="col-md-6 mb-2">
+												<select class="form-select">
+													<option selected disabled>District</option>
+													<option>District 1</option>
+													<option>District 7</option>
+													<option>Go Vap</option>
+													<!-- More districts -->
+												</select>
+											</div>
+
+											<div class="col-md-6 mb-2">
+												<select class="form-select">
+													<option selected disabled>Ward</option>
+													<option>Ward 1</option>
+													<option>Ward 2</option>
+													<option>Ward 3</option>
+													<!-- More wards -->
+												</select>
+											</div>
+										</div>
+									</div>
+
+									<!-- col .//-->
+									<!-- row.//-->
+									<!-- col.//-->
+								</div>
+							</div>
+
+
+							<!-- col.//-->
+							<!-- row.//-->
+						</div><br>
+						<button class="btn btn-primary" type="submit">Save changes</button>
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</section>
+</body>

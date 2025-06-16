@@ -1,0 +1,148 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('Add Product', ~{this :: .content-main})}">
+
+<head>
+	<title>Edit Profile</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header">
+			<h2 class="content-title">Profile setting</h2>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="row gx-5">
+
+					<div class="col-lg-12">
+						<section class="content-body p-xl-4">
+							<form>
+								<div class="row">
+									<div class="col-lg-8">
+										<div class="row gx-3">
+
+											<div class="col-6 mb-3">
+												<label class="form-label">First name</label>
+												<input class="form-control" type="text" placeholder="Type here">
+											</div>
+											<!-- col .//-->
+											<div class="col-6 mb-3">
+												<label class="form-label">Last name</label>
+												<input class="form-control" type="text" placeholder="Type here">
+											</div>
+											<!-- col .//-->
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Email</label>
+												<input class="form-control" type="email" placeholder="example@mail.com">
+											</div>
+											<!-- col .//-->
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Phone</label>
+												<input class="form-control" type="tel" placeholder="+1234567890">
+											</div>
+											<!-- col .//-->
+											<div class="col-lg-12 mb-3">
+												<label class="form-label">Address</label>
+												<input class="form-control mb-2" type="text"
+													placeholder="Street address, building number, etc.">
+
+												<div class="row gx-2">
+													<div class="col-md-6 mb-2">
+														<select class="form-select">
+															<option selected disabled>Country</option>
+															<option>Vietnam</option>
+															<option>USA</option>
+															<option>Japan</option>
+															<!-- More countries -->
+														</select>
+													</div>
+
+													<div class="col-md-6 mb-2">
+														<select class="form-select">
+															<option selected disabled>City</option>
+															<option>Ho Chi Minh</option>
+															<option>Hanoi</option>
+															<option>Da Nang</option>
+															<!-- More cities -->
+														</select>
+													</div>
+
+													<div class="col-md-6 mb-2">
+														<select class="form-select">
+															<option selected disabled>District</option>
+															<option>District 1</option>
+															<option>District 7</option>
+															<option>Go Vap</option>
+															<!-- More districts -->
+														</select>
+													</div>
+
+													<div class="col-md-6 mb-2">
+														<select class="form-select">
+															<option selected disabled>Ward</option>
+															<option>Ward 1</option>
+															<option>Ward 2</option>
+															<option>Ward 3</option>
+															<!-- More wards -->
+														</select>
+													</div>
+												</div>
+											</div>
+
+											<!-- col .//-->
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Birthday</label>
+												<input class="form-control" type="date">
+											</div>
+											<!-- col .//-->
+											<!-- row.//-->
+											<!-- col.//-->
+										</div>
+									</div>
+									<aside class="col-lg-4">
+										<figure class="text-lg-center"><img class="img-lg mb-3 img-avatar"
+												th:src="@{/vendor/assets/imgs/people/avatar1.jpg}" alt="User Photo">
+											<p>Username: <span>TruongNhuBao10</span></p>
+
+											<figcaption><a class="btn btn-light rounded font-md" href="#"><i
+														class="icons material-icons md-backup font-md"></i> Upload</a>
+											</figcaption>
+										</figure>
+									</aside>
+									<!-- col.//-->
+									<!-- row.//-->
+								</div><br>
+								<button class="btn btn-primary" type="submit">Save changes</button>
+							</form>
+							<hr class="my-5">
+							<div class="row" style="max-width:920px">
+								<div class="col-md">
+									<article class="box mb-3 bg-light"><a
+											class="btn float-end btn-light btn-sm rounded font-md" href="#">Change</a>
+										<h6>Password</h6><small class="text-muted d-block" style="width:70%">You can
+											reset or change your password by clicking here</small>
+									</article>
+								</div>
+								<!-- col.//-->
+								<div class="col-md">
+									<article class="box mb-3 bg-light"><a
+											class="btn float-end btn-light rounded btn-sm font-md"
+											href="#">Deactivate</a>
+										<h6>Remove account</h6><small class="text-muted d-block" style="width:70%">Once
+											you delete your account, there is no going back.</small>
+									</article>
+								</div>
+								<!-- col.//-->
+								<!-- row.//-->
+								<!-- content-body .//-->
+								<!-- col.//-->
+								<!-- row.//-->
+								<!-- card body end//-->
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>

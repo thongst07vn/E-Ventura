@@ -1,0 +1,180 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('Product List', ~{this :: .content-main})}">
+
+<head>
+	<title>Product Review Detail</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title">Reviews Detail Product</h2>
+				<p>Product: T-shirt for men</p>
+			</div>
+			<div>
+				<input class="form-control bg-white" type="text" placeholder="Search by name">
+			</div>
+		</div>
+		<div>
+			<a th:href="@{/vendor/product/review}" class="btn btn-primary mb-3">Product Review List</a>
+		</div>
+		<div class="card mb-4">
+			<header class="card-header">
+				<div class="row gx-3">
+					<div class="col-lg-4 col-md-6 me-auto">
+						<input class="form-control" type="text" placeholder="Search...">
+					</div>
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select">
+							<option>Status</option>
+							<option>Active</option>
+							<option>Disabled</option>
+							<option>Show all</option>
+						</select>
+					</div>
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select">
+							<option>Show 20</option>
+							<option>Show 30</option>
+							<option>Show 40</option>
+						</select>
+					</div>
+				</div>
+			</header>
+			<!-- card-header end//-->
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Rating</th>
+								<th>Date</th>
+								<th>Comment</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="align-middle fs-6">
+									<a class="itemside" href="#">
+										<div class="left"><img class="img-sm img-thumbnail"
+												th:src="@{/vendor/assets/imgs/people/avatar1.jpg}" alt="Item"></div>
+										<div class="info">
+											<h6 class="mb-0">Levi Akerman</h6>
+										</div>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 80%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+									</ul>
+								</td>
+								<td class="align-middle fs-6">10.03.2022</td>
+								<td class="align-middle fs-6">Chất lượng sản phẩm tốt, giao hàng nhanh.</td>
+							</tr>
+
+							<tr>
+								<td class="align-middle fs-6">
+									<a class="itemside" href="#">
+										<div class="left"><img class="img-sm img-thumbnail"
+												th:src="@{/vendor/assets/imgs/people/avatar3.jpg}" alt="Item"></div>
+										<div class="info">
+											<h6 class="mb-0">Eren Jeager</h6>
+										</div>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 100%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+									</ul>
+								</td>
+								<td class="align-middle fs-6">12.04.2022</td>
+								<td class="align-middle fs-6">Hài lòng với sản phẩm, đúng mô tả.</td>
+							</tr>
+
+							<tr>
+								<td class="align-middle fs-6">
+									<a class="itemside" href="#">
+										<div class="left"><img class="img-sm img-thumbnail"
+												th:src="@{/vendor/assets/imgs/people/avatar2.jpg}" alt="Item"></div>
+										<div class="info">
+											<h6 class="mb-0">Erwin Smith</h6>
+										</div>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 40%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+									</ul>
+								</td>
+								<td class="align-middle fs-6">18.05.2022</td>
+								<td class="align-middle fs-6">Sản phẩm chưa như mong đợi, chất vải hơi mỏng.</td>
+							</tr>
+							<tr>
+								<td class="align-middle fs-6">
+									<a class="itemside" href="#">
+										<div class="left"><img class="img-sm img-thumbnail"
+												th:src="@{/vendor/assets/imgs/people/avatar4.jpg}" alt="Item"></div>
+										<div class="info">
+											<h6 class="mb-0">Mikasa</h6>
+										</div>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 100%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 20px;">
+										</li>
+									</ul>
+								</td>
+								<td class="align-middle fs-6">12.04.2022</td>
+								<td class="align-middle fs-6">Hài lòng với sản phẩm, đúng mô tả.</td>
+							</tr>
+						</tbody>
+
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="pagination-area mt-30 mb-50">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-start">
+					<li class="page-item active"><a class="page-link" href="#">01</a></li>
+					<li class="page-item"><a class="page-link" href="#">02</a></li>
+					<li class="page-item"><a class="page-link" href="#">03</a></li>
+					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+					<li class="page-item"><a class="page-link" href="#">16</a></li>
+					<li class="page-item"><a class="page-link" href="#"><i
+								class="material-icons md-chevron_right"></i></a></li>
+				</ul>
+			</nav>
+		</div>
+	</section>
+</body>

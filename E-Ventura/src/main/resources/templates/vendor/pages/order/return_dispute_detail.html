@@ -1,0 +1,136 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('Order Detail', ~{this :: .content-main})}">
+
+<head>
+	<title>Return Detail</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title">Return detail</h2>
+				<p>Details for Order Return Id: RET-001</p>
+			</div>
+		</div>
+		<div>
+			<a th:href="@{/vendor/order/returnList}" class="btn btn-primary mb-3">Return List</a>
+		</div>
+		<div class="card">
+			<header class="card-header">
+				<div class="row align-items-center">
+					<div class="col-lg-6 col-md-6 mb-lg-0 mb-15"><span><i
+								class="material-icons md-calendar_today"></i><b>Wed, Aug 13, 2022,
+								4:34PM</b></span><br><small class="text-muted">Order Return Id: RET-001</small></div>
+					<div class="col-lg-6 col-md-6 ms-auto text-md-end">
+						<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
+							<option>Change status</option>
+							<option>Awaiting payment</option>
+							<option>Confirmed</option>
+							<option>Shipped</option>
+							<option>Delivered</option>
+						</select><a class="btn btn-primary" href="#">Save</a><a class="btn btn-secondary print ms-2"
+							href="#"><i class="icon material-icons md-print"></i></a>
+					</div>
+				</div>
+			</header>
+			<div class="card-body">
+
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th width="30%">Product</th>
+										<th width="15%">Variant</th>
+										<th width="20%">Unit Price</th>
+										<th width="15%">Quantity</th>
+										<th class="text-end" width="20%">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td><a class="itemside" href="#">
+												<div class="left"><img class="img-xs"
+														th:src="@{/vendor/assets/imgs/items/1.jpg}" alt="Item" width="40"
+														height="40"></div>
+												<div class="info"> T-shirt</div>
+											</a></td>
+										<td> Red</td>
+										<td> $44.25</td>
+										<td> 2</td>
+										<td class="text-end"> $99.50</td>
+									</tr>
+									<tr>
+										<td><a class="itemside" href="#">
+												<div class="left"><img class="img-xs"
+														th:src="@{/vendor/assets/imgs/items/2.jpg}" alt="Item" width="40"
+														height="40"></div>
+												<div class="info"> Winter jacket for men</div>
+											</a></td>
+										<td> Red</td>
+										<td> $7.50</td>
+										<td> 2</td>
+										<td class="text-end"> $15.00</td>
+									</tr>
+									<tr>
+										<td><a class="itemside" href="#">
+												<div class="left"><img class="img-xs"
+														th:src="@{/vendor/assets/imgs/items/3.jpg}" alt="Item" width="40"
+														height="40"></div>
+												<div class="info"> Jeans wear for men</div>
+											</a></td>
+										<td> Red</td>
+										<td> $43.50</td>
+										<td> 2</td>
+										<td class="text-end"> $102.04</td>
+									</tr>
+									<tr>
+										<td><a class="itemside" href="#">
+												<div class="left"><img class="img-xs"
+														th:src="@{/vendor/assets/imgs/items/4.jpg}" alt="Item" width="40"
+														height="40"></div>
+												<div class="info"> Flex Fan </div>
+											</a></td>
+										<td>XXL</td>
+										<td> $99.00</td>
+										<td> 3</td>
+										<td class="text-end"> $297.00</td>
+									</tr>
+									<tr>
+										<td colspan="4">
+											<article class="float-end">
+
+												<dl class="dlist">
+													<dt>Total Amount Return:</dt>
+													<dd><b class="h5">$983.00</b></dd>
+												</dl>
+												<dl class="dlist">
+													<dt class="text-muted">Status:</dt>
+													<dd><span
+															class="badge rounded-pill alert-success text-success">Payment
+															done</span></dd>
+												</dl>
+											</article>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-lg-12">
+
+						<div class="h-25 pt-4">
+							<div class="mb-3">
+								<label>Reason Return</label>
+								<textarea class="form-control" id="notes" name="notes"
+									placeholder="Type some note"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>

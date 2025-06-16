@@ -1,0 +1,246 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('Product List', ~{this :: .content-main})}">
+
+<head>
+	<title>Product List</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title">Reviews</h2>
+				<p>Lorem ipsum dolor sit amet.</p>
+			</div>
+			<div>
+				<input class="form-control bg-white" type="text" placeholder="Search by name">
+			</div>
+		</div>
+		<div class="card mb-4">
+			<header class="card-header">
+				<div class="row gx-3">
+					<div class="col-lg-4 col-md-6 me-auto">
+						<input class="form-control" type="text" placeholder="Search...">
+					</div>
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select">
+							<option>Status</option>
+							<option>Active</option>
+							<option>Disabled</option>
+							<option>Show all</option>
+						</select>
+					</div>
+					<div class="col-lg-2 col-md-3 col-6">
+						<select class="form-select">
+							<option>Show 20</option>
+							<option>Show 30</option>
+							<option>Show 40</option>
+						</select>
+					</div>
+				</div>
+			</header>
+			<!-- card-header end//-->
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+
+								<th>#ID</th>
+								<th>Product</th>
+								<th>Rating</th>
+								<th class="text-end">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+
+								<td class="align-middle">23</td>
+								<td>
+									<a class="itemside" href="#">
+										<img class="img-md img-thumbnail" th:src="@{/vendor/assets/imgs/items/2.jpg}"
+											alt="Item">
+										<h6 class="mb-0">T-shirt for men medium size</h6>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 60%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+									</ul>
+
+								</td>
+								<td class="text-end align-middle">
+									<a class="btn btn-md rounded font-sm"
+										th:href="@{/vendor/product/reviewDetail}">Detail</a>
+									<!-- dropdown -->
+								</td>
+							</tr>
+							<tr>
+
+								<td class="align-middle">23</td>
+								<td>
+									<a class="itemside" href="#">
+										<img class="img-md img-thumbnail" th:src="@{/vendor/assets/imgs/items/1.jpg}"
+											alt="Item">
+										<h6 class="mb-0">T-shirt for men medium size</h6>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 60%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+									</ul>
+
+								</td>
+								<td class="text-end align-middle">
+									<a class="btn btn-md rounded font-sm" href="#">Detail</a>
+									<!-- dropdown -->
+								</td>
+							</tr>
+							<tr>
+								<td class="align-middle">
+									15
+								</td>
+								<td>
+									<a class="itemside" href="#">
+										<img class="img-md img-thumbnail" th:src="@{/vendor/assets/imgs/items/3.jpg}"
+											alt="Item">
+										<h6 class="mb-0">T-shirt for men medium size</h6>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 60%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+									</ul>
+
+								</td>
+								<td class="text-end align-middle">
+									<a class="btn btn-md rounded font-sm" href="#">Detail</a>
+									<!-- dropdown -->
+								</td>
+							</tr>
+							<tr>
+
+								<td class="align-middle">23</td>
+								<td>
+									<a class="itemside" href="#">
+										<img class="img-md img-thumbnail" th:src="@{/vendor/assets/imgs/items/4.jpg}"
+											alt="Item">
+										<h6 class="mb-0">T-shirt for men medium size</h6>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 60%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+									</ul>
+
+								</td>
+								<td class="text-end align-middle">
+									<a class="btn btn-md rounded font-sm" href="#">Detail</a>
+									<!-- dropdown -->
+								</td>
+							</tr>
+							<tr>
+
+								<td class="align-middle">23</td>
+								<td>
+									<a class="itemside" href="#">
+										<img class="img-md img-thumbnail" th:src="@{/vendor/assets/imgs/items/5.jpg}"
+											alt="Item">
+										<h6 class="mb-0">T-shirt for men medium size</h6>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 60%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+									</ul>
+
+								</td>
+								<td class="text-end align-middle">
+									<a class="btn btn-md rounded font-sm" href="#">Detail</a>
+									<!-- dropdown -->
+								</td>
+							</tr>
+							<tr>
+
+								<td class="align-middle">23</td>
+								<td>
+									<a class="itemside" href="#">
+										<img class="img-md img-thumbnail" th:src="@{/vendor/assets/imgs/items/1.jpg}"
+											alt="Item">
+										<h6 class="mb-0">T-shirt for men medium size</h6>
+									</a>
+								</td>
+								<td class="align-middle">
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 60%;">
+											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+										<li>
+											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
+												style="height: 15px;">
+										</li>
+									</ul>
+
+								</td>
+								<td class="text-end align-middle">
+									<a class="btn btn-md rounded font-sm" href="#">Detail</a>
+									<!-- dropdown -->
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="pagination-area mt-30 mb-50">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-start">
+					<li class="page-item active"><a class="page-link" href="#">01</a></li>
+					<li class="page-item"><a class="page-link" href="#">02</a></li>
+					<li class="page-item"><a class="page-link" href="#">03</a></li>
+					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+					<li class="page-item"><a class="page-link" href="#">16</a></li>
+					<li class="page-item"><a class="page-link" href="#"><i
+								class="material-icons md-chevron_right"></i></a></li>
+				</ul>
+			</nav>
+		</div>
+	</section>
+</body>
