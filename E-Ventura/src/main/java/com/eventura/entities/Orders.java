@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +24,7 @@ import jakarta.persistence.TemporalType;
 @Table(name = "orders")
 public class Orders implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private Users users;
 	private String name;
 	private Long totalAmount;
@@ -31,22 +33,21 @@ public class Orders implements java.io.Serializable {
 	private Date updatedAt;
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
 	private Set<Payments> paymentses = new HashSet<Payments>(0);
+	private Set<OrdersCoupons> ordersCouponses = new HashSet<OrdersCoupons>(0);
 	private Set<VendorEarnings> vendorEarningses = new HashSet<VendorEarnings>(0);
 	private Set<Commissions> commissionses = new HashSet<Commissions>(0);
 
 	public Orders() {
 	}
 
-	public Orders(int id, Date createdAt, Date updatedAt) {
-		this.id = id;
+	public Orders(Date createdAt, Date updatedAt) {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public Orders(int id, Users users, String name, Long totalAmount, String ordersStatus, Date createdAt,
-			Date updatedAt, Set<OrderItems> orderItemses, Set<Payments> paymentses,
+	public Orders(Users users, String name, Long totalAmount, String ordersStatus, Date createdAt, Date updatedAt,
+			Set<OrderItems> orderItemses, Set<Payments> paymentses, Set<OrdersCoupons> ordersCouponses,
 			Set<VendorEarnings> vendorEarningses, Set<Commissions> commissionses) {
-		this.id = id;
 		this.users = users;
 		this.name = name;
 		this.totalAmount = totalAmount;
@@ -55,18 +56,20 @@ public class Orders implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 		this.orderItemses = orderItemses;
 		this.paymentses = paymentses;
+		this.ordersCouponses = ordersCouponses;
 		this.vendorEarningses = vendorEarningses;
 		this.commissionses = commissionses;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -143,6 +146,15 @@ public class Orders implements java.io.Serializable {
 
 	public void setPaymentses(Set<Payments> paymentses) {
 		this.paymentses = paymentses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
+	public Set<OrdersCoupons> getOrdersCouponses() {
+		return this.ordersCouponses;
+	}
+
+	public void setOrdersCouponses(Set<OrdersCoupons> ordersCouponses) {
+		this.ordersCouponses = ordersCouponses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")

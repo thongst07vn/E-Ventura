@@ -1,10 +1,12 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,7 +21,7 @@ import jakarta.persistence.TemporalType;
 @Table(name = "order_refunds")
 public class OrderRefunds implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private OrderReturns orderReturns;
 	private Long amount;
 	private String orderRefundsStatus;
@@ -30,15 +32,13 @@ public class OrderRefunds implements java.io.Serializable {
 	public OrderRefunds() {
 	}
 
-	public OrderRefunds(int id, Date createdAt, Date updatedAt) {
-		this.id = id;
+	public OrderRefunds(Date createdAt, Date updatedAt) {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public OrderRefunds(int id, OrderReturns orderReturns, Long amount, String orderRefundsStatus, Date createdAt,
+	public OrderRefunds(OrderReturns orderReturns, Long amount, String orderRefundsStatus, Date createdAt,
 			Date updatedAt, Date processedAt) {
-		this.id = id;
 		this.orderReturns = orderReturns;
 		this.amount = amount;
 		this.orderRefundsStatus = orderRefundsStatus;
@@ -48,13 +48,14 @@ public class OrderRefunds implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

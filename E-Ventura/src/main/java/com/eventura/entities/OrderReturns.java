@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,10 +24,10 @@ import jakarta.persistence.TemporalType;
 @Table(name = "order_returns")
 public class OrderReturns implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private OrderItems orderItems;
-	private Integer productId;
-	private Integer productVariantId;
+	private ProductVariants productVariants;
+	private Products products;
 	private Integer quantity;
 	private Double price;
 	private String orderReturnStatus;
@@ -36,18 +38,16 @@ public class OrderReturns implements java.io.Serializable {
 	public OrderReturns() {
 	}
 
-	public OrderReturns(int id, Date createdAt, Date updatedAt) {
-		this.id = id;
+	public OrderReturns(Date createdAt, Date updatedAt) {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public OrderReturns(int id, OrderItems orderItems, Integer productId, Integer productVariantId, Integer quantity,
+	public OrderReturns(OrderItems orderItems, ProductVariants productVariants, Products products, Integer quantity,
 			Double price, String orderReturnStatus, Date createdAt, Date updatedAt, Set<OrderRefunds> orderRefundses) {
-		this.id = id;
 		this.orderItems = orderItems;
-		this.productId = productId;
-		this.productVariantId = productVariantId;
+		this.productVariants = productVariants;
+		this.products = products;
 		this.quantity = quantity;
 		this.price = price;
 		this.orderReturnStatus = orderReturnStatus;
@@ -57,13 +57,14 @@ public class OrderReturns implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -77,22 +78,24 @@ public class OrderReturns implements java.io.Serializable {
 		this.orderItems = orderItems;
 	}
 
-	@Column(name = "product_id")
-	public Integer getProductId() {
-		return this.productId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_variant_id")
+	public ProductVariants getProductVariants() {
+		return this.productVariants;
 	}
 
-	public void setProductId(Integer productId) {
-		this.productId = productId;
+	public void setProductVariants(ProductVariants productVariants) {
+		this.productVariants = productVariants;
 	}
 
-	@Column(name = "product_variant_id")
-	public Integer getProductVariantId() {
-		return this.productVariantId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id")
+	public Products getProducts() {
+		return this.products;
 	}
 
-	public void setProductVariantId(Integer productVariantId) {
-		this.productVariantId = productVariantId;
+	public void setProducts(Products products) {
+		this.products = products;
 	}
 
 	@Column(name = "quantity")

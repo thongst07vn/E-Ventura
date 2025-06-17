@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +24,7 @@ import jakarta.persistence.TemporalType;
 @Table(name = "products")
 public class Products implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private ProductCategories productCategories;
 	private Vendors vendors;
 	private String name;
@@ -32,23 +34,23 @@ public class Products implements java.io.Serializable {
 	private Date updatedAt;
 	private Date deletedAt;
 	private Set<ProductVariants> productVariantses = new HashSet<ProductVariants>(0);
+	private Set<OrderReturns> orderReturnses = new HashSet<OrderReturns>(0);
 	private Set<ProductReviews> productReviewses = new HashSet<ProductReviews>(0);
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
+	private Set<Medias> mediases = new HashSet<Medias>(0);
 
 	public Products() {
 	}
 
-	public Products(int id, Date createdAt, Date updatedAt, Date deletedAt) {
-		this.id = id;
+	public Products(Date createdAt, Date updatedAt) {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
-		this.deletedAt = deletedAt;
 	}
 
-	public Products(int id, ProductCategories productCategories, Vendors vendors, String name, String description,
-			Double price, Date createdAt, Date updatedAt, Date deletedAt, Set<ProductVariants> productVariantses,
-			Set<ProductReviews> productReviewses, Set<OrderItems> orderItemses) {
-		this.id = id;
+	public Products(ProductCategories productCategories, Vendors vendors, String name, String description, Double price,
+			Date createdAt, Date updatedAt, Date deletedAt, Set<ProductVariants> productVariantses,
+			Set<OrderReturns> orderReturnses, Set<ProductReviews> productReviewses, Set<OrderItems> orderItemses,
+			Set<Medias> mediases) {
 		this.productCategories = productCategories;
 		this.vendors = vendors;
 		this.name = name;
@@ -58,18 +60,21 @@ public class Products implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
 		this.productVariantses = productVariantses;
+		this.orderReturnses = orderReturnses;
 		this.productReviewses = productReviewses;
 		this.orderItemses = orderItemses;
+		this.mediases = mediases;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -141,7 +146,7 @@ public class Products implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "deleted_at", nullable = false, length = 19)
+	@Column(name = "deleted_at", length = 19)
 	public Date getDeletedAt() {
 		return this.deletedAt;
 	}
@@ -160,6 +165,15 @@ public class Products implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "products")
+	public Set<OrderReturns> getOrderReturnses() {
+		return this.orderReturnses;
+	}
+
+	public void setOrderReturnses(Set<OrderReturns> orderReturnses) {
+		this.orderReturnses = orderReturnses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "products")
 	public Set<ProductReviews> getProductReviewses() {
 		return this.productReviewses;
 	}
@@ -175,6 +189,15 @@ public class Products implements java.io.Serializable {
 
 	public void setOrderItemses(Set<OrderItems> orderItemses) {
 		this.orderItemses = orderItemses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "products")
+	public Set<Medias> getMediases() {
+		return this.mediases;
+	}
+
+	public void setMediases(Set<Medias> mediases) {
+		this.mediases = mediases;
 	}
 
 }

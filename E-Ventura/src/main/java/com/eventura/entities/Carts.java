@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -22,7 +24,7 @@ import jakarta.persistence.TemporalType;
 @Table(name = "carts")
 public class Carts implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private Users users;
 	private Date createdAt;
 	private Date updatedAt;
@@ -31,14 +33,13 @@ public class Carts implements java.io.Serializable {
 	public Carts() {
 	}
 
-	public Carts(int id, Date createdAt, Date updatedAt) {
-		this.id = id;
+	public Carts(Users users, Date createdAt, Date updatedAt) {
+		this.users = users;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public Carts(int id, Users users, Date createdAt, Date updatedAt, Set<CartItems> cartItemses) {
-		this.id = id;
+	public Carts(Users users, Date createdAt, Date updatedAt, Set<CartItems> cartItemses) {
 		this.users = users;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
@@ -46,18 +47,19 @@ public class Carts implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	public Users getUsers() {
 		return this.users;
 	}
