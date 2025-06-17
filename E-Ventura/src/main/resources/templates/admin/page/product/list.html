@@ -2,7 +2,7 @@
 	th:replace="~{admin/layouts/layout :: layout('Product List', ~{this :: .content-main})}">
 
 <head>
-	<title>Product List</title>
+<title>Product List</title>
 </head>
 
 <body>
@@ -12,329 +12,105 @@
 				<h2 class="content-title card-title">Products List</h2>
 				<p>Lorem ipsum dolor sit amet.</p>
 			</div>
-			<div><a class="btn btn-primary" th:href="@{/admin/product/add}"><i class="material-icons md-plus"></i> Create Product</a></div>
+			<div>
+				<a class="btn btn-primary" th:href="@{/admin/product/add}"><i
+					class="material-icons md-plus"></i> Create Product</a>
+			</div>
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
 				<div class="row align-items-center">
-					<div class="col col-check flex-grow-0">
-						<div class="form-check ms-2">
-							<input class="form-check-input" type="checkbox" value="">
-						</div>
+					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+						<label>&nbsp;</label>
+						<form id="categorySearchForm" method="get"
+							th:action="@{/admin/product/search-by-category}">
+							<select class="form-select" name="categoryId" id="categorySelect">
+								<option value="0" th:selected="${selectedCategoryId == 0}">All category</option>
+								<option th:each="category : ${categories}"
+									th:value="${category.id}" th:text="${category.name}"
+									th:selected="${category.id == selectedCategoryId}"></option>
+							</select>
+						</form>
+						<script>
+						    document.getElementById('categorySelect').addEventListener('change', function() {
+						        document.getElementById('categorySearchForm').submit();
+						    });
+						</script>
 					</div>
 					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-						<select class="form-select">
-							<option selected="">All category</option>
-							<option>Electronics</option>
-							<option>Clothes</option>
-							<option>Automobile</option>
-						</select>
+						<label>&nbsp;</label>
+						<form id="vendorSearchForm" method="get"
+							th:action="@{/admin/product/search-by-vendor}">
+							<select class="form-select" name="vendorId" id="vendorSelect">
+								<option value="0" th:selected="${selectedVendorId == 0}">All category</option>
+								<option th:each="vendor : ${vendors}"
+									th:value="${vendor.id}" th:text="${vendor.name}"
+									th:selected="${vendor.id == selectedVendorId}"></option>
+							</select>
+						</form>
+						<script>
+						    document.getElementById('vendorSelect').addEventListener('change', function() {
+						        document.getElementById('vendorSearchForm').submit();
+						    });
+						</script>
 					</div>
 					<div class="col-md-2 col-6">
-						<input class="form-control" type="date" value="02.05.2022">
+						<label>Start date: </label> <input class="form-control"
+							type="date" value="02.05.2022">
 					</div>
 					<div class="col-md-2 col-6">
-						<select class="form-select">
-							<option selected="">Status</option>
-							<option>Active</option>
-							<option>Disabled</option>
-							<option>Show all</option>
-						</select>
+						<label>End date: </label> <input class="form-control" type="date"
+							value="02.05.2022">
 					</div>
+
 				</div>
 			</header>
 			<!-- card-header end//-->
 			<div class="card-body">
-				<div class="row align-items-center fw-bold text-muted border-bottom pb-2 mb-3" style="font-size: 15px;">
-					<div class="col col-check flex-grow-0">
-						<input class="form-check-input" type="checkbox" disabled>
-					</div>
-					<div class="col-lg-4 col-sm-4 col-8 col-name">Product</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-price text-center">Price</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-status text-center">Status</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-date text-center">Vendor</div>
-					<div class="col-lg-1 col-sm-2 col-4 col-action text-end pe-2">Actions</div>
-				</div>
+				<th:block th:if="${products!=null}">
+					<article class="itemlist" th:each="product : ${products}">
+						<th:block th:if="${product.deletedAt==null}">
+							<div class="row align-items-center">
+								<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+									<a class="itemside" href="#">
+										<div class="left">
+											<img class="img-sm img-thumbnail"
+												th:src="@{/admin/assets/imgs/items/1.jpg}" alt="Item">
+										</div>
+										<div class="info">
+											<h6 class="mb-0">
+												<th:block th:text="${product.name}"></th:block>
+											</h6>
+										</div>
+									</a>
+								</div>
+								<div class="col-lg-2 col-sm-2 col-4 col-price">
+									<span>$<th:block th:text="${product.price}"></th:block></span>
+								</div>
+								<div class="col-lg-2 col-sm-2 col-4 col-status">
+									<th:block
+										th:text="${#strings.substring(product.description, 0, 10) + '...'}"></th:block>
+								</div>
+								<div class="col-lg-1 col-sm-2 col-4 col-date">
+									<span><th:block th:text="${product.vendors.name}"></th:block></span>
+								</div>
+								<div class="col-lg-2 col-sm-2 col-4 col-action text-end">
+									<a class="btn btn-sm font-sm rounded btn-brand mr-5"
+										th:href="@{/admin/product/edit}"><i
+										class="material-icons md-edit"></i> Edit</a><a
+										class="btn btn-sm font-sm btn-light rounded" href="#"><i
+										class="material-icons md-delete_forever"></i> Delete</a>
+								</div>
+							</div>
+							<!-- row .//-->
+							<!-- itemlist  .//-->
+						</th:block>
+					</article>
+				</th:block>
 
-
-
-
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-							<a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/1.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">T-shirt for men medium size</h6>
-								</div>
-							</a>
-						</div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$34.50</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" th:href="@{/admin/product/edit}"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/2.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Helionic Hooded Down Jacket</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$990.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/3.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-warning">Archived</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/4.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Fanmis Men's Travel Bag</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$18.00</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/3.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Jeans Shorts for Men</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-danger">Disabled</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/5.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Wallet made of leather brown color</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$18.00</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-warning">Archived</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/6.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Modern Armchair for home interiors</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/4.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$18.00</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/3.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-3 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/admin/assets/imgs/items/4.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$180.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>Thong Store</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-					<!-- card-body end//-->
-				</article>
 			</div>
 		</div>
-		<!-- card end//-->
+		<!-- card end
 		<div class="pagination-area mt-30 mb-50">
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-start">
@@ -347,6 +123,7 @@
 								class="material-icons md-chevron_right"></i></a></li>
 				</ul>
 			</nav>
-		</div>
+		</div>//-->
+
 	</section>
 </body>
