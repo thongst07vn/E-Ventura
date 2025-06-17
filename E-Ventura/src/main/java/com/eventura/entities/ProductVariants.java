@@ -1,13 +1,18 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -19,42 +24,45 @@ import jakarta.persistence.TemporalType;
 @Table(name = "product_variants")
 public class ProductVariants implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private ProductAttributes productAttributes;
 	private Products products;
 	private String value;
 	private Double additionalPrice;
 	private Date createdAt;
 	private Date updatedAt;
+	private Set<OrderReturns> orderReturnses = new HashSet<OrderReturns>(0);
+	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
 
 	public ProductVariants() {
 	}
 
-	public ProductVariants(int id, Date createdAt, Date updatedAt) {
-		this.id = id;
+	public ProductVariants(Date createdAt, Date updatedAt) {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public ProductVariants(int id, ProductAttributes productAttributes, Products products, String value,
-			Double additionalPrice, Date createdAt, Date updatedAt) {
-		this.id = id;
+	public ProductVariants(ProductAttributes productAttributes, Products products, String value, Double additionalPrice,
+			Date createdAt, Date updatedAt, Set<OrderReturns> orderReturnses, Set<OrderItems> orderItemses) {
 		this.productAttributes = productAttributes;
 		this.products = products;
 		this.value = value;
 		this.additionalPrice = additionalPrice;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.orderReturnses = orderReturnses;
+		this.orderItemses = orderItemses;
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -114,6 +122,24 @@ public class ProductVariants implements java.io.Serializable {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productVariants")
+	public Set<OrderReturns> getOrderReturnses() {
+		return this.orderReturnses;
+	}
+
+	public void setOrderReturnses(Set<OrderReturns> orderReturnses) {
+		this.orderReturnses = orderReturnses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productVariants")
+	public Set<OrderItems> getOrderItemses() {
+		return this.orderItemses;
+	}
+
+	public void setOrderItemses(Set<OrderItems> orderItemses) {
+		this.orderItemses = orderItemses;
 	}
 
 }

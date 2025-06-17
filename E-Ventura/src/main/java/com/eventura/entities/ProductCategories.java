@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -7,6 +7,8 @@ import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -20,7 +22,7 @@ import jakarta.persistence.TemporalType;
 @Table(name = "product_categories")
 public class ProductCategories implements java.io.Serializable {
 
-	private int id;
+	private Integer id;
 	private String name;
 	private Date createdAt;
 	private Date updatedAt;
@@ -30,16 +32,12 @@ public class ProductCategories implements java.io.Serializable {
 	public ProductCategories() {
 	}
 
-	public ProductCategories(int id, Date createdAt, Date updatedAt, Date deletedAt) {
-		this.id = id;
+	public ProductCategories(Date createdAt, Date updatedAt) {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
-		this.deletedAt = deletedAt;
 	}
 
-	public ProductCategories(int id, String name, Date createdAt, Date updatedAt, Date deletedAt,
-			Set<Products> productses) {
-		this.id = id;
+	public ProductCategories(String name, Date createdAt, Date updatedAt, Date deletedAt, Set<Products> productses) {
 		this.name = name;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
@@ -48,13 +46,14 @@ public class ProductCategories implements java.io.Serializable {
 	}
 
 	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
 	@Column(name = "id", unique = true, nullable = false)
-	public int getId() {
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -88,7 +87,7 @@ public class ProductCategories implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "deleted_at", nullable = false, length = 19)
+	@Column(name = "deleted_at", length = 19)
 	public Date getDeletedAt() {
 		return this.deletedAt;
 	}

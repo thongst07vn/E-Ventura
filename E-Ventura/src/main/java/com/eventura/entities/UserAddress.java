@@ -1,12 +1,12 @@
 package com.eventura.entities;
-// Generated Jun 12, 2025, 2:02:47 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import static jakarta.persistence.GenerationType.IDENTITY;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -18,45 +18,38 @@ import jakarta.persistence.Table;
 @Table(name = "user_address")
 public class UserAddress implements java.io.Serializable {
 
-	private UserAddressId id;
+	private Integer id;
 	private Districts districts;
 	private Provinces provinces;
 	private Users users;
 	private Wards wards;
+	private String address;
 
 	public UserAddress() {
 	}
 
-	public UserAddress(UserAddressId id) {
-		this.id = id;
-	}
-
-	public UserAddress(UserAddressId id, Districts districts, Provinces provinces, Users users, Wards wards) {
-		this.id = id;
+	public UserAddress(Districts districts, Provinces provinces, Users users, Wards wards, String address) {
 		this.districts = districts;
 		this.provinces = provinces;
 		this.users = users;
 		this.wards = wards;
+		this.address = address;
 	}
 
-	@EmbeddedId
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
 
-	@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "id")),
-			@AttributeOverride(name = "userId", column = @Column(name = "user_id")),
-			@AttributeOverride(name = "address", column = @Column(name = "address")),
-			@AttributeOverride(name = "provinceCode", column = @Column(name = "province_code")),
-			@AttributeOverride(name = "districtCode", column = @Column(name = "district_code")),
-			@AttributeOverride(name = "wardCode", column = @Column(name = "ward_code")) })
-	public UserAddressId getId() {
+	@Column(name = "id", unique = true, nullable = false)
+	public Integer getId() {
 		return this.id;
 	}
 
-	public void setId(UserAddressId id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "district_code", insertable = false, updatable = false)
+	@JoinColumn(name = "district_code")
 	public Districts getDistricts() {
 		return this.districts;
 	}
@@ -66,7 +59,7 @@ public class UserAddress implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "province_code", insertable = false, updatable = false)
+	@JoinColumn(name = "province_code")
 	public Provinces getProvinces() {
 		return this.provinces;
 	}
@@ -76,7 +69,7 @@ public class UserAddress implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	@JoinColumn(name = "user_id")
 	public Users getUsers() {
 		return this.users;
 	}
@@ -86,13 +79,22 @@ public class UserAddress implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ward_code", insertable = false, updatable = false)
+	@JoinColumn(name = "ward_code")
 	public Wards getWards() {
 		return this.wards;
 	}
 
 	public void setWards(Wards wards) {
 		this.wards = wards;
+	}
+
+	@Column(name = "address")
+	public String getAddress() {
+		return this.address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 }

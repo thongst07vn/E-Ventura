@@ -2,8 +2,11 @@ package com.eventura.services;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.eventura.entities.Products;
 
+@Service
 public class ProductServiceImpl implements ProductService{
 
 	@Override
