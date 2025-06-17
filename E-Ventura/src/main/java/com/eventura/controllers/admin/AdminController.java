@@ -1,14 +1,26 @@
 package com.eventura.controllers.admin;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.eventura.services.CategoryService;
+import com.eventura.services.ProductService;
+import com.eventura.services.VendorService;
 
 @Controller
 @RequestMapping("admin")
 public class AdminController {
-	
+	@Autowired
+	private CategoryService categoryService;
+	@Autowired
+	private VendorService vendorService;
+	@Autowired
+	private ProductService productService;
 	//======= Login ========	
 	@GetMapping({"login"})
 	public String login(Model model) {
@@ -23,7 +35,8 @@ public class AdminController {
 	
 	//======= CATEGORY ========	
 	@GetMapping("category/list")
-	public String categoryList(Model model) {
+	public String categoryList(Model model, ModelMap map) {
+		map.put("categories", categoryService.findAll());
 		model.addAttribute("currentPage", "category");
 		return "admin/page/category/list";
 	}
@@ -41,7 +54,11 @@ public class AdminController {
 	
 	//======= PRODUCT ========
 	@GetMapping("product/list")
-	public String productList(Model model) {
+	public String productList(Model model, ModelMap map) {
+//		map.put("products", productService.findAll());
+		map.put("products", productService.findByCategoryId(1));
+		map.put("categories", categoryService.findAll());
+		map.put("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "product");
 		return "admin/page/product/list";
 	}
@@ -57,6 +74,33 @@ public class AdminController {
 		model.addAttribute("currentPage", "product");
 		return "admin/page/product/edit";
 	}
+	//======= Search PRODUCT ========
+	 @GetMapping("/product/search-by-category")
+    public String searchByCategory(@RequestParam("categoryId") int categoryId,ModelMap map) {
+        map.put("categories", categoryService.findAll());
+		map.put("vendors", vendorService.findAll());
+		map.put("currentPage", "product");
+        if (categoryId == 0) {
+        	map.put("products", productService.findAll());
+        }else {
+        	map.put("products", productService.findByCategoryId(categoryId));
+        }         
+        map.put("selectedCategoryId", categoryId);
+        return "admin/page/product/list";
+    }
+	 @GetMapping("/product/search-by-vendor")
+	 public String searchByVendor(@RequestParam("vendorId") int vendorId,ModelMap map) {
+		 map.put("categories", categoryService.findAll());
+		 map.put("vendors", vendorService.findAll());
+		 map.put("currentPage", "product");
+		 if (vendorId == 0) {
+			 map.put("products", productService.findAll());
+		 }else {
+			 map.put("products", productService.findByVendorId(vendorId));
+		 }         
+		 map.put("selectedVendorId", vendorId);
+		 return "admin/page/product/list";
+	 }
 	
 	//======= Order ========
 	@GetMapping("order/list")
