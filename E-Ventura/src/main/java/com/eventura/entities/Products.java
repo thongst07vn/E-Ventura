@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 17, 2025, 7:55:23 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 19, 2025, 12:03:09 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -38,6 +38,7 @@ public class Products implements java.io.Serializable {
 	private Set<ProductReviews> productReviewses = new HashSet<ProductReviews>(0);
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
 	private Set<Medias> mediases = new HashSet<Medias>(0);
+	private Set<Coupons> couponses = new HashSet<Coupons>(0);
 
 	public Products() {
 	}
@@ -50,7 +51,7 @@ public class Products implements java.io.Serializable {
 	public Products(ProductCategories productCategories, Vendors vendors, String name, String description, Double price,
 			Date createdAt, Date updatedAt, Date deletedAt, Set<ProductVariants> productVariantses,
 			Set<OrderReturns> orderReturnses, Set<ProductReviews> productReviewses, Set<OrderItems> orderItemses,
-			Set<Medias> mediases) {
+			Set<Medias> mediases, Set<Coupons> couponses) {
 		this.productCategories = productCategories;
 		this.vendors = vendors;
 		this.name = name;
@@ -64,6 +65,7 @@ public class Products implements java.io.Serializable {
 		this.productReviewses = productReviewses;
 		this.orderItemses = orderItemses;
 		this.mediases = mediases;
+		this.couponses = couponses;
 	}
 
 	@Id
@@ -198,6 +200,15 @@ public class Products implements java.io.Serializable {
 
 	public void setMediases(Set<Medias> mediases) {
 		this.mediases = mediases;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "products")
+	public Set<Coupons> getCouponses() {
+		return this.couponses;
+	}
+
+	public void setCouponses(Set<Coupons> couponses) {
+		this.couponses = couponses;
 	}
 
 }
