@@ -37,126 +37,25 @@
 			<!-- card-header end//-->
 			<div class="card-body">
 				<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
-					<div class="col">
+				<th:block th:if="${vendors!=null}">
+				</th:block>
+					<div class="col" th:each="vendor : ${vendors}">
 						<div class="card card-user">
 							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar1.jpg}"
 									alt="User pic"></div>
 							<div class="card-body">
-								<h5 class="card-title mt-50">Mary Sandra</h5>
+								<h5 class="card-title mt-50">
+									<th:block th:text="${vendor.name}"></th:block>
+								</h5>
 								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #409</p>
-									<p>mary90@example.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
+									<p class="m-0">Seller ID: <th:block th:text="${vendor.id}"></th:block></p>
+									<p><th:block th:text="${vendor.users.email}"></th:block></p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
 										th:href="@{/admin/vendor/detail}">View details</a>
 								</div>
 							</div>
 						</div>
 					</div>
-					<!-- col.//-->
-					<div class="col">
-						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar2.jpg}"
-									alt="User pic"></div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">Leslie Alexander</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #478</p>
-									<p>leslie@example.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										href="#">View details</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- col.//-->
-					<div class="col">
-						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar3.jpg}"
-									alt="User pic"></div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">Leslie Alexander</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #478</p>
-									<p>leslie@example.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										href="#">View details</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- col.//-->
-					<div class="col">
-						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar4.jpg}"
-									alt="User pic"></div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">Floyd Miles</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #171</p>
-									<p>fedor12@example.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										href="#">View details</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- col.//-->
-					<div class="col">
-						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar1.jpg}"
-									alt="User pic"></div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">John Alexander</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #987</p>
-									<p>john@mymail.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										href="#">View details</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- col.//-->
-					<div class="col">
-						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar3.jpg}"
-									alt="User pic"></div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">Albert Flores</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #478</p>
-									<p>leslie@example.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										href="#">View details</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- col.//-->
-					<div class="col">
-						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar4.jpg}"
-									alt="User pic"></div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">Leslie Alexander</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #478</p>
-									<p>leslie@example.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										href="#">View details</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- col.//-->
-					<div class="col">
-						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar1.jpg}"
-									alt="User pic"></div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">Marx Alberto</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: #478</p>
-									<p>leslie@example.com</p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										href="#">View details</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- col.//-->
+					
 					<!-- row.//-->
 					<!-- card-body end//-->
 				</div>

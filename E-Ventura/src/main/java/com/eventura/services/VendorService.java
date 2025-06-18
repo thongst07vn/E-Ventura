@@ -7,6 +7,6 @@ import com.eventura.entities.Vendors;
 public interface VendorService {
 	
 	public List<Vendors> findAll();
-
+	public Vendors findById(int id);
 	
 }
