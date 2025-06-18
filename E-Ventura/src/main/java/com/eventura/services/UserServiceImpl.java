@@ -12,13 +12,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.repositories.UserAddressRepository;
 import com.eventura.repositories.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private UserAddressRepository addressRepository;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Users user = findByEmail(username);
@@ -53,6 +57,18 @@ public class UserServiceImpl implements UserService {
 	public Users findById(int id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public UserAddress findAddressUser(int id) {
+		// TODO Auto-generated method stub
+		return addressRepository.findAddressUser(id);
+	}
+
+	@Override
+	public List<Users> findAll() {
+		// TODO Auto-generated method stub
+		return userRepository.findAll();
 	}
 
 

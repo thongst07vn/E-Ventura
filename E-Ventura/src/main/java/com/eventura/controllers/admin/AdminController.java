@@ -5,11 +5,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
+import com.eventura.services.UserService;
 import com.eventura.services.VendorService;
 
 @Controller
@@ -21,6 +23,8 @@ public class AdminController {
 	private VendorService vendorService;
 	@Autowired
 	private ProductService productService;
+	@Autowired
+	private UserService userService;
 	//======= Login ========	
 	@GetMapping({"login"})
 	public String login(@RequestParam(value = "error", required =false)String error,ModelMap modelMap) {
@@ -119,24 +123,30 @@ public class AdminController {
 	
 	//======= USER_CUSTOMER ========
 	@GetMapping("customer/list")
-	public String customerList(Model model) {
+	public String customerList(Model model,ModelMap modelMap) {
+		modelMap.put("users", userService.findAll());
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/customer/list";
 	}
 	@GetMapping("customer/detail")
 	public String customerDetail(Model model) {
+		
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/customer/detail";
 	}
 	
 	//======= USER_VENDOR ========
 	@GetMapping("vendor/list")
-	public String vendorList(Model model) {
+	public String vendorList(Model model,ModelMap modelMap) {
+		modelMap.put("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/list";
 	}
-	@GetMapping("vendor/detail")
-	public String vendorDetail(Model model) {
+	@GetMapping("vendor/detail/{id}")
+	public String vendorDetail(Model model,@PathVariable("id") int id, ModelMap modelMap) {
+		modelMap.put("vendor", vendorService.findById(id));
+		modelMap.put("vendorAddress", userService.findAddressUser(id));
+		modelMap.put("products", productService.findByVendorId(id));
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/detail";
 	}
