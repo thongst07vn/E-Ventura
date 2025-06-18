@@ -23,7 +23,10 @@ public class AdminController {
 	private ProductService productService;
 	//======= Login ========	
 	@GetMapping({"login"})
-	public String login(Model model) {
+	public String login(@RequestParam(value = "error", required =false)String error,ModelMap modelMap) {
+		if(error!=null) {
+			modelMap.put("msg", "Login failed");
+		}
 		return "admin/page/login/login";
 	}
 	//======= Dashboard ========

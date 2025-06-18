@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import com.eventura.services.AccountService;
+import com.eventura.services.UserService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityConfiguration {
 
 	@Autowired
-	private AccountService accountService;
+	private UserService userService;
 
 	// Defines the password encoder to be used for hashing passwords.
 	// BCryptPasswordEncoder is highly recommended for strong password hashing.
@@ -44,7 +44,7 @@ public class SecurityConfiguration {
 	// This tells Spring Security how to load user details for authentication.
 	@Autowired
 	public void configGlobal(AuthenticationManagerBuilder builder) throws Exception {
-		builder.userDetailsService(accountService);
+		builder.userDetailsService(userService);
 	}
 
 	// --- Admin Security Configuration Chain ---
@@ -64,9 +64,7 @@ public class SecurityConfiguration {
 				a.requestMatchers(
 					"/admin/login",        // Allow unauthenticated access to the admin login page
 					"/admin/process-login",
-					"/admin/dashboard",
 					"/admin/assets/**"
-					
 					// Allow unauthenticated access to the admin login processing URL
 				).permitAll()
 				.requestMatchers("/admin/**").hasAnyRole("ADMIN") // Require ADMIN role for all paths under /admin/
@@ -74,7 +72,7 @@ public class SecurityConfiguration {
 			})
 			.formLogin(f -> {
 				f.loginPage("/admin/login") // Specifies the custom admin login page URL
-				.loginProcessingUrl("/account/admin/process-login") // URL where the admin login form submits
+				.loginProcessingUrl("/admin/process-login") // URL where the admin login form submits
 				.usernameParameter("email") // Name of the username parameter in the login form
 				.passwordParameter("password") // Name of the password parameter in the login form
 				.successHandler(new AuthenticationSuccessHandler() {
@@ -84,7 +82,7 @@ public class SecurityConfiguration {
 						System.out.println("Admin Login Success for user: " + authentication.getName());
 						Map<String,String> redirectUrls = new HashMap<>();
 						redirectUrls.put("ROLE_ADMIN","/admin/dashboard"); // Redirect ADMINs to dashboard
-						String url ="/account/admin/login?error"; // Default fallback if no matching role found
+						String url ="/admin/login?error"; // Default fallback if no matching role found
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
 							if(redirectUrls.containsKey(authority.getAuthority())) {
 								url = redirectUrls.get(authority.getAuthority());
@@ -100,23 +98,23 @@ public class SecurityConfiguration {
 							HttpServletResponse response, AuthenticationException exception)
 							throws IOException, ServletException {
 						System.out.println("Admin Login Failure for email: " + request.getParameter("email"));
-						response.sendRedirect("/account/admin/login?error"); // Redirect back to admin login with error
+						response.sendRedirect("/admin/login?error"); // Redirect back to admin login with error
 					}
 				});
 			})
 			.logout(f -> {
-				f.logoutUrl("/account/admin/logout") // Admin-specific logout URL
+				f.logoutUrl("/admin/logout") // Admin-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
 					@Override
 					public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 							throws IOException, ServletException {
 						System.out.println("Admin Logout Success");
-						response.sendRedirect("/account/admin/login?logout"); // Redirect to admin login page after logout
+						response.sendRedirect("/admin/login?logout"); // Redirect to admin login page after logout
 					}
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/account/accessdenied"); // Redirect on access denied
+				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
 			})
 			.build();
 	}
@@ -191,7 +189,7 @@ public class SecurityConfiguration {
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/account/accessdenied"); // Redirect on access denied
+				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
 			})
 			.build();
 	}
@@ -211,28 +209,23 @@ public class SecurityConfiguration {
 					"/vendor/account/login",        // Allow unauthenticated access to the customer login page
 					"/vendor/account/register",
 					"/vendor/process-login",
-
-					"/vendor/assets/**",
-					"/vendor/**"
-
+					"/vendor/assets/**"
 				).permitAll()
 				.requestMatchers("/vendor/**").hasAnyRole("VENDOR") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
 			})
 			.formLogin(f -> {
 				f.loginPage("/vendor/account/login") // Specifies the custom customer login page URL
-				.loginProcessingUrl("/account/vendor/process-login") // URL where the customer login form submits
+				.loginProcessingUrl("/vendor/process-login") // URL where the customer login form submits
 				.usernameParameter("email") // Name of the username parameter in the login form
 				.passwordParameter("password") // Name of the password parameter in the login form
 				.successHandler(new AuthenticationSuccessHandler() {
 					@Override
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 							Authentication authentication) throws IOException, ServletException {
-						System.out.println("Customer/Doctor/Patient Login Success for user: " + authentication.getName());
 						Map<String,String> redirectUrls = new HashMap<>();
-						redirectUrls.put("ROLE_DOCTOR","/doctor/home");  // Redirect DOCTORs to their home
-						redirectUrls.put("ROLE_PATIENT","/patient/home"); // Redirect PATIENTs to their home
-						String url ="/account/customer/login?error"; // Default fallback if no matching role found
+						redirectUrls.put("ROLE_VENDOR","/vendor/dashboard/home");  // Redirect DOCTORs to their home
+						String url ="/vendor/account/login?error"; // Default fallback if no matching role found
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
 							if(redirectUrls.containsKey(authority.getAuthority())) {
 								url = redirectUrls.get(authority.getAuthority());
@@ -247,24 +240,22 @@ public class SecurityConfiguration {
 					public void onAuthenticationFailure(HttpServletRequest request,
 							HttpServletResponse response, AuthenticationException exception)
 							throws IOException, ServletException {
-						System.out.println("Customer/Doctor/Patient Login Failure for email: " + request.getParameter("email"));
-						response.sendRedirect("/account/vendor/login?error"); // Redirect back to customer login with error
+						response.sendRedirect("/vendor/account/login?error"); // Redirect back to customer login with error
 					}
 				});
 			})
 			.logout(f -> {
-				f.logoutUrl("/account/customer/logout") // Customer-specific logout URL
+				f.logoutUrl("/vendor/account/logout") // Customer-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
 					@Override
 					public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 							throws IOException, ServletException {
-						System.out.println("Customer/Doctor/Patient Logout Success");
-						response.sendRedirect("/account/vendor/login?logout"); // Redirect to customer login page after logout
+						response.sendRedirect("/vendor/account/login?logout"); // Redirect to customer login page after logout
 					}
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/account/accessdenied"); // Redirect on access denied
+				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
 			})
 			.build();
 	}
@@ -289,7 +280,7 @@ public class SecurityConfiguration {
 //					"/client/**",
 //					"/admin/assets/**",					// Allow unauthenticated access to static resources like CSS/JS
 //					"/account/register", // Allow unauthenticated access to registration page
-//					"/account/accessdenied" // Allow unauthenticated access to access denied page
+//					"/accessdenied/404" // Allow unauthenticated access to access denied page
 //				).permitAll()
 ////				.requestMatchers("/account/edit").hasAnyRole("ADMIN","DOCTOR","PATIENT") // Shared path requiring any of these roles
 //				.anyRequest().authenticated(); // All other requests not handled by previous chains require authentication
@@ -308,7 +299,7 @@ public class SecurityConfiguration {
 //				});
 //			})
 //			.exceptionHandling(ex -> {
-//				ex.accessDeniedPage("/account/accessdenied"); // Redirect on access denied
+//				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
 //			})
 //			.build();
 //	}
