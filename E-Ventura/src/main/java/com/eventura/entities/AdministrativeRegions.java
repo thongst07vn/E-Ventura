@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 12:03:09 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 19, 2025, 1:15:05 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.HashSet;
 import java.util.Set;
