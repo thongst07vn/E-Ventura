@@ -13,14 +13,22 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.eventura.entities.Users;
+import com.eventura.repositories.UserRepository;
 
 @Service
-public class AccountServiceImpl implements AccountService {
-
+public class UserServiceImpl implements UserService {
+	@Autowired
+	private UserRepository userRepository;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		Users user = findByEmail(username);
+		if(user == null) {
+			throw new UsernameNotFoundException("Email khong ton tai");
+		} else {
+			List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+			roles.add(new SimpleGrantedAuthority("ROLE_"+user.getRoles().getName()));		
+			return new User(user.getEmail(), user.getPassword(), roles);
+		}
 	}
 
 	@Override
@@ -38,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public Users findByEmail(String email) {
 		// TODO Auto-generated method stub
-		return null;
+		return userRepository.findByEmail(email);
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.eventura.entities.Users;
 
-public interface AccountService extends UserDetailsService {
+public interface UserService extends UserDetailsService {
 	
 	public boolean save(Users account);
 	public boolean delete(int id);
