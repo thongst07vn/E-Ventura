@@ -1,15 +1,16 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 1:15:05 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -22,11 +23,11 @@ import jakarta.persistence.TemporalType;
 public class VendorSettings implements java.io.Serializable {
 
 	private Integer id;
-	private Vendors vendors;
 	private String vendorType;
 	private Double commissionValue;
 	private Date createdAt;
 	private Date updatedAt;
+	private Set<Vendors> vendorses = new HashSet<Vendors>(0);
 
 	public VendorSettings() {
 	}
@@ -36,12 +37,13 @@ public class VendorSettings implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public VendorSettings(Vendors vendors, String vendorType, Double commissionValue, Date createdAt, Date updatedAt) {
-		this.vendors = vendors;
+	public VendorSettings(String vendorType, Double commissionValue, Date createdAt, Date updatedAt,
+			Set<Vendors> vendorses) {
 		this.vendorType = vendorType;
 		this.commissionValue = commissionValue;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.vendorses = vendorses;
 	}
 
 	@Id
@@ -54,16 +56,6 @@ public class VendorSettings implements java.io.Serializable {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "vendor_id")
-	public Vendors getVendors() {
-		return this.vendors;
-	}
-
-	public void setVendors(Vendors vendors) {
-		this.vendors = vendors;
 	}
 
 	@Column(name = "vendor_type")
@@ -102,6 +94,15 @@ public class VendorSettings implements java.io.Serializable {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendorSettings")
+	public Set<Vendors> getVendorses() {
+		return this.vendorses;
+	}
+
+	public void setVendorses(Set<Vendors> vendorses) {
+		this.vendorses = vendorses;
 	}
 
 }
