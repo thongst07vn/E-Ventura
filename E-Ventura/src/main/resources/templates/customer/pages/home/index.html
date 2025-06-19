@@ -12,7 +12,8 @@
 				<div class="box-swiper">
 					<div class="swiper-container swiper-group-9">
 						<div class="swiper-wrapper pt-5">
-							<div class="swiper-slide">
+
+							<div class="swiper-slide" th:each="category : ${categories}">
 								<div class="item-cat">
 									<div class="box-category-1">
 										<div class="box-image">
@@ -23,8 +24,8 @@
 											</div>
 										</div>
 										<div class="box-info">
-											<a class="color-gray-900 font-md-bold" href="#">Snake
-												Plant</a>
+											<a class="color-gray-900 font-md-bold" th:href="@{'/product/findbycategory/'+${category.id}}"> <th:block
+													th:text="${category.name}"></th:block></a>
 											<p class="font-xs color-gray-500">2356 items</p>
 										</div>
 									</div>
@@ -43,6 +44,7 @@
 							<div class="box-swiper">
 								<div class="swiper-container swiper-group-1">
 									<div class="swiper-wrapper">
+
 										<div class="swiper-slide">
 											<div class="banner-big-home10 bg-3">
 												<div class="info-banner">
@@ -77,40 +79,7 @@
 												</div>
 											</div>
 										</div>
-										<div class="swiper-slide">
-											<div class="banner-big-home10 bg-3">
-												<div class="info-banner">
-													<span
-														class="font-xs text-uppercase color-brand-2 font-bold">new
-														arrival</span>
-													<h3 class="mt-10 color-gray-1000 mb-0">
-														Make Your Home Beautiful <br class="d-none d-lg-block">With
-														<span class="color-success">Green Plants</span>
-													</h3>
-													<div class="mt-10">
-														<ul class="list-disc mt-0">
-															<li class="font-sm color-brand-3">Free Shipping.
-																Secure Payment</li>
-															<li class="font-sm color-brand-3">Contact us 24hrs a
-																day</li>
-															<li class="font-sm color-brand-3">Support gift
-																service</li>
-															<li class="font-sm color-brand-3">Garden care</li>
-														</ul>
-													</div>
-													<div class="mt-20">
-														<a class="btn btn-success" href="shop-grid.html">Shop
-															now</a><a class="btn btn-link-brand-3" href="shop-grid.html">Learn
-															more</a>
-													</div>
-												</div>
-												<div class="box-img-banner">
-													<img
-														th:src="@{/client/assets/imgs/page/homepage10/banner.png}"
-														alt="Ecom">
-												</div>
-											</div>
-										</div>
+
 									</div>
 									<div class="swiper-pagination swiper-pagination-1"></div>
 								</div>
@@ -147,467 +116,63 @@
 			<div class="container">
 				<div class="head-main text-center border-none mb-0">
 					<h3 class="mb-5">Featured Products</h3>
-					<p class="font-base color-gray-500">The best products from
-						Spring</p>
 				</div>
 				<div class="mt-0">
 					<div class="list-products-5 list-products-home10">
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<span class="label bg-brand-2">-17%</span><a
-										href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp1.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
+						<th:block th:each="pro : ${top10products}">
+							<div class="card-grid-style-3 home6-style home7-style">
+								<div class="card-grid-inner">
+									<div class="tools">
+										<a class="btn btn-trend btn-tooltip mb-10" href="#"
+											aria-label="Trend" data-bs-placement="left"></a><a
+											class="btn btn-wishlist btn-tooltip mb-10"
+											href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
+											class="btn btn-compare btn-tooltip mb-10"
+											href="shop-compare.html" aria-label="Compare"></a><a
+											class="btn btn-quickview btn-tooltip" aria-label="Quick view"
+											href="#ModalQuickview" data-bs-toggle="modal"></a>
 									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
+									<div class="image-box">
+										<a href="shop-single-product-2.html">
+										<th:block th:if="${pro.mediases[0].name.contains('https:')}">
+											<img th:src="${pro.mediases[0].name}" alt="Ecom">
+										</th:block>
+										<th:block th:if="${!pro.mediases[0].name.contains('https:')}">
+											<img th:src="@{'/client/assets/imgs/others/' + ${pro.mediases[0].name}}" alt="Ecom">
+										</th:block>
+										
+										
+										</a>
 									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<span class="label bg-danger">Hot</span><a
-										href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp2.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
+									<div class="info-right">
+										<a class="font-xs color-gray-500"
+											href="shop-vendor-single.html" th:text="${pro.description}"></a><br> <a
+											class="color-brand-3 font-sm-bold"
+											href="shop-single-product-2.html" th:text="${pro.name}"></a>
+										<div class="rating">
+											<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
+										</div>
+										<div class="price-info mb-10">
+											<strong>$</strong><strong class="font-lg-bold color-brand-3 price-main" th:text=${pro.price}></strong>
+										</div>
+										<div class="mt-10 box-btn-cart">
+											<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<span class="label bg-success">New</span><a
-										href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp3.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<a href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp4.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<a href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp5.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<span class="label bg-brand-2">-17%</span><a
-										href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp6.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<span class="label bg-danger">Hot</span><a
-										href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp7.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<span class="label bg-success">New</span><a
-										href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp8.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<a href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp9.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="card-grid-style-3 home6-style home7-style">
-							<div class="card-grid-inner">
-								<div class="tools">
-									<a class="btn btn-trend btn-tooltip mb-10" href="#"
-										aria-label="Trend" data-bs-placement="left"></a><a
-										class="btn btn-wishlist btn-tooltip mb-10"
-										href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-										class="btn btn-compare btn-tooltip mb-10"
-										href="shop-compare.html" aria-label="Compare"></a><a
-										class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-										href="#ModalQuickview" data-bs-toggle="modal"></a>
-								</div>
-								<div class="image-box">
-									<a href="shop-single-product-2.html"><img
-										th:src="@{/client/assets/imgs/page/homepage10/sp10.png}"
-										alt="Ecom"></a>
-								</div>
-								<div class="info-right">
-									<a class="font-xs color-gray-500"
-										href="shop-vendor-single.html">Amish</a><br> <a
-										class="color-brand-3 font-sm-bold"
-										href="shop-single-product-2.html">Crown of Thorns. 2
-										months. Good vitality. Including pots.</a>
-									<div class="rating">
-										<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
-									</div>
-									<div class="price-info mb-10">
-										<strong class="font-lg-bold color-brand-3 price-main">$2856.3</strong><span
-											class="color-gray-500 price-line">$3225.6</span>
-									</div>
-									<div class="mt-10 box-btn-cart">
-										<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
-									</div>
-								</div>
-							</div>
-						</div>
+						</th:block>
+
+
 					</div>
 				</div>
 			</div>
