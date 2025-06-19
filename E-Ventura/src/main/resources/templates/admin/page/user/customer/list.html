@@ -2,14 +2,17 @@
 	th:replace="~{admin/layouts/layout :: layout('Order List', ~{this :: .content-main})}">
 
 <head>
-	<title>Customer List</title>
+<title>Customer List</title>
 </head>
 
 <body>
 	<section class="content-main">
 		<div class="content-header">
 			<h2 class="content-title">Customer list</h2>
-			<div><a class="btn btn-primary" href="#"><i class="material-icons md-plus"></i> Create Customer</a></div>
+			<div>
+				<a class="btn btn-primary" href="#"><i
+					class="material-icons md-plus"></i> Create Customer</a>
+			</div>
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
@@ -42,26 +45,30 @@
 							<tr>
 								<th class="text-center">Customer</th>
 								<th>Email</th>
-								<th>Status</th>
-								<th>Registered</th>
-								<th class="text-center"> Action</th>
+								<th>Phone</th>
+								<th>Date of Birth</th>
+								<th class="text-center">Action</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr>
-								<td width="40%"><a class="itemside" href="#"  style="flex-direction:column;">
-										<div class="left"><img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar1.jpg}" alt="Userpic"></div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Eleanor Pena</h6><small class="text-muted">Seller ID:
-												#439</small>
+								<td width="40%"><a class="itemside" href="#"
+									style="flex-direction: column;">
+										<div class="left">
+											<img class="img-sm img-avatar"
+												th:src="@{/admin/assets/imgs/people/avatar1.jpg}"
+												alt="Userpic">
 										</div>
-									</a></td>
+										<div class="info pl-3">
+											<h6 class="mb-0 title">Eleanor Pena</h6>
+										</div>
+								</a></td>
 								<td>eleanor2022@example.com</td>
 								<td><span class="badge rounded-pill alert-success">Active</span></td>
 								<td>08.07.2022</td>
-								<td class="text-center "><a class="btn btn-sm btn-brand rounded font-sm mt-15 d-flex justify-content-center" th:href="@{/admin/customer/detail}">View
-										details</a></td>
+								<td class="text-center "><a
+									class="btn btn-sm btn-brand rounded font-sm mt-15 d-flex justify-content-center"
+									th:href="@{/admin/customer/detail}">View details</a></td>
 							</tr>
 						</tbody>
 					</table>
@@ -80,7 +87,7 @@
 					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
 					<li class="page-item"><a class="page-link" href="#">16</a></li>
 					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
+							class="material-icons md-chevron_right"></i></a></li>
 				</ul>
 			</nav>
 		</div>
