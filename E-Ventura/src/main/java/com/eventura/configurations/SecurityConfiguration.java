@@ -8,20 +8,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.eventura.services.UserService;
 
+import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,6 +40,12 @@ public class SecurityConfiguration {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private AccountOAuth2UserServices accountOAuth2UserServices;
+	
+	@Autowired
+	private OAuth2LoginSuccessHandler auth2LoginSuccessHandler;
 
 	// Defines the password encoder to be used for hashing passwords.
 	// BCryptPasswordEncoder is highly recommended for strong password hashing.
@@ -54,7 +68,7 @@ public class SecurityConfiguration {
 	@Order(1)
 	public SecurityFilterChain adminFilterChain(HttpSecurity httpSecurity)
 			throws Exception {
-		return httpSecurity
+		 return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /admin/**, the admin login page, and its processing URL.
 			.securityMatcher("/admin/**", "/admin/login", "/admin/process-login")
@@ -68,7 +82,7 @@ public class SecurityConfiguration {
 					// Allow unauthenticated access to the admin login processing URL
 				).permitAll()
 				.requestMatchers("/admin/**").hasAnyRole("ADMIN") // Require ADMIN role for all paths under /admin/
-				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
+				.anyRequest().authenticated(); 
 			})
 			.formLogin(f -> {
 				f.loginPage("/admin/login") // Specifies the custom admin login page URL
@@ -84,9 +98,11 @@ public class SecurityConfiguration {
 						redirectUrls.put("ROLE_ADMIN","/admin/dashboard"); // Redirect ADMINs to dashboard
 						String url ="/admin/login?error"; // Default fallback if no matching role found
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
+							System.out.println(authentication.getName());
 							if(redirectUrls.containsKey(authority.getAuthority())) {
+								System.out.println(url);
 								url = redirectUrls.get(authority.getAuthority());
-								break;
+								break;								
 							}
 						}
 						response.sendRedirect(url);
@@ -102,6 +118,21 @@ public class SecurityConfiguration {
 					}
 				});
 			})
+			.addFilterBefore(new OncePerRequestFilter() {
+			    @Override
+			    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			            throws ServletException, IOException {
+			        String uri = request.getRequestURI();
+			        if (uri.equals("/admin/login")) {
+			            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			            if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+			                response.sendRedirect("/admin/dashboard");
+			                return;
+			            }
+			        }
+			        filterChain.doFilter(request, response);
+			    }
+			}, UsernamePasswordAuthenticationFilter.class)
 			.logout(f -> {
 				f.logoutUrl("/admin/logout") // Admin-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
@@ -115,8 +146,7 @@ public class SecurityConfiguration {
 			})
 			.exceptionHandling(ex -> {
 				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
-			})
-			.build();
+			}).build();
 	}
 
 	// --- Customer/Doctor/Patient Security Configuration Chain ---
@@ -129,7 +159,7 @@ public class SecurityConfiguration {
 		return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
-			.securityMatcher("/", "/customer/**", "/customer/login", "/login", "/customer/process-login")
+			.securityMatcher("/", "/customer/**", "/customer/login", "/login/**", "/customer/process-login","/oauth2/**" )
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
@@ -138,8 +168,10 @@ public class SecurityConfiguration {
 					"/customer",
 					"/customer/home",
 					"/customer/login",        // Allow unauthenticated access to the customer login page
-					"/login",        // Allow unauthenticated access to the customer login page
-					"/customer/process-login" // Allow unauthenticated access to the customer login processing URL
+					"/login/**",        // Allow unauthenticated access to the customer login page
+					"/customer/process-login",
+					"/oauth2/**"
+					// Allow unauthenticated access to the customer login processing URL
 				).permitAll()
 				.requestMatchers("/customer/**").hasAnyRole("CUSTOMER") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
@@ -177,14 +209,17 @@ public class SecurityConfiguration {
 					}
 				});
 			})
+			.oauth2Login(f->{
+				f.loginPage("/login")				
+					.userInfoEndpoint().userService(accountOAuth2UserServices).and().successHandler(auth2LoginSuccessHandler);
+			})
 			.logout(f -> {
-				f.logoutUrl("/account/customer/logout") // Customer-specific logout URL
+				f.logoutUrl("/customer/logout") // Customer-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
 					@Override
 					public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 							throws IOException, ServletException {
-						System.out.println("Customer/Doctor/Patient Logout Success");
-						response.sendRedirect("/account/customer/login?logout"); // Redirect to customer login page after logout
+						response.sendRedirect("/customer/login?logout"); // Redirect to customer login page after logout
 					}
 				});
 			})
@@ -201,7 +236,7 @@ public class SecurityConfiguration {
 		return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
-			.securityMatcher("/vendor/**", "/vendor/account/login", "/vendor/process-login")
+			.securityMatcher("/vendor/**", "/vendor/account/login", "/vendor/process-login","/oauth2/**")
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
@@ -209,7 +244,8 @@ public class SecurityConfiguration {
 					"/vendor/account/login",        // Allow unauthenticated access to the customer login page
 					"/vendor/account/register",
 					"/vendor/process-login",
-					"/vendor/assets/**"
+					"/vendor/assets/**",
+					"/oauth2/**"
 				).permitAll()
 				.requestMatchers("/vendor/**").hasAnyRole("VENDOR") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated

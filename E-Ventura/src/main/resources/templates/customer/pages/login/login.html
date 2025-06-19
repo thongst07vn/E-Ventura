@@ -1,118 +1,164 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="msapplication-TileColor" content="#0E0E0E">
-    <meta name="template-color" content="#0E0E0E">
-    <meta name="description" content="Index page">
-    <meta name="keywords" content="index, page">
-    <meta name="author" content="">
-    <link rel="shortcut icon" type="image/x-icon" th:href="@{/client/assets/imgs/template/favicon.svg}">
-    <link th:href="@{/client/assets/css/style.css?v=3.0.0}" rel="stylesheet">
-    <title>Login - Ecom Marketplace Template</title>
-  </head>
-  <body>
-    <div id="preloader-active">
-      <div class="preloader d-flex align-items-center justify-content-center">
-        <div class="preloader-inner position-relative">
-          <div class="text-center"><img class="mb-10" th:src="@{/client/assets/imgs/template/favicon.svg}" alt="Ecom">
-            <div class="preloader-dots"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-        
-    <header class="header sticky-bar">
-      <div class="container">
-        <div class="main-header">
-          <div class="header-left">
-            <div class="header-logo"><a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom" th:src="@{/client/assets/imgs/template/logo.svg}"></a></div>
-           
-          </div>
-        </div>
-      </div>
-    </header>
-    <div class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
-      <div class="mobile-header-wrapper-inner">
-        <div class="mobile-header-content-area">
-          <div class="mobile-logo"><a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom" th:src="@{/client/assets/imgs/template/logo.svg}"></a></div>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="msapplication-TileColor" content="#0E0E0E">
+<meta name="template-color" content="#0E0E0E">
+<meta name="description" content="Index page">
+<meta name="keywords" content="index, page">
+<meta name="author" content="">
+<link rel="shortcut icon" type="image/x-icon"
+	th:href="@{/client/assets/imgs/template/favicon.svg}">
+<link th:href="@{/client/assets/css/style.css?v=3.0.0}" rel="stylesheet">
+<title>Login - Ecom Marketplace Template</title>
+</head>
+<body>
+	<div id="preloader-active">
+		<div
+			class="preloader d-flex align-items-center justify-content-center">
+			<div class="preloader-inner position-relative">
+				<div class="text-center">
+					<img class="mb-10"
+						th:src="@{/client/assets/imgs/template/favicon.svg}" alt="Ecom">
+					<div class="preloader-dots"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-        </div>
-      </div>
-    </div>
+	<header class="header sticky-bar">
+		<div class="container">
+			<div class="main-header">
+				<div class="header-left">
+					<div class="header-logo">
+						<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
+							th:src="@{/client/assets/imgs/template/logo.svg}"></a>
+					</div>
 
-    <div class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
-      <div class="mobile-header-wrapper-inner">
-        <div class="mobile-header-content-area">
-          <div class="mobile-logo"><a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom" th:src="@{/client/assets/imgs/template/logo.svg}"></a></div>
+				</div>
+			</div>
+		</div>
+	</header>
+	<div
+		class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
+		<div class="mobile-header-wrapper-inner">
+			<div class="mobile-header-content-area">
+				<div class="mobile-logo">
+					<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
+						th:src="@{/client/assets/imgs/template/logo.svg}"></a>
+				</div>
 
-        </div>
-      </div>
-    </div>
-    <main class="main">
-      <section class="section-box shop-template mt-60">
-        <div class="container">
-          <div class="row mb-100">
-			<div class="col-lg-3"></div>
-            <div class="col-lg-6">
-              <h3>Member Login</h3>
-              <p class="font-md color-gray-500">Welcome back!</p>
-              <div class="form-register mt-30 mb-30">
-                <div class="form-group">
-                  <label class="mb-5 font-sm color-gray-700">Email / Phone / Username *</label>
-                  <input class="form-control" type="text" placeholder="stevenjob@gmail.com">
-                </div>
-                <div class="form-group">
-                  <label class="mb-5 font-sm color-gray-700">Password *</label>
-                  <input class="form-control" type="password" placeholder="******************">
-                </div>
-                <div class="row">
-                  <div class="col-lg-6">
-                    <div class="form-group">
-                      <label class="color-gray-500 font-xs">
-                        <input class="checkagree" type="checkbox">Remember me
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-lg-6 text-end">
-                    <div class="form-group"><a class="font-xs color-gray-500" href="#">Forgot your password?</a></div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <input class="font-md-bold btn btn-buy" type="submit" value="Sign In">
-                </div>
-                <div class="mt-20"><span class="font-xs color-gray-500 font-medium">Have not an account?</span><a class="font-xs color-brand-3 font-medium" th:href="@{/customer/register}">Sign Up</a></div>
-              </div>
-            </div>
+			</div>
+		</div>
+	</div>
 
-          </div>
-        </div>
-      </section>
+	<div
+		class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
+		<div class="mobile-header-wrapper-inner">
+			<div class="mobile-header-content-area">
+				<div class="mobile-logo">
+					<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
+						th:src="@{/client/assets/imgs/template/logo.svg}"></a>
+				</div>
 
-    </main>
+			</div>
+		</div>
+	</div>
+	<main class="main">
+		<section class="section-box shop-template mt-60">
+			<div class="container">
+				<div class="row mb-100">
+					<div class="col-lg-2"></div>
+					<div class="col-lg-4">
+						<h3>Member Login</h3>
+						<p class="font-md color-gray-500">Welcome back!</p>
+						<div class="form-register mt-30 mb-30">
+							<div class="form-group">
+								<label class="mb-5 font-sm color-gray-700">Email / Phone
+									/ Username *</label> <input class="form-control" type="text"
+									placeholder="stevenjob@gmail.com">
+							</div>
+							<div class="form-group">
+								<label class="mb-5 font-sm color-gray-700">Password *</label> <input
+									class="form-control" type="password"
+									placeholder="******************">
+							</div>
+							<div class="row">
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label class="color-gray-500 font-xs"> <input
+											class="checkagree" type="checkbox">Remember me
+										</label>
+									</div>
+								</div>
+								<div class="col-lg-6 text-end">
+									<div class="form-group">
+										<a class="font-xs color-gray-500" href="#">Forgot your
+											password?</a>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<input class="font-md-bold btn btn-buy" type="submit"
+									value="Sign In">
+							</div>
+							<div class="mt-20">
+								<span class="font-xs color-gray-500 font-medium">Have not
+									an account?</span><a class="font-xs color-brand-3 font-medium"
+									th:href="@{/customer/register}">Sign Up</a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="box-login-social pt-65 pl-50">
+							<h5 class="text-center">Use Social Network Account</h5>
+							<div class="box-button-login mt-25">
+								<a th:href="@{/oauth2/authorization/google}" class="btn btn-login font-md-bold color-brand-3 mb-15">Sign
+									in with<img
+									th:src="@{/client/assets/imgs/page/account/google.svg}"
+									alt="Ecom">
+								</a><a th:href="@{/oauth2/authorization/facebook}" class="btn btn-login font-md-bold color-brand-3 mb-15">Sign
+									in with<span class="color-blue font-md-bold">&nbsp;Facebook</span>
+								</a>
+							</div>
+							<div class="mt-10 text-center">
+								<span class="font-xs color-gray-900">Buying for work?</span><a
+									class="color-brand-1 font-xs" href="#">Create a free
+									business account</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-    <script th:src="@{/client/assets/js/vendors/modernizr-3.6.0.min.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/jquery-migrate-3.3.0.min.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/bootstrap.bundle.min.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/waypoints.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/wow.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/magnific-popup.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/perfect-scrollbar.min.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/select2.min.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/isotope.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/scrollup.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/swiper-bundle.min.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/noUISlider.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/slider.js}"></script>
-    <!-- Count down-->
-    <script th:src="@{/client/assets/js/vendors/counterup.js}"></script>
-    <script th:src="@{/client/assets/js/vendors/jquery.countdown.min.js}"></script>
-    <!-- Count down--><script th:src="@{/client/assets/js/vendors/jquery.elevatezoom.js}"></script>
-<script th:src="@{/client/assets/js/vendors/slick.js}"></script>
-    <script th:src="@{/client/assets/js/main.js?v=3.0.0}"></script>
-    <script th:src="@{/client/assets/js/shop.js?v=1.2.1}"></script>
-  </body>
+	</main>
+
+	<script th:src="@{/client/assets/js/vendors/modernizr-3.6.0.min.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+	<script
+		th:src="@{/client/assets/js/vendors/jquery-migrate-3.3.0.min.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/waypoints.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/wow.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/magnific-popup.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/perfect-scrollbar.min.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/select2.min.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/isotope.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/scrollup.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/swiper-bundle.min.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/noUISlider.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/slider.js}"></script>
+	<!-- Count down-->
+	<script th:src="@{/client/assets/js/vendors/counterup.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/jquery.countdown.min.js}"></script>
+	<!-- Count down-->
+	<script th:src="@{/client/assets/js/vendors/jquery.elevatezoom.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/slick.js}"></script>
+	<script th:src="@{/client/assets/js/main.js?v=3.0.0}"></script>
+	<script th:src="@{/client/assets/js/shop.js?v=1.2.1}"></script>
+</body>
 </html>
