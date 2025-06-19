@@ -36,6 +36,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	public Products findById(int id) {
+		// TODO Auto-generated method stub
+		return productRepository.findById(id).get();
+  }
+  
+  @Override
 	public List<Products> findTopNewProduct() {
 		Pageable topten = PageRequest.of(0, 10, Sort.by("createdAt"));
 		return productRepository.findTopNewProduct(topten);
@@ -43,7 +49,6 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<Products> findByKeyword(String keyword) {
-
 		return productRepository.findByKeyword(keyword, Sort.by("createdAt").descending());
 	}
 

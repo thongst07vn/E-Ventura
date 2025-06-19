@@ -2,14 +2,17 @@
 	th:replace="~{admin/layouts/layout :: layout('Order List', ~{this :: .content-main})}">
 
 <head>
-	<title>Vendor List</title>
+<title>Vendor List</title>
 </head>
 
 <body>
 	<section class="content-main">
 		<div class="content-header">
 			<h2 class="content-title">Vendor List</h2>
-			<div><a class="btn btn-primary" href="#"><i class="material-icons md-plus"></i> Create Vendor</a></div>
+			<div>
+				<a class="btn btn-primary" href="#"><i
+					class="material-icons md-plus"></i> Create Vendor</a>
+			</div>
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
@@ -36,26 +39,43 @@
 			</header>
 			<!-- card-header end//-->
 			<div class="card-body">
-				<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
-				<th:block th:if="${vendors!=null}">
-				</th:block>
+				<div
+					class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
+					<th:block th:if="${vendors!=null}">
+					</th:block>
 					<div class="col" th:each="vendor : ${vendors}">
 						<div class="card card-user">
-							<div class="card-header"><img class="img-md img-avatar" th:src="@{/admin/assets/imgs/people/avatar1.jpg}"
-									alt="User pic"></div>
+							<div class="card-header">
+								<th:block th:if="${vendor.users.avatar.contains('https:')}">
+									<img class="img-md img-avatar" th:src="${vendor.users.avatar}"
+										alt="User pic">
+								</th:block>
+								<th:block th:if="${!vendor.users.avatar.contains('https:')}">
+									<img class="img-md img-avatar"
+										th:src="@{'/admin/assets/imgs/avatars/' + ${vendor.users.avatar}}"
+										alt="User pic">
+								</th:block>
+
+							</div>
 							<div class="card-body">
 								<h5 class="card-title mt-50">
 									<th:block th:text="${vendor.name}"></th:block>
 								</h5>
 								<div class="card-text text-muted">
-									<p class="m-0">Seller ID: <th:block th:text="${vendor.id}"></th:block></p>
-									<p><th:block th:text="${vendor.users.email}"></th:block></p><a class="btn btn-sm btn-brand rounded font-sm mt-15"
+									<p class="m-0">
+										Seller ID:
+										<th:block th:text="${vendor.id}"></th:block>
+									</p>
+									<p>
+										<th:block th:text="${vendor.users.email}"></th:block>
+									</p>
+									<a class="btn btn-sm btn-brand rounded font-sm mt-15"
 										th:href="@{/admin/vendor/detail}">View details</a>
 								</div>
 							</div>
 						</div>
 					</div>
-					
+
 					<!-- row.//-->
 					<!-- card-body end//-->
 				</div>
@@ -71,7 +91,7 @@
 					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
 					<li class="page-item"><a class="page-link" href="#">16</a></li>
 					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
+							class="material-icons md-chevron_right"></i></a></li>
 				</ul>
 			</nav>
 		</div>
