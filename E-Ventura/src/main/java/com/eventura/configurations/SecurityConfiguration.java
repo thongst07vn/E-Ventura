@@ -47,15 +47,13 @@ public class SecurityConfiguration {
 	@Autowired
 	private OAuth2LoginSuccessHandler auth2LoginSuccessHandler;
 
-	// Defines the password encoder to be used for hashing passwords.
-	// BCryptPasswordEncoder is highly recommended for strong password hashing.
+
 	@Bean
 	public BCryptPasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-	// Configures the global AuthenticationManager to use the custom UserDetailsService.
-	// This tells Spring Security how to load user details for authentication.
+
 	@Autowired
 	public void configGlobal(AuthenticationManagerBuilder builder) throws Exception {
 		builder.userDetailsService(userService);
@@ -71,12 +69,13 @@ public class SecurityConfiguration {
 		 return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /admin/**, the admin login page, and its processing URL.
-			.securityMatcher("/admin/**", "/admin/login", "/admin/process-login")
+			.securityMatcher("/admin/**", "/admin/login", "admin/register", "/admin/process-login")
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
 				a.requestMatchers(
-					"/admin/login",        // Allow unauthenticated access to the admin login page
+					"/admin/login",  
+					"/admin/register",
 					"/admin/process-login",
 					"/admin/assets/**"
 					// Allow unauthenticated access to the admin login processing URL
@@ -145,7 +144,7 @@ public class SecurityConfiguration {
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
+				ex.accessDeniedPage("/admin/login?error=unauthorized"); // Redirect on access denied
 			}).build();
 	}
 
@@ -159,41 +158,39 @@ public class SecurityConfiguration {
 		return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
-			.securityMatcher("/", "/customer/**", "/customer/login", "/login/**", "/customer/process-login","/oauth2/**" )
+			.securityMatcher("/", "/customer/**", "/customer/login", "/login/**", "/customer/register", "/customer/process-login", "/oauth2/**")
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
 				a.requestMatchers(
 					"/",
-					"/customer",
 					"/customer/home",
-					"/customer/login",        // Allow unauthenticated access to the customer login page
-					"/login/**",        // Allow unauthenticated access to the customer login page
-					"/customer/process-login",
+					"/customer/login",   
+					"/customer/register",
+					"/login/**", // Allow unauthenticated access to the customer login page
+					"/customer/process-login", // Allow unauthenticated access to the customer login processing URL
 					"/oauth2/**"
-					// Allow unauthenticated access to the customer login processing URL
 				).permitAll()
 				.requestMatchers("/customer/**").hasAnyRole("CUSTOMER") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
 			})
 			.formLogin(f -> {
-				f.loginPage("/login") // Specifies the custom customer login page URL
-				.loginProcessingUrl("/account/customer/process-login") // URL where the customer login form submits
+				f.loginPage("/customer/login") // Specifies the custom customer login page URL
+				.loginProcessingUrl("/customer/process-login") // URL where the customer login form submits
 				.usernameParameter("email") // Name of the username parameter in the login form
 				.passwordParameter("password") // Name of the password parameter in the login form
 				.successHandler(new AuthenticationSuccessHandler() {
 					@Override
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 							Authentication authentication) throws IOException, ServletException {
-						System.out.println("Customer/Doctor/Patient Login Success for user: " + authentication.getName());
+						System.out.println("Admin Login Success for user: " + authentication.getName());
 						Map<String,String> redirectUrls = new HashMap<>();
-						redirectUrls.put("ROLE_DOCTOR","/doctor/home");  // Redirect DOCTORs to their home
-						redirectUrls.put("ROLE_PATIENT","/patient/home"); // Redirect PATIENTs to their home
-						String url ="/account/customer/login?error"; // Default fallback if no matching role found
+						redirectUrls.put("ROLE_CUSTOMER","/customer/home"); 
+						String url ="/customer/login?error"; 
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
 							if(redirectUrls.containsKey(authority.getAuthority())) {
 								url = redirectUrls.get(authority.getAuthority());
-								break;
+								break;								
 							}
 						}
 						response.sendRedirect(url);
@@ -201,11 +198,10 @@ public class SecurityConfiguration {
 				})
 				.failureHandler(new AuthenticationFailureHandler() {
 					@Override
-					public void onAuthenticationFailure(HttpServletRequest request,
-							HttpServletResponse response, AuthenticationException exception)
-							throws IOException, ServletException {
-						System.out.println("Customer/Doctor/Patient Login Failure for email: " + request.getParameter("email"));
-						response.sendRedirect("/account/customer/login?error"); // Redirect back to customer login with error
+					public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+					                                    AuthenticationException exception) throws IOException {
+						System.out.println("Customer Login Failure for email: " + request.getParameter("email"));
+						response.sendRedirect("/customer/login?error");
 					}
 				});
 			})
@@ -224,7 +220,7 @@ public class SecurityConfiguration {
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
+				ex.accessDeniedPage("/customer/login?error=unauthorized"); // Redirect on access denied
 			})
 			.build();
 	}
@@ -236,7 +232,7 @@ public class SecurityConfiguration {
 		return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
-			.securityMatcher("/vendor/**", "/vendor/account/login", "/vendor/process-login","/oauth2/**")
+			.securityMatcher("/vendor/**", "/vendor/account/login", "/vendor/process-login")
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
@@ -244,8 +240,7 @@ public class SecurityConfiguration {
 					"/vendor/account/login",        // Allow unauthenticated access to the customer login page
 					"/vendor/account/register",
 					"/vendor/process-login",
-					"/vendor/assets/**",
-					"/oauth2/**"
+					"/vendor/assets/**"
 				).permitAll()
 				.requestMatchers("/vendor/**").hasAnyRole("VENDOR") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
@@ -291,7 +286,7 @@ public class SecurityConfiguration {
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/accessdenied/404"); // Redirect on access denied
+				ex.accessDeniedPage("/vendor/account/login?error=unauthorized"); // Redirect on access denied
 			})
 			.build();
 	}
