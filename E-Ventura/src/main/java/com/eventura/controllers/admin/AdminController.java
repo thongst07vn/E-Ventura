@@ -2,18 +2,25 @@ package com.eventura.controllers.admin;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("admin")
 public class AdminController {
 	
 	//======= Login ========	
-	@GetMapping({"login"})
-	public String login(Model model) {
+	@GetMapping("login")
+	public String login(@RequestParam(value = "error", required = false) String error,
+						ModelMap modelMap) {
+		if(error != null) {
+			modelMap.put("msg", "Failed");
+		}
 		return "admin/page/login/login";
 	}
+	
 	//======= Dashboard ========
 	@GetMapping({"dashboard"})
 	public String home(Model model) {
