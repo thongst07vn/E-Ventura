@@ -1,6 +1,8 @@
 package com.eventura.controllers.admin;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -27,11 +29,12 @@ public class AdminController {
 	private UserService userService;
 	//======= Login ========	
 	@GetMapping({"login"})
-	public String login(@RequestParam(value = "error", required =false)String error,ModelMap modelMap) {
+	public String login(@RequestParam(value = "error", required =false)String error,ModelMap modelMap,@CurrentSecurityContext(expression = "authentication") Authentication authentication) {
 		if(error!=null) {
 			modelMap.put("msg", "Login failed");
 		}
-		return "admin/page/login/login";
+		System.out.println(authentication.getName());	
+			return "admin/page/login/login";
 	}
 	//======= Dashboard ========
 	@GetMapping({"dashboard"})
