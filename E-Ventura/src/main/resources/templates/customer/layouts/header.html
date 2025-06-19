@@ -68,28 +68,20 @@
 						th:src="@{/client/assets/imgs/template/logo.svg}"></a>
 				</div>
 				<div class="header-search">
-					<div class="box-header-search">
-						<form class="form-search" method="post" action="#">
-							<div class="box-category">
-								<select class="select-active select2-hidden-accessible">
-									<option>All categories</option>
-									<option value="Computers Accessories">Computers
-										Accessories</option>
-									<option value="Cell Phones">Cell Phones</option>
-									<option value="Gaming Gatgets">Gaming Gatgets</option>
-									<option value="Smart watches">Smart watches</option>
-									<option value="Wired Headphone">Wired Headphone</option>
-									<option value="Mouse &amp; Keyboard">Mouse Keyboard</option>
-									<option value="Headphone">Headphone</option>
-									<option value="Bluetooth devices">Bluetooth devices</option>
-									<option value="Cloud Software">Cloud Software</option>
-								</select>
-							</div>
+					<div class="box-header-search">	
 							<div class="box-keysearch">
-								<input class="form-control font-xs" type="text" value=""
-									placeholder="Search for items">
+								<form method="get" th:action="@{/product/search}"  id="productSearchForm">
+									<input class="form-control font-xs" type="text" value=""
+										placeholder="Search for items" name="keyword" id="productSearchKeyword">
+								</form>
+							<script>
+								document.getElementById('productSearchKeyword').addEventListener('keyup', function(event) {									
+									 if (event.key === 'Enter' || event.keyCode === 13) {
+									        document.getElementById('productSearchForm').submit();
+									    }
+	                            });
+								</script>	
 							</div>
-						</form>
 					</div>
 				</div>
 				<div class="header-nav">
@@ -186,7 +178,7 @@
 								<li><a href="page-account.html">My Orders</a></li>
 								<li><a href="page-account.html">My Wishlist</a></li>
 								<li><a href="page-account.html">Setting</a></li>
-								<li><a href="page-login.html">Sign out</a></li>
+								<li><a th:href="@{/customer/logout}">Sign out</a></li>
 							</ul>
 						</div>
 					</div>
@@ -290,7 +282,7 @@
 						<li><a href="page-account.html">My Orders</a></li>
 						<li><a href="page-account.html">My Wishlist</a></li>
 						<li><a href="page-account.html">Setting</a></li>
-						<li><a href="page-login.html">Sign out</a></li>
+						<li><a th:href="@{/customer/logout}">Sign out</a></li>
 					</ul>
 				</div>
 				<div class="mobile-banner">
@@ -405,7 +397,7 @@
 						<li><a href="page-account.html">My Orders</a></li>
 						<li><a href="page-account.html">My Wishlist</a></li>
 						<li><a href="page-account.html">Setting</a></li>
-						<li><a href="page-login.html">Sign out</a></li>
+						<li><a th:href="@{/customer/logout}">Sign out</a></li>
 					</ul>
 				</div>
 				<div class="mobile-banner">

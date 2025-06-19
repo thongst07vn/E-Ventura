@@ -11,6 +11,10 @@ public interface ProductService {
 	
 	public List<Products> findByVendorId(int id);
 	
-	
 	public Products findById(int id);
+  
+	public List<Products> findTopNewProduct();
+	
+	public List<Products> findByKeyword(String keyword);
+
 }
