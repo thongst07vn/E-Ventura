@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 1:15:05 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
@@ -27,6 +29,7 @@ public class Vendors implements java.io.Serializable {
 
 	private Integer id;
 	private Users users;
+	private VendorSettings vendorSettings;
 	private String name;
 	private String description;
 	private String contactName;
@@ -36,7 +39,7 @@ public class Vendors implements java.io.Serializable {
 	private Set<Commissions> commissionses = new HashSet<Commissions>(0);
 	private Set<VendorReviews> vendorReviewses = new HashSet<VendorReviews>(0);
 	private Set<Products> productses = new HashSet<Products>(0);
-	private Set<VendorSettings> vendorSettingses = new HashSet<VendorSettings>(0);
+	private Set<Vouchers> voucherses = new HashSet<Vouchers>(0);
 	private Set<VendorEarnings> vendorEarningses = new HashSet<VendorEarnings>(0);
 	private Set<Coupons> couponses = new HashSet<Coupons>(0);
 
@@ -49,11 +52,12 @@ public class Vendors implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public Vendors(Users users, String name, String description, String contactName, String contactEmail,
-			Date createdAt, Date updatedAt, Set<Commissions> commissionses, Set<VendorReviews> vendorReviewses,
-			Set<Products> productses, Set<VendorSettings> vendorSettingses, Set<VendorEarnings> vendorEarningses,
-			Set<Coupons> couponses) {
+	public Vendors(Users users, VendorSettings vendorSettings, String name, String description, String contactName,
+			String contactEmail, Date createdAt, Date updatedAt, Set<Commissions> commissionses,
+			Set<VendorReviews> vendorReviewses, Set<Products> productses, Set<Vouchers> voucherses,
+			Set<VendorEarnings> vendorEarningses, Set<Coupons> couponses) {
 		this.users = users;
+		this.vendorSettings = vendorSettings;
 		this.name = name;
 		this.description = description;
 		this.contactName = contactName;
@@ -63,7 +67,7 @@ public class Vendors implements java.io.Serializable {
 		this.commissionses = commissionses;
 		this.vendorReviewses = vendorReviewses;
 		this.productses = productses;
-		this.vendorSettingses = vendorSettingses;
+		this.voucherses = voucherses;
 		this.vendorEarningses = vendorEarningses;
 		this.couponses = couponses;
 	}
@@ -89,6 +93,16 @@ public class Vendors implements java.io.Serializable {
 
 	public void setUsers(Users users) {
 		this.users = users;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "vendor_setting_id")
+	public VendorSettings getVendorSettings() {
+		return this.vendorSettings;
+	}
+
+	public void setVendorSettings(VendorSettings vendorSettings) {
+		this.vendorSettings = vendorSettings;
 	}
 
 	@Column(name = "name")
@@ -175,12 +189,12 @@ public class Vendors implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendors")
-	public Set<VendorSettings> getVendorSettingses() {
-		return this.vendorSettingses;
+	public Set<Vouchers> getVoucherses() {
+		return this.voucherses;
 	}
 
-	public void setVendorSettingses(Set<VendorSettings> vendorSettingses) {
-		this.vendorSettingses = vendorSettingses;
+	public void setVoucherses(Set<Vouchers> voucherses) {
+		this.voucherses = voucherses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendors")

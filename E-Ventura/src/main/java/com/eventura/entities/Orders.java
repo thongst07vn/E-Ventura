@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 1:15:05 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 19, 2025, 10:47:09 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -33,7 +33,7 @@ public class Orders implements java.io.Serializable {
 	private Date updatedAt;
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
 	private Set<Payments> paymentses = new HashSet<Payments>(0);
-	private Set<OrdersCoupons> ordersCouponses = new HashSet<OrdersCoupons>(0);
+	private Set<OrdersCampaigns> ordersCampaignses = new HashSet<OrdersCampaigns>(0);
 	private Set<VendorEarnings> vendorEarningses = new HashSet<VendorEarnings>(0);
 	private Set<Commissions> commissionses = new HashSet<Commissions>(0);
 
@@ -46,7 +46,7 @@ public class Orders implements java.io.Serializable {
 	}
 
 	public Orders(Users users, String name, Long totalAmount, String ordersStatus, Date createdAt, Date updatedAt,
-			Set<OrderItems> orderItemses, Set<Payments> paymentses, Set<OrdersCoupons> ordersCouponses,
+			Set<OrderItems> orderItemses, Set<Payments> paymentses, Set<OrdersCampaigns> ordersCampaignses,
 			Set<VendorEarnings> vendorEarningses, Set<Commissions> commissionses) {
 		this.users = users;
 		this.name = name;
@@ -56,7 +56,7 @@ public class Orders implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 		this.orderItemses = orderItemses;
 		this.paymentses = paymentses;
-		this.ordersCouponses = ordersCouponses;
+		this.ordersCampaignses = ordersCampaignses;
 		this.vendorEarningses = vendorEarningses;
 		this.commissionses = commissionses;
 	}
@@ -149,12 +149,12 @@ public class Orders implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
-	public Set<OrdersCoupons> getOrdersCouponses() {
-		return this.ordersCouponses;
+	public Set<OrdersCampaigns> getOrdersCampaignses() {
+		return this.ordersCampaignses;
 	}
 
-	public void setOrdersCouponses(Set<OrdersCoupons> ordersCouponses) {
-		this.ordersCouponses = ordersCouponses;
+	public void setOrdersCampaignses(Set<OrdersCampaigns> ordersCampaignses) {
+		this.ordersCampaignses = ordersCampaignses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")

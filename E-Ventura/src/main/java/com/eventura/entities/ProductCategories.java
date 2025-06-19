@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 1:15:05 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,6 +24,7 @@ public class ProductCategories implements java.io.Serializable {
 
 	private Integer id;
 	private String name;
+	private String photo;
 	private Date createdAt;
 	private Date updatedAt;
 	private Date deletedAt;
@@ -37,8 +38,10 @@ public class ProductCategories implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public ProductCategories(String name, Date createdAt, Date updatedAt, Date deletedAt, Set<Products> productses) {
+	public ProductCategories(String name, String photo, Date createdAt, Date updatedAt, Date deletedAt,
+			Set<Products> productses) {
 		this.name = name;
+		this.photo = photo;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
@@ -64,6 +67,15 @@ public class ProductCategories implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Column(name = "photo")
+	public String getPhoto() {
+		return this.photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
