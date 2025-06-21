@@ -17,57 +17,50 @@
 					class="material-icons md-plus"></i>Create category</a>
 			</div>
 		</div>
+		<div class="card mb-4">
+			<header class="card-header">
+				<div class="row gx-3">
+					<div class="col-lg-4 col-md-6 me-auto">
+						<input class="form-control" type="text" placeholder="Search...">
+					</div>
+			</header>
+			<!-- card-header end//-->
+			<th:block th:if="${categories!=null}">
+				<div class="card-body">
+					<div
+						class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+						<div class="col" th:each="category : ${categories} ">
+							<th:block th:if="${category.deletedAt == null}">
+								<div class="card card-product-grid">
+									<div>
+										<a class="img-wrap" href="#"> <img
+											class="img-sm img-thumbnail"
+											th:src="@{'/assets/imgs/others/' + ${category.photo}}"
+											height="300px" width="300px" alt="User pic">
+										</a>
+									</div>
 
-		<div class="card">
-			<div class="card-body">
-				<div class="row">
-
-					<div class="col-md-12">
-						<div class="table-responsive">
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th>ID</th>
-										<th>Name</th>
-										<th>Created</th>
-										<th>Updated</th>
-										<th class="text-center">Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									<th:block th:if="${categories!=null}">
-										<tr th:each="category : ${categories} ">
-											<th:block th:if="${category.deletedAt == null}">
-												<td><th:block th:text="${category.id}"></th:block></td>
-												<td><th:block th:text="${category.name}"></th:block></td>
-												<td><th:block
-														th:text="${#dates.format(category.createdAt, 'dd/MM/yyyy')}"></th:block>
-												</td>
-												<td><th:block
-														th:text="${#dates.format(category.updatedAt, 'dd/MM/yyyy')}"></th:block>
-												</td>
-												<td class="text-center">
-													<div class="dropdown">
-														<a class="btn btn-light rounded btn-sm font-sm" href="#"
-															data-bs-toggle="dropdown"><i
-															class="material-icons md-more_horiz"></i></a>
-														<div class="dropdown-menu">
-															<a class="dropdown-item"
-																th:href="@{/admin/category/edit}">Edit </a> <a
-																class="dropdown-item text-danger" href="#">Delete</a>
-														</div>
-													</div>
-												</td>
-											</th:block>
-
-										</tr>
-									</th:block>
-								</tbody>
-							</table>
+									<div class="info-wrap">
+										<a class="title text-truncate"
+											style="font-size: 25; color: black;" href="#"><th:block
+												th:text=${category.name}></th:block></a>
+										<!-- price.//-->
+										<a class="btn btn-sm font-sm rounded btn-brand"
+											th:href="@{/admin/category/edit}"><i
+											class="material-icons md-edit"></i> Edit</a><a
+											class="btn btn-sm font-sm btn-light rounded" href="#"><i
+											class="material-icons md-delete_forever"></i> Delete</a>
+									</div>
+								</div>
+								<!-- card-product  end//-->
+								<!-- col.//-->
+							</th:block>
 						</div>
 					</div>
 				</div>
-			</div>
+			</th:block>
+
 		</div>
+		<!-- card end//-->
 	</section>
 </body>

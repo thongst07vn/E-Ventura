@@ -1,6 +1,6 @@
 <aside class="navbar-aside" id="offcanvas_aside">
 	<div class="aside-top"><a class="brand-wrap" th:href="@{/admin/dashboard}"><img class="logo"
-				th:src="@{/admin/assets/imgs/theme/logo.svg}" alt="Evara Dashboard"></a>
+				th:src="@{/assets/imgs/theme/logo.svg}" alt="Evara Dashboard"></a>
 		<div>
 			<button class="btn btn-icon btn-aside-minimize"><i
 					class="text-muted material-icons md-menu_open"></i></button>
@@ -44,8 +44,8 @@
 					<a th:href="@{/admin/vendor/list}">Vendor List</a>
 				</div>
 			</li>
-			<li class="menu-item has-submenu" th:classappend="${currentPage == 'coupon' ? 'active' : ''}">
-				<a class="menu-link" href="page-orders-1.html">
+			<li class="menu-item has-submenu" th:classappend="${currentPage == 'coupon' ? 'actives' : ''}">
+				<a class="menu-link" href="">
 					<i class="icon material-icons md-confirmation_number"></i>
 					<span class="text">Sale</span>
 				</a>
