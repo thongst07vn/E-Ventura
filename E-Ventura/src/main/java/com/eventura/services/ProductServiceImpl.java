@@ -59,4 +59,16 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findAll(pageable);
 	}
 
+	@Override
+	public Page<Products> findByCategoryIdPage(int id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findProductByCategoryPage(id,pageable);
+	}
+
+	@Override
+	public Page<Products> findByVendorIdPage(int id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findProductByVendorPage(id, pageable);
+	}
+
 }

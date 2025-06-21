@@ -3,6 +3,7 @@ package com.eventura.repositories;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,4 +26,10 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	
 	@Query("from Products where name like %:keyword%")
 	public List<Products>  findByKeyword(@Param("keyword") String keyword,Sort sort);
+	
+	@Query("from Products where productCategories.id = :category_id")
+	public Page<Products> findProductByCategoryPage(@Param("category_id") int category_id,Pageable pageable);
+	
+	@Query("from Products where vendors.id = :vendor_id")
+	public Page<Products>  findProductByVendorPage(@Param("vendor_id") int vendor_id,Pageable pageable);
 }
