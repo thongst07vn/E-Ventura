@@ -13,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.eventura.entities.Users;
+import com.eventura.entities.VendorEarnings;
 import com.eventura.entities.Vendors;
+import com.eventura.repositories.VendorEarningRepository;
 import com.eventura.repositories.VendorRepository;
 
 @Service
@@ -21,6 +23,8 @@ public class VendorServiceImpl implements VendorService {
 
 	@Autowired
 	private VendorRepository vendorRepository;
+	@Autowired
+	private VendorEarningRepository vendorEarningRepository;
 	
 	@Override
 	public List<Vendors> findAll() {
@@ -32,6 +36,18 @@ public class VendorServiceImpl implements VendorService {
 	public Vendors findById(int id) {
 		// TODO Auto-generated method stub
 		return vendorRepository.findById(id).get();
+	}
+
+	@Override
+	public int countByVendorId(int id) {
+		// TODO Auto-generated method stub
+		return vendorEarningRepository.countByVendorId(id);
+	}
+
+	@Override
+	public int sumByVendorId(int id) {
+		// TODO Auto-generated method stub
+		return vendorEarningRepository.sumByVendorId(id);
 	}
 
 }

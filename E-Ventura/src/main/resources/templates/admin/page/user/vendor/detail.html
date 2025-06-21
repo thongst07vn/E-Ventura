@@ -19,9 +19,15 @@
 						<div
 							class="img-thumbnail shadow w-100 bg-white position-relative text-center"
 							style="height: 190px; width: 200px; margin-top: -120px">
-							<img class="center-xy img-fluid"
-								th:src="@{/admin/assets/imgs/brands/brand-3.jpg}"
-								alt="Logo Brand">
+							<th:block th:if="${vendor.users.avatar.contains('https:')}">
+									<img class="center-xy img-fluid" th:src="${vendor.users.avatar}"
+										alt="Logo Brand">
+								</th:block>
+								<th:block th:if="${!vendor.users.avatar.contains('https:')}">
+									<img class="center-xy img-fluid"
+										th:src="@{'/admin/assets/imgs/avatars/' + ${vendor.users.avatar}}"
+										alt="Logo Brand">
+								</th:block>
 						</div>
 					</div>
 					<!-- col.//-->
@@ -51,9 +57,9 @@
 						<div class="col-md-12 col-lg-4 col-xl-2">
 							<article class="box">
 								<p class="mb-0 text-muted">Total sales:</p>
-								<h5 class="text-success">238</h5>
-								<p class="mb-0 text-muted">Revenue:</p>
-								<h5 class="text-success mb-0">$2380</h5>
+								<h5 class="text-success" th:text="${totalSell}"></h5>
+								<p class="mb-0 text-muted">Income:</p>
+								<h5 class="text-success mb-0">$ <th:block th:text="${income}"></th:block></h5>
 							</article>
 						</div>
 						<!-- col.//-->
@@ -62,10 +68,12 @@
 							<p>
 								Manager:
 								<th:block
-									th:text="${vendor.users.firstName}+' '+${vendor.users.lastName}"></th:block>
+									th:text="${vendor.contactName}"></th:block>
 								<br>
-								<th:block th:text="${vendor.users.email}"></th:block>
+								Email:
+								<th:block th:text="${vendor.contactEmail}"></th:block>
 								<br>
+								Phone:
 								<th:block th:text="${vendor.users.phoneNumber}"></th:block>
 							</p>
 						</div>
@@ -82,8 +90,8 @@
 							<div class="mapbox position-relative d-inline-block">
 								<img class="rounded2"
 									th:src="@{/admin/assets/imgs/misc/map.jpg}" alt="map"
-									height="120">
-								<span class="map-pin" style="top: 50px; left: 100px"></span>
+									height="120"> <span class="map-pin"
+									style="top: 50px; left: 100px"></span>
 								<button
 									class="btn btn-sm btn-brand position-absolute bottom-0 end-0 mb-15 mr-15 font-xs">
 									Large</button>
@@ -98,13 +106,27 @@
 			<div class="card-body">
 				<h5 class="card-title">Products by seller</h5>
 				<div class="row">
-					<div class="col-xl-2 col-lg-3 col-md-6" th:each="product : ${products}">
+					<div class="col-xl-2 col-lg-3 col-md-6"
+						th:each="product : ${products}">
 						<div class="card card-product-grid">
-							<a class="img-wrap" href="#"><img
-								th:src="@{/admin/assets/imgs/items/1.jpg}" alt="Product"></a>
+							<a class="img-wrap" href="#"> <th:block
+									th:if="${product.mediases[0].name.contains('https:')}">
+									<img class="img-sm img-thumbnail"
+										th:src="${product.mediases[0].name}" alt="Item">
+								</th:block> <th:block
+									th:if="${!product.mediases[0].name.contains('https:')}">
+									<img class="img-sm img-thumbnail"
+										th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}"
+										alt="Item">
+								</th:block>
+							</a>
 							<div class="info-wrap">
-								<a class="title" href="#"><th:block th:text="${product.name}"></th:block></a>
-								<div class="price mt-1">$<th:block th:text="${product.price}"></th:block></div>
+								<a class="title" href="#"><th:block
+										th:text="${product.name}"></th:block></a>
+								<div class="price mt-1">
+									$
+									<th:block th:text="${product.price}"></th:block>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -124,6 +146,6 @@
 				</ul>
 			</nav>
 		</div>//-->
-		
+
 	</section>
 </body>
