@@ -29,12 +29,42 @@
 						</select>
 					</div>
 					<div class="col-lg-2 col-md-3 col-6">
-						<select class="form-select">
-							<option>Show 20</option>
-							<option>Show 30</option>
-							<option>Show 40</option>
+						<select id="pageSizeSelect" class="form-select"
+							onchange="changePageSize()">
+							<option th:value="5" th:text="'Show 5'"
+								th:selected="${pageSize == 5}"></option>
+							<option th:value="10" th:text="'Show 10'"
+								th:selected="${pageSize == 10}"></option>
+							<option th:value="20" th:text="'Show 20'"
+								th:selected="${pageSize == 20}"></option>
 						</select>
 					</div>
+
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+					        const select = document.getElementById('pageSizeSelect');
+					        const urlParams = new URLSearchParams(window.location.search);
+					        const pageSize = urlParams.get('pageSize') || '5'; // default là 5
+					        select.value = pageSize;
+					    });
+						function changePageSize() {
+						    // Lấy giá trị của option đã chọn
+						    const select = document.getElementById('pageSizeSelect');
+						    const pageSize = select.value;
+						    
+						    // Lấy giá trị của trang hiện tại, nếu có
+						    const urlParams = new URLSearchParams(window.location.search);
+						    const currentPage = urlParams.get('page') || 0; // hoặc giá trị khác tùy ý
+						    
+						    // Tạo URL mới với tham số page và pageSize
+						    const newUrl = new URL(window.location.origin + window.location.pathname);
+						    newUrl.searchParams.set('page', currentPage);
+						    newUrl.searchParams.set('pageSize', pageSize);
+						
+						    // Tải lại trang với URL mới
+						    window.location.href = newUrl.toString();
+						}
+					</script>
 				</div>
 			</header>
 			<!-- card-header end//-->
@@ -53,8 +83,7 @@
 						<tbody>
 							<th:block th:if="${users!=null}">
 								<tr th:each="user : ${users.content}">
-									<th:block
-										th:if="${user.deletedAt == null}">
+									<th:block th:if="${user.deletedAt == null}">
 										<td width="40%"><a class="itemside" href="#"
 											style="flex-direction: column;">
 												<div class="left">
@@ -64,7 +93,7 @@
 													</th:block>
 													<th:block th:if="${!user.avatar.contains('https:')}">
 														<img class="img-md img-avatar"
-															th:src="@{'/admin/assets/imgs/avatars/' + ${user.avatar}}"
+															th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}"
 															alt="User pic">
 													</th:block>
 												</div>
@@ -104,7 +133,7 @@
 					<!-- Nút trước -->
 					<li class="page-item"
 						th:classappend="${currentPages == 0} ? 'disabled'"><a
-						class="page-link" th:href="@{'?page=' + ${currentPages-1}}"
+						class="page-link" th:href="@{'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
 						aria-label="Previous"> <i
 							class="material-icons md-chevron_left"></i>
 					</a></li>
@@ -114,14 +143,14 @@
 
 						<li class="page-item"
 							th:classappend="${i} == ${currentPages} ? 'active'"><a
-							class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i + 1}"></a>
+							class="page-link" th:href="@{'?page=' + ${i}+'&pageSize='+${pageSize}}" th:text="${i + 1}"></a>
 						</li>
 					</th:block>
 
 					<!-- Nút tiếp -->
 					<li class="page-item"
 						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
-						<a class="page-link" th:href="@{'?page=' + ${currentPages+1}}"
+						<a class="page-link" th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
 						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 					</a>
 					</li>

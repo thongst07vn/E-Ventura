@@ -123,36 +123,111 @@
 			</div>
 		</div>
 		<!-- card end//-->
-		<div class="pagination-area mt-15 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<!-- Nút trước -->
-					<li class="page-item"
-						th:classappend="${currentPages == 0} ? 'disabled'"><a
-						class="page-link" th:href="@{'?page=' + ${currentPages-1}}"
-						aria-label="Previous"> <i
-							class="material-icons md-chevron_left"></i>
-					</a></li>
-
-					<!-- Các trang -->
-					<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
-
+		<!-- Trường hợp danh sách theo category -->
+		<th:block th:if="${selectedCategoryId != null && selectedVendorId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút trước -->
 						<li class="page-item"
-							th:classappend="${i} == ${currentPages} ? 'active'"><a
-							class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i + 1}"></a>
-						</li>
-					</th:block>
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							th:href="@{'/admin/product/search-by-category?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages-1}}"
+							class="page-link" aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
 
-					<!-- Nút tiếp -->
-					<li class="page-item"
-						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
-						<a class="page-link" th:href="@{'?page=' + ${currentPages+1}}"
-						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
-					</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-		
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/admin/product/search-by-category?categoryId=' + ${selectedCategoryId} + '&page=' + ${i}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/admin/product/search-by-category?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages+1}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+		<!-- Trường hợp danh sách theo vendor -->
+		<th:block th:if="${selectedVendorId != null && selectedCategoryId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút trước -->
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							th:href="@{'/admin/product/search-by-category?vendorId=' + ${selectedVendorId} + '&page=' + ${currentPages-1}}"
+							class="page-link" aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/admin/product/search-by-vendor?vendorId=' + ${selectedVendorId} + '&page=' + ${i}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/admin/product/search-by-vendor?vendorId=' + ${selectedVendorId} + '&page=' + ${currentPages+1}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+
+		<!-- Trường hợp danh sách tất cả sản phẩm -->
+		<th:block th:if="${selectedCategoryId == null && selectedVendorId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút trước -->
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							th:href="@{'/admin/product/list?page=' + ${currentPages-1}}"
+							class="page-link" aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/admin/product/list?page=' + ${i}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/admin/product/list?page=' + ${currentPages+1}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+
+
 	</section>
 </body>
