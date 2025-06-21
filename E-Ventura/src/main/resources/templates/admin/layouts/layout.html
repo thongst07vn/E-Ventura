@@ -14,11 +14,6 @@
 	th:href="@{/admin/assets/imgs/theme/favicon.svg}">
 <link th:href="@{/admin/assets/css/style.css?v=1.0.0}" rel="stylesheet">
 <title th:text="${title}">Ecomm - Marketplace Dashboard Template</title>
-<!-- Quill CSS -->
-<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-	rel="stylesheet">
-<!-- Quill JS -->
-<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 </head>
 
@@ -51,74 +46,7 @@
 	<script th:src="@{/admin/assets/js/main.js?v=1.0.0}"></script>
 	<script th:src="@{/admin/assets/js/custom-chart.js}"
 		type="text/javascript"></script>
-	<script>
-			var quill = new Quill('#editor', {
-				theme: 'snow'
-			});
-
-			// Lấy nội dung vào input ẩn khi submit
-			document.querySelector('form').addEventListener('submit', function () {
-				document.getElementById('description').value = quill.root.innerHTML;
-			});
-		</script>
-
-	<script>
-			let groupIndex = 0;
-
-			function addAttributeGroup() {
-				const container = document.getElementById("variation-container");
-
-				const html = `
-		    <div class="border p-3 mb-4 rounded" data-index="${groupIndex}" id="group-${groupIndex}">
-		      <div class="mb-3">
-		        <label class="form-label">Attribute name</label>
-		        <input type="text" class="form-control" name="attributes[${groupIndex}].name" placeholder="e.g. Color, Size">
-		      </div>
-
-		      <div id="values-container-${groupIndex}">
-		        <!-- Các giá trị sẽ được thêm tại đây -->
-		      </div>
-
-		      <button type="button" class="btn btn-sm btn-outline-primary mb-3" onclick="addAttributeValue(${groupIndex})">
-		        + Add Value
-		      </button>
-
-		      <div class="input-upload mt-2">
-		        <label class="form-label">Images for this variation (optional)</label>
-		        <img src="/admin/assets/imgs/theme/upload.svg" alt="">
-		        <input class="form-control" type="file" name="attributes[${groupIndex}].images" multiple accept="image/*">
-		      </div>
-		    </div>
-		  `;
-
-				container.insertAdjacentHTML("beforeend", html);
-				groupIndex++;
-			}
-
-			function addAttributeValue(groupId) {
-				const container = document.getElementById(`values-container-${groupId}`);
-				const valueCount = container.querySelectorAll('.attribute-value').length;
-
-				const html = `
-		    <div class="row attribute-value mb-2 g-2">
-		      <div class="col-md-3">
-		        <input type="text" class="form-control" name="attributes[${groupId}].values[${valueCount}].name" placeholder="Value (e.g. Red)">
-		      </div>
-		      <div class="col-md-3">
-		        <input type="number" class="form-control" name="attributes[${groupId}].values[${valueCount}].price" placeholder="Additional Price">
-		      </div>
-		      <div class="col-md-3">
-		        <input type="number" class="form-control" name="attributes[${groupId}].values[${valueCount}].quantity" placeholder="Quantity">
-		      </div>
-		      <div class="col-md-2 d-flex align-items-center">
-		        <button class="btn btn-outline-danger btn-sm" type="button" onclick="this.closest('.attribute-value').remove()">−</button>
-		      </div>
-		    </div>
-		  `;
-
-				container.insertAdjacentHTML("beforeend", html);
-			}
-		</script>
+	
 		
 </body>
 
