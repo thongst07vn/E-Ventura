@@ -26,10 +26,12 @@ public class CategoryServiceImpl implements CategoryService{
 	public Page<ProductCategories> findAlls(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return categoryRepository.findAll(pageable);
-  }
-  @Override
+	}
+	@Override
 	public ProductCategories findById(int id) {
 		// TODO Auto-generated method stub
 		return categoryRepository.findById(id).get();
 	}
+
+
 }
