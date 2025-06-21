@@ -1267,6 +1267,22 @@ a.text-brand-3:hover {
   background-color: #425A8B;
   color: #ffffff;
 }
+.btn.btn-cart-delete {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: bold;
+  color: #ff5757;
+  border: 1px solid #ff5757;
+  width: 100%;
+  text-align: center;
+  padding: 7px 22px;
+  transition: all 0.3s ease 0s;
+}
+.btn.btn-cart-delete:hover {
+  border: 1px solid #ff5757;
+  background-color: #ff5757;
+  color: #ffffff;
+}
 .btn.btn-buy {
   font-size: 14px;
   line-height: 20px;

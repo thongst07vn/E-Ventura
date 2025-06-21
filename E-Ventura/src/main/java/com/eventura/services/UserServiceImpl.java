@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserAddress findAddressUser(int id) {
+	public List<UserAddress> findAddressUser(int id) {
 		// TODO Auto-generated method stub
 		return addressRepository.findAddressUser(id);
 	}
