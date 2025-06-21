@@ -1,8 +1,6 @@
 package com.eventura.entities;
-// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 7:41:27 PM by Hibernate Tools 4.3.6.Final
 
-import java.util.HashSet;
-import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,7 +9,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 /**
@@ -22,23 +19,15 @@ import jakarta.persistence.Table;
 public class VendorProductCategory implements java.io.Serializable {
 
 	private Integer id;
-	private VendorProductCategory vendorProductCategory;
+	private ProductCategories productCategories;
 	private Vendors vendors;
-	private Set<VendorProductCategory> vendorProductCategories = new HashSet<VendorProductCategory>(0);
 
 	public VendorProductCategory() {
 	}
 
-	public VendorProductCategory(VendorProductCategory vendorProductCategory, Vendors vendors) {
-		this.vendorProductCategory = vendorProductCategory;
+	public VendorProductCategory(ProductCategories productCategories, Vendors vendors) {
+		this.productCategories = productCategories;
 		this.vendors = vendors;
-	}
-
-	public VendorProductCategory(VendorProductCategory vendorProductCategory, Vendors vendors,
-			Set<VendorProductCategory> vendorProductCategories) {
-		this.vendorProductCategory = vendorProductCategory;
-		this.vendors = vendors;
-		this.vendorProductCategories = vendorProductCategories;
 	}
 
 	@Id
@@ -55,12 +44,12 @@ public class VendorProductCategory implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_category_id", nullable = false)
-	public VendorProductCategory getVendorProductCategory() {
-		return this.vendorProductCategory;
+	public ProductCategories getProductCategories() {
+		return this.productCategories;
 	}
 
-	public void setVendorProductCategory(VendorProductCategory vendorProductCategory) {
-		this.vendorProductCategory = vendorProductCategory;
+	public void setProductCategories(ProductCategories productCategories) {
+		this.productCategories = productCategories;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -71,15 +60,6 @@ public class VendorProductCategory implements java.io.Serializable {
 
 	public void setVendors(Vendors vendors) {
 		this.vendors = vendors;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendorProductCategory")
-	public Set<VendorProductCategory> getVendorProductCategories() {
-		return this.vendorProductCategories;
-	}
-
-	public void setVendorProductCategories(Set<VendorProductCategory> vendorProductCategories) {
-		this.vendorProductCategories = vendorProductCategories;
 	}
 
 }

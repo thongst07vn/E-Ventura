@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 21, 2025, 1:02:58 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 7:41:27 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.AttributeOverride;
@@ -24,17 +24,17 @@ public class OrdersCampaigns implements java.io.Serializable {
 	private OrdersCampaignsId id;
 	private CampaignRedemptions campaignRedemptions;
 	private Orders orders;
-	private Date redemtionDate;
+	private Date redemptionDate;
 
 	public OrdersCampaigns() {
 	}
 
 	public OrdersCampaigns(OrdersCampaignsId id, CampaignRedemptions campaignRedemptions, Orders orders,
-			Date redemtionDate) {
+			Date redemptionDate) {
 		this.id = id;
 		this.campaignRedemptions = campaignRedemptions;
 		this.orders = orders;
-		this.redemtionDate = redemtionDate;
+		this.redemptionDate = redemptionDate;
 	}
 
 	@EmbeddedId
@@ -70,13 +70,13 @@ public class OrdersCampaigns implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "redemtion_date", nullable = false, length = 19)
-	public Date getRedemtionDate() {
-		return this.redemtionDate;
+	@Column(name = "redemption_date", nullable = false, length = 19)
+	public Date getRedemptionDate() {
+		return this.redemptionDate;
 	}
 
-	public void setRedemtionDate(Date redemtionDate) {
-		this.redemtionDate = redemtionDate;
+	public void setRedemptionDate(Date redemptionDate) {
+		this.redemptionDate = redemptionDate;
 	}
 
 }
