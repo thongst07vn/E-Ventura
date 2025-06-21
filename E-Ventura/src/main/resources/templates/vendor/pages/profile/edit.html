@@ -47,32 +47,24 @@
 
 												<div class="row gx-2">
 													<div class="col-md-6 mb-2">
-														<select class="form-select">
+														<select class="form-select" id="provinceSelect">
 															<option selected disabled>Provinces</option>
-															<option>Provinces 1</option>
-															<option>Provinces 2</option>
-															<option>Provinces 3</option>
-															<!-- More countries -->
+															<option th:each="province : ${provinces}"
+															        th:value="${province.code}" 
+															        th:text="${province.name}">
+															</option>
 														</select>
 													</div>
 
 													<div class="col-md-6 mb-2">
-														<select class="form-select">
+														<select class="form-select" id="districtSelect" disabled>
 															<option selected disabled>District</option>
-															<option>District 1</option>
-															<option>District 2</option>
-															<option>District 3</option>
-															<!-- More cities -->
 														</select>
 													</div>
 
 													<div class="col-md-6 mb-2">
-														<select class="form-select">
+														<select class="form-select" id="wardSelect" disabled>
 															<option selected disabled>Ward</option>
-															<option>Ward 1</option>
-															<option>Ward 2</option>
-															<option>Ward 3</option>
-															<!-- More wards -->
 														</select>
 													</div>
 												</div>
@@ -138,7 +130,68 @@
 				</div>
 			</div>
 		</div>
+
 		
+		<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const provinceSelect = document.getElementById("provinceSelect");
+			const districtSelect = document.getElementById("districtSelect");
+			const wardSelect = document.getElementById("wardSelect");
+
+			provinceSelect.addEventListener("change", function () {
+				const provinceCode = this.value;
+				districtSelect.innerHTML = '<option selected disabled>Loading...</option>';
+				wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+				wardSelect.disabled = true;
+
+				fetch(`/api/address/districts?provinceCode=${provinceCode}`)
+				    .then(response => response.json())
+				    .then(data => {
+				        console.log(data);
+				        // Clear existing options BEFORE adding new ones
+				        districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
+				        data.forEach(district => {
+				            const option = document.createElement("option");
+				            option.value = district.code;
+				            option.text = district.name;
+				            districtSelect.appendChild(option);
+				        });
+				        districtSelect.disabled = false;
+				    })
+				    .catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
+			});
+
+			districtSelect.addEventListener("change", function () {
+				const districtCode = this.value;
+				wardSelect.innerHTML = '<option selected disabled>Loading...</option>';
+
+				fetch(`/api/address/wards?districtCode=${districtCode}`)
+					.then(response => response.json())
+					.then(data => {
+						wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+						data.forEach(ward => {
+							const option = document.createElement("option");
+							option.value = ward.code;
+							option.text = ward.name;
+							wardSelect.appendChild(option);
+						});
+						wardSelect.disabled = false;
+					});
+			});
+		});
+		</script>
+
+		<th:block th:each="district : ${districts}">
+			<th:block th:text="${district.code}"></th:block>
+
+			<th:block th:text="${district.name}"></th:block>
+		</th:block>
+		<h5>Chia</h5>
+		<th:block th:each="ward : ${wards}">
+			<th:block th:text="${ward.code}"></th:block>
+
+			<th:block th:text="${ward.name}"></th:block>
+		</th:block>
 		
 	</section>
 </body>
