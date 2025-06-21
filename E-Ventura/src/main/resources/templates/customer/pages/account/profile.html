@@ -809,7 +809,7 @@
 																	<label class="form-label">Username</label> <input
 																		class="form-control" type="tel"
 																		placeholder="your username"
-																		th:field="${user.username}">>
+																		th:field="${user.username}">
 																</div>
 																<div class="col-lg-6 mb-3">
 																	<label class="form-label">Birthday</label> <input
@@ -823,7 +823,7 @@
 														<aside class="col-lg-4">
 															<figure class="text-lg-center">
 																<img id="userAvatar" class="img-lg mb-3 img-avatar"
-																	th:src="@{'/client/assets/imgs/avatars/'+${user.avatar}}"
+																	th:src="@{'/assets/imgs/avatars/'+${user.avatar}}"
 																	alt="User Photo">
 																<figcaption>
 																	<input type="file" name="file" id="actualFileInput"
@@ -914,12 +914,19 @@
 														<h4 class="mb-10">Shipping adress</h4>
 														<div class="card">
 															<div class="card-body bg-light">
+
+																<th:block th:each="userAdress, i : ${userAdresses}">
 																<article class="box mb-3 bg-light">
 																	<a class="btn btn-cart w-auto float-end" href="#">Change</a>
-																	<h6>Password</h6>
-																	<small class="text-muted d-block" style="width: 70%">You
-																		can reset or change your password by clicking here</small>
+																	<a class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a>
+																	<a class="btn btn-cart-delete w-auto float-end" href="#">Delete</a>
+																	<h6 th:text="Address + ${i.index+1}"></h6>
+																	<small class="text-muted d-block" style="width: 70%"> <th:block
+																			th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}"></th:block>
+
+																	</small>
 																</article>
+																</th:block>
 															</div>
 														</div>
 

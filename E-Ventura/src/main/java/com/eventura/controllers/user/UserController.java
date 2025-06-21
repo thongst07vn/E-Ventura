@@ -95,11 +95,14 @@ public class UserController {
 			@AuthenticationPrincipal UserDetails userDetails) {
 		if (userDetails != null) {
 			Users user = userService.findByEmail(userDetails.getUsername());
-			UserAddress userAdresses = userService.findAddressUser(user.getId());
+			List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
+			modelMap.put("userAdresses", userAdresses);
 			modelMap.put("user", user);
 		} else if (authentication != null) {
 			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
 			Users user = userService.findByEmail(accountOAuth2User.getEmail());
+			List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
+			modelMap.put("userAdresses", userAdresses);
 			modelMap.put("user", user);
 		}
 		return "customer/pages/account/profile";
@@ -108,30 +111,48 @@ public class UserController {
 	@PostMapping({ "edit/{id}" })
 	public String editProfile(@ModelAttribute("user") Users user, Authentication authentication,
 			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("file") MultipartFile file) {
-		System.out.println(file.getOriginalFilename());
-//		if (file != null && !file.isEmpty()) {
-//			try {
-//				String fileName = FileHelper.generateFileName(file.getOriginalFilename());
-//				File imagesFolder = new ClassPathResource("static/images").getFile();
-//				Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
-//				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-//				product.setPhoto(fileName);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		} else {
-//			product.setPhoto("no-image.jpg");
-//		}
-		System.out.println("user info:");
-		System.out.println("avatar: " + user.getAvatar());
-		System.out.println("email: " + user.getEmail());
-		System.out.println("first name: " + user.getFirstName());
-		System.out.println("last name: " + user.getLastName());
-		System.out.println("password: " + user.getPassword());
-		System.out.println("phone: " + user.getPhoneNumber());
-		System.out.println("username: " + user.getUsername());
-		System.out.println("remember token: " + user.getRememberToken());
 
+		Users currentUser = null;
+
+	    // 1. Centralize currentUser retrieval
+	    if (userDetails != null) {
+	        currentUser = userService.findByEmail(userDetails.getUsername());
+	    } else if (authentication != null && authentication.getPrincipal() instanceof AccountOAuth2User) {
+	        AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+	        currentUser = userService.findByEmail(accountOAuth2User.getEmail());
+	    }
+
+	    // 2. Handle file upload for avatar
+	    if (file != null && !file.isEmpty()) {
+	        try {
+	            String fileName = FileHelper.generateFileName(file.getOriginalFilename());
+	            // Using getFile() might fail if running from a JAR; consider using getResourceAsStream() and Files.copy()
+	            // Or get a path outside of the JAR for persistent storage
+	            File imagesFolder = new ClassPathResource("static/images").getFile();
+	            Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
+	            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+	            user.setAvatar(fileName);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            // If file upload fails, fall back to existing avatar if available
+	            if (currentUser != null) {
+	                user.setAvatar(currentUser.getAvatar());
+	            }
+	            // Optionally, rethrow a custom exception or add a logging message
+	        }
+	    } else {
+	        // If no new file is uploaded, keep the existing avatar
+	        if (currentUser != null) {
+	            user.setAvatar(currentUser.getAvatar());
+	        }
+	        // If currentUser is null here, it means no existing user found, avatar would remain null or default
+	    }
+
+	    // 3. Preserve rememberToken and password if currentUser was found
+	    if (currentUser != null) {
+	        user.setRememberToken(currentUser.getRememberToken());
+	        user.setPassword(currentUser.getPassword());
+	    }
 		return "redirect:/customer/profile";
 	}
 

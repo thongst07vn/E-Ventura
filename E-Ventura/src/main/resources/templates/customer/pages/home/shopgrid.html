@@ -106,7 +106,7 @@
 														<img th:src="${product.mediases[0].name}" alt="Ecom">
 													</th:block>
 													<th:block th:if="${!product.mediases[0].name.contains('https:')}">
-														<img th:src="@{'/client/assets/imgs/others/' + ${product.mediases[0].name}}" alt="Ecom">
+														<img th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}" alt="Ecom">
 													</th:block>
 												</a>
 											</div>

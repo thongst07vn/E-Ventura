@@ -4,6 +4,9 @@ package com.eventura.entities;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,6 +38,7 @@ public class Users implements java.io.Serializable {
 	private String email;
 	private String rememberToken;
 	private String password;
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date birthOfDate;
 	private String phoneNumber;
 	private Date createdAt;
