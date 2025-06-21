@@ -25,7 +25,7 @@
 								</th:block>
 								<th:block th:if="${!vendor.users.avatar.contains('https:')}">
 									<img class="center-xy img-fluid"
-										th:src="@{'/admin/assets/imgs/avatars/' + ${vendor.users.avatar}}"
+										th:src="@{'/assets/imgs/avatars/' + ${vendor.users.avatar}}"
 										alt="Logo Brand">
 								</th:block>
 						</div>
@@ -89,7 +89,7 @@
 						<div class="col-sm-6 col-xl-4 text-xl-end">
 							<div class="mapbox position-relative d-inline-block">
 								<img class="rounded2"
-									th:src="@{/admin/assets/imgs/misc/map.jpg}" alt="map"
+									th:src="@{/assets/imgs/misc/map.jpg}" alt="map"
 									height="120"> <span class="map-pin"
 									style="top: 50px; left: 100px"></span>
 								<button
@@ -116,9 +116,8 @@
 								</th:block> <th:block
 									th:if="${!product.mediases[0].name.contains('https:')}">
 									<img class="img-sm img-thumbnail"
-										th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}"
+										th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}"
 										alt="Item">
-								</th:block>
 							</a>
 							<div class="info-wrap">
 								<a class="title" href="#"><th:block
