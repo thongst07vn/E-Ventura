@@ -20,5 +20,11 @@ public class CategoryServiceImpl implements CategoryService{
 		return categoryRepository.findAll();
 	}
 
+	@Override
+	public ProductCategories findById(int id) {
+		// TODO Auto-generated method stub
+		return categoryRepository.findById(id).get();
+	}
+
 
 }

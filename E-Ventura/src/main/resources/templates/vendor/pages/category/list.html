@@ -26,25 +26,25 @@
 			<!-- card-header end//-->
 			<div class="card-body">
 				<div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
-					<div class="col">
-						<div class="card card-product-grid">
-							<a class="img-wrap" href="#">
-								<img src="assets/imgs/items/1.jpg" alt="Product">
-							</a>
-							<div class="info-wrap">
-								<a class="title text-truncate" href="#">Just another product name</a>
-								<a class="btn btn-sm font-sm rounded btn-brand" href="#">
-									<i class="material-icons md-edit"></i> Edit
+					<th:block th:each="vendorProductCategory : ${vendorProductCategories}">
+						<div class="col">
+							<div class="card card-product-grid">
+								<a class="img-wrap" href="#">
+									<img th:src="@{'/assets/imgs/others/' + ${vendorProductCategory.productCategories.photo}}" alt="Product">
 								</a>
-								<a class="btn btn-sm font-sm btn-light rounded" href="#">
-									<i class="material-icons md-delete_forever"></i> Delete
-								</a>
+								<div class="info-wrap">
+									<a class="title text-truncate" th:text="${vendorProductCategory.productCategories.name}">Just another product name</a>
+									<a class="btn btn-sm font-sm rounded btn-brand" th:href="@{'/vendor/category/edit/' + ${vendorProductCategory.productCategories.id}}">
+										<i class="material-icons md-edit"></i> Edit
+									</a>
+									<a class="btn btn-sm font-sm btn-light rounded" href="#">
+										<i class="material-icons md-delete_forever"></i> Delete
+									</a>
+								</div>
 							</div>
 						</div>
-						<!-- card-product  end//-->
-						<!-- col.//-->
-					</div>
-					
+					</th:block>
+
 				</div>
 			</div>
 		</div>
@@ -62,5 +62,6 @@
 				</ul>
 			</nav>
 		</div>
+
 	</section>
 </body>
