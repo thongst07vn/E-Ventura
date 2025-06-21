@@ -23,16 +23,22 @@ public class CategoryController  {
 	/*===================== CATEGORY =====================*/
 	@GetMapping("list")
 	public String categoryList(HttpSession session, ModelMap modelMap ) {
+		modelMap.put("currentPage", "category");
+
 		return "vendor/pages/category/list";
 	}
 	
 	@GetMapping("add")
-	public String categoryAdd() {
+	public String categoryAdd(ModelMap modelMap) {
+		modelMap.put("currentPage", "category");
+
 		return "vendor/pages/category/add";
 	}
 	
 	@GetMapping("edit")
-	public String categoryEdit() {
+	public String categoryEdit(ModelMap modelMap) {
+		modelMap.put("currentPage", "category");
+
 		return "vendor/pages/category/edit";
 	}
 

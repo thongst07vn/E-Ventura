@@ -10,7 +10,7 @@
 		<ul class="menu-aside">
 			
 			<!-- Dashboard -->
-			<li class="menu-item active">
+			<li class="menu-item" th:classappend="${currentPage == 'dashboard' ? 'active' : ''}">
 				<a class="menu-link" th:href="@{/vendor/dashboard/home}">
 					<i class="icon material-icons md-home"></i>
 						<span class="text">Dashboard</span>
@@ -18,7 +18,7 @@
 			</li>
 			
 			<!-- Product -->
-			<li class="menu-item">
+			<li class="menu-item" th:classappend="${currentPage == 'product' ? 'active' : ''}">
 				<a class="menu-link" th:href="@{/vendor/product/list}">
 					<i class="icon material-icons md-shopping_bag"></i>
 						<span class="text">Product</span>
@@ -26,7 +26,7 @@
 			</li>
 			
 			<!-- Category -->
-			<li class="menu-item">
+			<li class="menu-item" th:classappend="${currentPage == 'category' ? 'active' : ''}">
 				<a class="menu-link" th:href="@{/vendor/category/list}">
 					<i class="icon material-icons md-category"></i>
 						<span class="text">Category</span>
@@ -35,7 +35,7 @@
 	
 			
 			<!-- Orders -->
-			<li class="menu-item has-submenu">
+			<li class="menu-item has-submenu" th:classappend="${currentPage == 'order' ? 'active' : ''}">
 				<a class="menu-link" href="page-orders-1.html">
 					<i class="icon material-icons md-shopping_cart"></i>
 					<span class="text">Orders</span>
@@ -46,7 +46,7 @@
 			</li>
 			
 			<!-- Promotion -->
-			<li class="menu-item has-submenu">
+			<li class="menu-item has-submenu" th:classappend="${currentPage == 'promotion' ? 'active' : ''}">
 				<a class="menu-link" href="page-products-list.html">
 					<i class="icon material-icons md-local_offer"></i>
 					<span class="text">Promotion</span>
@@ -60,7 +60,7 @@
 			</li>		
 			
 			<!-- Review -->
-			<li class="menu-item has-submenu">
+			<li class="menu-item has-submenu" th:classappend="${currentPage == 'review' ? 'active' : ''}">
 				<a class="menu-link" href="#">
 					<i class="icon material-icons md-comment"></i>
 					<span class="text">Reviews</span>
@@ -74,8 +74,7 @@
 			
 			
 		<hr>
-		<ul class="menu-aside">
-			<li class="menu-item has-submenu">
+			<li class="menu-item has-submenu" th:classappend="${currentPage == 'profile' ? 'active' : ''}">
 				<a class="menu-link" href="#">
 					<i class="icon material-icons md-perm_identity"></i>
 					<span class="text">Manage Profile</span>
@@ -83,7 +82,7 @@
 				<div class="submenu">
 					<a th:href="@{/vendor/profile/edit}">Edit Profile</a>
 			</li>
-			<li class="menu-item has-submenu">
+			<li class="menu-item has-submenu" th:classappend="${currentPage == 'store' ? 'active' : ''}">
 				<a class="menu-link" href="#">
 					<i class="icon material-icons md-store"></i>
 					<span class="text">Manage Store</span>
@@ -92,6 +91,5 @@
 					<a th:href="@{/vendor/store/edit}">Edit Store</a>
 					<a th:href="@{/vendor/store/view}">View Store</a>
 			</li>
-		</ul>
 	</nav>
 </aside>
