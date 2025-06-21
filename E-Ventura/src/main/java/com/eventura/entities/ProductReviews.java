@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -24,7 +24,7 @@ public class ProductReviews implements java.io.Serializable {
 	private Integer id;
 	private Products products;
 	private Users users;
-	private Integer rating;
+	private int rating;
 	private String comment;
 	private Date createdAt;
 	private Date updatedAt;
@@ -32,13 +32,7 @@ public class ProductReviews implements java.io.Serializable {
 	public ProductReviews() {
 	}
 
-	public ProductReviews(Date createdAt, Date updatedAt) {
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
-
-	public ProductReviews(Products products, Users users, Integer rating, String comment, Date createdAt,
-			Date updatedAt) {
+	public ProductReviews(Products products, Users users, int rating, String comment, Date createdAt, Date updatedAt) {
 		this.products = products;
 		this.users = users;
 		this.rating = rating;
@@ -60,7 +54,7 @@ public class ProductReviews implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_id", nullable = false)
 	public Products getProducts() {
 		return this.products;
 	}
@@ -70,7 +64,7 @@ public class ProductReviews implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	public Users getUsers() {
 		return this.users;
 	}
@@ -79,16 +73,16 @@ public class ProductReviews implements java.io.Serializable {
 		this.users = users;
 	}
 
-	@Column(name = "rating")
-	public Integer getRating() {
+	@Column(name = "rating", nullable = false)
+	public int getRating() {
 		return this.rating;
 	}
 
-	public void setRating(Integer rating) {
+	public void setRating(int rating) {
 		this.rating = rating;
 	}
 
-	@Column(name = "comment")
+	@Column(name = "comment", nullable = false)
 	public String getComment() {
 		return this.comment;
 	}

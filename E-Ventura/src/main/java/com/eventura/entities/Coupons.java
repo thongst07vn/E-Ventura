@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Coupons implements java.io.Serializable {
 	private Integer id;
 	private Products products;
 	private Vendors vendors;
-	private int discountValue;
+	private double discountValue;
 	private String discountUnit;
 	private Date startTime;
 	private Date endTime;
@@ -40,7 +40,7 @@ public class Coupons implements java.io.Serializable {
 	public Coupons() {
 	}
 
-	public Coupons(Products products, Vendors vendors, int discountValue, String discountUnit, Date startTime,
+	public Coupons(Products products, Vendors vendors, double discountValue, String discountUnit, Date startTime,
 			Date endTime, boolean redeemAllowed, Date createdAt, Date updatedAt) {
 		this.products = products;
 		this.vendors = vendors;
@@ -53,7 +53,7 @@ public class Coupons implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public Coupons(Products products, Vendors vendors, int discountValue, String discountUnit, Date startTime,
+	public Coupons(Products products, Vendors vendors, double discountValue, String discountUnit, Date startTime,
 			Date endTime, boolean redeemAllowed, Date createdAt, Date updatedAt, Date deletedAt,
 			Set<CouponsCampaigns> couponsCampaignses) {
 		this.products = products;
@@ -101,12 +101,12 @@ public class Coupons implements java.io.Serializable {
 		this.vendors = vendors;
 	}
 
-	@Column(name = "discount_value", nullable = false)
-	public int getDiscountValue() {
+	@Column(name = "discount_value", nullable = false, precision = 22, scale = 0)
+	public double getDiscountValue() {
 		return this.discountValue;
 	}
 
-	public void setDiscountValue(int discountValue) {
+	public void setDiscountValue(double discountValue) {
 		this.discountValue = discountValue;
 	}
 

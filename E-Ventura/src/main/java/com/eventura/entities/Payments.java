@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -24,7 +24,7 @@ public class Payments implements java.io.Serializable {
 	private Integer id;
 	private Orders orders;
 	private PaymentMethods paymentMethods;
-	private Long amount;
+	private double amount;
 	private Date paymentDate;
 	private Date createdAt;
 	private Date updatedAt;
@@ -32,13 +32,7 @@ public class Payments implements java.io.Serializable {
 	public Payments() {
 	}
 
-	public Payments(Date paymentDate, Date createdAt, Date updatedAt) {
-		this.paymentDate = paymentDate;
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
-
-	public Payments(Orders orders, PaymentMethods paymentMethods, Long amount, Date paymentDate, Date createdAt,
+	public Payments(Orders orders, PaymentMethods paymentMethods, double amount, Date paymentDate, Date createdAt,
 			Date updatedAt) {
 		this.orders = orders;
 		this.paymentMethods = paymentMethods;
@@ -61,7 +55,7 @@ public class Payments implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id")
+	@JoinColumn(name = "order_id", nullable = false)
 	public Orders getOrders() {
 		return this.orders;
 	}
@@ -71,7 +65,7 @@ public class Payments implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "payment_method_id")
+	@JoinColumn(name = "payment_method_id", nullable = false)
 	public PaymentMethods getPaymentMethods() {
 		return this.paymentMethods;
 	}
@@ -80,12 +74,12 @@ public class Payments implements java.io.Serializable {
 		this.paymentMethods = paymentMethods;
 	}
 
-	@Column(name = "amount", precision = 10, scale = 0)
-	public Long getAmount() {
+	@Column(name = "amount", nullable = false, precision = 22, scale = 0)
+	public double getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(Long amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -29,7 +29,8 @@ public class Products implements java.io.Serializable {
 	private Vendors vendors;
 	private String name;
 	private String description;
-	private Double price;
+	private double price;
+	private int quantity;
 	private Date createdAt;
 	private Date updatedAt;
 	private Date deletedAt;
@@ -43,13 +44,20 @@ public class Products implements java.io.Serializable {
 	public Products() {
 	}
 
-	public Products(Date createdAt, Date updatedAt) {
+	public Products(ProductCategories productCategories, Vendors vendors, String name, String description, double price,
+			int quantity, Date createdAt, Date updatedAt) {
+		this.productCategories = productCategories;
+		this.vendors = vendors;
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public Products(ProductCategories productCategories, Vendors vendors, String name, String description, Double price,
-			Date createdAt, Date updatedAt, Date deletedAt, Set<ProductVariants> productVariantses,
+	public Products(ProductCategories productCategories, Vendors vendors, String name, String description, double price,
+			int quantity, Date createdAt, Date updatedAt, Date deletedAt, Set<ProductVariants> productVariantses,
 			Set<OrderReturns> orderReturnses, Set<ProductReviews> productReviewses, Set<OrderItems> orderItemses,
 			Set<Medias> mediases, Set<Coupons> couponses) {
 		this.productCategories = productCategories;
@@ -57,6 +65,7 @@ public class Products implements java.io.Serializable {
 		this.name = name;
 		this.description = description;
 		this.price = price;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
@@ -81,7 +90,7 @@ public class Products implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name = "category_id", nullable = false)
 	public ProductCategories getProductCategories() {
 		return this.productCategories;
 	}
@@ -91,7 +100,7 @@ public class Products implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "vendor_id")
+	@JoinColumn(name = "vendor_id", nullable = false)
 	public Vendors getVendors() {
 		return this.vendors;
 	}
@@ -100,7 +109,7 @@ public class Products implements java.io.Serializable {
 		this.vendors = vendors;
 	}
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}
@@ -109,7 +118,7 @@ public class Products implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "description", length = 65535)
+	@Column(name = "description", nullable = false, length = 65535)
 	public String getDescription() {
 		return this.description;
 	}
@@ -118,13 +127,22 @@ public class Products implements java.io.Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "price", precision = 22, scale = 0)
-	public Double getPrice() {
+	@Column(name = "price", nullable = false, precision = 22, scale = 0)
+	public double getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

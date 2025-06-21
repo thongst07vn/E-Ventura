@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -51,9 +51,17 @@ public class Users implements java.io.Serializable {
 	public Users() {
 	}
 
-	public Users(String username, String email, Date createdAt) {
+	public Users(Roles roles, String avatar, String firstName, String lastName, String username, String email,
+			String password, Date birthOfDate, String phoneNumber, Date createdAt) {
+		this.roles = roles;
+		this.avatar = avatar;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.username = username;
 		this.email = email;
+		this.password = password;
+		this.birthOfDate = birthOfDate;
+		this.phoneNumber = phoneNumber;
 		this.createdAt = createdAt;
 	}
 
@@ -96,7 +104,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "role_id")
+	@JoinColumn(name = "role_id", nullable = false)
 	public Roles getRoles() {
 		return this.roles;
 	}
@@ -105,7 +113,7 @@ public class Users implements java.io.Serializable {
 		this.roles = roles;
 	}
 
-	@Column(name = "avatar")
+	@Column(name = "avatar", nullable = false)
 	public String getAvatar() {
 		return this.avatar;
 	}
@@ -114,7 +122,7 @@ public class Users implements java.io.Serializable {
 		this.avatar = avatar;
 	}
 
-	@Column(name = "first_name")
+	@Column(name = "first_name", nullable = false)
 	public String getFirstName() {
 		return this.firstName;
 	}
@@ -123,7 +131,7 @@ public class Users implements java.io.Serializable {
 		this.firstName = firstName;
 	}
 
-	@Column(name = "last_name")
+	@Column(name = "last_name", nullable = false)
 	public String getLastName() {
 		return this.lastName;
 	}
@@ -159,7 +167,7 @@ public class Users implements java.io.Serializable {
 		this.rememberToken = rememberToken;
 	}
 
-	@Column(name = "password")
+	@Column(name = "password", nullable = false)
 	public String getPassword() {
 		return this.password;
 	}
@@ -169,7 +177,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "birth_of_date", length = 10)
+	@Column(name = "birth_of_date", nullable = false, length = 10)
 	public Date getBirthOfDate() {
 		return this.birthOfDate;
 	}
@@ -178,7 +186,7 @@ public class Users implements java.io.Serializable {
 		this.birthOfDate = birthOfDate;
 	}
 
-	@Column(name = "phone_number")
+	@Column(name = "phone_number", nullable = false)
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}

@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ public class OrderReturns implements java.io.Serializable {
 	private ProductVariants productVariants;
 	private Products products;
 	private Integer quantity;
-	private Double price;
+	private double price;
 	private String orderReturnStatus;
 	private Date createdAt;
 	private Date updatedAt;
@@ -38,13 +38,19 @@ public class OrderReturns implements java.io.Serializable {
 	public OrderReturns() {
 	}
 
-	public OrderReturns(Date createdAt, Date updatedAt) {
+	public OrderReturns(OrderItems orderItems, ProductVariants productVariants, Products products, double price,
+			String orderReturnStatus, Date createdAt, Date updatedAt) {
+		this.orderItems = orderItems;
+		this.productVariants = productVariants;
+		this.products = products;
+		this.price = price;
+		this.orderReturnStatus = orderReturnStatus;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
 	public OrderReturns(OrderItems orderItems, ProductVariants productVariants, Products products, Integer quantity,
-			Double price, String orderReturnStatus, Date createdAt, Date updatedAt, Set<OrderRefunds> orderRefundses) {
+			double price, String orderReturnStatus, Date createdAt, Date updatedAt, Set<OrderRefunds> orderRefundses) {
 		this.orderItems = orderItems;
 		this.productVariants = productVariants;
 		this.products = products;
@@ -69,7 +75,7 @@ public class OrderReturns implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_items_id")
+	@JoinColumn(name = "order_items_id", nullable = false)
 	public OrderItems getOrderItems() {
 		return this.orderItems;
 	}
@@ -79,7 +85,7 @@ public class OrderReturns implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_variant_id")
+	@JoinColumn(name = "product_variant_id", nullable = false)
 	public ProductVariants getProductVariants() {
 		return this.productVariants;
 	}
@@ -89,7 +95,7 @@ public class OrderReturns implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_id", nullable = false)
 	public Products getProducts() {
 		return this.products;
 	}
@@ -107,16 +113,16 @@ public class OrderReturns implements java.io.Serializable {
 		this.quantity = quantity;
 	}
 
-	@Column(name = "price", precision = 22, scale = 0)
-	public Double getPrice() {
+	@Column(name = "price", nullable = false, precision = 22, scale = 0)
+	public double getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 
-	@Column(name = "order_return_status")
+	@Column(name = "order_return_status", nullable = false)
 	public String getOrderReturnStatus() {
 		return this.orderReturnStatus;
 	}

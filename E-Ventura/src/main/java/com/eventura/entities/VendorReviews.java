@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -24,25 +24,19 @@ public class VendorReviews implements java.io.Serializable {
 	private Integer id;
 	private Users users;
 	private Vendors vendors;
-	private Integer rating;
-	private Integer followers;
+	private double rating;
+	private boolean follow;
 	private Date createdAt;
 	private Date updatedAt;
 
 	public VendorReviews() {
 	}
 
-	public VendorReviews(Date createdAt, Date updatedAt) {
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
-
-	public VendorReviews(Users users, Vendors vendors, Integer rating, Integer followers, Date createdAt,
-			Date updatedAt) {
+	public VendorReviews(Users users, Vendors vendors, double rating, boolean follow, Date createdAt, Date updatedAt) {
 		this.users = users;
 		this.vendors = vendors;
 		this.rating = rating;
-		this.followers = followers;
+		this.follow = follow;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -60,7 +54,7 @@ public class VendorReviews implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	public Users getUsers() {
 		return this.users;
 	}
@@ -70,7 +64,7 @@ public class VendorReviews implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "vendor_id")
+	@JoinColumn(name = "vendor_id", nullable = false)
 	public Vendors getVendors() {
 		return this.vendors;
 	}
@@ -79,22 +73,22 @@ public class VendorReviews implements java.io.Serializable {
 		this.vendors = vendors;
 	}
 
-	@Column(name = "rating")
-	public Integer getRating() {
+	@Column(name = "rating", nullable = false, precision = 22, scale = 0)
+	public double getRating() {
 		return this.rating;
 	}
 
-	public void setRating(Integer rating) {
+	public void setRating(double rating) {
 		this.rating = rating;
 	}
 
-	@Column(name = "followers")
-	public Integer getFollowers() {
-		return this.followers;
+	@Column(name = "follow", nullable = false)
+	public boolean isFollow() {
+		return this.follow;
 	}
 
-	public void setFollowers(Integer followers) {
-		this.followers = followers;
+	public void setFollow(boolean follow) {
+		this.follow = follow;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

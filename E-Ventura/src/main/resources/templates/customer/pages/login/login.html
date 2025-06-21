@@ -70,7 +70,7 @@
 					<div class="col-lg-2"></div>
 					<div class="col-lg-4">
 						<h3>Member Login</h3>
-
+						<h5 th:if="${msg}" th:text="${msg}" class="text-danger"></h5>
 						<p class="font-md color-gray-500">Welcome back!</p>
 						<form method="POST" th:action="@{/customer/process-login}">
 							<div class="form-register mt-30 mb-30">

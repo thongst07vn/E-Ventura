@@ -171,7 +171,8 @@ public class SecurityConfiguration {
 					"/customer/process-login", // Allow unauthenticated access to the customer login processing URL
 					"/oauth2/**"
 				).permitAll()
-				.requestMatchers("/customer/**").hasAnyRole("CUSTOMER") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
+//				.requestMatchers("/customer/**").hasAnyRole("CUSTOMER","OAUTH2_USER") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
+				.requestMatchers("/customer/**").hasAnyAuthority("ROLE_CUSTOMER","OAUTH2_USER") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.anyRequest().authenticated(); // Any other request matched by this chain must be authenticated
 			})
 			.formLogin(f -> {
@@ -183,9 +184,9 @@ public class SecurityConfiguration {
 					@Override
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 							Authentication authentication) throws IOException, ServletException {
-						System.out.println("Admin Login Success for user: " + authentication.getName());
+						System.out.println("Customer Login Success for user: " + authentication.getName());
 						Map<String,String> redirectUrls = new HashMap<>();
-						redirectUrls.put("ROLE_CUSTOMER","/customer/home"); 
+						redirectUrls.put("CUSTOMER","/customer/home"); 
 						String url ="/customer/login?error"; 
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
 							if(redirectUrls.containsKey(authority.getAuthority())) {
@@ -209,6 +210,21 @@ public class SecurityConfiguration {
 				f.loginPage("/login")				
 					.userInfoEndpoint().userService(accountOAuth2UserServices).and().successHandler(auth2LoginSuccessHandler);
 			})
+			.addFilterBefore(new OncePerRequestFilter() {
+			    @Override
+			    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			            throws ServletException, IOException {
+			        String uri = request.getRequestURI();
+			        if (uri.equals("/customer/login")) {
+			            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			            if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+			                response.sendRedirect("/customer/home");
+			                return;
+			            }
+			        }
+			        filterChain.doFilter(request, response);
+			    }
+			}, UsernamePasswordAuthenticationFilter.class)
 			.logout(f -> {
 				f.logoutUrl("/customer/logout") // Customer-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {

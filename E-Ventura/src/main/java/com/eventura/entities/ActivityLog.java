@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -31,11 +31,6 @@ public class ActivityLog implements java.io.Serializable {
 	public ActivityLog() {
 	}
 
-	public ActivityLog(Date createdAt, Date updatedAt) {
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
-
 	public ActivityLog(Users users, String deviceLog, String ipLog, Date createdAt, Date updatedAt) {
 		this.users = users;
 		this.deviceLog = deviceLog;
@@ -57,7 +52,7 @@ public class ActivityLog implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	public Users getUsers() {
 		return this.users;
 	}
@@ -66,7 +61,7 @@ public class ActivityLog implements java.io.Serializable {
 		this.users = users;
 	}
 
-	@Column(name = "device_log")
+	@Column(name = "device_log", nullable = false)
 	public String getDeviceLog() {
 		return this.deviceLog;
 	}
@@ -75,7 +70,7 @@ public class ActivityLog implements java.io.Serializable {
 		this.deviceLog = deviceLog;
 	}
 
-	@Column(name = "ip_log")
+	@Column(name = "ip_log", nullable = false)
 	public String getIpLog() {
 		return this.ipLog;
 	}
