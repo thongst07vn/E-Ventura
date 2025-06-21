@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.eventura.configurations.AccountOAuth2UserServices;
+import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.Users;
+import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
@@ -59,8 +61,16 @@ public class AdminController {
 
 	// ======= CATEGORY ========
 	@GetMapping("category/list")
-	public String categoryList(Model model, ModelMap map) {
-		map.put("categories", categoryService.findAll());
+	public String categoryList(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "20") int pageSize) {
+//		map.put("categories", categoryService.findAll());
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<ProductCategories> catePage = categoryService.findAlls(pageable);
+		map.put("categories", catePage);
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", catePage.getTotalPages());
+		model.addAttribute("lastPageIndex", catePage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
 		model.addAttribute("currentPage", "category");
 		return "admin/page/category/list";
 	}
@@ -84,7 +94,6 @@ public class AdminController {
 		Pageable pageable = PageRequest.of(page, pageSize);
 		Page<Products> productPage = productService.findAlls(pageable);
 		map.put("products", productPage.getContent());
-		System.out.println(page);
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", productPage.getTotalPages());
 		model.addAttribute("lastPageIndex", productPage.getTotalPages() - 1);
@@ -208,8 +217,16 @@ public class AdminController {
 
 	// ======= USER_VENDOR ========
 	@GetMapping("vendor/list")
-	public String vendorList(Model model, ModelMap modelMap) {
-		modelMap.put("vendors", vendorService.findAll());
+	public String vendorList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "12") int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<Vendors> userPage = vendorService.findAlls(pageable);
+		modelMap.put("vendors", userPage);
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", userPage.getTotalPages());
+		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+//		modelMap.put("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/list";
 	}
@@ -219,7 +236,7 @@ public class AdminController {
 		modelMap.put("vendor", vendorService.findById(id));
 		modelMap.put("income", vendorService.sumByVendorId(id));
 		modelMap.put("totalSell", vendorService.countByVendorId(id));
-		modelMap.put("vendorAddress", userService.findAddressUser(id));
+		modelMap.put("vendorAddresses", userService.findAddressUser(id));
 		modelMap.put("products", productService.findByVendorId(id));
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/detail";

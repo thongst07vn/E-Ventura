@@ -51,14 +51,6 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>0901</td>
-								<td><b>Marvin McKinney</b></td>
-								<td>$9.00</td>
-								<td><span class="badge rounded-pill alert-warning">Pending</span></td>
-								<td>03.12.2022</td>
-								<td class="text-center"><a class="btn btn-md rounded font-sm" href="#">Detail</a></td>
-							</tr>
-							<tr>
 								<td>1233</td>
 								<td><b>Esther Howard</b></td>
 								<td>$12.00</td>
@@ -70,20 +62,50 @@
 								</td>
 							</tr>
 							<tr>
-								<td>2329</td>
-								<td><b>Darlene Robertson</b></td>
-								<td>$948.55</td>
-								<td><span class="badge rounded-pill alert-success">Received</span></td>
+								<td>1233</td>
+								<td><b>Esther Howard</b></td>
+								<td>$12.00</td>
+								<td><span class="badge rounded-pill alert-info">Ordered</span></td>
 								<td>03.07.2022</td>
-								<td class="text-center"><a class="btn btn-md rounded font-sm" href="#">Detail</a>
-									<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm" href="#"
-											data-bs-toggle="dropdown"><i class="material-icons md-more_horiz"></i></a>
-										<div class="dropdown-menu"><a class="dropdown-item" href="#">View detail</a><a
-												class="dropdown-item" href="#">Edit info</a><a
-												class="dropdown-item text-danger" href="#">Delete</a></div>
-									</div>
+								<td  class="text-center">
+									<a class="btn rounded btn-brand mr-5" th:href="@{/admin/order/detail}">Detail</a>
+									<a class="btn btn-light rounded" th:href="@{/admin/order/detail}">Delete</a>
 								</td>
 							</tr>
+							<tr>
+								<td>1233</td>
+								<td><b>Esther Howard</b></td>
+								<td>$12.00</td>
+								<td><span class="badge rounded-pill alert-primary">Confirm</span></td>
+								<td>03.07.2022</td>
+								<td  class="text-center">
+									<a class="btn rounded btn-brand mr-5" th:href="@{/admin/order/detail}">Detail</a>
+									<a class="btn btn-light rounded" th:href="@{/admin/order/detail}">Delete</a>
+								</td>
+							</tr>
+							<tr>
+								<td>1233</td>
+								<td><b>Esther Howard</b></td>
+								<td>$12.00</td>
+								<td><span class="badge rounded-pill alert-warning">Shipping</span></td>
+								<td>03.07.2022</td>
+								<td  class="text-center">
+									<a class="btn rounded btn-brand mr-5" th:href="@{/admin/order/detail}">Detail</a>
+									<a class="btn btn-light rounded" th:href="@{/admin/order/detail}">Delete</a>
+								</td>
+							</tr>
+							<tr>
+								<td>1233</td>
+								<td><b>Esther Howard</b></td>
+								<td>$12.00</td>
+								<td><span class="badge rounded-pill alert-success">Finish</span></td>
+								<td>03.07.2022</td>
+								<td  class="text-center">
+									<a class="btn rounded btn-brand mr-5" th:href="@{/admin/order/detail}">Detail</a>
+									<a class="btn btn-light rounded" th:href="@{/admin/order/detail}">Delete</a>
+								</td>
+							</tr>
+							
 						</tbody>
 					</table>
 				</div>

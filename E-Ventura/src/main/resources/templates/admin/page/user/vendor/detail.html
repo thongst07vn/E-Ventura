@@ -20,14 +20,14 @@
 							class="img-thumbnail shadow w-100 bg-white position-relative text-center"
 							style="height: 190px; width: 200px; margin-top: -120px">
 							<th:block th:if="${vendor.users.avatar.contains('https:')}">
-									<img class="center-xy img-fluid" th:src="${vendor.users.avatar}"
-										alt="Logo Brand">
-								</th:block>
-								<th:block th:if="${!vendor.users.avatar.contains('https:')}">
-									<img class="center-xy img-fluid"
-										th:src="@{'/assets/imgs/avatars/' + ${vendor.users.avatar}}"
-										alt="Logo Brand">
-								</th:block>
+								<img class="center-xy img-fluid" th:src="${vendor.users.avatar}"
+									alt="Logo Brand">
+							</th:block>
+							<th:block th:if="${!vendor.users.avatar.contains('https:')}">
+								<img class="center-xy img-fluid"
+									th:src="@{'/assets/imgs/avatars/' + ${vendor.users.avatar}}"
+									alt="Logo Brand">
+							</th:block>
 						</div>
 					</div>
 					<!-- col.//-->
@@ -36,20 +36,119 @@
 							<th:block th:text="${vendor.name}"></th:block>
 						</h3>
 						<p>
-							<th:block 
+              
+							<th:block th:each="vendorAddress : ${vendorAddresses}"
 								th:text="${vendorAddress.address}+' '+${vendorAddress.wards.administrativeUnits.shortName}+' '+${vendorAddress.wards.name}+' '+${vendorAddress.districts.administrativeUnits.shortName}+' '+${vendorAddress.districts.name}+' '+${vendorAddress.provinces.administrativeUnits.shortName}+' '+${vendorAddress.provinces.name}"></th:block>
 						</p>
 					</div>
 					<!-- col.//-->
-					<div class="col-xl-4 text-md-end">
-						<select class="form-select w-auto d-inline-block">
-							<option>Actions</option>
-							<option>Disable shop</option>
-							<option>Analyze</option>
-							<option>Something</option>
-						</select><a class="btn btn-primary" href="#">View live<i
-							class="material-icons md-launch"></i></a>
+					<div class="col-xl-6 text-md-end">
+						<form class="w-auto d-inline-block">
+							<label class="switch"> <input type="checkbox" checked
+								id="mySwitch"> <span class="slider round"></span>
+							</label>
+						</form>
+
+						<div class="modal fade" id="confirmTurnOnModal" tabindex="-1"
+							aria-labelledby="confirmTurnOnModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="confirmTurnOnModalLabel">Xác
+											nhận bật</h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">Bạn có chắc chắn muốn bật tính
+										năng này không?</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Hủy</button>
+										<button type="button" class="btn btn-primary"
+											id="confirmTurnOnBtn">Bật</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="modal fade" id="confirmTurnOffModal" tabindex="-1"
+							aria-labelledby="confirmTurnOffModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="confirmTurnOffModalLabel">Xác
+											nhận tắt</h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">Bạn có chắc chắn muốn tắt tính
+										năng này không?</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Hủy</button>
+										<button type="button" class="btn btn-danger"
+											id="confirmTurnOffBtn">Tắt</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<script>
+							document.addEventListener('DOMContentLoaded', function() {
+							    const mySwitch = document.getElementById('mySwitch');
+							    const confirmTurnOnModal = new bootstrap.Modal(document.getElementById('confirmTurnOnModal'));
+							    const confirmTurnOffModal = new bootstrap.Modal(document.getElementById('confirmTurnOffModal'));
+							    const confirmTurnOnBtn = document.getElementById('confirmTurnOnBtn');
+							    const confirmTurnOffBtn = document.getElementById('confirmTurnOffBtn');
+							
+							    // Lưu trạng thái hiện tại của switch
+							    let currentSwitchState = mySwitch.checked;
+							
+							    mySwitch.addEventListener('change', function() {
+							        // When the switch is clicked, we first revert its visual state
+							        // to what it was *before* the click.
+							        // The modal will then ask for confirmation.
+							        if (this.checked) { // If the user tried to turn it ON
+							            this.checked = false; // Visually revert to OFF
+							            confirmTurnOnModal.show();
+							        } else { // If the user tried to turn it OFF
+							            this.checked = true; // Visually revert to ON
+							            confirmTurnOffModal.show();
+							        }
+							    });
+							
+							    // Xử lý khi người dùng nhấn "Bật" trong modal bật
+							    confirmTurnOnBtn.addEventListener('click', function() {
+							        mySwitch.checked = true; // Bật switch
+							        currentSwitchState = true; // Cập nhật trạng thái
+							        confirmTurnOnModal.hide(); // Ẩn modal
+							        console.log('Tính năng đã được bật!');
+							        // Thực hiện các hành động khác sau khi bật thành công (ví dụ: gọi API, cập nhật UI khác)
+							    });
+							
+							    // Xử lý khi người dùng nhấn "Tắt" trong modal tắt
+							    confirmTurnOffBtn.addEventListener('click', function() {
+							        mySwitch.checked = false; // Tắt switch
+							        currentSwitchState = false; // Cập nhật trạng thái
+							        confirmTurnOffModal.hide(); // Ẩn modal
+							        console.log('Tính năng đã được tắt!');
+							        // Thực hiện các hành động khác sau khi tắt thành công (ví dụ: gọi API, cập nhật UI khác)
+							    });
+							
+							    // Xử lý khi người dùng đóng modal bằng nút "Hủy" hoặc nút đóng (x)
+							    // Đảm bảo switch trở về trạng thái trước khi người dùng tương tác
+							    // This is implicitly handled by the initial `this.checked = false/true` in the change listener.
+							    // However, it's good practice to ensure consistency if there were other ways the modal could close.
+							    document.getElementById('confirmTurnOnModal').addEventListener('hidden.bs.modal', function() {
+							        mySwitch.checked = currentSwitchState; // Ensure switch state matches actual state if modal is dismissed without confirmation
+							    });
+							
+							    document.getElementById('confirmTurnOffModal').addEventListener('hidden.bs.modal', function() {
+							        mySwitch.checked = currentSwitchState; // Ensure switch state matches actual state if modal is dismissed without confirmation
+							    });
+							});
+						</script>
 					</div>
+					
 					<!-- col.//-->
 					<!-- card-body.//-->
 					<hr class="my-4">
@@ -59,7 +158,10 @@
 								<p class="mb-0 text-muted">Total sales:</p>
 								<h5 class="text-success" th:text="${totalSell}"></h5>
 								<p class="mb-0 text-muted">Income:</p>
-								<h5 class="text-success mb-0">$ <th:block th:text="${income}"></th:block></h5>
+								<h5 class="text-success mb-0">
+									$
+									<th:block th:text="${income}"></th:block>
+								</h5>
 							</article>
 						</div>
 						<!-- col.//-->
@@ -67,13 +169,10 @@
 							<h6>Contacts</h6>
 							<p>
 								Manager:
-								<th:block
-									th:text="${vendor.contactName}"></th:block>
-								<br>
-								Email:
+								<th:block th:text="${vendor.contactName}"></th:block>
+								<br> Email:
 								<th:block th:text="${vendor.contactEmail}"></th:block>
-								<br>
-								Phone:
+								<br> Phone:
 								<th:block th:text="${vendor.users.phoneNumber}"></th:block>
 							</p>
 						</div>
@@ -81,16 +180,15 @@
 						<div class="col-sm-6 col-lg-4 col-xl-3">
 							<h6>Address</h6>
 							<p>
-								<th:block
+								<th:block th:each="vendorAddress : ${vendorAddresses}"
 									th:text="${vendorAddress.address}+' '+${vendorAddress.wards.administrativeUnits.shortName}+' '+${vendorAddress.wards.name}+' '+${vendorAddress.districts.administrativeUnits.shortName}+' '+${vendorAddress.districts.name}+' '+${vendorAddress.provinces.administrativeUnits.shortName}+' '+${vendorAddress.provinces.name}"></th:block>
 							</p>
 						</div>
 						<!-- col.//-->
 						<div class="col-sm-6 col-xl-4 text-xl-end">
 							<div class="mapbox position-relative d-inline-block">
-								<img class="rounded2"
-									th:src="@{/assets/imgs/misc/map.jpg}" alt="map"
-									height="120"> <span class="map-pin"
+								<img class="rounded2" th:src="@{/assets/imgs/misc/map.jpg}"
+									alt="map" height="120"> <span class="map-pin"
 									style="top: 50px; left: 100px"></span>
 								<button
 									class="btn btn-sm btn-brand position-absolute bottom-0 end-0 mb-15 mr-15 font-xs">
@@ -117,8 +215,7 @@
 									th:if="${!product.mediases[0].name.contains('https:')}">
 									<img class="img-sm img-thumbnail"
 										th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}"
-										alt="Item">
-							</a>
+										alt="Item"></a>
 							<div class="info-wrap">
 								<a class="title" href="#"><th:block
 										th:text="${product.name}"></th:block></a>

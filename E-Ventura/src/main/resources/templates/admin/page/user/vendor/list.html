@@ -20,14 +20,43 @@
 					<div class="col-lg-4 col-md-6 me-auto">
 						<input class="form-control" type="text" placeholder="Search...">
 					</div>
-					<div class="col-lg-2 col-6 col-md-3">
-						<select class="form-select">
-							<option>Show 20</option>
-							<option>Show 30</option>
-							<option>Show 40</option>
-							<option>Show all</option>
+					<div class="col-lg-2 col-md-3 col-6">
+						<select id="pageSizeSelect" class="form-select"
+							onchange="changePageSize()">
+							<option th:value="20" th:text="'Show 20'"
+								th:selected="${pageSize == 20}"></option>
+							<option th:value="30" th:text="'Show 30'"
+								th:selected="${pageSize == 30}"></option>
+							<option th:value="50" th:text="'Show 50'"
+								th:selected="${pageSize == 50}"></option>
 						</select>
 					</div>
+
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+					        const select = document.getElementById('pageSizeSelect');
+					        const urlParams = new URLSearchParams(window.location.search);
+					        const pageSize = urlParams.get('pageSize') || '20'; // default là 5
+					        select.value = pageSize;
+					    });
+						function changePageSize() {
+						    // Lấy giá trị của option đã chọn
+						    const select = document.getElementById('pageSizeSelect');
+						    const pageSize = select.value;
+						    
+						    // Lấy giá trị của trang hiện tại, nếu có
+						    const urlParams = new URLSearchParams(window.location.search);
+						    const currentPage = urlParams.get('page') || 0; // hoặc giá trị khác tùy ý
+						    
+						    // Tạo URL mới với tham số page và pageSize
+						    const newUrl = new URL(window.location.origin + window.location.pathname);
+						    newUrl.searchParams.set('page', currentPage);
+						    newUrl.searchParams.set('pageSize', pageSize);
+						
+						    // Tải lại trang với URL mới
+						    window.location.href = newUrl.toString();
+						}
+					</script>
 					<div class="col-lg-2 col-6 col-md-3">
 						<select class="form-select">
 							<option>Status: all</option>
@@ -42,38 +71,47 @@
 				<div
 					class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
 					<th:block th:if="${vendors!=null}">
-					</th:block>
-					<div class="col" th:each="vendor : ${vendors}">
-						<div class="card card-user">
-							<div class="card-header">
-								<th:block th:if="${vendor.users.avatar.contains('https:')}">
-									<img class="img-md img-avatar" th:src="${vendor.users.avatar}"
-										alt="User pic">
-								</th:block>
-								<th:block th:if="${!vendor.users.avatar.contains('https:')}">
-									<img class="img-md img-avatar"
-										th:src="@{'/assets/imgs/avatars/' + ${vendor.users.avatar}}"
-										alt="User pic">
-								</th:block>
-							</div>
-							<div class="card-body">
-								<h5 class="card-title mt-50">
-									<th:block th:text="${vendor.name}"></th:block>
-								</h5>
-								<div class="card-text text-muted">
-									<p class="m-0">
-										Vendor Tyoe:
-										<th:block th:text="${vendor.vendorSettings.vendorType}"></th:block>
-									</p>
-									<p>
-										<th:block th:text="${vendor.users.email}"></th:block>
-									</p>
-									<a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										th:href="@{'/admin/vendor/detail/'+${vendor.users.id}}">View details</a>
+						<div class="col" th:each="vendor : ${vendors}">
+							<div class="card card-user">
+								<div class="card-header">
+									<th:block th:if="${vendor.users.avatar.contains('https:')}">
+										<img class="img-md img-avatar" th:src="${vendor.users.avatar}"
+											alt="User pic">
+									</th:block>
+									<th:block th:if="${!vendor.users.avatar.contains('https:')}">
+										<img class="img-md img-avatar"
+											th:src="@{'/assets/imgs/avatars/' + ${vendor.users.avatar}}"
+											alt="User pic">
+									</th:block>
+								</div>
+								<div class="card-body">
+									<h5 class="card-title mt-50">
+										<th:block th:text="${vendor.name}"></th:block>
+									</h5>
+									<div class="card-text text-muted">
+										<p class="m-0">
+											Vendor Tyoe:
+											<th:block th:text="${vendor.vendorSettings.vendorType}"></th:block>
+										</p>
+											Vendor Status: 
+											<th:block th:if="${vendor.users.deletedAt == null}">
+												<span class="badge rounded-pill alert-success">Enable</span>
+											</th:block>
+											<th:block th:if="${vendor.users.deletedAt != null}">
+												<span class="badge rounded-pill alert-danger">Disable</span>
+											</th:block>
+										<p>
+											<th:block th:text="${vendor.users.email}"></th:block>
+										</p>
+										<a class="btn btn-sm btn-brand rounded font-sm mt-15"
+											th:href="@{'/admin/vendor/detail/'+${vendor.users.id}}">View
+											details</a>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</th:block>
+
 
 					<!-- row.//-->
 					<!-- card-body end//-->
@@ -84,13 +122,33 @@
 		<div class="pagination-area mt-15 mb-50">
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-							class="material-icons md-chevron_right"></i></a></li>
+					<!-- Nút trước -->
+					<li class="page-item"
+						th:classappend="${currentPages == 0} ? 'disabled'"><a
+						class="page-link"
+						th:href="@{'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+						aria-label="Previous"> <i
+							class="material-icons md-chevron_left"></i>
+					</a></li>
+
+					<!-- Các trang -->
+					<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+						<li class="page-item"
+							th:classappend="${i} == ${currentPages} ? 'active'"><a
+							class="page-link"
+							th:href="@{'?page=' + ${i}+'&pageSize='+${pageSize}}"
+							th:text="${i + 1}"></a></li>
+					</th:block>
+
+					<!-- Nút tiếp -->
+					<li class="page-item"
+						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+						<a class="page-link"
+						th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+					</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
