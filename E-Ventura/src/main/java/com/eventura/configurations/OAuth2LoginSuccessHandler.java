@@ -35,6 +35,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			Users user = new Users();
 			user.setEmail(email);
 			user.setUsername(name);
+			user.setBirthOfDate(new Date());
 			if(accountOAuth2User.getAvatar() != null) {
 				user.setAvatar(accountOAuth2User.getAvatar());
 			}

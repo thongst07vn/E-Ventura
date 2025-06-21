@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{vendor/layouts/layout :: layout('Add Product', ~{this :: .content-main})}">
+	th:replace="~{vendor/layouts/layout :: layout('Vendor Profile', ~{this :: .content-main})}">
 
 <head>
 	<title>Edit Profile</title>
@@ -48,21 +48,11 @@
 												<div class="row gx-2">
 													<div class="col-md-6 mb-2">
 														<select class="form-select">
-															<option selected disabled>Country</option>
-															<option>Vietnam</option>
-															<option>USA</option>
-															<option>Japan</option>
+															<option selected disabled>Provinces</option>
+															<option>Provinces 1</option>
+															<option>Provinces 2</option>
+															<option>Provinces 3</option>
 															<!-- More countries -->
-														</select>
-													</div>
-
-													<div class="col-md-6 mb-2">
-														<select class="form-select">
-															<option selected disabled>City</option>
-															<option>Ho Chi Minh</option>
-															<option>Hanoi</option>
-															<option>Da Nang</option>
-															<!-- More cities -->
 														</select>
 													</div>
 
@@ -70,9 +60,9 @@
 														<select class="form-select">
 															<option selected disabled>District</option>
 															<option>District 1</option>
-															<option>District 7</option>
-															<option>Go Vap</option>
-															<!-- More districts -->
+															<option>District 2</option>
+															<option>District 3</option>
+															<!-- More cities -->
 														</select>
 													</div>
 
@@ -99,8 +89,13 @@
 										</div>
 									</div>
 									<aside class="col-lg-4">
-										<figure class="text-lg-center"><img class="img-lg mb-3 img-avatar"
-												th:src="@{/vendor/assets/imgs/people/avatar1.jpg}" alt="User Photo">
+										<figure class="text-lg-center">
+											<th:block th:if="${user.avatar.contains('https:')}">
+												<img th:src="${user.avatar}">							
+											</th:block>
+											<th:block th:if="${!user.avatar.contains('https:')}">
+												<img th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}">							
+											</th:block>
 											<p>Username: <span th:text="${user.username}"></span></p>
 
 											<figcaption><a class="btn btn-light rounded font-md" href="#"><i
@@ -143,5 +138,7 @@
 				</div>
 			</div>
 		</div>
+		
+		
 	</section>
 </body>

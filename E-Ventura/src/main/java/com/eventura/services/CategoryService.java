@@ -10,6 +10,9 @@ import com.eventura.entities.Products;
 
 public interface CategoryService {
 	public List<ProductCategories> findAll();
+
 	public Page<ProductCategories> findAlls(Pageable pageable);
+	
+	public ProductCategories findById(int id);
 
 }
