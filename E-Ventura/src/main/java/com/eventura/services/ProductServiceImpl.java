@@ -3,6 +3,7 @@ package com.eventura.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,6 +51,12 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Products> findByKeyword(String keyword) {
 		return productRepository.findByKeyword(keyword, Sort.by("createdAt").descending());
+	}
+
+	@Override
+	public Page<Products> findAlls(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findAll(pageable);
 	}
 
 }

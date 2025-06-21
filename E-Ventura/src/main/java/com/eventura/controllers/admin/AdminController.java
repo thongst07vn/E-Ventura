@@ -1,6 +1,10 @@
 package com.eventura.controllers.admin;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.eventura.entities.Products;
+import com.eventura.entities.Users;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
@@ -64,9 +70,15 @@ public class AdminController {
 	
 	//======= PRODUCT ========
 	@GetMapping("product/list")
-	public String productList(Model model, ModelMap map) {
-//		map.put("products", productService.findAll());
-		map.put("products", productService.findByCategoryId(1));
+	public String productList(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page) {
+		int pageSize = 10;
+	    Pageable pageable = PageRequest.of(page, pageSize);
+	    Page<Products> productPage = productService.findAlls(pageable);
+	    map.put("products", productPage.getContent());
+	    System.out.println(page);
+	    model.addAttribute("currentPages", page);
+	    model.addAttribute("totalPages", productPage.getTotalPages());
+	    model.addAttribute("lastPageIndex", productPage.getTotalPages() - 1);
 		map.put("categories", categoryService.findAll());
 		map.put("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "product");
@@ -126,10 +138,16 @@ public class AdminController {
 	
 	//======= USER_CUSTOMER ========
 	@GetMapping("customer/list")
-	public String customerList(Model model,ModelMap modelMap) {
-		modelMap.put("users", userService.findAll());
-		model.addAttribute("currentPage", "user");
-		return "admin/page/user/customer/list";
+	public String customerList(Model model,ModelMap modelMap, @RequestParam(defaultValue = "0") int page) {
+		int pageSize = 10;
+	    Pageable pageable = PageRequest.of(page, pageSize);
+	    Page<Users> userPage = userService.findAlls(pageable);
+	    modelMap.put("users", userPage);
+	    model.addAttribute("currentPages", page);
+	    model.addAttribute("totalPages", userPage.getTotalPages());
+	    model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
+	    model.addAttribute("currentPage", "user");
+	    return "admin/page/user/customer/list";
 	}
 	@GetMapping("customer/detail")
 	public String customerDetail(Model model) {
@@ -148,6 +166,8 @@ public class AdminController {
 	@GetMapping("vendor/detail/{id}")
 	public String vendorDetail(Model model,@PathVariable("id") int id, ModelMap modelMap) {
 		modelMap.put("vendor", vendorService.findById(id));
+		modelMap.put("income", vendorService.sumByVendorId(id));
+		modelMap.put("totalSell", vendorService.countByVendorId(id));
 		modelMap.put("vendorAddress", userService.findAddressUser(id));
 		modelMap.put("products", productService.findByVendorId(id));
 		model.addAttribute("currentPage", "user");

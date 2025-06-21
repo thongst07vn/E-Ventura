@@ -51,25 +51,43 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td width="40%"><a class="itemside" href="#"
-									style="flex-direction: column;">
-										<div class="left">
-											<img class="img-sm img-avatar"
-												th:src="@{/admin/assets/imgs/people/avatar1.jpg}"
-												alt="Userpic">
-										</div>
-										<div class="info pl-3">
-											<h6 class="mb-0 title">Eleanor Pena</h6>
-										</div>
-								</a></td>
-								<td>eleanor2022@example.com</td>
-								<td><span class="badge rounded-pill alert-success">Active</span></td>
-								<td>08.07.2022</td>
-								<td class="text-center "><a
-									class="btn btn-sm btn-brand rounded font-sm mt-15 d-flex justify-content-center"
-									th:href="@{/admin/customer/detail}">View details</a></td>
-							</tr>
+							<th:block th:if="${users!=null}">
+								<tr th:each="user : ${users.content}">
+									<th:block
+										th:if="${user.deletedAt == null}">
+										<td width="40%"><a class="itemside" href="#"
+											style="flex-direction: column;">
+												<div class="left">
+													<th:block th:if="${user.avatar.contains('https:')}">
+														<img class="img-md img-avatar" th:src="${user.avatar}"
+															alt="User pic">
+													</th:block>
+													<th:block th:if="${!user.avatar.contains('https:')}">
+														<img class="img-md img-avatar"
+															th:src="@{'/admin/assets/imgs/avatars/' + ${user.avatar}}"
+															alt="User pic">
+													</th:block>
+												</div>
+												<div class="info pl-3">
+													<h6 class="mb-0 title">
+														<th:block th:text="${user.firstName}+' '+${user.lastName}"></th:block>
+													</h6>
+												</div>
+										</a></td>
+										<td><th:block th:text="${user.email}"></th:block></td>
+										<td><th:block th:text="${user.phoneNumber}"></th:block></td>
+										<td><th:block
+												th:text="${#dates.format(user.birthOfDate, 'dd/MM/yyyy')}"></th:block></td>
+										<th:block
+											th:if="${user.deletedAt == null && user.roles.id != 1}">
+											<td class="text-center "><a
+												class="btn btn-sm btn-brand rounded font-sm mt-15 d-flex justify-content-center"
+												th:href="@{/admin/customer/detail}">View details</a></td>
+										</th:block>
+									</th:block>
+								</tr>
+							</th:block>
+
 						</tbody>
 					</table>
 					<!-- table-responsive.//-->
@@ -77,17 +95,36 @@
 				</div>
 			</div>
 		</div>
-		<!-- card end//-->
+		<!-- card end
+		
+		//-->
 		<div class="pagination-area mt-15 mb-50">
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-							class="material-icons md-chevron_right"></i></a></li>
+					<!-- Nút trước -->
+					<li class="page-item"
+						th:classappend="${currentPages == 0} ? 'disabled'"><a
+						class="page-link" th:href="@{'?page=' + ${currentPages-1}}"
+						aria-label="Previous"> <i
+							class="material-icons md-chevron_left"></i>
+					</a></li>
+
+					<!-- Các trang -->
+					<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+						<li class="page-item"
+							th:classappend="${i} == ${currentPages} ? 'active'"><a
+							class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i + 1}"></a>
+						</li>
+					</th:block>
+
+					<!-- Nút tiếp -->
+					<li class="page-item"
+						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+						<a class="page-link" th:href="@{'?page=' + ${currentPages+1}}"
+						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+					</a>
+					</li>
 				</ul>
 			</nav>
 		</div>

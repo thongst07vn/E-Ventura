@@ -55,7 +55,6 @@
 										th:src="@{'/admin/assets/imgs/avatars/' + ${vendor.users.avatar}}"
 										alt="User pic">
 								</th:block>
-
 							</div>
 							<div class="card-body">
 								<h5 class="card-title mt-50">
@@ -63,14 +62,14 @@
 								</h5>
 								<div class="card-text text-muted">
 									<p class="m-0">
-										Seller ID:
-										<th:block th:text="${vendor.id}"></th:block>
+										Vendor Tyoe:
+										<th:block th:text="${vendor.vendorSettings.vendorType}"></th:block>
 									</p>
 									<p>
 										<th:block th:text="${vendor.users.email}"></th:block>
 									</p>
 									<a class="btn btn-sm btn-brand rounded font-sm mt-15"
-										th:href="@{/admin/vendor/detail}">View details</a>
+										th:href="@{'/admin/vendor/detail/'+${vendor.users.id}}">View details</a>
 								</div>
 							</div>
 						</div>

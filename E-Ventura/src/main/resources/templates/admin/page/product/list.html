@@ -78,13 +78,16 @@
 										<div class="left">
 											<th:block
 												th:if="${product.mediases[0].name.contains('https:')}">
-												<img class="img-sm img-thumbnail" th:src="${product.mediases[0].name}" alt="Item">
+												<img class="img-sm img-thumbnail"
+													th:src="${product.mediases[0].name}" alt="Item">
 											</th:block>
 											<th:block
 												th:if="${!product.mediases[0].name.contains('https:')}">
-												<img class="img-sm img-thumbnail" th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}" alt="Item">
+												<img class="img-sm img-thumbnail"
+													th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}"
+													alt="Item">
 											</th:block>
-											
+
 										</div>
 										<div class="info">
 											<h6 class="mb-0">
@@ -119,20 +122,37 @@
 
 			</div>
 		</div>
-		<!-- card end
-		<div class="pagination-area mt-30 mb-50">
+		<!-- card end//-->
+		<div class="pagination-area mt-15 mb-50">
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
+					<!-- Nút trước -->
+					<li class="page-item"
+						th:classappend="${currentPages == 0} ? 'disabled'"><a
+						class="page-link" th:href="@{'?page=' + ${currentPages-1}}"
+						aria-label="Previous"> <i
+							class="material-icons md-chevron_left"></i>
+					</a></li>
+
+					<!-- Các trang -->
+					<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+						<li class="page-item"
+							th:classappend="${i} == ${currentPages} ? 'active'"><a
+							class="page-link" th:href="@{'?page=' + ${i}}" th:text="${i + 1}"></a>
+						</li>
+					</th:block>
+
+					<!-- Nút tiếp -->
+					<li class="page-item"
+						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+						<a class="page-link" th:href="@{'?page=' + ${currentPages+1}}"
+						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+					</a>
+					</li>
 				</ul>
 			</nav>
-		</div>//-->
-
+		</div>
+		
 	</section>
 </body>
