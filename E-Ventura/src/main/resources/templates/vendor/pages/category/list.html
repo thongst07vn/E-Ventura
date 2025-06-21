@@ -1,220 +1,66 @@
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{vendor/layouts/layout :: layout('Product List', ~{this :: .content-main})}">
+	th:replace="~{vendor/layouts/layout :: layout('Category List', ~{this :: .content-main})}">
 
 <head>
-	<title>Product List</title>
+	<title>Category List</title>
 </head>
 
 <body>
 	<section class="content-main">
 		<div class="content-header">
 			<div>
-				<h2 class="content-title card-title">Categories</h2>
-				<p>Category List</p>
+				<h2 class="content-title card-title">Category List</h2>
+				<p>View your Category here</p>
 			</div>
-			<div>
-				<input class="form-control bg-white" type="text" placeholder="Search Categories">
-			</div>
+			<div><a class="btn btn-primary btn-sm rounded" href="#">Create new</a></div>
 		</div>
-		<div>
-			<a th:href="@{/vendor/category/add}" class="btn btn-primary">Create category</a>
-		</div>
-		<br>
-
-		<div class="card">
-			<div class="card-body">
-				<div class="row">
-
-					<div class="col-md-12">
-						<div class="table-responsive">
-							<table class="table table-hover">
-								<thead>
-									<tr>
-										<th class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</th>
-										<th>ID</th>
-										<th>Name</th>
-										<th>Description</th>
-										<th>Slug</th>
-										<th class="text-end">Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</td>
-										<td>21</td>
-										<td><b>Men clothes</b></td>
-										<td>Men clothes</td>
-										<td>/men</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" th:href="@{/vendor/category/edit}">Edit
-														info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</td>
-										<td>2</td>
-										<td><b>Women fashion</b></td>
-										<td>Fashions for Women</td>
-										<td>/women</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" href="#">Edit info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</td>
-										<td>3</td>
-										<td><b>Kids clothes</b></td>
-										<td>Clothes for kids</td>
-										<td>/kids</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" th:href="@{/vendor/category/edit}">Edit
-														info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="text-center"><i
-												class="material-icons md-subdirectory_arrow_right text-muted"></i></td>
-										<td>4</td>
-										<td><b>Hot Gifts</b></td>
-										<td>Hot Gifts</td>
-										<td>/gifts</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" th:href="@{/vendor/category/edit}">Edit
-														info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="text-center"><i
-												class="material-icons md-subdirectory_arrow_right text-muted"></i></td>
-										<td>5</td>
-										<td><b>Electronics</b></td>
-										<td>Electronics</td>
-										<td>/electr</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" th:href="@{/vendor/category/edit}">Edit
-														info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</td>
-										<td>6</td>
-										<td><b>Accessories</b></td>
-										<td>Accessories</td>
-										<td>/accessories</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" href="#">Edit info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</td>
-										<td>7</td>
-										<td><b>Jewellery</b></td>
-										<td>Jewellery</td>
-										<td>/jewel</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" href="#">Edit info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</td>
-										<td>8</td>
-										<td><b>Interiors</b></td>
-										<td>Interiors</td>
-										<td>/interior</td>
-										<td class="text-end">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" href="#">Edit info</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
+		<div class="card mb-4">
+			<header class="card-header">
+				<div class="row gx-3">
+					<div class="col-lg-4 col-md-6 me-auto">
+						<input class="form-control" type="text" placeholder="Search...">
 					</div>
+
+				</div>
+			</header>
+			<!-- card-header end//-->
+			<div class="card-body">
+				<div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
+					<div class="col">
+						<div class="card card-product-grid">
+							<a class="img-wrap" href="#">
+								<img src="assets/imgs/items/1.jpg" alt="Product">
+							</a>
+							<div class="info-wrap">
+								<a class="title text-truncate" href="#">Just another product name</a>
+								<a class="btn btn-sm font-sm rounded btn-brand" href="#">
+									<i class="material-icons md-edit"></i> Edit
+								</a>
+								<a class="btn btn-sm font-sm btn-light rounded" href="#">
+									<i class="material-icons md-delete_forever"></i> Delete
+								</a>
+							</div>
+						</div>
+						<!-- card-product  end//-->
+						<!-- col.//-->
+					</div>
+					
 				</div>
 			</div>
+		</div>
+		<!-- card end//-->
+		<div class="pagination-area mt-30 mb-50">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-start">
+					<li class="page-item active"><a class="page-link" href="#">01</a></li>
+					<li class="page-item"><a class="page-link" href="#">02</a></li>
+					<li class="page-item"><a class="page-link" href="#">03</a></li>
+					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
+					<li class="page-item"><a class="page-link" href="#">16</a></li>
+					<li class="page-item"><a class="page-link" href="#"><i
+								class="material-icons md-chevron_right"></i></a></li>
+				</ul>
+			</nav>
 		</div>
 	</section>
 </body>

@@ -27,6 +27,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.eventura.entities.Users;
 import com.eventura.services.UserService;
 
 import jakarta.servlet.FilterChain;
@@ -254,6 +255,12 @@ public class SecurityConfiguration {
 					@Override
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 							Authentication authentication) throws IOException, ServletException {
+						/* Email */
+						String email = authentication.getName();
+						/* users */
+						Users user = userService.findByEmail(email);
+						request.getSession().setAttribute("vendorId", user.getId());
+						
 						Map<String,String> redirectUrls = new HashMap<>();
 						redirectUrls.put("ROLE_VENDOR","/vendor/dashboard/home");  // Redirect DOCTORs to their home
 						String url ="/vendor/account/login?error"; // Default fallback if no matching role found

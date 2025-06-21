@@ -13,7 +13,8 @@
 				<p>Lorem ipsum dolor sit amet.</p>
 			</div>
 			<div><a class="btn btn-light rounded font-md" href="#">Export</a><a class="btn btn-light rounded font-md"
-					href="#">Import</a><a class="btn btn-primary btn-sm rounded" th:href="@{/vendor/product/add}">Create new</a></div>
+					href="#">Import</a><a class="btn btn-primary btn-sm rounded" th:href="@{/vendor/product/add}">Create
+					new</a></div>
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
@@ -24,315 +25,75 @@
 						</div>
 					</div>
 					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-						<select class="form-select">
-							<option selected="">All category</option>
-							<option>Electronics</option>
-							<option>Clothes</option>
-							<option>Automobile</option>
-						</select>
+						<form>
+							<select class="form-select" name="category">
+								<option th:each="category : ${categories}" th:value="${category.id}"
+									th:text="${category.name}"></option>
+							</select>
+						</form>
 					</div>
-					<div class="col-md-2 col-6">
-						<input class="form-control" type="date" value="02.05.2022">
-					</div>
-					<div class="col-md-2 col-6">
-						<select class="form-select">
-							<option selected="">Status</option>
-							<option>Active</option>
-							<option>Disabled</option>
-							<option>Show all</option>
-						</select>
-					</div>
+
 				</div>
 			</header>
 			<!-- card-header end//-->
 			<div class="card-body">
 				<div class="row align-items-center fw-bold text-muted border-bottom pb-2 mb-3" style="font-size: 15px;">
-					<div class="col col-check flex-grow-0">
-						<input class="form-check-input" type="checkbox" disabled>
-					</div>
-					<div class="col-lg-4 col-sm-4 col-8 col-name">Product</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-price text-center">Price</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-status text-center">Status</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-date text-center">Created Date</div>
-					<div class="col-lg-1 col-sm-2 col-4 col-action text-end pe-2">Actions</div>
+
+					<div class="col-lg-3 col-sm-4 col-8 col-name">Product</div>
+					<div class="col-lg-2 col-sm-2 col-4 col-price text-center">Description</div>
+					<div class="col-lg-2 col-sm-2 col-4 col-status text-center">Price</div>
+					<div class="col-lg-2 col-sm-2 col-4 col-date text-center">Category</div>
+					<div class="col-lg-2 col-sm-2 col-4 col-action text-end pe-2">Actions</div>
 				</div>
 
 
 
+				<th:block th:each="product : ${products}">
+					<article class="itemlist">
+						<div class="row align-items-center">
 
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox">
+							<div class="col-lg-3 col-sm-4 col-8 flex-grow-1 col-name">
+								<a class="itemside" href="#">
+									<div class="left">
+										<th:block th:if="${product.mediases[0].name.contains('https:')}">
+											<img class="img-sm img-thumbnail" th:src="${product.mediases[0].name}"
+												alt="Item">
+										</th:block>
+										<th:block th:if="${!product.mediases[0].name.contains('https:')}">
+											<img class="img-sm img-thumbnail"
+												th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}"
+												alt="Item">
+										</th:block>
+									</div>
+									<div class="info">
+										<h6 class="mb-0" th:text="${product.name}"></h6>
+									</div>
+								</a>
+							</div>
+							<div class="col-lg-2 col-sm-2 col-4 col-price"><span
+									th:text="${product.description}"></span></div>
+							<div class="col-lg-2 col-sm-2 col-4 col-status"><span th:text="${product.price}"></span>
+							</div>
+							<div class="col-lg-2 col-sm-2 col-4 col-date"><span
+									th:text="${product.productCategories.name}"></span></div>
+							<div class="col-lg-2 col-sm-2 col-4 col-action text-end">
+
+								<a class="btn btn-sm font-sm rounded btn-brand mr-5"
+									th:href="@{'/vendor/product/edit/' + ${product.id}}">
+									<i class="material-icons md-edit"></i> Edit
+								</a>
+								<a class="btn btn-sm font-sm rounded btn-danger text-white"
+									th:href="@{'/vendor/product/details/' + ${product.id}}">
+									<i class="material-icons md-delete	"></i>
+								</a>
 							</div>
 						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
-							<a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/1.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">T-shirt for men medium size</h6>
-								</div>
-							</a>
-						</div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$34.50</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" th:href="@{/vendor/product/edit}"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/2.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Helionic Hooded Down Jacket</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$990.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/3.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-warning">Archived</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/4.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Fanmis Men's Travel Bag</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$18.00</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/3.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Jeans Shorts for Men</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-danger">Disabled</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/5.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Wallet made of leather brown color</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$18.00</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-warning">Archived</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/6.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Modern Armchair for home interiors</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/4.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$18.00</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/3.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$76.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-				</article>
-				<article class="itemlist">
-					<div class="row align-items-center">
-						<div class="col col-check flex-grow-0">
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="">
-							</div>
-						</div>
-						<div class="col-lg-3 col-sm-4 col-8 flex-grow-1 col-name"><a class="itemside" href="#">
-								<div class="left"><img class="img-sm img-thumbnail"
-										th:src="@{/vendor/assets/imgs/items/4.jpg}" alt="Item"></div>
-								<div class="info">
-									<h6 class="mb-0">Lace mini dress with faux leather</h6>
-								</div>
-							</a></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-price"><span>$180.99</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-status"><span
-								class="badge rounded-pill alert-success">Active</span></div>
-						<div class="col-lg-1 col-sm-2 col-4 col-date"><span>02.11.2022</span></div>
-						<div class="col-lg-2 col-sm-2 col-4 col-action text-end"><a
-								class="btn btn-sm font-sm rounded btn-brand mr-5" href="#"><i
-									class="material-icons md-edit"></i> Edit</a><a
-								class="btn btn-sm font-sm btn-light rounded" href="#"><i
-									class="material-icons md-delete_forever"></i> Delete</a></div>
-					</div>
-					<!-- row .//-->
-					<!-- itemlist  .//-->
-					<!-- card-body end//-->
-				</article>
+						<!-- row .//-->
+						<!-- itemlist  .//-->
+					</article>
+				</th:block>
+
+
 			</div>
 		</div>
 		<!-- card end//-->

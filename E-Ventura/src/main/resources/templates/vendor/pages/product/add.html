@@ -56,9 +56,16 @@
 								</div>
 								<div class="mb-4">
 									<label class="form-label">Full description</label>
-									<div id="editor" style="height: 200px;"></div>
+									<br>
+									<textarea class="form-control" cols="90" rows="8"></textarea>
 								</div>
-								<input type="hidden" name="description" id="description">
+								<div class="mb-4">
+									<label class="form-label">Category</label>
+									<select class="form-select">
+										<option th:each="category: ${categories}" th:value="${category.id}"
+											th:text="${category.name}"> </option>
+									</select>
+								</div>
 							</div>
 
 
@@ -79,37 +86,7 @@
 					</div>
 				</div>
 
-				<div class="card mb-4">
-					<div class="card-header">
-						<h4>Shiping</h4>
-					</div>
-					<div class="card-body">
-						<form>
-							<div class="row">
-								<div class="col-lg-6">
-									<div class="mb-4">
-										<label class="form-label" for="product_name">Width</label>
-										<input class="form-control" id="product_name" type="text" placeholder="inch">
-									</div>
-								</div>
-								<div class="col-lg-6">
-									<div class="mb-4">
-										<label class="form-label" for="product_name">Height</label>
-										<input class="form-control" id="product_name" type="text" placeholder="inch">
-									</div>
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="product_name">Weight</label>
-									<input class="form-control" id="product_name" type="text" placeholder="gam">
-								</div>
-								<div class="mb-4">
-									<label class="form-label" for="product_name">Shipping fees</label>
-									<input class="form-control" id="product_name" type="text" placeholder="$">
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
+				
 			</div>
 			<div class="col-lg-3">
 				<div class="card mb-4">
@@ -124,39 +101,7 @@
 				</div>
 
 
-				<div class="card mb-4">
-					<div class="card-header">
-						<h4>Organization</h4>
-					</div>
-					<div class="card-body">
-						<div class="row gx-2">
-							<div class="col-sm-6 mb-3">
-								<label class="form-label">Category</label>
-								<select class="form-select">
-									<option> Automobiles</option>
-									<option> Home items</option>
-									<option> Electronics</option>
-									<option> Smartphones</option>
-									<option> Sport items</option>
-									<option> Baby and Tous</option>
-								</select>
-							</div>
-							<div class="col-sm-6 mb-3">
-								<label class="form-label">Brand</label>
-								<select class="form-select">
-									<option> Nissan</option>
-									<option> Honda</option>
-									<option> Mercedes</option>
-									<option> Chevrolet</option>
-								</select>
-							</div>
-							<div class="mb-4">
-								<label class="form-label" for="product_name">Tags</label>
-								<input class="form-control" type="text">
-							</div>
-						</div>
-					</div>
-				</div>
+				
 			</div>
 		</div>
 	</section>

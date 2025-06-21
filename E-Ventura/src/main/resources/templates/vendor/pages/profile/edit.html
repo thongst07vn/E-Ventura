@@ -23,28 +23,27 @@
 
 											<div class="col-6 mb-3">
 												<label class="form-label">First name</label>
-												<input class="form-control" type="text" placeholder="Type here">
+												<input class="form-control" type="text" th:field="${user.firstName}">
 											</div>
 											<!-- col .//-->
 											<div class="col-6 mb-3">
 												<label class="form-label">Last name</label>
-												<input class="form-control" type="text" placeholder="Type here">
+												<input class="form-control" type="text" th:field="${user.lastName}">
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Email</label>
-												<input class="form-control" type="email" placeholder="example@mail.com">
+												<input class="form-control" type="email" th:field="${user.email}">
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Phone</label>
-												<input class="form-control" type="tel" placeholder="+1234567890">
+												<input class="form-control" type="tel" th:field="${user.phoneNumber}">
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-12 mb-3">
 												<label class="form-label">Address</label>
-												<input class="form-control mb-2" type="text"
-													placeholder="Street address, building number, etc.">
+												<input class="form-control mb-2" type="text" th:field="${user.userAddresses[0].address}">
 
 												<div class="row gx-2">
 													<div class="col-md-6 mb-2">
@@ -92,7 +91,7 @@
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Birthday</label>
-												<input class="form-control" type="date">
+												<input class="form-control" type="date" th:field="${user.birthOfDate}">
 											</div>
 											<!-- col .//-->
 											<!-- row.//-->
@@ -102,7 +101,7 @@
 									<aside class="col-lg-4">
 										<figure class="text-lg-center"><img class="img-lg mb-3 img-avatar"
 												th:src="@{/vendor/assets/imgs/people/avatar1.jpg}" alt="User Photo">
-											<p>Username: <span>TruongNhuBao10</span></p>
+											<p>Username: <span th:text="${user.username}"></span></p>
 
 											<figcaption><a class="btn btn-light rounded font-md" href="#"><i
 														class="icons material-icons md-backup font-md"></i> Upload</a>
