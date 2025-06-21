@@ -20,6 +20,8 @@ public class ProfileController  {
 	/*===================== PROFILE =====================*/
 	@GetMapping("edit")
 	public String editProfile(HttpSession session, ModelMap modelMap) {
+		modelMap.put("currentPage", "profile");
+
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 		Users user = userService.findById(vendorId);
 		modelMap.put("user", user);

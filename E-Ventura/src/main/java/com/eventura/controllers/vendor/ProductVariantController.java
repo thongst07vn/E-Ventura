@@ -23,6 +23,8 @@ public class ProductVariantController  {
 	/*===================== PRODUCT VARIANT =====================*/
 	@GetMapping("edit/{id}")
 	public String edit(@PathVariable("id") int id, ModelMap modelMap) {
+		modelMap.put("currentPage", "product");
+
 		modelMap.put("productVariant", productVariantService.findById(id));
 		
 		

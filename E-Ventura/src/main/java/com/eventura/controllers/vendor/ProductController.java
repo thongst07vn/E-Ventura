@@ -27,6 +27,8 @@ public class ProductController  {
 	/*===================== PRODUCT =====================*/
 	@GetMapping("list")
 	public String productList(ModelMap modelMap, HttpSession session) {
+		modelMap.put("currentPage", "product");
+
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 		System.out.println("Vendor Id:" + vendorId);
 		modelMap.put("products", productService.findByVendorId(vendorId));
@@ -35,36 +37,49 @@ public class ProductController  {
 	}
 	
 	@GetMapping("details/{id}")
-	public String productDetail(@PathVariable("id") int id) {
+	public String productDetail(@PathVariable("id") int id, ModelMap modelMap) {
+		modelMap.put("currentPage", "product");
+
 		return "vendor/pages/product/details";
 	}
 	
 	@GetMapping("add")
 	public String productAdd(ModelMap modelMap) {
+		modelMap.put("currentPage", "product");
 		modelMap.put("categories", categoryService.findAll());
+
 		return "vendor/pages/product/add";
 	}
 	
 	@GetMapping("edit/{id}")
 	public String productEdit(@PathVariable("id") int id, ModelMap modelMap) {
+		modelMap.put("currentPage", "product");
+
 		modelMap.put("productVariants", productVariantService.findByProductId(id));
 		modelMap.put("product", productService.findById(id));
 		modelMap.put("categories", categoryService.findAll());
+
 		return "vendor/pages/product/edit";
 	}
 	
 	@GetMapping("delete/{id}")
-	public String productDelete(@PathVariable("id") int id) {
+	public String productDelete(@PathVariable("id") int id, ModelMap modelMap) {
+		modelMap.put("currentPage", "product");
+
 		return "vendor/pages/product/delete";
 	}
 	
 	@GetMapping("review")
-	public String productReview() {
+	public String productReview(ModelMap modelMap) {
+		modelMap.put("currentPage", "review");
+
 		return "vendor/pages/product/review";
 	}
 	
 	@GetMapping("reviewDetail")
-	public String productReviewDetail() {
+	public String productReviewDetail(ModelMap modelMap) {
+		modelMap.put("currentPage", "review");
+
 		return "vendor/pages/product/reviewDetail";
 	}
 	
