@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 7:41:27 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -29,6 +29,7 @@ public class ProductCategories implements java.io.Serializable {
 	private Date updatedAt;
 	private Date deletedAt;
 	private Set<Products> productses = new HashSet<Products>(0);
+	private Set<VendorProductCategory> vendorProductCategories = new HashSet<VendorProductCategory>(0);
 
 	public ProductCategories() {
 	}
@@ -41,13 +42,14 @@ public class ProductCategories implements java.io.Serializable {
 	}
 
 	public ProductCategories(String name, String photo, Date createdAt, Date updatedAt, Date deletedAt,
-			Set<Products> productses) {
+			Set<Products> productses, Set<VendorProductCategory> vendorProductCategories) {
 		this.name = name;
 		this.photo = photo;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
 		this.productses = productses;
+		this.vendorProductCategories = vendorProductCategories;
 	}
 
 	@Id
@@ -117,6 +119,15 @@ public class ProductCategories implements java.io.Serializable {
 
 	public void setProductses(Set<Products> productses) {
 		this.productses = productses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productCategories")
+	public Set<VendorProductCategory> getVendorProductCategories() {
+		return this.vendorProductCategories;
+	}
+
+	public void setVendorProductCategories(Set<VendorProductCategory> vendorProductCategories) {
+		this.vendorProductCategories = vendorProductCategories;
 	}
 
 }
