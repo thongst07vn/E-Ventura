@@ -24,29 +24,35 @@
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-6 mx-auto">
-						<form></form>
-						<div class="mb-4">
-							<label class="form-label" for="product_name">Name</label>
-							<input class="form-control" id="product_name" type="text" placeholder="Type here">
-						</div>
-						<div class="mb-4">
-							<label class="form-label" for="product_slug">Slug</label>
-							<input class="form-control" id="product_slug" type="text" placeholder="Type here">
-						</div>
-						<div class="mb-4">
-							<label class="form-label">Parent</label>
-							<select class="form-select">
-								<option>Clothes</option>
-								<option>T-Shirts</option>
-							</select>
-						</div>
-						<div class="mb-4">
-							<label class="form-label">Description</label>
-							<textarea class="form-control" placeholder="Type here"></textarea>
-						</div>
-						<div class="d-grid">
-							<button class="btn btn-primary">Edit category</button>
-						</div>
+						<form th:action="@{/category/edit}" method="post"
+							enctype="multipart/form-data">
+							<div class="mb-4">
+								<label class="form-label" for="product_name">Name</label>
+								<input class="form-control" id="product_name" type="text" th:field="${category.name}">
+							</div>
+
+							<!-- Hình ảnh hiện tại -->
+							<div class="mb-4">
+								<label class="form-label">Current Image</label>
+								<div>
+									<img th:src="@{'/assets/imgs/others/' + ${category.photo}}"  class="img-thumbnail"
+										style="max-width: 200px;">
+								</div>
+							</div>
+
+							<!-- Upload ảnh mới -->
+							<div class="mb-4">
+								<label class="form-label" for="imageUpload">Upload New Image</label>
+								<input class="form-control" type="file" id="imageUpload" name="imageFile"
+									accept="image/*">
+							</div>
+
+							<!-- Nút Submit -->
+							<div class="d-grid">
+								<button class="btn btn-primary" type="submit">Edit category</button>
+							</div>
+						</form>
+
 					</div>
 
 				</div>
