@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -31,7 +31,8 @@ public class PaymentMethods implements java.io.Serializable {
 	public PaymentMethods() {
 	}
 
-	public PaymentMethods(Date createdAt, Date updatedAt) {
+	public PaymentMethods(String name, Date createdAt, Date updatedAt) {
+		this.name = name;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -55,7 +56,7 @@ public class PaymentMethods implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}

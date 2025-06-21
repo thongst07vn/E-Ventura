@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:47:09 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 1:02:58 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class Orders implements java.io.Serializable {
 	private Integer id;
 	private Users users;
 	private String name;
-	private Long totalAmount;
+	private double totalAmount;
 	private String ordersStatus;
 	private Date createdAt;
 	private Date updatedAt;
@@ -40,12 +40,16 @@ public class Orders implements java.io.Serializable {
 	public Orders() {
 	}
 
-	public Orders(Date createdAt, Date updatedAt) {
+	public Orders(Users users, String name, double totalAmount, String ordersStatus, Date createdAt, Date updatedAt) {
+		this.users = users;
+		this.name = name;
+		this.totalAmount = totalAmount;
+		this.ordersStatus = ordersStatus;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public Orders(Users users, String name, Long totalAmount, String ordersStatus, Date createdAt, Date updatedAt,
+	public Orders(Users users, String name, double totalAmount, String ordersStatus, Date createdAt, Date updatedAt,
 			Set<OrderItems> orderItemses, Set<Payments> paymentses, Set<OrdersCampaigns> ordersCampaignses,
 			Set<VendorEarnings> vendorEarningses, Set<Commissions> commissionses) {
 		this.users = users;
@@ -74,7 +78,7 @@ public class Orders implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	public Users getUsers() {
 		return this.users;
 	}
@@ -83,7 +87,7 @@ public class Orders implements java.io.Serializable {
 		this.users = users;
 	}
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}
@@ -92,16 +96,16 @@ public class Orders implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "total_amount", precision = 10, scale = 0)
-	public Long getTotalAmount() {
+	@Column(name = "total_amount", nullable = false, precision = 22, scale = 0)
+	public double getTotalAmount() {
 		return this.totalAmount;
 	}
 
-	public void setTotalAmount(Long totalAmount) {
+	public void setTotalAmount(double totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	@Column(name = "orders_status")
+	@Column(name = "orders_status", nullable = false)
 	public String getOrdersStatus() {
 		return this.ordersStatus;
 	}

@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -24,19 +24,14 @@ public class VendorEarnings implements java.io.Serializable {
 	private Integer id;
 	private Orders orders;
 	private Vendors vendors;
-	private Long amount;
+	private double amount;
 	private Date createdAt;
 	private Date updatedAt;
 
 	public VendorEarnings() {
 	}
 
-	public VendorEarnings(Date createdAt, Date updatedAt) {
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
-
-	public VendorEarnings(Orders orders, Vendors vendors, Long amount, Date createdAt, Date updatedAt) {
+	public VendorEarnings(Orders orders, Vendors vendors, double amount, Date createdAt, Date updatedAt) {
 		this.orders = orders;
 		this.vendors = vendors;
 		this.amount = amount;
@@ -57,7 +52,7 @@ public class VendorEarnings implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id")
+	@JoinColumn(name = "order_id", nullable = false)
 	public Orders getOrders() {
 		return this.orders;
 	}
@@ -67,7 +62,7 @@ public class VendorEarnings implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "vendor_id")
+	@JoinColumn(name = "vendor_id", nullable = false)
 	public Vendors getVendors() {
 		return this.vendors;
 	}
@@ -76,12 +71,12 @@ public class VendorEarnings implements java.io.Serializable {
 		this.vendors = vendors;
 	}
 
-	@Column(name = "amount", precision = 10, scale = 0)
-	public Long getAmount() {
+	@Column(name = "amount", nullable = false, precision = 22, scale = 0)
+	public double getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(Long amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

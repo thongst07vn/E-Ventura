@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -37,7 +37,11 @@ public class ProductVariants implements java.io.Serializable {
 	public ProductVariants() {
 	}
 
-	public ProductVariants(Date createdAt, Date updatedAt) {
+	public ProductVariants(ProductAttributes productAttributes, Products products, String value, Date createdAt,
+			Date updatedAt) {
+		this.productAttributes = productAttributes;
+		this.products = products;
+		this.value = value;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -67,7 +71,7 @@ public class ProductVariants implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_attribute_id")
+	@JoinColumn(name = "product_attribute_id", nullable = false)
 	public ProductAttributes getProductAttributes() {
 		return this.productAttributes;
 	}
@@ -77,7 +81,7 @@ public class ProductVariants implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_id")
+	@JoinColumn(name = "product_id", nullable = false)
 	public Products getProducts() {
 		return this.products;
 	}
@@ -86,7 +90,7 @@ public class ProductVariants implements java.io.Serializable {
 		this.products = products;
 	}
 
-	@Column(name = "value")
+	@Column(name = "value", nullable = false)
 	public String getValue() {
 		return this.value;
 	}

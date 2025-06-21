@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -23,22 +23,16 @@ public class CartItems implements java.io.Serializable {
 
 	private Integer id;
 	private Carts carts;
-	private Integer productId;
-	private Integer productVariantId;
-	private Integer quantity;
+	private int productId;
+	private int productVariantId;
+	private int quantity;
 	private Date createdAt;
 	private Date updatedAt;
 
 	public CartItems() {
 	}
 
-	public CartItems(Date createdAt, Date updatedAt) {
-		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
-	}
-
-	public CartItems(Carts carts, Integer productId, Integer productVariantId, Integer quantity, Date createdAt,
-			Date updatedAt) {
+	public CartItems(Carts carts, int productId, int productVariantId, int quantity, Date createdAt, Date updatedAt) {
 		this.carts = carts;
 		this.productId = productId;
 		this.productVariantId = productVariantId;
@@ -60,7 +54,7 @@ public class CartItems implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cart_id")
+	@JoinColumn(name = "cart_id", nullable = false)
 	public Carts getCarts() {
 		return this.carts;
 	}
@@ -69,30 +63,30 @@ public class CartItems implements java.io.Serializable {
 		this.carts = carts;
 	}
 
-	@Column(name = "product_id")
-	public Integer getProductId() {
+	@Column(name = "product_id", nullable = false)
+	public int getProductId() {
 		return this.productId;
 	}
 
-	public void setProductId(Integer productId) {
+	public void setProductId(int productId) {
 		this.productId = productId;
 	}
 
-	@Column(name = "product_variant_id")
-	public Integer getProductVariantId() {
+	@Column(name = "product_variant_id", nullable = false)
+	public int getProductVariantId() {
 		return this.productVariantId;
 	}
 
-	public void setProductVariantId(Integer productVariantId) {
+	public void setProductVariantId(int productVariantId) {
 		this.productVariantId = productVariantId;
 	}
 
-	@Column(name = "quantity")
-	public Integer getQuantity() {
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
 		return this.quantity;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 

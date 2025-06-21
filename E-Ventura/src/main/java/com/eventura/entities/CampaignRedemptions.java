@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:47:09 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 1:02:58 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,7 +24,6 @@ public class CampaignRedemptions implements java.io.Serializable {
 
 	private Integer id;
 	private String campaignName;
-	private Date redemptionDate;
 	private Date createdAt;
 	private Date updatedAt;
 	private Date deletedAt;
@@ -35,18 +34,16 @@ public class CampaignRedemptions implements java.io.Serializable {
 	public CampaignRedemptions() {
 	}
 
-	public CampaignRedemptions(String campaignName, Date redemptionDate, Date createdAt, Date updatedAt) {
+	public CampaignRedemptions(String campaignName, Date createdAt, Date updatedAt) {
 		this.campaignName = campaignName;
-		this.redemptionDate = redemptionDate;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public CampaignRedemptions(String campaignName, Date redemptionDate, Date createdAt, Date updatedAt, Date deletedAt,
+	public CampaignRedemptions(String campaignName, Date createdAt, Date updatedAt, Date deletedAt,
 			Set<OrdersCampaigns> ordersCampaignses, Set<CouponsCampaigns> couponsCampaignses,
 			Set<VouchersCampaigns> vouchersCampaignses) {
 		this.campaignName = campaignName;
-		this.redemptionDate = redemptionDate;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
@@ -74,16 +71,6 @@ public class CampaignRedemptions implements java.io.Serializable {
 
 	public void setCampaignName(String campaignName) {
 		this.campaignName = campaignName;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "redemption_date", nullable = false, length = 19)
-	public Date getRedemptionDate() {
-		return this.redemptionDate;
-	}
-
-	public void setRedemptionDate(Date redemptionDate) {
-		this.redemptionDate = redemptionDate;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

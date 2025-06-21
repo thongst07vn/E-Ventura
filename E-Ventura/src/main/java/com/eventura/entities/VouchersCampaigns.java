@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
@@ -21,9 +21,9 @@ public class VouchersCampaigns implements java.io.Serializable {
 	private VouchersCampaignsId id;
 	private CampaignRedemptions campaignRedemptions;
 	private Vouchers vouchers;
+	private String voucherCode;
 	private int redeemAllowedQty;
 	private int redeemUsedQty;
-	private String voucherCode;
 
 	public VouchersCampaigns() {
 	}
@@ -38,13 +38,13 @@ public class VouchersCampaigns implements java.io.Serializable {
 	}
 
 	public VouchersCampaigns(VouchersCampaignsId id, CampaignRedemptions campaignRedemptions, Vouchers vouchers,
-			int redeemAllowedQty, int redeemUsedQty, String voucherCode) {
+			String voucherCode, int redeemAllowedQty, int redeemUsedQty) {
 		this.id = id;
 		this.campaignRedemptions = campaignRedemptions;
 		this.vouchers = vouchers;
+		this.voucherCode = voucherCode;
 		this.redeemAllowedQty = redeemAllowedQty;
 		this.redeemUsedQty = redeemUsedQty;
-		this.voucherCode = voucherCode;
 	}
 
 	@EmbeddedId
@@ -80,6 +80,15 @@ public class VouchersCampaigns implements java.io.Serializable {
 		this.vouchers = vouchers;
 	}
 
+	@Column(name = "voucher_code")
+	public String getVoucherCode() {
+		return this.voucherCode;
+	}
+
+	public void setVoucherCode(String voucherCode) {
+		this.voucherCode = voucherCode;
+	}
+
 	@Column(name = "redeem_allowed_qty", nullable = false)
 	public int getRedeemAllowedQty() {
 		return this.redeemAllowedQty;
@@ -96,15 +105,6 @@ public class VouchersCampaigns implements java.io.Serializable {
 
 	public void setRedeemUsedQty(int redeemUsedQty) {
 		this.redeemUsedQty = redeemUsedQty;
-	}
-
-	@Column(name = "voucher_code")
-	public String getVoucherCode() {
-		return this.voucherCode;
-	}
-
-	public void setVoucherCode(String voucherCode) {
-		this.voucherCode = voucherCode;
 	}
 
 }

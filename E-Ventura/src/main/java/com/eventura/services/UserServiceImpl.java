@@ -39,8 +39,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean save(Users account) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			userRepository.save(account);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override

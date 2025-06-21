@@ -9,7 +9,7 @@
 	<main class="main content-main">
       <section class="section-box shop-template mt-30">
         <div class="container box-account-template">
-          <h3>Hello Steven</h3>
+          <h3>Hello <th:block th:if="${user}" th:text="${user.username}"></th:block></h3>
           <p class="font-md color-gray-500">From your account dashboard. you can easily check & view your recent orders,<br class="d-none d-lg-block">manage your shipping and billing addresses and edit your password and account details.</p>
           <div class="box-tabs mb-100">
             <ul class="nav nav-tabs nav-tabs-account" role="tablist">

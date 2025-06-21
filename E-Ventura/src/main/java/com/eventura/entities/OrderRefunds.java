@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -23,7 +23,7 @@ public class OrderRefunds implements java.io.Serializable {
 
 	private Integer id;
 	private OrderReturns orderReturns;
-	private Long amount;
+	private long amount;
 	private String orderRefundsStatus;
 	private Date createdAt;
 	private Date updatedAt;
@@ -32,12 +32,16 @@ public class OrderRefunds implements java.io.Serializable {
 	public OrderRefunds() {
 	}
 
-	public OrderRefunds(Date createdAt, Date updatedAt) {
+	public OrderRefunds(OrderReturns orderReturns, long amount, String orderRefundsStatus, Date createdAt,
+			Date updatedAt) {
+		this.orderReturns = orderReturns;
+		this.amount = amount;
+		this.orderRefundsStatus = orderRefundsStatus;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public OrderRefunds(OrderReturns orderReturns, Long amount, String orderRefundsStatus, Date createdAt,
+	public OrderRefunds(OrderReturns orderReturns, long amount, String orderRefundsStatus, Date createdAt,
 			Date updatedAt, Date processedAt) {
 		this.orderReturns = orderReturns;
 		this.amount = amount;
@@ -60,7 +64,7 @@ public class OrderRefunds implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_returns_id")
+	@JoinColumn(name = "order_returns_id", nullable = false)
 	public OrderReturns getOrderReturns() {
 		return this.orderReturns;
 	}
@@ -69,16 +73,16 @@ public class OrderRefunds implements java.io.Serializable {
 		this.orderReturns = orderReturns;
 	}
 
-	@Column(name = "amount", precision = 10, scale = 0)
-	public Long getAmount() {
+	@Column(name = "amount", nullable = false, precision = 10, scale = 0)
+	public long getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(Long amount) {
+	public void setAmount(long amount) {
 		this.amount = amount;
 	}
 
-	@Column(name = "order_refunds_status")
+	@Column(name = "order_refunds_status", nullable = false)
 	public String getOrderRefundsStatus() {
 		return this.orderRefundsStatus;
 	}

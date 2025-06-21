@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ public class VendorSettings implements java.io.Serializable {
 
 	private Integer id;
 	private String vendorType;
-	private Double commissionValue;
+	private double commissionValue;
 	private Date createdAt;
 	private Date updatedAt;
 	private Set<Vendors> vendorses = new HashSet<Vendors>(0);
@@ -32,12 +32,14 @@ public class VendorSettings implements java.io.Serializable {
 	public VendorSettings() {
 	}
 
-	public VendorSettings(Date createdAt, Date updatedAt) {
+	public VendorSettings(String vendorType, double commissionValue, Date createdAt, Date updatedAt) {
+		this.vendorType = vendorType;
+		this.commissionValue = commissionValue;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public VendorSettings(String vendorType, Double commissionValue, Date createdAt, Date updatedAt,
+	public VendorSettings(String vendorType, double commissionValue, Date createdAt, Date updatedAt,
 			Set<Vendors> vendorses) {
 		this.vendorType = vendorType;
 		this.commissionValue = commissionValue;
@@ -58,7 +60,7 @@ public class VendorSettings implements java.io.Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "vendor_type")
+	@Column(name = "vendor_type", nullable = false)
 	public String getVendorType() {
 		return this.vendorType;
 	}
@@ -67,12 +69,12 @@ public class VendorSettings implements java.io.Serializable {
 		this.vendorType = vendorType;
 	}
 
-	@Column(name = "commission_value", precision = 22, scale = 0)
-	public Double getCommissionValue() {
+	@Column(name = "commission_value", nullable = false, precision = 22, scale = 0)
+	public double getCommissionValue() {
 		return this.commissionValue;
 	}
 
-	public void setCommissionValue(Double commissionValue) {
+	public void setCommissionValue(double commissionValue) {
 		this.commissionValue = commissionValue;
 	}
 

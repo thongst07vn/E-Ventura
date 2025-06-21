@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 19, 2025, 10:38:50 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 21, 2025, 10:45:01 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -42,12 +42,19 @@ public class Vendors implements java.io.Serializable {
 	private Set<Vouchers> voucherses = new HashSet<Vouchers>(0);
 	private Set<VendorEarnings> vendorEarningses = new HashSet<VendorEarnings>(0);
 	private Set<Coupons> couponses = new HashSet<Coupons>(0);
+	private Set<VendorProductCategory> vendorProductCategories = new HashSet<VendorProductCategory>(0);
 
 	public Vendors() {
 	}
 
-	public Vendors(Users users, Date createdAt, Date updatedAt) {
+	public Vendors(Users users, VendorSettings vendorSettings, String name, String description, String contactName,
+			String contactEmail, Date createdAt, Date updatedAt) {
 		this.users = users;
+		this.vendorSettings = vendorSettings;
+		this.name = name;
+		this.description = description;
+		this.contactName = contactName;
+		this.contactEmail = contactEmail;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -55,7 +62,8 @@ public class Vendors implements java.io.Serializable {
 	public Vendors(Users users, VendorSettings vendorSettings, String name, String description, String contactName,
 			String contactEmail, Date createdAt, Date updatedAt, Set<Commissions> commissionses,
 			Set<VendorReviews> vendorReviewses, Set<Products> productses, Set<Vouchers> voucherses,
-			Set<VendorEarnings> vendorEarningses, Set<Coupons> couponses) {
+			Set<VendorEarnings> vendorEarningses, Set<Coupons> couponses,
+			Set<VendorProductCategory> vendorProductCategories) {
 		this.users = users;
 		this.vendorSettings = vendorSettings;
 		this.name = name;
@@ -70,6 +78,7 @@ public class Vendors implements java.io.Serializable {
 		this.voucherses = voucherses;
 		this.vendorEarningses = vendorEarningses;
 		this.couponses = couponses;
+		this.vendorProductCategories = vendorProductCategories;
 	}
 
 	@GenericGenerator(name = "generator", strategy = "foreign", parameters = @Parameter(name = "property", value = "users"))
@@ -96,7 +105,7 @@ public class Vendors implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "vendor_setting_id")
+	@JoinColumn(name = "vendor_setting_id", nullable = false)
 	public VendorSettings getVendorSettings() {
 		return this.vendorSettings;
 	}
@@ -105,7 +114,7 @@ public class Vendors implements java.io.Serializable {
 		this.vendorSettings = vendorSettings;
 	}
 
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}
@@ -114,7 +123,7 @@ public class Vendors implements java.io.Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "description")
+	@Column(name = "description", nullable = false)
 	public String getDescription() {
 		return this.description;
 	}
@@ -123,7 +132,7 @@ public class Vendors implements java.io.Serializable {
 		this.description = description;
 	}
 
-	@Column(name = "contact_name")
+	@Column(name = "contact_name", nullable = false)
 	public String getContactName() {
 		return this.contactName;
 	}
@@ -132,7 +141,7 @@ public class Vendors implements java.io.Serializable {
 		this.contactName = contactName;
 	}
 
-	@Column(name = "contact_email")
+	@Column(name = "contact_email", nullable = false)
 	public String getContactEmail() {
 		return this.contactEmail;
 	}
@@ -213,6 +222,15 @@ public class Vendors implements java.io.Serializable {
 
 	public void setCouponses(Set<Coupons> couponses) {
 		this.couponses = couponses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendors")
+	public Set<VendorProductCategory> getVendorProductCategories() {
+		return this.vendorProductCategories;
+	}
+
+	public void setVendorProductCategories(Set<VendorProductCategory> vendorProductCategories) {
+		this.vendorProductCategories = vendorProductCategories;
 	}
 
 }
