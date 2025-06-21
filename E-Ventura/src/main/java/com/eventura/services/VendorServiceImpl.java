@@ -5,6 +5,8 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -48,6 +50,12 @@ public class VendorServiceImpl implements VendorService {
 	public int sumByVendorId(int id) {
 		// TODO Auto-generated method stub
 		return vendorEarningRepository.sumByVendorId(id);
+	}
+
+	@Override
+	public Page<Vendors> findAlls(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return vendorRepository.findAll(pageable);
 	}
 
 }

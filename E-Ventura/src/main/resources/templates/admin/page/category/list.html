@@ -23,6 +23,44 @@
 					<div class="col-lg-4 col-md-6 me-auto">
 						<input class="form-control" type="text" placeholder="Search...">
 					</div>
+				<div class="col-lg-2 col-md-3 col-6">
+						<select id="pageSizeSelect" class="form-select"
+							onchange="changePageSize()">
+							<option th:value="12" th:text="'Show 12'"
+								th:selected="${pageSize == 12}"></option>
+							<option th:value="24" th:text="'Show 24'"
+								th:selected="${pageSize == 24}"></option>
+							<option th:value="36" th:text="'Show 36'"
+								th:selected="${pageSize == 36}"></option>
+						</select>
+					</div>
+
+					<script>
+						document.addEventListener('DOMContentLoaded', () => {
+					        const select = document.getElementById('pageSizeSelect');
+					        const urlParams = new URLSearchParams(window.location.search);
+					        const pageSize = urlParams.get('pageSize') || '12'; // default là 5
+					        select.value = pageSize;
+					    });
+						function changePageSize() {
+						    // Lấy giá trị của option đã chọn
+						    const select = document.getElementById('pageSizeSelect');
+						    const pageSize = select.value;
+						    
+						    // Lấy giá trị của trang hiện tại, nếu có
+						    const urlParams = new URLSearchParams(window.location.search);
+						    const currentPage = urlParams.get('page') || 0; // hoặc giá trị khác tùy ý
+						    
+						    // Tạo URL mới với tham số page và pageSize
+						    const newUrl = new URL(window.location.origin + window.location.pathname);
+						    newUrl.searchParams.set('page', currentPage);
+						    newUrl.searchParams.set('pageSize', pageSize);
+						
+						    // Tải lại trang với URL mới
+						    window.location.href = newUrl.toString();
+						}
+					</script>
+				</div>
 			</header>
 			<!-- card-header end//-->
 			<th:block th:if="${categories!=null}">
@@ -62,5 +100,38 @@
 
 		</div>
 		<!-- card end//-->
+		<div class="pagination-area mt-15 mb-50">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-start">
+					<!-- Nút trước -->
+					<li class="page-item"
+						th:classappend="${currentPages == 0} ? 'disabled'"><a
+						class="page-link"
+						th:href="@{'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+						aria-label="Previous"> <i
+							class="material-icons md-chevron_left"></i>
+					</a></li>
+
+					<!-- Các trang -->
+					<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+						<li class="page-item"
+							th:classappend="${i} == ${currentPages} ? 'active'"><a
+							class="page-link"
+							th:href="@{'?page=' + ${i}+'&pageSize='+${pageSize}}"
+							th:text="${i + 1}"></a></li>
+					</th:block>
+
+					<!-- Nút tiếp -->
+					<li class="page-item"
+						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+						<a class="page-link"
+						th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+					</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
 	</section>
 </body>
