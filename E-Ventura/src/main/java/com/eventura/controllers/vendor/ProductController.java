@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
+import com.eventura.services.ProductVariantService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -20,6 +21,8 @@ public class ProductController  {
 	private ProductService productService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private ProductVariantService productVariantService;
 	
 	/*===================== PRODUCT =====================*/
 	@GetMapping("list")
@@ -44,6 +47,7 @@ public class ProductController  {
 	
 	@GetMapping("edit/{id}")
 	public String productEdit(@PathVariable("id") int id, ModelMap modelMap) {
+		modelMap.put("productVariants", productVariantService.findByProductId(id));
 		modelMap.put("product", productService.findById(id));
 		modelMap.put("categories", categoryService.findAll());
 		return "vendor/pages/product/edit";

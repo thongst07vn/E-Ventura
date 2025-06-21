@@ -76,17 +76,37 @@
 					</div>
 					<div class="card mb-4">
 						<div class="card-header">
-							<h4>Product Variations</h4>
+							<h4 class="mb-0">Product Variations</h4>
 						</div>
-						<div class="card-body" id="variation-container">
-							<!-- Các attribute group sẽ được thêm tại đây -->
-						</div>
-						<div class="card-footer">
-							<button class="btn btn-sm btn-primary" type="button">+ Add
-								Attribute Group</button>
+						<div class="card-body">
+							<div class="table-responsive">
+								<table class="table table-bordered table-hover align-middle">
+									<thead class="table-light">
+										<tr>
+											<th scope="col">Attribute</th>
+											<th scope="col">Value</th>
+											<th scope="col" class="text-center">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:each="productVariant, i : ${productVariants}">
+										    <tr>
+										        <td th:text="${i.index == 0 || productVariants[i.index - 1].productAttributes.name != productVariant.productAttributes.name} ? ${productVariant.productAttributes.name} : ''"></td>
+										        <td th:text="${productVariant.value}"></td>
+										        <td class="text-center">
+										            <a class="btn btn-sm btn-primary me-1" th:href="@{'/vendor/productVariant/edit/' + ${productVariant.id}}">Edit</a>
+										            <a class="btn btn-sm btn-danger">Delete</button>
+										        </td>
+										    </tr>
+										</th:block>
+
+										
+										<!-- Thêm dòng khác nếu cần -->
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
-
 
 				</div>
 				<div class="col-lg-3">
@@ -95,7 +115,8 @@
 							<h4>Media</h4>
 						</div>
 						<div class="card-body">
-							<div class="input-upload"><img th:src="@{'/vendor/assets/imgs/items/' + ${product.mediases[0].name}}" alt="">
+							<div class="input-upload"><img
+									th:src="@{'/vendor/assets/imgs/items/' + ${product.mediases[0].name}}" alt="">
 								<input class="form-control" type="file" multiple>
 							</div>
 						</div>
