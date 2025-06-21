@@ -159,7 +159,7 @@ public class SecurityConfiguration {
 		return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
-			.securityMatcher("/", "/customer/**", "/customer/login", "/login/**", "/customer/register", "/customer/process-login", "/oauth2/**")
+			.securityMatcher("/", "/customer/**", "/customer/login", "/login", "/customer/register", "/customer/process-login", "/oauth2/**")
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
@@ -185,7 +185,6 @@ public class SecurityConfiguration {
 					@Override
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 							Authentication authentication) throws IOException, ServletException {
-						System.out.println("Customer Login Success for user: " + authentication.getName());
 						Map<String,String> redirectUrls = new HashMap<>();
 						redirectUrls.put("CUSTOMER","/customer/home"); 
 						String url ="/customer/login?error"; 
@@ -208,24 +207,26 @@ public class SecurityConfiguration {
 				});
 			})
 			.oauth2Login(f->{
-				f.loginPage("/login")				
+				f.loginPage("/customer/login")				
 					.userInfoEndpoint().userService(accountOAuth2UserServices).and().successHandler(auth2LoginSuccessHandler);
 			})
 			.addFilterBefore(new OncePerRequestFilter() {
-			    @Override
-			    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			            throws ServletException, IOException {
-			        String uri = request.getRequestURI();
-			        if (uri.equals("/customer/login")) {
-			            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			            if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
-			                response.sendRedirect("/customer/home");
-			                return;
-			            }
-			        }
-			        filterChain.doFilter(request, response);
-			    }
-			}, UsernamePasswordAuthenticationFilter.class)
+                @Override
+                protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                        throws ServletException, IOException {
+                    String uri = request.getRequestURI();
+                    // Only apply this logic to the customer login page
+                    if (uri.equals("/customer/login") || uri.equals("/login")) { // Include /login if that's also a path for your customer login form
+                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                        // Check if the user is authenticated and not an anonymous user
+                        if (auth != null && auth.isAuthenticated() && !(auth instanceof AnonymousAuthenticationToken)) {
+                            response.sendRedirect("/customer/home");
+                            return; // IMPORTANT: Stop the filter chain
+                        }
+                    }
+                    filterChain.doFilter(request, response); // Continue the filter chain if not redirecting
+                }
+            }, UsernamePasswordAuthenticationFilter.class)
 			.logout(f -> {
 				f.logoutUrl("/customer/logout") // Customer-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
