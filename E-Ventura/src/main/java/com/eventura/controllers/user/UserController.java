@@ -13,6 +13,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -121,6 +122,9 @@ public class UserController {
 	    } else if (authentication != null && authentication.getPrincipal() instanceof AccountOAuth2User) {
 	        AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
 	        currentUser = userService.findByEmail(accountOAuth2User.getEmail());
+	        if(currentUser.getPassword()==null) {
+	        	user.setPassword(BCrypt.hashpw("123456789@T", BCrypt.gensalt()));
+	        }
 	    }
 
 	    // 2. Handle file upload for avatar
@@ -166,6 +170,33 @@ public class UserController {
 	    	redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
 	    	return "redirect:/customer/profile";    	    	
 	    }
+	}
+	
+	@PostMapping({ "changepassword" })
+	public String ChangePassword(@RequestParam("newPassword") String newPassword, Authentication authentication,
+			@AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
+		
+		Users currentUser = null;
+		
+		if (userDetails != null) {
+			currentUser = userService.findByEmail(userDetails.getUsername());
+		} else if (authentication != null && authentication.getPrincipal() instanceof AccountOAuth2User) {
+			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+			currentUser = userService.findByEmail(accountOAuth2User.getEmail());
+		}
+		if (currentUser != null) {
+			currentUser.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+		}
+		
+		if(userService.save(currentUser)) {
+			redirectAttributes.addFlashAttribute("msg","Change password success");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+			return "redirect:/customer/profile";    	
+		} else {
+			redirectAttributes.addFlashAttribute("msg","Change password failed");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+			return "redirect:/customer/profile";    	    	
+		}  	    	
 	}
 
 }
