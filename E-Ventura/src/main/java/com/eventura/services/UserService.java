@@ -21,5 +21,7 @@ public interface UserService extends UserDetailsService {
 	
 	public List<Users> findAll();
 	public Page<Users> findAlls(Pageable pageable);
+	public Page<Users> findAllByDeletedAtISNUL(Pageable pageable);
+	public Page<Users> findAllByDeletedAtISNOTNUL(Pageable pageable);
 	
 }

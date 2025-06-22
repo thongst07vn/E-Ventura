@@ -45,7 +45,7 @@
 							<select class="form-select" name="vendorId" id="vendorSelect">
 								<option value="0" th:selected="${selectedVendorId == 0}">All
 									Vendor</option>
-								<option th:each="vendor : ${vendors}" th:value="${vendor.id}"
+								<option th:each="vendor : ${vendors}" th:if="${vendor.users.deletedAt==null}" th:value="${vendor.id}" 
 									th:text="${vendor.name}"
 									th:selected="${vendor.id == selectedVendorId}"></option>
 							</select>

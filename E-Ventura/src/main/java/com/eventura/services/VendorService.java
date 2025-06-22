@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.eventura.entities.Users;
 import com.eventura.entities.VendorEarnings;
 import com.eventura.entities.Vendors;
 
@@ -15,4 +16,5 @@ public interface VendorService {
 	public int countByVendorId(int id); 
 	public int sumByVendorId(int id); 
 	public Page<Vendors> findAlls(Pageable pageable);
+	public boolean disableVendorUser(Users users);
 }

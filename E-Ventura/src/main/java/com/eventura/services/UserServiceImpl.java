@@ -83,6 +83,18 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findUsersWithRoleId3(pageable);
 	}
 
+	@Override
+	public Page<Users> findAllByDeletedAtISNUL(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return userRepository.findUsersWithRoleId3ByDeletedAtISNULL(pageable);
+	}
+
+	@Override
+	public Page<Users> findAllByDeletedAtISNOTNUL(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return userRepository.findUsersWithRoleId3ByDeletedAtNOTNULL(pageable);
+	}
+
 
 
 	

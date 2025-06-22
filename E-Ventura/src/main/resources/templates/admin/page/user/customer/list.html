@@ -20,13 +20,17 @@
 					<div class="col-lg-4 col-md-6 me-auto">
 						<input class="form-control" type="text" placeholder="Search...">
 					</div>
+
 					<div class="col-lg-2 col-md-3 col-6">
-						<select class="form-select">
-							<option>Status</option>
-							<option>Active</option>
-							<option>Disabled</option>
-							<option>Show all</option>
-						</select>
+						<form method="GET" th:action="@{/admin/customer/list}">
+							<select class="form-select" name="filter"
+								onchange="this.form.submit()">
+								<option value="show_all" th:selected="${filter == 'show_all'}">Show
+									all</option>
+								<option value="enabled" th:selected="${filter == 'enabled'}">Enabled</option>
+								<option value="disabled" th:selected="${filter == 'disabled'}">Disabled</option>
+							</select>
+						</form>
 					</div>
 					<div class="col-lg-2 col-md-3 col-6">
 						<select id="pageSizeSelect" class="form-select"
@@ -77,43 +81,46 @@
 								<th>Email</th>
 								<th>Phone</th>
 								<th>Date of Birth</th>
+								<th>Status</th>
 								<th class="text-center">Action</th>
 							</tr>
 						</thead>
 						<tbody>
 							<th:block th:if="${users!=null}">
 								<tr th:each="user : ${users.content}">
-									<th:block th:if="${user.deletedAt == null}">
-										<td width="40%"><a class="itemside" href="#"
-											style="flex-direction: column;">
-												<div class="left">
-													<th:block th:if="${user.avatar.contains('https:')}">
-														<img class="img-md img-avatar" th:src="${user.avatar}"
-															alt="User pic">
-													</th:block>
-													<th:block th:if="${!user.avatar.contains('https:')}">
-														<img class="img-md img-avatar"
-															th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}"
-															alt="User pic">
-													</th:block>
-												</div>
-												<div class="info pl-3">
-													<h6 class="mb-0 title">
-														<th:block th:text="${user.firstName}+' '+${user.lastName}"></th:block>
-													</h6>
-												</div>
-										</a></td>
-										<td><th:block th:text="${user.email}"></th:block></td>
-										<td><th:block th:text="${user.phoneNumber}"></th:block></td>
-										<td><th:block
-												th:text="${#dates.format(user.birthOfDate, 'dd/MM/yyyy')}"></th:block></td>
-										<th:block
-											th:if="${user.deletedAt == null && user.roles.id != 1}">
-											<td class="text-center "><a
-												class="btn btn-sm btn-brand rounded font-sm mt-15 d-flex justify-content-center"
-												th:href="@{/admin/customer/detail}">View details</a></td>
-										</th:block>
-									</th:block>
+									<td width="40%"><a class="itemside" href="#"
+										style="flex-direction: column;">
+											<div class="left">
+												<th:block th:if="${user.avatar.contains('https:')}">
+													<img class="img-md img-avatar" th:src="${user.avatar}"
+														alt="User pic">
+												</th:block>
+												<th:block th:if="${!user.avatar.contains('https:')}">
+													<img class="img-md img-avatar"
+														th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}"
+														alt="User pic">
+												</th:block>
+											</div>
+											<div class="info pl-3">
+												<h6 class="mb-0 title">
+													<th:block th:text="${user.firstName}+' '+${user.lastName}"></th:block>
+												</h6>
+											</div>
+									</a></td>
+									<td><th:block th:text="${user.email}"></th:block></td>
+									<td><th:block th:text="${user.phoneNumber}"></th:block></td>
+									<td><th:block
+											th:text="${#dates.format(user.birthOfDate, 'dd/MM/yyyy')}"></th:block></td>
+									<td><th:block th:if="${user.deletedAt == null}">
+											<span class="badge rounded-pill alert-success">Enable</span>
+										</th:block> <th:block th:if="${user.deletedAt != null}">
+											<span class="badge rounded-pill alert-danger">Disable</span>
+										</th:block></td>
+									<td class="text-center "><a
+										class="btn btn-sm btn-brand rounded font-sm mt-15 d-flex justify-content-center"
+										th:href="@{'/admin/customer/detail/'+${user.id}}">View
+											details</a></td>
+
 								</tr>
 							</th:block>
 
@@ -133,7 +140,8 @@
 					<!-- Nút trước -->
 					<li class="page-item"
 						th:classappend="${currentPages == 0} ? 'disabled'"><a
-						class="page-link" th:href="@{'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+						class="page-link"
+						th:href="@{'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
 						aria-label="Previous"> <i
 							class="material-icons md-chevron_left"></i>
 					</a></li>
@@ -143,14 +151,16 @@
 
 						<li class="page-item"
 							th:classappend="${i} == ${currentPages} ? 'active'"><a
-							class="page-link" th:href="@{'?page=' + ${i}+'&pageSize='+${pageSize}}" th:text="${i + 1}"></a>
-						</li>
+							class="page-link"
+							th:href="@{'?page=' + ${i}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							th:text="${i + 1}"></a></li>
 					</th:block>
 
 					<!-- Nút tiếp -->
 					<li class="page-item"
 						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
-						<a class="page-link" th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+						<a class="page-link"
+						th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
 						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 					</a>
 					</li>
