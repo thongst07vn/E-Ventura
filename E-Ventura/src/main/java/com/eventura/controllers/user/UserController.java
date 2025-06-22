@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2User;
 import com.eventura.entities.ProductCategories;
@@ -110,7 +111,7 @@ public class UserController {
 
 	@PostMapping({ "edit/{id}" })
 	public String editProfile(@ModelAttribute("user") Users user, Authentication authentication,
-			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("file") MultipartFile file) {
+			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
 		Users currentUser = null;
 
@@ -152,8 +153,19 @@ public class UserController {
 	    if (currentUser != null) {
 	        user.setRememberToken(currentUser.getRememberToken());
 	        user.setPassword(currentUser.getPassword());
+	        user.setEmail(currentUser.getEmail());
+	        user.setRoles(currentUser.getRoles());
 	    }
-		return "redirect:/customer/profile";
+	    
+	    if(userService.save(user)) {
+	    	redirectAttributes.addFlashAttribute("msg","Edit profile success");
+	    	redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+	    	return "redirect:/customer/profile";    	
+	    } else {
+	    	redirectAttributes.addFlashAttribute("msg","Edit profile failed");
+	    	redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+	    	return "redirect:/customer/profile";    	    	
+	    }
 	}
 
 }

@@ -19,6 +19,7 @@
 					shipping and billing addresses and edit your password and account
 					details.
 				</p>
+				<span th:class="${classedit}" th:if="${msg}" th:text="${msg}"></span>
 				<div class="box-tabs mb-100">
 					<ul class="nav nav-tabs nav-tabs-account" role="tablist">
 						<li><a class="active" href="#tab-notification"
@@ -796,7 +797,7 @@
 																	<label class="form-label">Email</label> <input
 																		class="form-control" type="email"
 																		placeholder="example@mail.com"
-																		th:field="${user.email}" disabled="disabled">
+																		th:field="${user.email}" readonly="readonly">
 																</div>
 																<!-- col .//-->
 																<div class="col-lg-6 mb-3">
