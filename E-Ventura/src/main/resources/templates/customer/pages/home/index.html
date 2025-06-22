@@ -19,7 +19,7 @@
 										<div class="box-image">
 											<div class="inner-image">
 												<img
-													th:src="@{/client/assets/imgs/page/homepage10/cat1.png}"
+													th:src="@{'/assets/imgs/others/'+${category.photo}}"
 													alt="Ecom">
 											</div>
 										</div>
@@ -74,7 +74,7 @@
 												</div>
 												<div class="box-img-banner">
 													<img
-														th:src="@{/client/assets/imgs/page/homepage10/banner.png}"
+														th:src="@{/assets/imgs/page/homepage10/banner.png}"
 														alt="Ecom">
 												</div>
 											</div>
@@ -103,7 +103,7 @@
 								</div>
 								<div class="box-img-banner-2">
 									<img
-										th:src="@{/client/assets/imgs/page/homepage10/banner2.png}"
+										th:src="@{/assets/imgs/page/homepage10/banner2.png}"
 										alt="Ecom">
 								</div>
 							</div>
@@ -139,9 +139,7 @@
 										</th:block>
 										<th:block th:if="${!pro.mediases[0].name.contains('https:')}">
 											<img th:src="@{'/assets/imgs/others/' + ${pro.mediases[0].name}}" alt="Ecom">
-										</th:block>
-										
-										
+										</th:block>																			
 										</a>
 									</div>
 									<div class="info-right">
@@ -150,15 +148,15 @@
 											class="color-brand-3 font-sm-bold"
 											href="shop-single-product-2.html" th:text="${pro.name}"></a>
 										<div class="rating">
-											<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											<img th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 										</div>
 										<div class="price-info mb-10">
@@ -193,7 +191,7 @@
 							</div>
 							<div class="box-img-banner">
 								<img class="img1"
-									th:src="@{/client/assets/imgs/page/homepage10/banner3.png}"
+									th:src="@{/assets/imgs/page/homepage10/banner3.png}"
 									alt="Ecom">
 							</div>
 						</div>
@@ -211,7 +209,7 @@
 							</div>
 							<div class="box-img-banner">
 								<img class="img2"
-									th:src="@{/client/assets/imgs/page/homepage10/banner4.png}"
+									th:src="@{/assets/imgs/page/homepage10/banner4.png}"
 									alt="Ecom">
 							</div>
 						</div>
@@ -230,7 +228,7 @@
 							</div>
 							<div class="box-img-banner">
 								<img class="img3"
-									th:src="@{/client/assets/imgs/page/homepage10/banner5.png}"
+									th:src="@{/assets/imgs/page/homepage10/banner5.png}"
 									alt="Ecom">
 							</div>
 						</div>
@@ -312,7 +310,7 @@
 													<div class="image-box">
 														<span class="label bg-brand-2">-17%</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots1.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -322,15 +320,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -361,7 +359,7 @@
 													<div class="image-box">
 														<span class="label bg-danger">Hot</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots2.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -371,15 +369,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -410,7 +408,7 @@
 													<div class="image-box">
 														<span class="label bg-success">New</span><a
 															href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots3.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -420,15 +418,15 @@
 															Soundbar with Wall Mount</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -458,7 +456,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots4.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -468,15 +466,15 @@
 															Hoverboard Electric Scooter</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -506,7 +504,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots5.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -516,15 +514,15 @@
 															All-in-One InkJet Printer</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -568,7 +566,7 @@
 													<div class="image-box">
 														<span class="label bg-brand-2">-17%</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots1.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -578,15 +576,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -617,7 +615,7 @@
 													<div class="image-box">
 														<span class="label bg-danger">Hot</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots2.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -627,15 +625,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -666,7 +664,7 @@
 													<div class="image-box">
 														<span class="label bg-success">New</span><a
 															href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots3.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -676,15 +674,15 @@
 															Soundbar with Wall Mount</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -714,7 +712,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots4.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -724,15 +722,15 @@
 															Hoverboard Electric Scooter</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -762,7 +760,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots5.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -772,15 +770,15 @@
 															All-in-One InkJet Printer</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -824,7 +822,7 @@
 													<div class="image-box">
 														<span class="label bg-brand-2">-17%</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots1.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -834,15 +832,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -873,7 +871,7 @@
 													<div class="image-box">
 														<span class="label bg-danger">Hot</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots2.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -883,15 +881,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -922,7 +920,7 @@
 													<div class="image-box">
 														<span class="label bg-success">New</span><a
 															href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots3.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -932,15 +930,15 @@
 															Soundbar with Wall Mount</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -970,7 +968,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots4.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -980,15 +978,15 @@
 															Hoverboard Electric Scooter</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1018,7 +1016,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots5.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1028,15 +1026,15 @@
 															All-in-One InkJet Printer</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1080,7 +1078,7 @@
 													<div class="image-box">
 														<span class="label bg-brand-2">-17%</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots1.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1090,15 +1088,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1129,7 +1127,7 @@
 													<div class="image-box">
 														<span class="label bg-danger">Hot</span><a
 															href="shop-single-product-3.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots2.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1139,15 +1137,15 @@
 															HD Indoor/Outdoor</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1178,7 +1176,7 @@
 													<div class="image-box">
 														<span class="label bg-success">New</span><a
 															href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots3.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1188,15 +1186,15 @@
 															Soundbar with Wall Mount</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1226,7 +1224,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots4.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1236,15 +1234,15 @@
 															Hoverboard Electric Scooter</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1274,7 +1272,7 @@
 													</div>
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/pots5.png}"
+															th:src="@{/assets/imgs/page/homepage10/pots5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1284,15 +1282,15 @@
 															All-in-One InkJet Printer</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1378,7 +1376,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool1.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1388,15 +1386,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1410,7 +1408,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool2.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1420,15 +1418,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1442,7 +1440,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool3.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1452,15 +1450,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1474,7 +1472,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool4.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1484,15 +1482,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1506,7 +1504,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool5.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1516,15 +1514,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1538,7 +1536,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool6.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool6.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1548,15 +1546,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1570,7 +1568,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool7.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool7.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1580,15 +1578,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1602,7 +1600,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool8.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool8.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1612,15 +1610,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1634,7 +1632,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool9.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool9.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1644,15 +1642,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1679,7 +1677,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool1.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1689,15 +1687,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1711,7 +1709,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool2.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1721,15 +1719,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1743,7 +1741,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool3.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1753,15 +1751,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1775,7 +1773,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool4.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1785,15 +1783,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1807,7 +1805,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool5.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1817,15 +1815,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1839,7 +1837,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool6.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool6.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1849,15 +1847,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1871,7 +1869,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool7.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool7.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1881,15 +1879,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1903,7 +1901,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool8.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool8.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1913,15 +1911,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1935,7 +1933,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool9.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool9.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1945,15 +1943,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -1980,7 +1978,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool1.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -1990,15 +1988,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2012,7 +2010,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool2.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2022,15 +2020,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2044,7 +2042,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool3.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2054,15 +2052,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2076,7 +2074,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool4.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2086,15 +2084,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2108,7 +2106,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool5.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2118,15 +2116,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2140,7 +2138,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool6.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool6.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2150,15 +2148,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2172,7 +2170,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool7.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool7.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2182,15 +2180,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2204,7 +2202,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool8.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool8.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2214,15 +2212,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2236,7 +2234,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool9.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool9.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2246,15 +2244,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2281,7 +2279,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool1.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool1.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2291,15 +2289,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2313,7 +2311,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool2.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool2.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2323,15 +2321,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2345,7 +2343,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool3.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool3.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2355,15 +2353,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2377,7 +2375,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool4.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool4.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2387,15 +2385,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2409,7 +2407,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool5.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool5.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2419,15 +2417,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2441,7 +2439,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool6.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool6.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2451,15 +2449,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2473,7 +2471,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool7.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool7.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2483,15 +2481,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2505,7 +2503,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool8.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool8.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2515,15 +2513,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2537,7 +2535,7 @@
 												<div class="card-grid-style-2">
 													<div class="image-box">
 														<a href="shop-single-product.html"><img
-															th:src="@{/client/assets/imgs/page/homepage10/tool9.png}"
+															th:src="@{/assets/imgs/page/homepage10/tool9.png}"
 															alt="Ecom"></a>
 													</div>
 													<div class="info-right">
@@ -2547,15 +2545,15 @@
 															CEOs and Their Radically Rational Blueprint for Success</a>
 														<div class="rating">
 															<img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
-																th:src="@{/client/assets/imgs/template/icons/star.svg}"
+																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><span class="font-xs color-gray-500">(65)</span>
 														</div>
 														<div class="price-info">
@@ -2577,7 +2575,7 @@
 		<div class="section-box mt-10">
 			<div class="container">
 				<div class="box-ads-home10">
-					<img th:src="@{/client/assets/imgs/page/homepage10/ads.png}"
+					<img th:src="@{/assets/imgs/page/homepage10/ads.png}"
 						alt="Ecom">
 					<div class="info-ads-home10">
 						<div class="d-inline-block text-start">
@@ -2609,7 +2607,7 @@
 							<div class="card-grid-style-1">
 								<div class="image-box">
 									<a href="blog-single-2.html"></a><img
-										th:src="@{/client/assets/imgs/page/homepage10/news1.png}"
+										th:src="@{/assets/imgs/page/homepage10/news1.png}"
 										alt="Ecom">
 								</div>
 								<a class="tag-dot font-xs" href="blog-list.html">News</a><a
@@ -2627,7 +2625,7 @@
 							<div class="card-grid-style-1">
 								<div class="image-box">
 									<a href="blog-single.html"></a><img
-										th:src="@{/client/assets/imgs/page/homepage10/news2.png}"
+										th:src="@{/assets/imgs/page/homepage10/news2.png}"
 										alt="Ecom">
 								</div>
 								<a class="tag-dot font-xs" href="blog-list.html">News</a><a
@@ -2645,7 +2643,7 @@
 							<div class="card-grid-style-1">
 								<div class="image-box">
 									<a href="blog-single-3.html"></a><img
-										th:src="@{/client/assets/imgs/page/homepage10/news3.png}"
+										th:src="@{/assets/imgs/page/homepage10/news3.png}"
 										alt="Ecom">
 								</div>
 								<a class="tag-dot font-xs" href="blog-list.html">News</a><a
@@ -2663,7 +2661,7 @@
 							<div class="card-grid-style-1">
 								<div class="image-box">
 									<a href="blog-single-2.html"></a><img
-										th:src="@{/client/assets/imgs/page/homepage10/news4.png}"
+										th:src="@{/assets/imgs/page/homepage10/news4.png}"
 										alt="Ecom">
 								</div>
 								<a class="tag-dot font-xs" href="blog-list.html">Tips</a><a
@@ -2687,7 +2685,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/client/assets/imgs/template/delivery.svg}"
+								<img th:src="@{/assets/imgs/template/delivery.svg}"
 									alt="Ecom">
 							</div>
 							<div class="info-right">
@@ -2699,7 +2697,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/client/assets/imgs/template/support.svg}"
+								<img th:src="@{/assets/imgs/template/support.svg}"
 									alt="Ecom">
 							</div>
 							<div class="info-right">
@@ -2711,7 +2709,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/client/assets/imgs/template/voucher.svg}"
+								<img th:src="@{/assets/imgs/template/voucher.svg}"
 									alt="Ecom">
 							</div>
 							<div class="info-right">
@@ -2723,7 +2721,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/client/assets/imgs/template/return.svg}"
+								<img th:src="@{/assets/imgs/template/return.svg}"
 									alt="Ecom">
 							</div>
 							<div class="info-right">
@@ -2735,7 +2733,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/client/assets/imgs/template/secure.svg}"
+								<img th:src="@{/assets/imgs/template/secure.svg}"
 									alt="Ecom">
 							</div>
 							<div class="info-right">
@@ -2789,37 +2787,37 @@
 											<div class="product-image-slider-2">
 												<figure class="border-radius-10">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-1.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-2.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-3.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-4.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-5.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-6.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-7.jpg}"
 														alt="product image">
 												</figure>
 											</div>
@@ -2828,49 +2826,49 @@
 											<div>
 												<div class="item-thumb">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-1.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-2.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-3.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-4.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-5.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-6.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
 													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+														th:src="@{/assets/imgs/page/product/img-gallery-7.jpg}"
 														alt="product image">
 												</div>
 											</div>
@@ -2897,15 +2895,15 @@
 											class="byAUthor color-gray-900 font-xs font-medium"
 											href="shop-vendor-list.html"> Ecom Tech</a>
 										<div class="rating d-inline-block">
-											<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											<img th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><span
 												class="font-xs color-gray-500 font-medium"> (65
 												reviews)</span>
@@ -2932,25 +2930,25 @@
 										</p>
 										<ul class="list-colors">
 											<li class="disabled"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+												th:src="@{/assets/imgs/page/product/img-gallery-1.jpg}"
 												alt="Ecom" title="Pink"></li>
 											<li><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+												th:src="@{/assets/imgs/page/product/img-gallery-2.jpg}"
 												alt="Ecom" title="Gold"></li>
 											<li><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+												th:src="@{/assets/imgs/page/product/img-gallery-3.jpg}"
 												alt="Ecom" title="Pink Gold"></li>
 											<li><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+												th:src="@{/assets/imgs/page/product/img-gallery-4.jpg}"
 												alt="Ecom" title="Silver"></li>
 											<li class="active"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+												th:src="@{/assets/imgs/page/product/img-gallery-5.jpg}"
 												alt="Ecom" title="Pink Gold"></li>
 											<li class="disabled"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+												th:src="@{/assets/imgs/page/product/img-gallery-6.jpg}"
 												alt="Ecom" title="Black"></li>
 											<li class="disabled"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+												th:src="@{/assets/imgs/page/product/img-gallery-7.jpg}"
 												alt="Ecom" title="Red"></li>
 										</ul>
 									</div>
