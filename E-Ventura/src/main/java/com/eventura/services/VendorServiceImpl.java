@@ -47,7 +47,7 @@ public class VendorServiceImpl implements VendorService {
 	}
 
 	@Override
-	public int sumByVendorId(int id) {
+	public double sumByVendorId(int id) {
 		// TODO Auto-generated method stub
 		return vendorEarningRepository.sumByVendorId(id);
 	}

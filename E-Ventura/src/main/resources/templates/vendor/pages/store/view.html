@@ -16,24 +16,23 @@
 					<div class="col-xl col-lg flex-grow-0" style="flex-basis:230px">
 						<div class="img-thumbnail shadow w-100 bg-white position-relative text-center"
 							style="height:190px; width:200px; margin-top:-120px"><img class="center-xy img-fluid"
-								th:src="@{/vendor/assets/imgs/brands/brand-3.jpg}" alt="Logo Brand"></div>
+								th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}" alt="Logo Brand"></div>
 					</div>
 					<!-- col.//-->
 					<div class="col-xl col-lg">
-						<h3>Cocorico sports shop</h3>
-						<p>3891 Ranchview Dr. Richardson, California 62639</p>
+						<h3 th:text="${vendor.name}"></h3>
+						<p>
+							<span style="font-weight: bold;">Address: </span>
+							<span th:text="${user.userAddresses[0].address}"></span>
+						</p>
+
+						<p>
+							<span style="font-weight: bold;">Type: </span>
+							<span th:text="${vendor.vendorSettings.vendorType}"></span>
+						</p>
 					</div>
 					<!-- col.//-->
-					<div class="col-xl-4 text-md-end">
-						<select class="form-select w-auto d-inline-block">
-							<option>Actions</option>
-							<option>Disable shop</option>
-							<option>Analyze</option>
-							<option>Something</option>
-						</select><a class="btn btn-primary" href="#">View live<i
-								class="material-icons md-launch"></i></a>
-					</div>
-					<!-- col.//-->
+
 					<!-- card-body.//-->
 					<hr class="my-4">
 					<div class="row g-4">
@@ -42,29 +41,34 @@
 								<p class="mb-0 text-muted">Total sales:</p>
 								<h5 class="text-success">238</h5>
 								<p class="mb-0 text-muted">Revenue:</p>
-								<h5 class="text-success mb-0">$2380</h5>
+								<h5 class="text-success mb-0" th:text="${revenue}"></h5>
 							</article>
 						</div>
 						<!-- col.//-->
 						<div class="col-sm-6 col-lg-4 col-xl-3">
 							<h6>Contacts</h6>
-							<p>Manager: Jerome Bell<br> info@example.com<br> (229) 555-0109, (808) 555-0111</p>
+							<p>
+								<span>Contact Name: </span>
+								<span th:text="${vendor.contactName}"></span>
+							</p>
+							<p>
+								<span>Contact Email: </span>
+								<span th:text="${vendor.contactEmail}"></span>
+							</p>
+							<p>
+								<span>Phone: </span>
+								<span th:text="${user.phoneNumber}"></span>
+							</p>
 						</div>
 						<!-- col.//-->
 						<div class="col-sm-6 col-lg-4 col-xl-3">
 							<h6>Address</h6>
-							<p>Country: California<br> Address: Ranchview Dr. Richardson<br> Postal code: 62639</p>
+							<p th:text="${user.userAddresses[0].address}"></p>
+							<p
+								th:text="${user.userAddresses[0].provinces.name + ', ' + user.userAddresses[0].districts.name + ', ' + user.userAddresses[0].wards.name}">
+							</p>
 						</div>
-						<!-- col.//-->
-						<div class="col-sm-6 col-xl-4 text-xl-end"><map
-								class="mapbox position-relative d-inline-block"><img class="rounded2"
-									th:src="@{/vendor/assets/imgs/misc/map.jpg}" alt="map" height="120"><span class="map-pin"
-									style="top:50px; left: 100px"></span>
-								<button
-									class="btn btn-sm btn-brand position-absolute bottom-0 end-0 mb-15 mr-15 font-xs">
-									Large</button></map></div>
-						<!-- col.//-->
-						<!-- row.//-->
+
 						<!-- card-body.//-->
 					</div>
 				</div>
@@ -75,272 +79,28 @@
 			<div class="card-body">
 				<h5 class="card-title">Products by seller</h5>
 				<div class="row">
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/1.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
+					<th:block th:each="product : ${products}">
+						<div class="col-xl-2 col-lg-3 col-md-6">
+							<div class="card card-product-grid">
+								<a class="img-wrap" th:href="@{'/vendor/product/edit/' + ${product.id}}">
+									<th:block th:if="${product.mediases[0].name.contains('https:')}">
+										<img class="img-sm img-thumbnail" th:src="${product.mediases[0].name}">
+									</th:block>
+									<th:block th:if="${!product.mediases[0].name.contains('https:')}">
+										<img class="img-sm img-thumbnail"
+											th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}">
+									</th:block>
+								</a>
+								<div class="info-wrap">
+									<a class="title" th:href="@{'/vendor/product/edit/' + ${product.id}}">
+										<p th:text="${product.name}"></p>
+									</a>
+									<div class="price mt-1" th:text="${product.price}"></div>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/2.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/3.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Jeans short new model</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/4.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Travel Bag XL</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/5.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/6.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/7.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/8.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Apple Airpods CB-133</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/9.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/10.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/11.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Jeans short new model</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/12.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Travel Bag XL</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/1.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/2.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/3.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Jeans short new model</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/4.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Travel Bag XL</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/5.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/6.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/7.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/8.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Apple Airpods CB-133</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/9.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/10.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Product name</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/11.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Jeans short new model</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</div>
-						</div>
-					</div>
-					<div class="col-xl-2 col-lg-3 col-md-6">
-						<div class="card card-product-grid"><a class="img-wrap" href="#"><img
-									th:src="@{/vendor/assets/imgs/items/12.jpg}" alt="Product"></a>
-							<div class="info-wrap"><a class="title" href="#">Travel Bag XL</a>
-								<div class="price mt-1">$179.00</div>
-								<!-- price-wrap.//-->
-								<!-- card-product  end//-->
-								<!-- col.//-->
-								<!-- row.//-->
-								<!-- card-body.//-->
-							</div>
-						</div>
-					</div>
+					</th:block>
+
 				</div>
 			</div>
 		</div>

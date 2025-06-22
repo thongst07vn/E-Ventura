@@ -47,24 +47,36 @@
 
 												<div class="row gx-2">
 													<div class="col-md-6 mb-2">
-														<select class="form-select" id="provinceSelect">
-															<option selected disabled>Provinces</option>
+														<!-- Province -->
+														<select class="form-select" id="provinceSelect" th:field="${user.userAddresses[0].provinces.code}">
+															<option value="" disabled selected>Chọn Tỉnh/Thành</option>
 															<option th:each="province : ${provinces}"
-															        th:value="${province.code}" 
+															        th:value="${province.code}"
 															        th:text="${province.name}">
 															</option>
 														</select>
 													</div>
 
 													<div class="col-md-6 mb-2">
-														<select class="form-select" id="districtSelect" disabled>
-															<option selected disabled>District</option>
+
+														<!-- District -->
+														<select class="form-select" id="districtSelect" th:field="${user.userAddresses[0].districts.code}">
+															<option value="" disabled selected>Chọn Quận/Huyện</option>
+															<option th:each="district : ${districts}"
+															        th:value="${district.code}"
+															        th:text="${district.name}">
+															</option>
 														</select>
 													</div>
 
 													<div class="col-md-6 mb-2">
-														<select class="form-select" id="wardSelect" disabled>
-															<option selected disabled>Ward</option>
+														<!-- Ward -->
+														<select class="form-select" id="wardSelect" th:field="${user.userAddresses[0].wards.code}">
+															<option value="" disabled selected>Chọn Phường/Xã</option>
+															<option th:each="ward : ${wards}"
+															        th:value="${ward.code}"
+															        th:text="${ward.name}">
+															</option>
 														</select>
 													</div>
 												</div>

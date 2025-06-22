@@ -16,25 +16,24 @@
 					<div class="col-xl col-lg flex-grow-0" style="flex-basis:230px">
 						<div class="img-thumbnail shadow w-100 bg-white position-relative text-center"
 							style="height:190px; width:200px; margin-top:-120px"><img class="center-xy img-fluid"
-								th:src="@{/vendor/assets/imgs/brands/brand-3.jpg}" alt="Logo Brand"></div>
-						<a class="btn btn-light rounded font-md mt-3" href="#"><i
-								class="icons material-icons md-backup font-md"></i> Upload</a>
+								th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}" alt="Logo Brand"></div>
 					</div>
 					<!-- col.//-->
 					<div class="col-xl col-lg">
-						<h3>Cocorico sports shop</h3>
-						<p>3891 Ranchview Dr. Richardson, California 62639</p>
+						<h3 th:text="${vendor.name}"></h3>
+						<p>
+							<span style="font-weight: bold;">Address: </span> 
+							<span th:text="${user.userAddresses[0].address}"></span>
+						</p>
+
+						<p>
+							<span style="font-weight: bold;">Type: </span> 
+							<span th:text="${vendor.vendorSettings.vendorType}"></span>
+						</p>
+
+
 					</div>
-					<!-- col.//-->
-					<div class="col-xl-4 text-md-end">
-						<select class="form-select w-auto d-inline-block">
-							<option>Actions</option>
-							<option>Disable shop</option>
-							<option>Analyze</option>
-							<option>Something</option>
-						</select><a class="btn btn-primary" href="#">View live<i
-								class="material-icons md-launch"></i></a>
-					</div>
+					
 					<!-- col.//-->
 					<!-- card-body.//-->
 					<hr class="my-4">
@@ -44,26 +43,26 @@
 								<div class="row gx-3">
 									<div class="col-6 mb-3">
 										<label class="form-label">Store name</label>
-										<input class="form-control" type="text" placeholder="Type here">
+										<input class="form-control" type="text" th:field="${vendor.name}">
 									</div>
 									<div class="col-6 mb-3">
 										<label class="form-label">Store Type</label>
-										<input class="form-control" type="text" placeholder="Type here">
+										<input class="form-control" type="text" th:value="${vendor.vendorSettings.vendorType}"  readonly>
 									</div>
 									<div class="col-6 mb-3">
 										<label class="form-label">Contact name</label>
-										<input class="form-control" type="text" placeholder="Type here">
+										<input class="form-control" type="text" th:field="${vendor.contactName}">
 									</div>
 									<!-- col .//-->
 									<!-- col .//-->
 									<div class="col-lg-6 mb-3">
 										<label class="form-label">Email</label>
-										<input class="form-control" type="email" placeholder="example@mail.com">
+										<input class="form-control" type="email" th:field="${vendor.contactEmail}">
 									</div>
 
 									<div class="col-lg-12 mb-4">
 										<label class="form-label">Full description</label>
-										<textarea class="form-control" placeholder="Type here" rows="4"></textarea>
+										<textarea class="form-control" rows="4" th:field="${vendor.description}"></textarea>
 									</div>
 
 
