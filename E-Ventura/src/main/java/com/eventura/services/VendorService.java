@@ -13,6 +13,6 @@ public interface VendorService {
 	public List<Vendors> findAll();
 	public Vendors findById(int id);
 	public int countByVendorId(int id); 
-	public int sumByVendorId(int id); 
+	public double sumByVendorId(int id); 
 	public Page<Vendors> findAlls(Pageable pageable);
 }

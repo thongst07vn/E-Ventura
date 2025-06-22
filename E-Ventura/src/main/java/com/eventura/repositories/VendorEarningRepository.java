@@ -17,5 +17,5 @@ public interface VendorEarningRepository extends JpaRepository<VendorEarnings, I
 	@Query("select count(v) from VendorEarnings v where v.vendors.id = :id")
 	public int countByVendorId(@Param("id") int id);
 	@Query("select sum(v.amount) from VendorEarnings v where v.vendors.id = :id")
-	public int sumByVendorId(@Param("id") int id);
+	public double sumByVendorId(@Param("id") int id);
 }
