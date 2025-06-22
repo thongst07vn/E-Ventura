@@ -19,6 +19,7 @@
 					shipping and billing addresses and edit your password and account
 					details.
 				</p>
+				<span th:class="${classedit}" th:if="${msg}" th:text="${msg}"></span>
 				<div class="box-tabs mb-100">
 					<ul class="nav nav-tabs nav-tabs-account" role="tablist">
 						<li><a class="active" href="#tab-notification"
@@ -796,7 +797,7 @@
 																	<label class="form-label">Email</label> <input
 																		class="form-control" type="email"
 																		placeholder="example@mail.com"
-																		th:field="${user.email}" disabled="disabled">
+																		th:field="${user.email}" readonly="readonly">
 																</div>
 																<!-- col .//-->
 																<div class="col-lg-6 mb-3">
@@ -822,12 +823,22 @@
 														</div>
 														<aside class="col-lg-4">
 															<figure class="text-lg-center">
-																<img id="userAvatar" class="img-lg mb-3 img-avatar"
-																	th:src="@{'/assets/imgs/avatars/'+${user.avatar}}"
-																	alt="User Photo">
+																<th:block
+																	th:if="${user.avatar.contains('https:')}">
+																	<img id="userAvatar" class="img-lg mb-3 img-avatar"
+																		th:src="${user.avatar}"
+																		alt="User Photo">
+																</th:block>
+																<th:block
+																	th:if="${!user.avatar.contains('https:')}">
+																	<img id="userAvatar" class="img-lg mb-3 img-avatar"
+																		th:src="@{'/assets/imgs/avatars/'+${user.avatar}}"
+																		alt="User Photo">
+																</th:block>
+																
 																<figcaption>
 																	<input type="file" name="file" id="actualFileInput"
-																		hidden accept="image/*"> <a href="#"
+																		hidden accept=".png,.jpg"> <a href="#"
 																		class="btn btn-cart w-auto" id="uploadButton">
 																		Upload </a>
 
@@ -916,16 +927,17 @@
 															<div class="card-body bg-light">
 
 																<th:block th:each="userAdress, i : ${userAdresses}">
-																<article class="box mb-3 bg-light">
-																	<a class="btn btn-cart w-auto float-end" href="#">Change</a>
-																	<a class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a>
-																	<a class="btn btn-cart-delete w-auto float-end" href="#">Delete</a>
-																	<h6 th:text="Address + ${i.index+1}"></h6>
-																	<small class="text-muted d-block" style="width: 70%"> <th:block
-																			th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}"></th:block>
+																	<article class="box mb-3 bg-light">
+																		<a class="btn btn-cart w-auto float-end" href="#">Change</a>
+																		<a class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a> <a
+																			class="btn btn-cart-delete w-auto float-end" href="#">Delete</a>
+																		<h6 th:text="Address + ${i.index+1}"></h6>
+																		<small class="text-muted d-block" style="width: 70%">
+																			<th:block
+																				th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}"></th:block>
 
-																	</small>
-																</article>
+																		</small>
+																	</article>
 																</th:block>
 															</div>
 														</div>
