@@ -11,7 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import com.eventura.entities.Roles;
 import com.eventura.entities.Users;
+import com.eventura.services.RoleService;
 import com.eventura.services.UserService;
 
 import jakarta.servlet.ServletException;
@@ -23,6 +25,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
 	@Autowired
 	private UserService userService; 
+	@Autowired
+	private RoleService roleService; 
 	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -33,11 +37,18 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 		String name = accountOAuth2User.getName();
 		if(userService.findByEmail(email)==null) {
 			Users user = new Users();
+			user.setFirstName(name);
+			user.setLastName(name);
 			user.setEmail(email);
 			user.setUsername(name);
 			user.setBirthOfDate(new Date());
+			user.setPassword("1");	
+			user.setPhoneNumber("0123456789");
+			user.setRoles(roleService.findById(3));
 			if(accountOAuth2User.getAvatar() != null) {
 				user.setAvatar(accountOAuth2User.getAvatar());
+			} else {
+				user.setAvatar("noimg.jpg");				
 			}
 			user.setCreatedAt(new Date());
 			userService.save(user);

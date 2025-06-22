@@ -128,7 +128,7 @@ public class UserController {
 	            String fileName = FileHelper.generateFileName(file.getOriginalFilename());
 	            // Using getFile() might fail if running from a JAR; consider using getResourceAsStream() and Files.copy()
 	            // Or get a path outside of the JAR for persistent storage
-	            File imagesFolder = new ClassPathResource("static/images").getFile();
+	            File imagesFolder = new ClassPathResource("static/assets/imgs/avatars/").getFile();
 	            Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
 	            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 	            user.setAvatar(fileName);
