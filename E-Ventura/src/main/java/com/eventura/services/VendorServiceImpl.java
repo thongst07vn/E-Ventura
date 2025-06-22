@@ -17,16 +17,23 @@ import org.springframework.stereotype.Service;
 import com.eventura.entities.Users;
 import com.eventura.entities.VendorEarnings;
 import com.eventura.entities.Vendors;
+import com.eventura.repositories.UserRepository;
 import com.eventura.repositories.VendorEarningRepository;
 import com.eventura.repositories.VendorRepository;
 
 @Service
 public class VendorServiceImpl implements VendorService {
 
+    private final UserRepository userRepository;
+
 	@Autowired
 	private VendorRepository vendorRepository;
 	@Autowired
 	private VendorEarningRepository vendorEarningRepository;
+
+    VendorServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 	
 	@Override
 	public List<Vendors> findAll() {
@@ -56,6 +63,19 @@ public class VendorServiceImpl implements VendorService {
 	public Page<Vendors> findAlls(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return vendorRepository.findAll(pageable);
+	}
+
+	@Override
+	public boolean disableVendorUser(Users users) {
+		// TODO Auto-generated method stub
+		try {
+			userRepository.save(users);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

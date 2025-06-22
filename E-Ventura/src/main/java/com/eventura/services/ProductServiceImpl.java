@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public List<Products> findAll() {
 		// TODO Auto-generated method stub
-		return productRepository.findAll();
+		return productRepository.findAll(Sort.by("createdAt").descending());
 	}
 
 	@Override
@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<Products> findAlls(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return productRepository.findAll(pageable);
+		return productRepository.findAllProduct(pageable);
 	}
 
 	@Override
