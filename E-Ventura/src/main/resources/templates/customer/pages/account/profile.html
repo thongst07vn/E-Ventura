@@ -939,7 +939,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        ...
+	
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -977,7 +977,131 @@
 														<div class="card">
 															<div class="card-body bg-light">
 																<article class="box mb-3 bg-light">
-																	<a class="btn btn-cart w-auto float-end" href="#">Change</a>
+																	<a class="btn btn-cart w-auto float-end" data-bs-toggle="modal" data-bs-target="#changePasswordModel">Change</a>
+																	
+  <!-- modal -->
+<div class="modal fade" id="changePasswordModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Change password</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form method="post" th:action="@{/customer/changepassword}" id="changepasswordform">
+                    <label class="form-label">Current password</label>
+	        <input class="form-control" type="password" id="oldPassword" required="required">
+	      <label class="form-label">New password</label>
+	        <input class="form-control" type="password" id="newPassword" name="newPassword" required="required">
+	      <label class="form-label">Enter new password again</label>
+	        <input class="form-control" type="password" id="newRePassword" required="required">
+      </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveChangePassword">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	document.getElementById("saveChangePassword").addEventListener("click",async ()  =>{
+		try {
+			var feedback = [];
+			const minLength = 8; // Example: Minimum length requirement
+		    const hasNumber = /\d/; // Regular expression to check for at least one digit (0-9)
+		    const hasUppercase = /[A-Z]/; // Regular expression to check for at least one uppercase letter (A-Z)
+		    const hasSpecialChar = /[!@#$%^&*()_+]/;
+			
+			var oldPassword = document.getElementById("oldPassword");
+			var newPassword = document.getElementById("newPassword");
+			var newRePassword = document.getElementById("newRePassword");
+		    const response = await fetch('/api/password/checkpassword', { // Your backend API endpoint
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		            // If using Spring Security CSRF, uncomment and add your token:
+		            // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
+		        },
+		        body: JSON.stringify({
+		        	inputPassword: oldPassword.value
+		        })
+		    });
+
+		    const responseData = await response.json(); // Assuming your backend returns JSON
+			const checkrepassword = newPassword.value == newRePassword.value;
+		    if (responseData.ok && checkrepassword) { 		      
+		        Swal.fire({ // Using SweetAlert2 for success message (if still included)
+		            icon: 'success',
+		            title: 'Success!',
+		            text: responseData.message || 'Password updated successfully!',
+		            confirmButtonText: 'OK'
+		        }).then(() => {
+		            changePasswordModal.hide(); // Hide the modal on success
+		        });
+
+		    }
+		    if(!responseData)
+		    { // HTTP status 400, 500, etc.
+		        // Server-side validation failed (e.g., incorrect current password)
+		        	oldPassword.classList.add('is-invalid');
+		        	feedback.push("Incorrect current password.");
+		            // The modal remains open because we don't call changePasswordModal.hide() here		       
+		    }
+		    if(!checkrepassword)
+		    { // HTTP status 400, 500, etc.
+		        // Server-side validation failed (e.g., incorrect current password)
+		    		newRePassword.classList.add('is-invalid');
+		    		feedback.push("Incorrect re password.");
+		            // The modal remains open because we don't call changePasswordModal.hide() here		       
+		    }
+		    if (newPassword.value.length < minLength) {
+		        feedback.push("Password must be at least 8 characters long.");
+		    }
+
+		    if (!hasNumber.test(newPassword.value)) {
+		        feedback.push("Password must contain at least one number.");
+		    }
+
+		    if (!hasUppercase.test(newPassword.value)) {
+		        feedback.push("Password must contain at least one uppercase letter.");
+		    }
+
+		    if (!hasSpecialChar.test(newPassword.value)) {
+		        feedback.push("Password must contain at least one special character (e.g., !@#$%^&*).");
+		    }
+		    if(feedback.length === 0 && checkrepassword && responseData){
+		    	document.getElementById("changepasswordform").submit();
+		    	//Swal.fire({
+			     //   icon: 'success',
+			      //  title: 'Change password success!',
+			     //   confirmButtonText: 'OK'
+			    //});
+		    } else {
+		    	let errorMessage = '';
+		    	for(let i=0; i<feedback.length ; i++){
+		    		errorMessage += feedback[i] + '<br/>'
+		    	}
+		    	 Swal.fire({
+				        icon: 'error',
+				        title: 'Error!',
+				        html: errorMessage,
+				        confirmButtonText: 'OK'
+				    });
+		    }
+		} catch (error) {
+		    console.error('Network or unexpected error:', error);
+		    Swal.fire({
+		        icon: 'error',
+		        title: 'Error!',
+		        text: 'A network error occurred. Please try again later.',
+		        confirmButtonText: 'OK'
+		    });
+		}
+	});
+</script>
+																	
 																	<h6>Password</h6>
 																	<small class="text-muted d-block" style="width: 70%">You
 																		can reset or change your password by clicking here</small>
