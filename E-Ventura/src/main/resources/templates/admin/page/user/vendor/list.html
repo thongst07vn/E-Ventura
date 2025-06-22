@@ -93,13 +93,13 @@
 											Vendor Tyoe:
 											<th:block th:text="${vendor.vendorSettings.vendorType}"></th:block>
 										</p>
-											Vendor Status: 
-											<th:block th:if="${vendor.users.deletedAt == null}">
-												<span class="badge rounded-pill alert-success">Enable</span>
-											</th:block>
-											<th:block th:if="${vendor.users.deletedAt != null}">
-												<span class="badge rounded-pill alert-danger">Disable</span>
-											</th:block>
+										Vendor Status:
+										<th:block th:if="${vendor.users.deletedAt == null}">
+											<span class="badge rounded-pill alert-success">Enable</span>
+										</th:block>
+										<th:block th:if="${vendor.users.deletedAt != null}">
+											<span class="badge rounded-pill alert-danger">Disable</span>
+										</th:block>
 										<p>
 											<th:block th:text="${vendor.users.email}"></th:block>
 										</p>
@@ -122,6 +122,13 @@
 		<div class="pagination-area mt-15 mb-50">
 			<nav aria-label="Page navigation example">
 				<ul class="pagination justify-content-start">
+					<li class="page-item"
+						th:classappend="${currentPages == 0} ? 'hidden'"><a
+						class="page-link"
+						th:href="@{'?page=' + ${0}+'&pageSize='+${pageSize}}"
+						aria-label="Next"> <i class="material-icons md-double_arrow"
+							style="transform: rotate(180deg) translate(15%, -30%);"></i>
+					</a></li>
 					<!-- Nút trước -->
 					<li class="page-item"
 						th:classappend="${currentPages == 0} ? 'disabled'"><a
@@ -147,6 +154,14 @@
 						<a class="page-link"
 						th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
 						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+					</a>
+					</li>
+
+					<li class="page-item"
+						th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+						<a class="page-link"
+						th:href="@{'?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
+						aria-label="Next"><i class="material-icons md-double_arrow"></i>
 					</a>
 					</li>
 				</ul>

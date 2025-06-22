@@ -1005,8 +1005,8 @@ textarea.form-control {
   flex-shrink: 0;
   margin-right: 15px;
 }
-.md-edit{
-	transform: translateY(-25%);
+.md-edit, .md-article{
+	transform: translateY(-28%);
 }
 .md-delete_forever{
 	transform: translateY(-25%);
