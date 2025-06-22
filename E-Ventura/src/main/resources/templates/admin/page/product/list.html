@@ -45,7 +45,8 @@
 							<select class="form-select" name="vendorId" id="vendorSelect">
 								<option value="0" th:selected="${selectedVendorId == 0}">All
 									Vendor</option>
-								<option th:each="vendor : ${vendors}" th:if="${vendor.users.deletedAt==null}" th:value="${vendor.id}" 
+								<option th:each="vendor : ${vendors}"
+									th:if="${vendor.users.deletedAt==null}" th:value="${vendor.id}"
 									th:text="${vendor.name}"
 									th:selected="${vendor.id == selectedVendorId}"></option>
 							</select>
@@ -106,12 +107,20 @@
 								<div class="col-lg-1 col-sm-2 col-4 col-date">
 									<span><th:block th:text="${product.vendors.name}"></th:block></span>
 								</div>
-								<div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-									<a class="btn btn-sm font-sm rounded btn-brand mr-5"
-										th:href="@{/admin/product/edit}"><i
-										class="material-icons md-edit"></i> Edit</a><a
-										class="btn btn-sm font-sm btn-light rounded" href="#"><i
-										class="material-icons md-delete_forever"></i> Delete</a>
+								<div class="col-lg-1 col-sm-2 col-4 col-date">
+									<span><ul class="rating-stars">
+											<li class="stars-active" style="width: 100%;"><img
+												th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 20px;"></li>
+											<li><img
+												th:src="@{/assets/imgs/icons/starts-disable.svg}"
+												alt="stars" style="height: 20px;"></li>
+										</ul></span>
+								</div>
+								<div class="col-lg-2 col-sm-2 col-4 col-action text-center">
+									<a class="btn btn-sm rounded btn-brand"
+										th:href="@{'/admin/product/detail/'+${product.id}}"><i
+										class="material-icons md-article"></i> Details</a>
 								</div>
 							</div>
 							<!-- row .//-->
@@ -124,10 +133,18 @@
 		</div>
 		<!-- card end//-->
 		<!-- Trường hợp danh sách theo category -->
-		<th:block th:if="${selectedCategoryId != null && selectedVendorId == null && !#lists.isEmpty(products)}">
+		<th:block
+			th:if="${selectedCategoryId != null && selectedVendorId == null && !#lists.isEmpty(products)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
+							class="page-link"
+							th:href="@{'/admin/product/search-by-category?categoryId=' + ${selectedCategoryId} + '&page=' + ${0}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
 						<!-- Nút trước -->
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'disabled'"><a
@@ -153,15 +170,31 @@
 							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 						</a>
 						</li>
+
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'/admin/product/search-by-category?categoryId=' + ${selectedCategoryId} + '&page=' + ${lastPageIndex}}"
+							aria-label="Next"><i class="material-icons md-double_arrow"></i>
+						</a>
+						</li>
 					</ul>
 				</nav>
 			</div>
 		</th:block>
 		<!-- Trường hợp danh sách theo vendor -->
-		<th:block th:if="${selectedVendorId != null && selectedCategoryId == null && !#lists.isEmpty(products)}">
+		<th:block
+			th:if="${selectedVendorId != null && selectedCategoryId == null && !#lists.isEmpty(products)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
+							class="page-link"
+							th:href="@{'/admin/product/search-by-category?vendorId=' + ${selectedVendorId} + '&page=' + ${0}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
 						<!-- Nút trước -->
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'disabled'"><a
@@ -187,16 +220,31 @@
 							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 						</a>
 						</li>
+
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'/admin/product/search-by-vendor?vendorId=' + ${selectedVendorId} + '&page=' + ${lastPageIndex}}"
+							aria-label="Next"><i class="material-icons md-double_arrow"></i>
+						</a>
+						</li>
 					</ul>
 				</nav>
 			</div>
 		</th:block>
 
 		<!-- Trường hợp danh sách tất cả sản phẩm -->
-		<th:block th:if="${selectedCategoryId == null && selectedVendorId == null && !#lists.isEmpty(products)}">
+		<th:block
+			th:if="${selectedCategoryId == null && selectedVendorId == null && !#lists.isEmpty(products)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
+							class="page-link" th:href="@{'/admin/product/list?page=' + ${0}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
 						<!-- Nút trước -->
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'disabled'"><a
@@ -221,6 +269,14 @@
 							<a class="page-link"
 							th:href="@{'/admin/product/list?page=' + ${currentPages+1}}"
 							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'/admin/product/list?page=' + ${lastPageIndex}}"
+							aria-label="Next"><i class="material-icons md-double_arrow"></i>
 						</a>
 						</li>
 					</ul>

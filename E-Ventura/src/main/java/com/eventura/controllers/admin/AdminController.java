@@ -110,16 +110,12 @@ public class AdminController {
 		return "admin/page/product/list";
 	}
 
-	@GetMapping("product/add")
-	public String productAdd(Model model) {
-		model.addAttribute("currentPage", "product");
-		return "admin/page/product/add";
-	}
-
-	@GetMapping("product/edit")
-	public String productEdit(Model model) {
-		model.addAttribute("currentPage", "product");
-		return "admin/page/product/edit";
+	@GetMapping("product/detail/{id}")
+	public String productdetail(ModelMap modelMap,@PathVariable("id") int id) {
+		modelMap.put("product", productService.findById(id));
+		modelMap.put("vendorAddresses", userService.findAddressUser(productService.findById(id).getVendors().getId()));
+		modelMap.put("currentPage", "product");
+		return "admin/page/product/detail";
 	}
 
 	// ======= Search PRODUCT ========
