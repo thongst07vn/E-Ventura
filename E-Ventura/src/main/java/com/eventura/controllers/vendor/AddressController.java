@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eventura.dtos.DistrictsDTO;
+import com.eventura.dtos.WardsDTO;
 import com.eventura.entities.Districts;
-import com.eventura.entities.DistrictsDTO;
 import com.eventura.entities.Provinces;
 import com.eventura.entities.Users;
 import com.eventura.entities.Wards;
-import com.eventura.entities.WardsDTO;
 import com.eventura.services.AddressService;
 import com.eventura.services.UserService;
 

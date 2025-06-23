@@ -25,12 +25,19 @@
 						</div>
 					</div>
 					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-						<form>
-							<select class="form-select" name="category">
-								<option th:each="category : ${categories}" th:value="${category.id}"
-									th:text="${category.name}"></option>
+						<form id="venderCategorySearchForm" 
+							  method="GET" 
+							  th:action="@{/vendor/product/searchByVendorCategory}">
+							<select class="form-select" name="categoryId" id="categorySelect">
+								<option th:each="vendorCategory : ${vendorCategories}" th:value="${vendorCategory.id}"
+									th:text="${vendorCategory.productCategories.name}"></option>
 							</select>
 						</form>
+						<script>
+							document.getElementById('categorySelect').addEventListener('change', function () {
+								document.getElementById('venderCategorySearchForm').submit();
+							});
+						</script>
 					</div>
 
 				</div>
@@ -61,7 +68,7 @@
 										</th:block>
 										<th:block th:if="${!product.mediases[0].name.contains('https:')}">
 											<img class="img-sm img-thumbnail"
-												th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}"
+												th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}"
 												alt="Item">
 										</th:block>
 									</div>
@@ -97,18 +104,39 @@
 			</div>
 		</div>
 		<!-- card end//-->
-		<div class="pagination-area mt-30 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
-				</ul>
-			</nav>
-		</div>
+
+		<!-- Trường hợp danh sách tất cả sản phẩm -->
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút trước -->
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							th:href="@{'/vendor/product/list?page=' + ${currentPages-1}}"
+							class="page-link" aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/vendor/product/list?page=' + ${i}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/vendor/product/list?page=' + ${currentPages+1}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
 	</section>
 </body>
