@@ -94,9 +94,28 @@ public class SecurityConfiguration {
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 							Authentication authentication) throws IOException, ServletException {
 						System.out.println("Admin Login Success for user: " + authentication.getName());
+						boolean isVendor = false;
+				        for (GrantedAuthority authority : authentication.getAuthorities()) {
+				            if ("ROLE_VENDOR".equals(authority.getAuthority()) || "ROLE_CUSTOMER".equals(authority.getAuthority())) {
+				                isVendor = true;
+				                break;
+				            }
+				        }
+
+				        if (isVendor) {
+				            // Logout the vendor user
+				            SecurityContextHolder.clearContext(); // Clear security context
+				            // Optionally, invalidate session
+				            request.getSession().invalidate();
+				            // Redirect to login with error parameter
+				            response.sendRedirect("/admin/login?error=Restricted");
+				            return;
+				        }
 						Map<String,String> redirectUrls = new HashMap<>();
-						redirectUrls.put("ROLE_ADMIN","/admin/dashboard"); // Redirect ADMINs to dashboard
-						String url ="/admin/login?error"; // Default fallback if no matching role found
+						redirectUrls.put("ROLE_ADMIN","/admin/dashboard"); // Redirect ADMINs to dashboard // Redirect ADMINs to dashboard
+						redirectUrls.put("ROLE_VENDOR","/admin/logout");
+						redirectUrls.put("ROLE_CUSTOMER","/admin/logout");
+						String url ="/admin/login?error=Wrong%20Password%20or%20Email"; // Default fallback if no matching role found
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
 							System.out.println(authentication.getName());
 							if(redirectUrls.containsKey(authority.getAuthority())) {
@@ -114,7 +133,7 @@ public class SecurityConfiguration {
 							HttpServletResponse response, AuthenticationException exception)
 							throws IOException, ServletException {
 						System.out.println("Admin Login Failure for email: " + request.getParameter("email"));
-						response.sendRedirect("/admin/login?error"); // Redirect back to admin login with error
+						response.sendRedirect("/admin/login?error=Wrong%20Password%20or%20Email"); // Redirect back to admin login with error
 					}
 				});
 			})
@@ -140,7 +159,7 @@ public class SecurityConfiguration {
 					public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 							throws IOException, ServletException {
 						System.out.println("Admin Logout Success");
-						response.sendRedirect("/admin/login?logout"); // Redirect to admin login page after logout
+						response.sendRedirect("/admin/login"); // Redirect to admin login page after logout
 					}
 				});
 			})
@@ -185,9 +204,28 @@ public class SecurityConfiguration {
 					@Override
 					public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 							Authentication authentication) throws IOException, ServletException {
+						boolean isVendor = false;
+				        for (GrantedAuthority authority : authentication.getAuthorities()) {
+				            if ("ROLE_VENDOR".equals(authority.getAuthority()) || "ROLE_ADMIN".equals(authority.getAuthority())) {
+				                isVendor = true;
+				                break;
+				            }
+				        }
+
+				        if (isVendor) {
+				            // Logout the vendor user
+				            SecurityContextHolder.clearContext(); // Clear security context
+				            // Optionally, invalidate session
+				            request.getSession().invalidate();
+				            // Redirect to login with error parameter
+				            response.sendRedirect("/customer/login?error=Restricted");
+				            return;
+				        }
 						Map<String,String> redirectUrls = new HashMap<>();
-						redirectUrls.put("CUSTOMER","/customer/home"); 
-						String url ="/customer/login?error"; 
+						redirectUrls.put("ROLE_CUSTOMER","/customer/home"); 
+						redirectUrls.put("ROLE_ADMIN","/customer/logout"); 
+						redirectUrls.put("ROLE_VENDOR","/customer/logout"); 
+						String url ="/customer/login?error=Wrong%20Password%20or%20Email"; 
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
 							if(redirectUrls.containsKey(authority.getAuthority())) {
 								url = redirectUrls.get(authority.getAuthority());
@@ -202,7 +240,7 @@ public class SecurityConfiguration {
 					public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 					                                    AuthenticationException exception) throws IOException {
 						System.out.println("Customer Login Failure for email: " + request.getParameter("email"));
-						response.sendRedirect("/customer/login?error");
+						response.sendRedirect("/customer/login?error=Wrong%20Password%20or%20Email");
 					}
 				});
 			})
@@ -277,10 +315,28 @@ public class SecurityConfiguration {
 						/* users */
 						Users user = userService.findByEmail(email);
 						request.getSession().setAttribute("vendorId", user.getId());
-						
+						boolean isVendor = false;
+				        for (GrantedAuthority authority : authentication.getAuthorities()) {
+				            if ("ROLE_CUSTOMER".equals(authority.getAuthority()) || "ROLE_ADMIN".equals(authority.getAuthority())) {
+				                isVendor = true;
+				                break;
+				            }
+				        }
+
+				        if (isVendor) {
+				            // Logout the vendor user
+				            SecurityContextHolder.clearContext(); // Clear security context
+				            // Optionally, invalidate session
+				            request.getSession().invalidate();
+				            // Redirect to login with error parameter
+				            response.sendRedirect("/vendor/account/login?error=Restricted");
+				            return;
+				        }
 						Map<String,String> redirectUrls = new HashMap<>();
 						redirectUrls.put("ROLE_VENDOR","/vendor/dashboard/home");  // Redirect DOCTORs to their home
-						String url ="/vendor/account/login?error"; // Default fallback if no matching role found
+						redirectUrls.put("ROLE_CUSTOMER","/vendor/account/logout");  // Redirect DOCTORs to their home
+						redirectUrls.put("ROLE_ADMIN","/vendor/account/logout");  // Redirect DOCTORs to their home
+						String url ="/vendor/account/login?error=Wrong%20Password%20or%20Email"; // Default fallback if no matching role found
 						for(GrantedAuthority authority : authentication.getAuthorities()) {
 							if(redirectUrls.containsKey(authority.getAuthority())) {
 								url = redirectUrls.get(authority.getAuthority());
@@ -295,7 +351,7 @@ public class SecurityConfiguration {
 					public void onAuthenticationFailure(HttpServletRequest request,
 							HttpServletResponse response, AuthenticationException exception)
 							throws IOException, ServletException {
-						response.sendRedirect("/vendor/account/login?error"); // Redirect back to customer login with error
+						response.sendRedirect("/vendor/account/login?error=Wrong%20Password%20or%20Email"); // Redirect back to customer login with error
 					}
 				});
 			})

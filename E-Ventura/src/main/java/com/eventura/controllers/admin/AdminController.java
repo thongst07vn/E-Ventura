@@ -53,7 +53,7 @@ public class AdminController {
 	public String login(@RequestParam(value = "error", required = false) String error, ModelMap modelMap,
 			@CurrentSecurityContext(expression = "authentication") Authentication authentication) {
 		if (error != null) {
-			modelMap.put("msg", "Login failed");
+			modelMap.put("msg", error);
 		}
 		System.out.println(authentication.getName());
 		return "admin/page/login/login";
@@ -114,6 +114,22 @@ public class AdminController {
 	public String productdetail(ModelMap modelMap,@PathVariable("id") int id) {
 		modelMap.put("product", productService.findById(id));
 		modelMap.put("vendorAddresses", userService.findAddressUser(productService.findById(id).getVendors().getId()));
+		modelMap.put("productReviews", productService.findProductReview(id));
+		if(!productService.findProductReview(id).isEmpty()) {
+			modelMap.put("countProductReview", productService.countProductReview(id));
+			modelMap.put("avgProductReview", productService.avgProductReview(id));
+		}else {
+			modelMap.put("countProductReview", 0);
+			modelMap.put("avgProductReview", 0);
+			
+		}
+		if(!vendorService.findVendorReview(productService.findById(id).getVendors().getId()).isEmpty()) {			
+			modelMap.put("countVendorReview", vendorService.countVendorReview(productService.findById(id).getVendors().getId()));
+			modelMap.put("avgVendorReview", vendorService.avgVendorReview(productService.findById(id).getVendors().getId()));
+		}else {			
+			modelMap.put("countVendorReview",0);
+			modelMap.put("avgVendorReview", 0);
+		}
 		modelMap.put("currentPage", "product");
 		return "admin/page/product/detail";
 	}

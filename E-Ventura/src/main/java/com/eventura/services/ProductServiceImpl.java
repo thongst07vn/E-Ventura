@@ -9,14 +9,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.eventura.entities.ProductReviews;
 import com.eventura.entities.Products;
 import com.eventura.repositories.ProductRepository;
+import com.eventura.repositories.ProductReviewsRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private ProductReviewsRepository productReviewsRepository;
 
 	@Override
 	public List<Products> findAll() {
@@ -69,6 +74,24 @@ public class ProductServiceImpl implements ProductService {
 	public Page<Products> findByVendorIdPage(int id, Pageable pageable) {
 		// TODO Auto-generated method stub
 		return productRepository.findProductByVendorPage(id, pageable);
+	}
+
+	@Override
+	public List<ProductReviews> findProductReview(int id) {
+		// TODO Auto-generated method stub
+		return productReviewsRepository.findProductReview(id);
+	}
+
+	@Override
+	public int countProductReview(int id) {
+		// TODO Auto-generated method stub
+		return productReviewsRepository.countProductReview(id);
+	}
+
+	@Override
+	public double avgProductReview(int id) {
+		// TODO Auto-generated method stub
+		return productReviewsRepository.avgProductReview(id);
 	}
 
 }
