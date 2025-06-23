@@ -71,4 +71,10 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findProductByVendorPage(id, pageable);
 	}
 
+	@Override
+	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findProductsByVendorCategoryPage(vendorId, categoryId, pageable);
+	}
+
 }

@@ -192,18 +192,5 @@
 			});
 		});
 		</script>
-
-		<th:block th:each="district : ${districts}">
-			<th:block th:text="${district.code}"></th:block>
-
-			<th:block th:text="${district.name}"></th:block>
-		</th:block>
-		<h5>Chia</h5>
-		<th:block th:each="ward : ${wards}">
-			<th:block th:text="${ward.code}"></th:block>
-
-			<th:block th:text="${ward.name}"></th:block>
-		</th:block>
-		
 	</section>
 </body>
