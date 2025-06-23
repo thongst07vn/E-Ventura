@@ -1,21 +1,23 @@
-package com.eventura.entities;
+package com.eventura.dtos;
 
-public class WardsDTO {
+import com.eventura.entities.Districts;
+
+public class DistrictsDTO {
     private String code;
     private String name;
 
-    public WardsDTO() {
+    public DistrictsDTO() {
     }
 
-    public WardsDTO(String code, String name) {
+    public DistrictsDTO(String code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    // Constructor chuyển từ entity sang DTO
-    public WardsDTO(com.eventura.entities.Wards ward) {
-        this.code = ward.getCode();
-        this.name = ward.getName();
+    // Constructor để chuyển từ entity sang DTO
+    public DistrictsDTO(com.eventura.entities.Districts district) {
+        this.code = district.getCode();
+        this.name = district.getName();
     }
 
     // Getter và Setter
@@ -35,4 +37,3 @@ public class WardsDTO {
         this.name = name;
     }
 }
-
