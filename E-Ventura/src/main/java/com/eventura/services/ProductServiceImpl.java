@@ -92,12 +92,18 @@ public class ProductServiceImpl implements ProductService {
 	public double avgProductReview(int id) {
 		// TODO Auto-generated method stub
 		return productReviewsRepository.avgProductReview(id);
-  }
-  @Override
+	}
+	@Override
 	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable) {
 		// TODO Auto-generated method stub
 		return productRepository.findProductsByVendorCategoryPage(vendorId, categoryId, pageable);
 
+	}
+
+	@Override
+	public Page<Products> findByKeywordPage(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findByKeywordPage(keyword, pageable);
 	}
 
 }

@@ -13,7 +13,7 @@
 					<div class="swiper-container swiper-group-9">
 						<div class="swiper-wrapper pt-5">
 							<div class="swiper-slide" th:each="category : ${categories}">
-						<a class="color-gray-900 font-md-bold" th:href="@{'/product/findbycategory/'+${category.id}}">
+						<a class="color-gray-900 font-md-bold" th:href="@{'/product/findbycategory/'+${category.id} + '?page=' + ${0}+ '&pageSize=' + ${30}}">
 								<div class="item-cat">
 									<div class="box-category-1">
 										<div class="box-image">
