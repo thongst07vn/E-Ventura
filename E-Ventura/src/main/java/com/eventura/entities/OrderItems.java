@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 22, 2025, 10:52:58 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 23, 2025, 6:51:08 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -33,6 +33,7 @@ public class OrderItems implements java.io.Serializable {
 	private Date createdAt;
 	private Date updatedAt;
 	private Set<OrderReturns> orderReturnses = new HashSet<OrderReturns>(0);
+	private Set<OrderItemsOrderStatus> orderItemsOrderStatuses = new HashSet<OrderItemsOrderStatus>(0);
 
 	public OrderItems() {
 	}
@@ -49,7 +50,8 @@ public class OrderItems implements java.io.Serializable {
 	}
 
 	public OrderItems(Orders orders, ProductVariants productVariants, Products products, int quantity, double price,
-			Date createdAt, Date updatedAt, Set<OrderReturns> orderReturnses) {
+			Date createdAt, Date updatedAt, Set<OrderReturns> orderReturnses,
+			Set<OrderItemsOrderStatus> orderItemsOrderStatuses) {
 		this.orders = orders;
 		this.productVariants = productVariants;
 		this.products = products;
@@ -58,6 +60,7 @@ public class OrderItems implements java.io.Serializable {
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.orderReturnses = orderReturnses;
+		this.orderItemsOrderStatuses = orderItemsOrderStatuses;
 	}
 
 	@Id
@@ -147,6 +150,15 @@ public class OrderItems implements java.io.Serializable {
 
 	public void setOrderReturnses(Set<OrderReturns> orderReturnses) {
 		this.orderReturnses = orderReturnses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orderItems")
+	public Set<OrderItemsOrderStatus> getOrderItemsOrderStatuses() {
+		return this.orderItemsOrderStatuses;
+	}
+
+	public void setOrderItemsOrderStatuses(Set<OrderItemsOrderStatus> orderItemsOrderStatuses) {
+		this.orderItemsOrderStatuses = orderItemsOrderStatuses;
 	}
 
 }

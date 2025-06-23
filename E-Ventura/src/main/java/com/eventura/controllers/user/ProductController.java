@@ -39,7 +39,7 @@ public class ProductController {
 	}
 	@GetMapping({"findbycategory/{id}"})
 	public String findByCategory(@PathVariable("id") int id,ModelMap modelMap,@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "20") int pageSize) {
+			@RequestParam(defaultValue = "30") int pageSize) {
 		
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		
@@ -50,7 +50,7 @@ public class ProductController {
 		modelMap.put("categoryId", id);
 		
 		modelMap.addAttribute("currentPages", page);
-		modelMap.addAttribute("totalPages", products.getTotalPages());
+		modelMap.addAttribute("totalPage", products.getTotalPages());
 		modelMap.addAttribute("lastPageIndex", products.getTotalPages() - 1);
 		modelMap.addAttribute("pageSize", pageSize);
 		modelMap.addAttribute("currentPage", "category");
