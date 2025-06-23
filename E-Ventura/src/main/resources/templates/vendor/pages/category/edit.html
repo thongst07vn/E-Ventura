@@ -8,19 +8,15 @@
 <body>
 	<section class="content-main">
 		<div class="content-header">
-			<div>
-				<h2 class="content-title card-title">Categories</h2>
-				<p>Edit category</p>
-			</div>
-			<div>
-				<input class="form-control bg-white" type="text" placeholder="Search Categories">
-			</div>
+			<a th:href="@{/vendor/category/list}"><i class="material-icons md-arrow_back"></i> Go back</a>
 		</div>
-		<div>
-			<a th:href="@{/vendor/category/list}" class="btn btn-primary">Category List</a>
-		</div>
-		<br>
 		<div class="card">
+			<div class="card-header">
+				<div>
+					<h2 class="content-title card-title">Categories</h2>
+					<p>Edit category</p>
+				</div>
+			</div>
 			<div class="card-body">
 				<div class="row">
 					<div class="col-md-6 mx-auto">
@@ -48,7 +44,7 @@
 							</div>
 
 							<!-- Nút Submit -->
-							<div class="d-grid">
+							<div>
 								<button class="btn btn-primary" type="submit">Edit category</button>
 							</div>
 						</form>

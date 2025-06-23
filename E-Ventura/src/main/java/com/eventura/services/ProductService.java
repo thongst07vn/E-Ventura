@@ -27,9 +27,14 @@ public interface ProductService {
 
 	public Page<Products> findByVendorIdPage(int id,Pageable pageable);
 
+
 	public List<ProductReviews> findProductReview(int id);
 	
 	public int countProductReview(int id);
 
 	public double avgProductReview(int id);
+
+	
+	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable);
+
 }
