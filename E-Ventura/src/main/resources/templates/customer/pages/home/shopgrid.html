@@ -11,11 +11,10 @@
 			<div class="breadcrumbs-div">
 				<div class="container">
 					<ul class="breadcrumb">
-						<li><a class="font-xs color-gray-1000" href="index.html">Home</a></li>
-						<li><a class="font-xs color-gray-500" href="shop-grid.html">Electronics</a></li>
-						<li><a class="font-xs color-gray-500" href="shop-grid.html">Cell
-								phone</a></li>
-						<li><a class="font-xs color-gray-500" href="shop-grid.html">Accessories</a></li>
+						<li><a class="font-xs color-gray-1000" th:href="@{customer/home}">Home</a></li>
+						<li th:if="${keyword}"><a class="font-xs color-gray-500" th:href="@{'/product/search?keyword='+${keyword}}">Search</a></li>
+						<li th:if="${categoryId}"><a class="font-xs color-gray-500" th:href="@{'/product/findbycategory/'+${categoryId}}">Search</a></li>
+						
 					</ul>
 				</div>
 			</div>
@@ -101,7 +100,7 @@
 													data-bs-toggle="modal"></a>
 											</div>
 											<div class="image-box">
-												<a href="shop-single-product.html">
+												<a th:href="@{'/product/productdetails/'+${product.id}}">
 													<th:block th:if="${product.mediases[0].name.contains('https:')}">
 														<img th:src="${product.mediases[0].name}" alt="Ecom">
 													</th:block>
@@ -151,9 +150,13 @@
 						</div>
 						<nav>
 							<ul class="pagination">
-								<li class="page-item"><a class="page-link page-prev"
-									href="#"></a></li>
-								<li class="page-item"><a class="page-link" href="#">1</a></li>
+								<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+									<a class="page-link page-prev"
+									th:href="@{'product/findbycategory'}"></a>
+								</li>
+								<li class="page-item">
+									<a class="page-link" href="#">1</a>
+								</li>
 								<li class="page-item"><a class="page-link active" href="#">2</a></li>
 								<li class="page-item"><a class="page-link" href="#">3</a></li>
 								<li class="page-item"><a class="page-link" href="#">4</a></li>

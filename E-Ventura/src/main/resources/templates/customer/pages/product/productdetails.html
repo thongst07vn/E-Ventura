@@ -28,37 +28,28 @@
                   <div class="detail-gallery">
                     <label class="label">-17%</label>
                     <div class="product-image-slider">
-                      <figure class="border-radius-10"><img th:src="@{/assets/imgs/page/product/img-gallery-1.jpg}" alt="product image"></figure>
-                      <figure class="border-radius-10"><img th:src="@{/assets/imgs/page/product/img-gallery-2.jpg}" alt="product image"></figure>
-                      <figure class="border-radius-10"><img th:src="@{/assets/imgs/page/product/img-gallery-3.jpg}" alt="product image"></figure>
-                      <figure class="border-radius-10"><img th:src="@{/assets/imgs/page/product/img-gallery-4.jpg}" alt="product image"></figure>
-                      <figure class="border-radius-10"><img th:src="@{/assets/imgs/page/product/img-gallery-5.jpg}" alt="product image"></figure>
-                      <figure class="border-radius-10"><img th:src="@{/assets/imgs/page/product/img-gallery-6.jpg}" alt="product image"></figure>
-                      <figure class="border-radius-10"><img th:src="@{/assets/imgs/page/product/img-gallery-7.jpg}" alt="product image"></figure>
+                    <th:block th:if="${product.mediases!=null}">
+                    	<th:block th:each="img : ${product.mediases}">
+                    		<figure class="border-radius-10" th:if="${img.name.contains('http')}"><img th:src="${img.name}" alt="product image"></figure>
+                    		<figure class="border-radius-10" th:if="${!img.name.contains('http')}"><img th:src="@{'/assets/imgs/others/'+${img.name}}" alt="product image"></figure>
+                    	</th:block>
+                    </th:block>
+                      
+              
                     </div>
                   </div>
                   <div class="slider-nav-thumbnails">
-                    <div>
-                      <div class="item-thumb"><img th:src="@{/assets/imgs/page/product/img-gallery-1.jpg}" alt="product image"></div>
-                    </div>
-                    <div>
-                      <div class="item-thumb"><img th:src="@{/assets/imgs/page/product/img-gallery-2.jpg}" alt="product image"></div>
-                    </div>
-                    <div>
-                      <div class="item-thumb"><img th:src="@{/assets/imgs/page/product/img-gallery-3.jpg}" alt="product image"></div>
-                    </div>
-                    <div>
-                      <div class="item-thumb"><img th:src="@{/assets/imgs/page/product/img-gallery-4.jpg}" alt="product image"></div>
-                    </div>
-                    <div>
-                      <div class="item-thumb"><img th:src="@{/assets/imgs/page/product/img-gallery-5.jpg}" alt="product image"></div>
-                    </div>
-                    <div>
-                      <div class="item-thumb"><img th:src="@{/assets/imgs/page/product/img-gallery-6.jpg}" alt="product image"></div>
-                    </div>
-                    <div>
-                      <div class="item-thumb"><img th:src="@{/assets/imgs/page/product/img-gallery-7.jpg}" alt="product image"></div>
-                    </div>
+                  <th:block th:if="${product.mediases!=null}">
+                    	<th:block th:each="img : ${product.mediases}">
+                    		<div th:if="${img.name.contains('http')}">
+		                      <div class="item-thumb" style="height: fit; width: fit; "><img th:src="${img.name}" alt="product image"></div>
+		                    </div>
+                    		<div th:if="${!img.name.contains('http')}">
+		                      <div class="item-thumb" style="height: fit; width: fit; "><img th:src="@{'/assets/imgs/others/'+${img.name}}" alt="product image"></div>
+		                    </div>
+                    	</th:block>
+                    </th:block>
+                    
                   </div>
                 </div>
               </div>
