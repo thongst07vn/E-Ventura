@@ -12,7 +12,7 @@
 				<div class="container">
 					<ul class="breadcrumb">
 						<li><a class="font-xs color-gray-1000"
-							th:href="@{customer/home}">Home</a></li>
+							th:href="@{/customer/home}">Home</a></li>
 						<li th:if="${keyword}"><a class="font-xs color-gray-500"
 							th:href="@{'/product/search?keyword='+${keyword}}">Search</a></li>
 						<li th:if="${categoryId}"><a class="font-xs color-gray-500"
@@ -63,22 +63,30 @@
 									<div class="d-inline-block">
 										<span class="font-sm color-gray-500 font-medium">Show</span>
 										<div class="dropdown dropdown-sort border-1-right">
-										<form method="get" th:action="@{/product/findbycategory/'+${categoryId}+'?page=' + ${0}+ '&pageSize=' + ${pageSize}}" hidden>
-										
-										</form>
-											<button
-												class="btn dropdown-toggle font-sm color-gray-900 font-medium"
-												id="dropdownSort2" type="button" data-bs-toggle="dropdown"
-												aria-expanded="false" data-bs-display="static">
-												<span>30 items</span>
-											</button>
-											<ul class="dropdown-menu dropdown-menu-light"
-												aria-labelledby="dropdownSort2">
-												<li><a class="dropdown-item active" href="#">30
-														items</a></li>
-												<li><a class="dropdown-item" href="#">50 items</a></li>
-												<li><a class="dropdown-item" href="#">100 items</a></li>
-											</ul>
+
+											<form id="pageSizeForm" method="GET"
+												th:action="@{'/product/findbycategory/'+${categoryId}}">
+												<select class="form-select" name="pageSize"
+													id="pageSizeSelect">
+													<option value="30" th:selected="${pagesize == 30}">30 items</option>
+													<option value="50" th:selected="${pageSize == 50}">50 items</option>
+													<option value="100" th:selected="${pageSize == 100}">100 items</option>
+												</select>
+											</form>
+											<script>
+												document
+														.getElementById(
+																'pageSizeSelect')
+														.addEventListener(
+																'change',
+																function() {
+																	document
+																			.getElementById(
+																					'pageSizeForm')
+																			.submit();
+																});
+											</script>
+
 										</div>
 									</div>
 									<div class="d-inline-block">
@@ -118,10 +126,7 @@
 													</th:block>
 												</a>
 											</div>
-											<div class="info-right">
-												<a class="font-xs color-gray-500"
-													href="shop-vendor-single.html"
-													th:text="${product.description}"></a><br> <a
+											<div class="info-right"><a
 													class="color-brand-3 font-sm-bold"
 													href="shop-single-product.html" th:text="${product.name}"></a>
 												<div class="rating">
@@ -159,7 +164,8 @@
 
 						</div>
 						<nav>
-							<th:block th:if="${categoryId!=null && !#lists.isEmpty(products)}">
+							<th:block
+								th:if="${categoryId!=null && !#lists.isEmpty(products)}">
 								<ul class="pagination">
 									<!-- nút về đầu -->
 									<li class="page-item"
@@ -172,9 +178,8 @@
 									<li class="page-item"
 										th:classappend="${currentPages == 0} ? 'disabled'"><a
 										th:href="@{'/product/findbycategory/'+${categoryId}+'?page=' + ${currentPages-1}+ '&pageSize=' + ${1}}"
-										class="page-link" aria-label="Previous"><div style="font-size: 30;">&lsaquo;</div>
-										
-									</a></li>
+										class="page-link" aria-label="Previous"><div
+												style="font-size: 30;">&lsaquo;</div> </a></li>
 									<!-- Các trang -->
 									<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
 
@@ -191,7 +196,7 @@
 										<a class="page-link"
 										th:href="@{'/product/findbycategory/'+${categoryId}+'?page=' + ${currentPages+1}+ '&pageSize=' + ${1}}"
 										aria-label="Next">
-										<div style="font-size: 30;">&rsaquo;</div>
+											<div style="font-size: 30;">&rsaquo;</div>
 									</a>
 									</li>
 									<!-- Nút tới cuối -->
@@ -200,7 +205,53 @@
 										<a class="page-link"
 										th:href="@{'/product/findbycategory/'+${categoryId}+'?page=' + ${lastPageIndex}+ '&pageSize=' + ${1}}"
 										aria-label="Next">
-										<div style="font-size: 30;">&raquo;</div>
+											<div style="font-size: 30;">&raquo;</div>
+									</a>
+									</li>
+								</ul>
+							</th:block>
+							<th:block
+								th:if="${keyword!=null && !#lists.isEmpty(products)}">
+								<ul class="pagination">
+									<!-- nút về đầu -->
+									<li class="page-item"
+										th:classappend="${currentPages == 0} ? 'hidden'"><a
+										class="page-link" aria-label="Back to start"
+										th:href="@{'/product/search?keyword='+${keyword}+'&page='+${0}+ '&pageSize=' + ${pageSize}}">
+											<div style="font-size: 30;">&laquo;</div>
+									</a></li>
+									<!-- nút về trước -->
+									<li class="page-item"
+										th:classappend="${currentPages == 0} ? 'disabled'"><a
+										th:href="@{'/product/search?keyword='+${keyword}+'&page=' + ${currentPages-1}+ '&pageSize=' + ${pageSize}}"
+										class="page-link" aria-label="Previous"><div
+												style="font-size: 30;">&lsaquo;</div> </a></li>
+									<!-- Các trang -->
+									<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+										<li class="page-item"
+											th:classappend="${i} == ${currentPages} ? 'active'"><a
+											class="page-link"
+											th:href="@{'/product/search?keyword='+${keyword}+'&page=' + ${i}+ '&pageSize=' + ${pageSize}}"
+											th:text="${i + 1}"></a></li>
+									</th:block>
+
+									<!-- Nút tiếp -->	
+									<li class="page-item"
+										th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+										<a class="page-link"
+										th:href="@{'/product/search?keyword='+${keyword}+'&page=' + ${currentPages+1}+ '&pageSize=' + ${pageSize}}"
+										aria-label="Next">
+											<div style="font-size: 30;">&rsaquo;</div>
+									</a>
+									</li>
+									<!-- Nút tới cuối -->
+									<li class="page-item"
+										th:classappend="${currentPages + 1 >= totalPage}? 'hidden' ">
+										<a class="page-link"
+										th:href="@{'/product/search?keyword='+${keyword}+'&page=' + ${lastPageIndex}+ '&pageSize=' + ${pageSize}}"
+										aria-label="Next">
+											<div style="font-size: 30;">&raquo;</div>
 									</a>
 									</li>
 								</ul>
