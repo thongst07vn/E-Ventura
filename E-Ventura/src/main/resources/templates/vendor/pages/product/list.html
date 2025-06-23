@@ -41,22 +41,11 @@
 			</header>
 			<!-- card-header end//-->
 			<div class="card-body">
-				<div class="row align-items-center fw-bold text-muted border-bottom pb-2 mb-3" style="font-size: 15px;">
-
-					<div class="col-lg-3 col-sm-4 col-8 col-name">Product</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-price text-center">Description</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-status text-center">Price</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-date text-center">Category</div>
-					<div class="col-lg-2 col-sm-2 col-4 col-action text-end pe-2">Actions</div>
-				</div>
-
-
-
 				<th:block th:each="product : ${products}">
 					<article class="itemlist">
 						<div class="row align-items-center">
 
-							<div class="col-lg-3 col-sm-4 col-8 flex-grow-1 col-name">
+							<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
 								<a class="itemside" href="#">
 									<div class="left">
 										<th:block th:if="${product.mediases[0].name.contains('https:')}">
@@ -76,12 +65,20 @@
 							</div>
 							<div class="col-lg-2 col-sm-2 col-4 col-price"><span
 									th:text="${product.description}"></span></div>
-							<div class="col-lg-2 col-sm-2 col-4 col-status"><span th:text="${product.price}"></span>
+							<div class="col-lg-1 col-sm-1 col-3 col-status"><span th:text="${product.price}"></span>
 							</div>
 							<div class="col-lg-2 col-sm-2 col-4 col-date"><span
 									th:text="${product.productCategories.name}"></span></div>
+							<div class="col-lg-1 col-sm-2 col-4 col-date">
+								<span>
+									<ul class="rating-stars">
+										<li class="stars-active" style="width: 100%;"><img th:src="@{/assets/imgs/icons/stars-active.svg}"
+													alt="stars" style="height: 20px;"></li>
+										<li><img th:src="@{/assets/imgs/icons/starts-disable.svg}" alt="stars" style="height: 20px;"></li>
+									</ul>
+								</span>
+							</div>
 							<div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-
 								<a class="btn btn-sm font-sm rounded btn-brand mr-5"
 									th:href="@{'/vendor/product/edit/' + ${product.id}}">
 									<i class="material-icons md-edit"></i> Edit
@@ -147,47 +144,47 @@
 		</th:block>
 		
 		<!-- Trường hợp lọc danh sách theo category -->
-				<th:block th:if="${selectedCategoryId != null && !#lists.isEmpty(products)}">
-					<div class="pagination-area mt-15 mb-50">
-						<nav aria-label="Page navigation example">
-							<ul class="pagination justify-content-start">
-								<!-- Nút về đầu -->
-								<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
-									<a class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${0}}" aria-label="Next"> <i
-											class="material-icons md-double_arrow"
-											style="transform: rotate(180deg) translate(15%, -30%);"></i>
-									</a>
-								</li>
-								<!-- Nút trước -->
-								<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
-										th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages-1}}" class="page-link"
-										aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
-									</a></li>
+		<th:block th:if="${selectedCategoryId != null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút về đầu -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${0}}" aria-label="Next"> <i
+									class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a>
+						</li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+								th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages-1}}" class="page-link"
+								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
 
-								<!-- Các trang -->
-								<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
 
-									<li class="page-item" th:classappend="${i} == ${currentPage} ? 'active'"><a
-											class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${i}}"
-											th:text="${i + 1}"></a></li>
-								</th:block>
+							<li class="page-item" th:classappend="${i} == ${currentPage} ? 'active'"><a
+									class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
+						</th:block>
 
-								<!-- Nút tiếp -->
-								<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
-									<a class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages+1}}"
-										aria-label="Next"> <i class="material-icons md-chevron_right"></i>
-									</a>
-								</li>
-								
-								<!-- Nút tới cuối -->
-								<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
-									<a class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${lastPageIndex}}" aria-label="Next"> <i
-											class="material-icons md-double_arrow"></i>
-									</a>
-								</li>
-							</ul>
-						</nav>
-					</div>
-				</th:block>
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+							<a class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages+1}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+						
+						<!-- Nút tới cuối -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${lastPageIndex}}" aria-label="Next"> <i
+									class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
 	</section>
 </body>
