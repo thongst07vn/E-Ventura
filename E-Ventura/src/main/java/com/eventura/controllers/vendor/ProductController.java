@@ -39,7 +39,7 @@ public class ProductController  {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 2;
+		int pageSize = 3;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage = productService.findByVendorIdPage(vendorId,pageable);
 
@@ -53,13 +53,31 @@ public class ProductController  {
 	}
 	
 	@GetMapping("searchByVendorCategory")
-	public String searchByVendorCategory(ModelMap modelMap, 
+	public String searchByVendorCategory(ModelMap modelMap, HttpSession session,
 										@RequestParam("categoryId") int categoryId, 
 										@RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "product");
-		
-		int pageSize = 2;
+		Integer vendorId = (Integer) session.getAttribute("vendorId");
+
+		int pageSize = 3;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Products> productPage;
+		
+		if(categoryId == 0) {
+			productPage = productService.findByVendorIdPage(vendorId, pageable);
+			modelMap.put("products", productPage.getContent());
+		}else {
+			productPage = productService.findByVendorCategoryPage(vendorId, categoryId, pageable);
+			modelMap.put("products", productPage.getContent());
+		}
+		
+		modelMap.put("currentPages", page);
+		modelMap.put("totalPage", productPage.getTotalPages());
+		modelMap.put("lastPageIndex", productPage.getTotalPages() - 1);
+		
+		modelMap.put("selectedCategoryId", categoryId);
+		
+		modelMap.put("vendorCategories", vendorProductCategoryService.findByVendorId(vendorId));
 		return "vendor/pages/product/list";
 	}
 	

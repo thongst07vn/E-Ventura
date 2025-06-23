@@ -12,20 +12,19 @@
 
 				<div class="col-9">
 					<div class="content-header">
-						<h2 class="content-title">Edit Product</h2>
-						<div>
-							<button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
-							<button class="btn btn-md rounded font-sm hover-up">Publich</button>
-						</div>
+						<a th:href="@{/vendor/product/list}">
+							<i class="material-icons md-arrow_back">
+								
+							</i> Go back</a>
+						<br>
 					</div>
-				</div>
-				<div>
-					<a th:href="@{/vendor/product/list}" class="btn btn-primary mb-3">Product List</a>
+
+
 				</div>
 				<div class="col-lg-6">
 					<div class="card mb-4">
 						<div class="card-header">
-							<h4>Basic</h4>
+							<h2 class="content-title">Edit Product</h2>
 						</div>
 						<div class="card-body">
 							<div class="mb-4">
@@ -99,11 +98,13 @@
 										        </td>
 										    </tr>
 										</th:block>
-
-										
 										<!-- Thêm dòng khác nếu cần -->
 									</tbody>
 								</table>
+								<!-- Nút Submit -->
+								<div style="float: right">
+									<button class="btn btn-outline-dark" type="submit">Add Variant</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -127,6 +128,10 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<!-- Nút Submit -->
+			<div>
+				<button class="btn btn-primary" type="submit">Edit Product</button>
 			</div>
 		</form>
 	</section>

@@ -25,4 +25,6 @@ public interface ProductService {
 	public Page<Products> findByCategoryIdPage(int id,Pageable pageable);
 
 	public Page<Products> findByVendorIdPage(int id,Pageable pageable);
+	
+	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable);
 }
