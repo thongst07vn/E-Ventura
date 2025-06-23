@@ -72,54 +72,62 @@
 			<div class="card-body">
 				<th:block th:if="${products!=null}">
 					<article class="itemlist" th:each="product : ${products}">
-						<th:block th:if="${product.deletedAt==null}">
+						<th:block th:if="${product.products.deletedAt==null}">
 							<div class="row align-items-center">
 								<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
 									<a class="itemside" href="#">
 										<div class="left">
 											<th:block
-												th:if="${product.mediases[0].name.contains('https:')}">
+												th:if="${product.products.mediases[0].name.contains('https:')}">
 												<img class="img-sm img-thumbnail"
-													th:src="${product.mediases[0].name}" alt="Item">
+													th:src="${product.products.mediases[0].name}" alt="Item">
 											</th:block>
 											<th:block
-												th:if="${!product.mediases[0].name.contains('https:')}">
+												th:if="${!product.products.mediases[0].name.contains('https:')}">
 												<img class="img-sm img-thumbnail"
-													th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}"
+													th:src="@{'/assets/imgs/others/' + ${product.products.mediases[0].name}}"
 													alt="Item">
 											</th:block>
 
 										</div>
 										<div class="info">
 											<h6 class="mb-0">
-												<th:block th:text="${product.name}"></th:block>
+												<th:block th:text="${product.products.name}"></th:block>
 											</h6>
 										</div>
 									</a>
 								</div>
 								<div class="col-lg-2 col-sm-2 col-4 col-price">
-									<span>$<th:block th:text="${product.price}"></th:block></span>
+									<span>$<th:block th:text="${product.products.price}"></th:block></span>
 								</div>
 								<div class="col-lg-2 col-sm-2 col-4 col-status">
 									<th:block
-										th:text="${#strings.substring(product.description, 0, 10) + '...'}"></th:block>
+										th:text="${#strings.substring(product.products.description, 0, 10) + '...'}"></th:block>
 								</div>
 								<div class="col-lg-1 col-sm-2 col-4 col-date">
-									<span><th:block th:text="${product.vendors.name}"></th:block></span>
+									<span><th:block
+											th:text="${product.products.vendors.name}"></th:block></span>
 								</div>
 								<div class="col-lg-1 col-sm-2 col-4 col-date">
-									<span><ul class="rating-stars">
-											<li class="stars-active" style="width: 100%;"><img
-												th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;"></li>
-											<li><img
-												th:src="@{/assets/imgs/icons/starts-disable.svg}"
-												alt="stars" style="height: 20px;"></li>
-										</ul></span>
+									<span> <th:block
+											th:with="displayRating=${product.rating != null ? product.rating : 0},
+             cappedRating=${displayRating > 5 ? 5 : displayRating},
+             width=${cappedRating * 20}">
+											<ul class="rating-stars">
+												<li class="stars-active"
+													th:style="'width:' + ${width} + '%'"><img
+													th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
+													style="height: 20px;"></li>
+												<li><img
+													th:src="@{/assets/imgs/icons/starts-disable.svg}"
+													alt="stars" style="height: 20px;"></li>
+											</ul>
+										</th:block>
+									</span>
 								</div>
 								<div class="col-lg-2 col-sm-2 col-4 col-action text-center">
 									<a class="btn btn-sm rounded btn-brand"
-										th:href="@{'/admin/product/detail/'+${product.id}}"><i
+										th:href="@{'/admin/product/detail/'+${product.products.id}}"><i
 										class="material-icons md-article"></i> Details</a>
 								</div>
 							</div>
