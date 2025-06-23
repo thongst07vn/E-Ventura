@@ -12,8 +12,8 @@
 				<div class="box-swiper">
 					<div class="swiper-container swiper-group-9">
 						<div class="swiper-wrapper pt-5">
-
 							<div class="swiper-slide" th:each="category : ${categories}">
+						<a class="color-gray-900 font-md-bold" th:href="@{'/product/findbycategory/'+${category.id}}">
 								<div class="item-cat">
 									<div class="box-category-1">
 										<div class="box-image">
@@ -30,6 +30,7 @@
 										</div>
 									</div>
 								</div>
+							</a>
 							</div>
 						</div>
 					</div>
@@ -133,7 +134,7 @@
 											href="#ModalQuickview" data-bs-toggle="modal"></a>
 									</div>
 									<div class="image-box">
-										<a href="shop-single-product-2.html">
+										<a th:href="@{'/product/productdetails/'+${pro.id}}">
 										<th:block th:if="${pro.mediases[0].name.contains('https:')}">
 											<img th:src="${pro.mediases[0].name}" alt="Ecom">
 										</th:block>

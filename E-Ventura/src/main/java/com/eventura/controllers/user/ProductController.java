@@ -3,6 +3,10 @@ package com.eventura.controllers.user;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,16 +31,29 @@ public class ProductController {
 	@Autowired
 	private CategoryService categoryService;
 	
-	@GetMapping({"productdetails"})
-	public String prouctDetails() {
+	@GetMapping({"productdetails/{id}"})
+	public String prouctDetails(@PathVariable("id") int id,ModelMap modelMap) {
+		Products product = productService.findById(id);
+		modelMap.put("product", product);
 		return "customer/pages/product/productdetails";
 	}
 	@GetMapping({"findbycategory/{id}"})
-	public String findByCategory(@PathVariable("id") int id,ModelMap modelMap) {
-		List<Products> products = productService.findByCategoryId(id);
+	public String findByCategory(@PathVariable("id") int id,ModelMap modelMap,@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "20") int pageSize) {
+		
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		
+		Page<Products> products = productService.findByCategoryIdPage(id,pageable);
 		List<ProductCategories> categories = categoryService.findAll();
 		modelMap.put("products", products);
 		modelMap.put("categories", categories);
+		modelMap.put("categoryId", id);
+		
+		modelMap.addAttribute("currentPages", page);
+		modelMap.addAttribute("totalPages", products.getTotalPages());
+		modelMap.addAttribute("lastPageIndex", products.getTotalPages() - 1);
+		modelMap.addAttribute("pageSize", pageSize);
+		modelMap.addAttribute("currentPage", "category");
 		return "customer/pages/home/shopgrid";
 	}
 
@@ -46,19 +63,9 @@ public class ProductController {
 		List<ProductCategories> categories = categoryService.findAll();
 		modelMap.put("products", products);
 		modelMap.put("categories", categories);
+		modelMap.put("keyword", keyword);
 		return "customer/pages/home/shopgrid";
 	}
 	
-	@GetMapping("/searchbycategory")
-    public String searchByVendor(@RequestParam("categoryId") int categoryId,ModelMap map) {
-        map.put("categories", categoryService.findAll());
-        if (categoryId == 0) {
-            map.put("products", productService.findAll());
-        }else {
-            map.put("products", productService.findByCategoryId(categoryId));
-        }
-        map.put("selectedCategoryId", categoryId);
-        return "customer/pages/home/shopgrid";
-    }
 
 }
