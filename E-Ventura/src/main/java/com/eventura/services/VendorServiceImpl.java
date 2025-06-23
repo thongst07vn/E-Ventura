@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
 
 import com.eventura.entities.Users;
 import com.eventura.entities.VendorEarnings;
+import com.eventura.entities.VendorReviews;
 import com.eventura.entities.Vendors;
 import com.eventura.repositories.UserRepository;
 import com.eventura.repositories.VendorEarningRepository;
 import com.eventura.repositories.VendorRepository;
+import com.eventura.repositories.VendorReviewsRepository;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -30,6 +32,8 @@ public class VendorServiceImpl implements VendorService {
 	private VendorRepository vendorRepository;
 	@Autowired
 	private VendorEarningRepository vendorEarningRepository;
+	@Autowired
+	private VendorReviewsRepository vendorReviewsRepository;
 
     VendorServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -76,6 +80,24 @@ public class VendorServiceImpl implements VendorService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public List<VendorReviews> findVendorReview(int id) {
+		// TODO Auto-generated method stub
+		return vendorReviewsRepository.findVendorReview(id);
+	}
+
+	@Override
+	public int countVendorReview(int id) {
+		// TODO Auto-generated method stub
+		return vendorReviewsRepository.countVendorReview(id);
+	}
+
+	@Override
+	public double avgVendorReview(int id) {
+		// TODO Auto-generated method stub
+		return vendorReviewsRepository.avgVendorReview(id);
 	}
 
 }
