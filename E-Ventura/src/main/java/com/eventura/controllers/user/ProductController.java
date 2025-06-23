@@ -45,7 +45,7 @@ public class ProductController {
 		
 		Page<Products> products = productService.findByCategoryIdPage(id,pageable);
 		List<ProductCategories> categories = categoryService.findAll();
-		modelMap.put("products", products);
+		modelMap.put("products", products.getContent());
 		modelMap.put("categories", categories);
 		modelMap.put("categoryId", id);
 		
@@ -62,7 +62,7 @@ public class ProductController {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> products = productService.findByKeywordPage(keyword,pageable);
 		List<ProductCategories> categories = categoryService.findAll();
-		modelMap.put("products", products);
+		modelMap.put("products", products.getContent());
 		modelMap.put("categories", categories);
 		modelMap.put("keyword", keyword);
 		
