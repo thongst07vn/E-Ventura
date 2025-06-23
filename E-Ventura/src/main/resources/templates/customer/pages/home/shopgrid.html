@@ -11,10 +11,13 @@
 			<div class="breadcrumbs-div">
 				<div class="container">
 					<ul class="breadcrumb">
-						<li><a class="font-xs color-gray-1000" th:href="@{customer/home}">Home</a></li>
-						<li th:if="${keyword}"><a class="font-xs color-gray-500" th:href="@{'/product/search?keyword='+${keyword}}">Search</a></li>
-						<li th:if="${categoryId}"><a class="font-xs color-gray-500" th:href="@{'/product/findbycategory/'+${categoryId}}">Search</a></li>
-						
+						<li><a class="font-xs color-gray-1000"
+							th:href="@{customer/home}">Home</a></li>
+						<li th:if="${keyword}"><a class="font-xs color-gray-500"
+							th:href="@{'/product/search?keyword='+${keyword}}">Search</a></li>
+						<li th:if="${categoryId}"><a class="font-xs color-gray-500"
+							th:href="@{'/product/findbycategory/'+${categoryId}}">Search</a></li>
+
 					</ul>
 				</div>
 			</div>
@@ -60,6 +63,9 @@
 									<div class="d-inline-block">
 										<span class="font-sm color-gray-500 font-medium">Show</span>
 										<div class="dropdown dropdown-sort border-1-right">
+										<form method="get" th:action="@{/product/findbycategory/'+${categoryId}+'?page=' + ${0}+ '&pageSize=' + ${pageSize}}" hidden>
+										
+										</form>
 											<button
 												class="btn dropdown-toggle font-sm color-gray-900 font-medium"
 												id="dropdownSort2" type="button" data-bs-toggle="dropdown"
@@ -101,22 +107,25 @@
 											</div>
 											<div class="image-box">
 												<a th:href="@{'/product/productdetails/'+${product.id}}">
-													<th:block th:if="${product.mediases[0].name.contains('https:')}">
+													<th:block
+														th:if="${product.mediases[0].name.contains('https:')}">
 														<img th:src="${product.mediases[0].name}" alt="Ecom">
-													</th:block>
-													<th:block th:if="${!product.mediases[0].name.contains('https:')}">
-														<img th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}" alt="Ecom">
+													</th:block> <th:block
+														th:if="${!product.mediases[0].name.contains('https:')}">
+														<img
+															th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}"
+															alt="Ecom">
 													</th:block>
 												</a>
 											</div>
 											<div class="info-right">
 												<a class="font-xs color-gray-500"
-													href="shop-vendor-single.html" th:text="${product.description}"></a><br>
-												<a class="color-brand-3 font-sm-bold"
+													href="shop-vendor-single.html"
+													th:text="${product.description}"></a><br> <a
+													class="color-brand-3 font-sm-bold"
 													href="shop-single-product.html" th:text="${product.name}"></a>
 												<div class="rating">
-													<img
-														th:src="@{/assets/imgs/template/icons/star.svg}"
+													<img th:src="@{/assets/imgs/template/icons/star.svg}"
 														alt="Ecom"><img
 														th:src="@{/assets/imgs/template/icons/star.svg}"
 														alt="Ecom"><img
@@ -129,7 +138,8 @@
 												</div>
 												<div class="price-info">
 													<strong class="font-lg-bold color-brand-3 price-main">$</strong>
-													<strong class="font-lg-bold color-brand-3 price-main" th:text=${product.price}></strong>
+													<strong class="font-lg-bold color-brand-3 price-main"
+														th:text=${product.price}></strong>
 												</div>
 												<div class="mt-20 box-btn-cart">
 													<a class="btn btn-cart" href="shop-cart.html">Add To
@@ -149,22 +159,53 @@
 
 						</div>
 						<nav>
-							<ul class="pagination">
-								<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
-									<a class="page-link page-prev"
-									th:href="@{'product/findbycategory'}"></a>
-								</li>
-								<li class="page-item">
-									<a class="page-link" href="#">1</a>
-								</li>
-								<li class="page-item"><a class="page-link active" href="#">2</a></li>
-								<li class="page-item"><a class="page-link" href="#">3</a></li>
-								<li class="page-item"><a class="page-link" href="#">4</a></li>
-								<li class="page-item"><a class="page-link" href="#">5</a></li>
-								<li class="page-item"><a class="page-link" href="#">6</a></li>
-								<li class="page-item"><a class="page-link page-next"
-									href="#"></a></li>
-							</ul>
+							<th:block th:if="${categoryId!=null && !#lists.isEmpty(products)}">
+								<ul class="pagination">
+									<!-- nút về đầu -->
+									<li class="page-item"
+										th:classappend="${currentPages == 0} ? 'hidden'"><a
+										class="page-link" aria-label="Back to start"
+										th:href="@{'/product/findbycategory/'+${categoryId}+'?page='+${0}+ '&pageSize=' + ${1}}">
+											<div style="font-size: 30;">&laquo;</div>
+									</a></li>
+									<!-- nút về trước -->
+									<li class="page-item"
+										th:classappend="${currentPages == 0} ? 'disabled'"><a
+										th:href="@{'/product/findbycategory/'+${categoryId}+'?page=' + ${currentPages-1}+ '&pageSize=' + ${1}}"
+										class="page-link" aria-label="Previous"><div style="font-size: 30;">&lsaquo;</div>
+										
+									</a></li>
+									<!-- Các trang -->
+									<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+										<li class="page-item"
+											th:classappend="${i} == ${currentPages} ? 'active'"><a
+											class="page-link"
+											th:href="@{'/product/findbycategory/'+${categoryId}+'?page=' + ${i}+ '&pageSize=' + ${1}}"
+											th:text="${i + 1}"></a></li>
+									</th:block>
+
+									<!-- Nút tiếp -->
+									<li class="page-item"
+										th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+										<a class="page-link"
+										th:href="@{'/product/findbycategory/'+${categoryId}+'?page=' + ${currentPages+1}+ '&pageSize=' + ${1}}"
+										aria-label="Next">
+										<div style="font-size: 30;">&rsaquo;</div>
+									</a>
+									</li>
+									<!-- Nút tới cuối -->
+									<li class="page-item"
+										th:classappend="${currentPages + 1 >= totalPage}? 'hidden' ">
+										<a class="page-link"
+										th:href="@{'/product/findbycategory/'+${categoryId}+'?page=' + ${lastPageIndex}+ '&pageSize=' + ${1}}"
+										aria-label="Next">
+										<div style="font-size: 30;">&raquo;</div>
+									</a>
+									</li>
+								</ul>
+							</th:block>
+
 						</nav>
 					</div>
 					<div class="col-lg-3 order-last order-lg-first">
@@ -174,13 +215,11 @@
 							</div>
 							<div class="sidebar-content">
 								<ul class="list-nav-arrow" th:each="category : ${categories}">
-									<li>
-										<a th:href="@{'/product/findbycategory/'+${category.id}}">
-										<th:block th:text="${category.name}"></th:block>
-										<span class="number" th:text="${category.productses.size()}"></span>				
-										</a> 
-										
-									</li>
+									<li><a
+										th:href="@{'/product/findbycategory/'+${category.id}}"> <th:block
+												th:text="${category.name}"></th:block> <span class="number"
+											th:text="${category.productses.size()}"></span>
+									</a></li>
 								</ul>
 								<div>
 									<div class="collapse" id="moreMenu">
@@ -320,8 +359,7 @@
 															href="shop-single-product-3.html">HP Slim Desktop,
 															Intel Celeron J4025, 4GB RAM</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -351,8 +389,7 @@
 															href="shop-single-product-3.html">Class 4K UHD
 															(2160P) LED Roku Smart TV HDR</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -382,8 +419,7 @@
 															href="shop-single-product-3.html">HP 11.6&quot;
 															Chromebook, AMD A4, 4GB RAM, 32GB Storage</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -413,8 +449,7 @@
 															href="shop-single-product-3.html">LG 65&quot; Class
 															4K UHD Smart TV OLED A1 Series</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -446,8 +481,7 @@
 															href="shop-single-product-3.html">Lenovo Legion 5i
 															15.6&quot; Laptop, Intel Core i5</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -478,8 +512,7 @@
 															href="shop-single-product-3.html">SAMSUNG Galaxy Tab
 															A7 Lite, 8.7&quot; Tablet 32GB</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -509,8 +542,7 @@
 															href="shop-single-product-3.html">Apple AirPods Pro
 															with MagSafe Charging</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -540,8 +572,7 @@
 															href="shop-single-product-3.html">Razer Power Up
 															Gaming Bundle V2 - Cynosa</a>
 														<div class="rating">
-															<img
-																th:src="@{/assets/imgs/template/icons/star.svg}"
+															<img th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
 																th:src="@{/assets/imgs/template/icons/star.svg}"
 																alt="Ecom"><img
@@ -611,8 +642,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/assets/imgs/template/delivery.svg}"
-									alt="Ecom">
+								<img th:src="@{/assets/imgs/template/delivery.svg}" alt="Ecom">
 							</div>
 							<div class="info-right">
 								<h5 class="font-lg-bold color-gray-100">Free Delivery</h5>
@@ -623,8 +653,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/assets/imgs/template/support.svg}"
-									alt="Ecom">
+								<img th:src="@{/assets/imgs/template/support.svg}" alt="Ecom">
 							</div>
 							<div class="info-right">
 								<h5 class="font-lg-bold color-gray-100">Support 24/7</h5>
@@ -635,8 +664,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/assets/imgs/template/voucher.svg}"
-									alt="Ecom">
+								<img th:src="@{/assets/imgs/template/voucher.svg}" alt="Ecom">
 							</div>
 							<div class="info-right">
 								<h5 class="font-lg-bold color-gray-100">Gift voucher</h5>
@@ -647,8 +675,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/assets/imgs/template/return.svg}"
-									alt="Ecom">
+								<img th:src="@{/assets/imgs/template/return.svg}" alt="Ecom">
 							</div>
 							<div class="info-right">
 								<h5 class="font-lg-bold color-gray-100">Return &amp; Refund</h5>
@@ -659,8 +686,7 @@
 					<li>
 						<div class="item-list">
 							<div class="icon-left">
-								<img th:src="@{/assets/imgs/template/secure.svg}"
-									alt="Ecom">
+								<img th:src="@{/assets/imgs/template/secure.svg}" alt="Ecom">
 							</div>
 							<div class="info-right">
 								<h5 class="font-lg-bold color-gray-100">Secure payment</h5>
@@ -823,38 +849,26 @@
 								<h6 class="color-gray-900 mb-0 mt-40">Rating</h6>
 								<ul class="list-checkbox">
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><span
 											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(5
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
 											th:src="@{/assets/imgs/template/icons/star-gray.svg}"
 											alt="Ecom"><span
 											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(4
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
 											th:src="@{/assets/imgs/template/icons/star-gray.svg}"
 											alt="Ecom"><img
 											th:src="@{/assets/imgs/template/icons/star-gray.svg}"
@@ -862,10 +876,8 @@
 											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(3
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
 											th:src="@{/assets/imgs/template/icons/star-gray.svg}"
 											alt="Ecom"><img
 											th:src="@{/assets/imgs/template/icons/star-gray.svg}"
@@ -875,8 +887,7 @@
 											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(2
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
+											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
 											th:src="@{/assets/imgs/template/icons/star-gray.svg}"
 											alt="Ecom"><img
 											th:src="@{/assets/imgs/template/icons/star-gray.svg}"
@@ -1058,14 +1069,10 @@
 										<div class="rating d-inline-block">
 											<img th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img
-												th:src="@{/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><img
-												th:src="@{/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><img
-												th:src="@{/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><img
-												th:src="@{/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><span
+												th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><span
 												class="font-xs color-gray-500 font-medium"> (65
 												reviews)</span>
 										</div>
