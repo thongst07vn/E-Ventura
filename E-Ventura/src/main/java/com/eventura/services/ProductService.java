@@ -21,6 +21,8 @@ public interface ProductService {
 
 	public List<Products> findByKeyword(String keyword);
 
+	public Page<Products> findByKeywordPage(String keyword,Pageable pageable);
+
 	public Page<Products> findAlls(Pageable pageable);
 
 	public Page<Products> findByCategoryIdPage(int id,Pageable pageable);

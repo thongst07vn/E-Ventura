@@ -27,6 +27,9 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	@Query("from Products where name like %:keyword%")
 	public List<Products>  findByKeyword(@Param("keyword") String keyword,Sort sort);
 	
+	@Query("from Products where name like %:keyword%")
+	public Page<Products>  findByKeywordPage(@Param("keyword") String keyword,Pageable pageable);
+	
 	@Query("FROM Products p JOIN Vendors v ON p.vendors.id = v.id WHERE v.users.deletedAt IS NULL AND p.productCategories.id = :category_id")
 	public Page<Products> findProductByCategoryPage(@Param("category_id") int category_id,Pageable pageable);
 	

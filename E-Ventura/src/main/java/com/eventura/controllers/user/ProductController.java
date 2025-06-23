@@ -53,17 +53,23 @@ public class ProductController {
 		modelMap.addAttribute("totalPage", products.getTotalPages());
 		modelMap.addAttribute("lastPageIndex", products.getTotalPages() - 1);
 		modelMap.addAttribute("pageSize", pageSize);
-		modelMap.addAttribute("currentPage", "category");
 		return "customer/pages/home/shopgrid";
 	}
 
 	@GetMapping({"search"})
-	public String searchByKeyword(@RequestParam("keyword") String keyword,ModelMap modelMap) {
-		List<Products> products = productService.findByKeyword(keyword);
+	public String searchByKeyword(@RequestParam("keyword") String keyword,ModelMap modelMap,@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "30") int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Products> products = productService.findByKeywordPage(keyword,pageable);
 		List<ProductCategories> categories = categoryService.findAll();
 		modelMap.put("products", products);
 		modelMap.put("categories", categories);
 		modelMap.put("keyword", keyword);
+		
+		modelMap.addAttribute("currentPages", page);
+		modelMap.addAttribute("totalPage", products.getTotalPages());
+		modelMap.addAttribute("lastPageIndex", products.getTotalPages() - 1);
+		modelMap.addAttribute("pageSize", pageSize);
 		return "customer/pages/home/shopgrid";
 	}
 	
