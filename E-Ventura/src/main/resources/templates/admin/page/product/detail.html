@@ -59,13 +59,19 @@
 								<div class="col-lg-4 col-md-4 col-sm-3 mb-mobile">
 
 									<div class="rating mt-5">
-										<img th:src="@{/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-											th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><span
-											class="font-xs color-gray-500 font-medium"> (<th:block
+										<th:block
+											th:with="width=${avgProductReview > 0 ? widthProduct : 0}">
+											<ul class="rating-stars">
+												<li class="stars-active"
+													th:style="'width:' + ${widthProduct} + '%'"><img
+													th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
+													style="height: 20px;"></li>
+												<li><img
+													th:src="@{/assets/imgs/icons/starts-disable.svg}"
+													alt="stars" style="height: 20px;"></li>
+											</ul>
+										</th:block>
+										<span class="font-xs color-gray-500 font-medium"> (<th:block
 												th:text="${countProductReview}"></th:block> reviews)
 										</span>
 									</div>
@@ -329,18 +335,21 @@
 										</h6>
 										<div class="product-rate-cover text-end">
 											<div class="rating mt-5">
-												
-												<ul class="rating-stars">
-													<li class="stars-active" style="width: 80%;"><img
-														th:src="@{/assets/imgs/icons/stars-active.svg}"
-														alt="stars" style="height: 20px;"></li>
-													<li><img
-														th:src="@{/assets/imgs/icons/starts-disable.svg}"
-														alt="stars" style="height: 20px;"></li>
-												</ul>
-													<span
-													class="font-xs color-gray-500 font-medium"> (65
-													reviews)</span>
+												<th:block
+													th:with="width=${avgVendorReview > 0 ? widthVendor : 0}">
+													<ul class="rating-stars">
+														<li class="stars-active"
+															th:style="'width:' + ${widthVendor} + '%'"><img
+															th:src="@{/assets/imgs/icons/stars-active.svg}"
+															alt="stars" style="height: 20px;"></li>
+														<li><img
+															th:src="@{/assets/imgs/icons/starts-disable.svg}"
+															alt="stars" style="height: 20px;"></li>
+													</ul>
+												</th:block>
+												<span class="font-xs color-gray-500 font-medium"> (<th:block
+														th:text="${countVendorReview}"></th:block> reviews)
+												</span>
 											</div>
 										</div>
 									</div>
@@ -359,7 +368,11 @@
 								<div class="d-flex mb-25">
 									<div class="mr-30">
 										<p class="color-brand-1 font-xs">Rating</p>
-										<h4 class="mb-0"><tH:block th:text="${#numbers.formatDecimal((avgVendorReview/5)*100, 0, 'COMMA', 0, 'POINT')}"></tH:block>%</h4>
+										<h4 class="mb-0">
+											<tH:block
+												th:text="${#numbers.formatDecimal((avgVendorReview/5)*100, 0, 'COMMA', 0, 'POINT')}"></tH:block>
+											%
+										</h4>
 									</div>
 									<div class="mr-30">
 										<p class="color-brand-1 font-xs">Ship on time</p>
