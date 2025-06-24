@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.eventura.dtos.OrderVendorDTO;
 import com.eventura.entities.OrderItems;
-import com.eventura.entities.Orders;
 
-public interface OrderService {
-	public Page<OrderVendorDTO> findOrdersByVendorPage(int vendorId, Pageable pageable);
-	
-	public Orders findOrderByOrderId(int orderId);
+public interface OrderItemService {
+	public Page<OrderItems> findOrderItemsByOrderId(int orderId, int vendorId, Pageable pageable);
 }

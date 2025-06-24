@@ -16,4 +16,13 @@ public interface UserAddressRepository extends JpaRepository<UserAddress, Intege
 
 	@Query("from UserAddress where users.id = :user_id")
 	public List<UserAddress> findAddressUser(@Param("user_id") int user_id);
+	
+	@Query("""
+		    SELECT ua
+		    FROM UserAddress ua
+		    JOIN ua.users u
+		    JOIN u.orderses o
+		    WHERE o.id = :orderId
+		""")
+	public List<UserAddress> findUserAddressByOrderId(@Param("orderId") Integer orderId);
 }
