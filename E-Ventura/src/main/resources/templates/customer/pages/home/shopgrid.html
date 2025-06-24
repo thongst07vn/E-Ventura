@@ -38,9 +38,6 @@
 										Fillters</a>
 								</div>
 								<div class="col-xl-10 col-lg-9 mb-10 text-lg-end text-center">
-									<span
-										class="font-sm color-gray-900 font-medium border-1-right span">Showing
-										1&ndash;16 of 17 results</span>
 									<div class="d-inline-block">
 										<span class="font-sm color-gray-500 font-medium">Sort
 											by:</span>
@@ -63,9 +60,18 @@
 									<div class="d-inline-block">
 										<span class="font-sm color-gray-500 font-medium">Show</span>
 										<div class="dropdown dropdown-sort border-1-right">
-
-											<form id="pageSizeForm" method="GET"
+											<form th:if="${categoryId}" id="pageSizeForm" method="GET"
 												th:action="@{'/product/findbycategory/'+${categoryId}}">
+												<select class="form-select" name="pageSize"
+													id="pageSizeSelect">
+													<option value="30" th:selected="${pagesize == 30}">30 items</option>
+													<option value="50" th:selected="${pageSize == 50}">50 items</option>
+													<option value="100" th:selected="${pageSize == 100}">100 items</option>
+												</select>
+											</form>
+											<form th:if=${keyword} id="pageSizeForm" method="GET"
+												th:action="@{/product/search}">
+												<input type="text" name="keyword" th:value="${keyword}" hidden/>
 												<select class="form-select" name="pageSize"
 													id="pageSizeSelect">
 													<option value="30" th:selected="${pagesize == 30}">30 items</option>
@@ -86,12 +92,7 @@
 																			.submit();
 																});
 											</script>
-
 										</div>
-									</div>
-									<div class="d-inline-block">
-										<a class="view-type-grid mr-5 active" href="shop-grid.html"></a><a
-											class="view-type-list" href="shop-list.html"></a>
 									</div>
 								</div>
 							</div>

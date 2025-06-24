@@ -30,6 +30,7 @@ import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.services.AddressService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
@@ -48,23 +49,17 @@ public class UserController {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private AddressService addressService;
 
 	@GetMapping({ "home", "/" })
-	public String home(ModelMap modelMap, Authentication authentication,
-			@AuthenticationPrincipal UserDetails userDetails) {
+	public String home(ModelMap modelMap) {
 		List<ProductCategories> categories = categoryService.findAll();
 		List<Products> top10products = productService.findTopNewProduct();
 
 		modelMap.put("categories", categories);
 		modelMap.put("top10products", top10products);
-		if (userDetails != null) {
-			Users user = userService.findByEmail(userDetails.getUsername());
-			modelMap.put("user", user);
-		} else if (authentication != null) {
-			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
-			Users user = userService.findByEmail(accountOAuth2User.getEmail());
-			modelMap.put("user", user);
-		}
 
 		return "customer/pages/home/index";
 	}
@@ -107,6 +102,8 @@ public class UserController {
 			modelMap.put("userAdresses", userAdresses);
 			modelMap.put("user", user);
 		}
+		modelMap.put("addAddressVariable", new UserAddress());
+		modelMap.put("provinces", addressService.findAllProvinces());
 		return "customer/pages/account/profile";
 	}
 

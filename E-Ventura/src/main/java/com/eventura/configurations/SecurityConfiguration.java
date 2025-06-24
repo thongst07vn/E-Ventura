@@ -178,7 +178,7 @@ public class SecurityConfiguration {
 		return httpSecurity
 			// securityMatcher defines which requests this specific filter chain will handle.
 			// It will match requests for /doctor/**, /patient/**, the customer login page, and its processing URL.
-			.securityMatcher("/", "/customer/**", "/customer/login", "/login/**", "/customer/register", "/customer/process-login", "/oauth2/**","/api/password/**")
+			.securityMatcher("/", "/customer/**", "/customer/login", "/login/**", "/customer/register", "/customer/process-login", "/oauth2/**","/api/password/**","/product/**")
 			.cors(c -> c.disable()) // Disables CORS for simplicity. In production, configure CORS appropriately.
 			.csrf(c -> c.disable()) // Disables CSRF for simplicity. **Enable and handle CSRF tokens in production.**
 			.authorizeHttpRequests(a -> {
