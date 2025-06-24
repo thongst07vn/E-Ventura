@@ -156,7 +156,7 @@
 							class="burger-icon-bottom"></span>
 					</div>
 				</div>
-				<div class="header-shop" th:if="${user != null}">
+				<div class="header-shop" sec:authorize="hasAnyRole('CUSTOMER')">
 					<a class="font-lg icon-list icon-wishlist"
 						href="shop-wishlist.html"><span>Wishlist</span><span
 						class="number-item font-xs">5</span></a>
@@ -179,11 +179,7 @@
 					</div>
 
 				</div>
-				<div class="header-shop" th:if="${user == null}">					
-					<div class="d-inline-block box-dropdown-cart">
-						<a th:href="@{/customer/login}"><span class="font-lg icon-list icon-account"><span>Sign in</span></span></a>
-					</div>
-				</div>
+				
 			</div>
 		</div>
 	</div>
