@@ -32,9 +32,21 @@ public class UserServiceImpl implements UserService {
 		if(user == null || user.getDeletedAt()!=null) {
 			throw new UsernameNotFoundException("Email khong ton tai");
 		} else {
-			List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
-			roles.add(new SimpleGrantedAuthority("ROLE_"+user.getRoles().getName()));		
-			return new User(user.getEmail(), user.getPassword(), roles);
+			// If the user is soft-deleted, consider them disabled
+	        boolean isAccountNonLocked = true; // Assuming no locking mechanism based on your code
+	        boolean isCredentialsNonExpired = true; // Assuming no credential expiration based on your code
+	        boolean isAccountNonExpired = true; // Assuming no account expiration based on your code
+	        boolean isEnabled = (user.getDeletedAt() == null); // User is enabled only if deletedAt is null
+
+	        List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+	        roles.add(new SimpleGrantedAuthority("ROLE_" + user.getRoles().getName()));
+	        
+	        return new User(user.getEmail(), user.getPassword(), isEnabled, isAccountNonExpired, isCredentialsNonExpired, isAccountNonLocked, roles);
+//	        // Use Spring Security's User constructor that takes enabled status
+//	        return new User(user.getEmail(), user.getPassword(), isEnabled, isAccountNonExpired, isCredentialsNonExpired, isAccountNonLocked, roles);
+//			List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
+//			roles.add(new SimpleGrantedAuthority("ROLE_"+user.getRoles().getName()));		
+//			return new User(user.getEmail(), user.getPassword(), roles);
 		}
 	}
 

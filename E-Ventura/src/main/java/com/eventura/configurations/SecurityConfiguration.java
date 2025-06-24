@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -127,6 +128,7 @@ public class SecurityConfiguration {
 						response.sendRedirect(url);
 					}
 				})
+				
 				.failureHandler(new AuthenticationFailureHandler() {
 					@Override
 					public void onAuthenticationFailure(HttpServletRequest request,
@@ -137,6 +139,7 @@ public class SecurityConfiguration {
 					}
 				});
 			})
+			.addFilterAfter(new DeletedUserCheckFilter(userService), SecurityContextHolderFilter.class)
 			.addFilterBefore(new OncePerRequestFilter() {
 			    @Override
 			    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -152,6 +155,7 @@ public class SecurityConfiguration {
 			        filterChain.doFilter(request, response);
 			    }
 			}, UsernamePasswordAuthenticationFilter.class)
+			
 			.logout(f -> {
 				f.logoutUrl("/admin/logout") // Admin-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
@@ -164,7 +168,7 @@ public class SecurityConfiguration {
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/admin/login?error=unauthorized"); // Redirect on access denied
+				ex.accessDeniedPage("/admin/login?error=Unauthorized"); // Redirect on access denied
 			}).build();
 	}
 
@@ -248,6 +252,7 @@ public class SecurityConfiguration {
 				f.loginPage("/customer/login")				
 					.userInfoEndpoint().userService(accountOAuth2UserServices).and().successHandler(auth2LoginSuccessHandler);
 			})
+			.addFilterAfter(new DeletedUserCheckFilter(userService), SecurityContextHolderFilter.class)
 			.addFilterBefore(new OncePerRequestFilter() {
                 @Override
                 protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -276,7 +281,7 @@ public class SecurityConfiguration {
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/customer/login?error=unauthorized"); // Redirect on access denied
+				ex.accessDeniedPage("/customer/login?error=Unauthorized"); // Redirect on access denied
 			})
 			.build();
 	}
@@ -355,6 +360,7 @@ public class SecurityConfiguration {
 					}
 				});
 			})
+			.addFilterAfter(new DeletedUserCheckFilter(userService), SecurityContextHolderFilter.class)
 			.logout(f -> {
 				f.logoutUrl("/vendor/account/logout") // Customer-specific logout URL
 				.logoutSuccessHandler(new LogoutSuccessHandler() {
@@ -366,7 +372,7 @@ public class SecurityConfiguration {
 				});
 			})
 			.exceptionHandling(ex -> {
-				ex.accessDeniedPage("/vendor/account/login?error=unauthorized"); // Redirect on access denied
+				ex.accessDeniedPage("/vendor/account/login?error=Unauthorized"); // Redirect on access denied
 			})
 			.build();
 	}
