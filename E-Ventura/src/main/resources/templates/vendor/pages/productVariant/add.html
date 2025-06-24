@@ -1,5 +1,5 @@
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{vendor/layouts/layout :: layout('Edit Product', ~{this :: .content-main})}">
+	th:replace="~{vendor/layouts/layout :: layout('Add Product Variant', ~{this :: .content-main})}">
 
 <head>
 	<title></title>
@@ -10,27 +10,27 @@
 		<div class="container mt-4">
 			<div class="card shadow-sm">
 				<div class="card-header text-dark">
-					<h5 class="mb-0">Edit Product Attribute</h5>
+					<h5 class="mb-0">Add Product Attribute</h5>
 				</div>
 				<div class="card-body">
 					<div class="row">
 						<div class="col-lg-6">
 							<div class="mb-4">
 								<label class="form-label">Attribute</label>
-								<input class="form-control" type="text" th:field="${productVariant.productAttributes.name}" readonly>
+								<input class="form-control" type="text" >
 							</div>
 						</div>
 						<div class="col-lg-6">
 							<div class="mb-4">
 								<label class="form-label">Value</label>
-								<input class="form-control" type="text" th:field="${productVariant.value}">
+								<input class="form-control" type="text" >
 							</div>
 						</div>
 					</div>
 
 					<!-- Buttons -->
 					<div class="d-flex justify-content-between mt-4">
-						<a th:href="@{'/vendor/product/edit/' + ${productVariant.products.id}}" class="btn btn-secondary">
+						<a th:href="@{'/vendor/product/edit/'}" class="btn btn-secondary">
 							← Back
 						</a>
 						<button type="submit" class="btn btn-success text-white">
