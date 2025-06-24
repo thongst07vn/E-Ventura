@@ -9,12 +9,15 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eventura.dtos.DistrictsDTO;
+import com.eventura.dtos.UserAddressDTO;
 import com.eventura.dtos.WardsDTO;
 import com.eventura.entities.Districts;
 import com.eventura.entities.Provinces;
+import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
 import com.eventura.entities.Wards;
 import com.eventura.services.AddressService;
@@ -51,6 +54,12 @@ public class CustomerAddressController {
                              .map(WardsDTO::new)
                              .toList();
     }
+    
+	@GetMapping({"geteditaddress"})
+	public UserAddressDTO GetEditAddress(@RequestParam("editAddressId") int editAddressId) {
+		UserAddress userAddress = addressService.findById(editAddressId);
+		return new UserAddressDTO(userAddress); 		    	
+	}
 
 }
 

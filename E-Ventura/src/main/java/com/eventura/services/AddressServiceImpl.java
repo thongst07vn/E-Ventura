@@ -26,6 +26,7 @@ public class AddressServiceImpl implements AddressService {
 	@Autowired
 	private UserAddressRepository userAddressRepository;
 
+	
 	@Override
 	public List<Provinces> findAllProvinces() {
 		// TODO Auto-generated method stub
@@ -53,6 +54,11 @@ public class AddressServiceImpl implements AddressService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public UserAddress findById(int id) {
+		return userAddressRepository.findById(id).get();
 	}
 	
 }

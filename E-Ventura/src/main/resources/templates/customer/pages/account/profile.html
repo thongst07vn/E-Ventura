@@ -938,21 +938,27 @@
 																			data-bs-dismiss="modal" aria-label="Close"></button>
 																	</div>
 																	<div class="modal-body">
-																		<form method="post" th:action="@{/customer/addaddress}" id="addAddressForm">
+																		<form method="post"
+																			th:action="@{/customer/addaddress}"
+																			id="addAddressForm">
 																			<div class="row">
 																				<div class="col-lg-12">
 																					<div class="row gx-3">
 																						<div class="col-lg-12 mb-3">
-																						 <input
-																								class="form-control mb-2" type="text"
+																							<input class="form-control mb-2" type="text"
 																								name="userId" th:value="${user.id}"
-																								required="required" hidden>
+																								required="required" hidden> <label
+																								class="form-label">Location name</label> <input
+																								class="form-control mb-2" type="text"
+																								th:field="${addAddressVariable.name}"
+																								required="required" placeholder="123 street 123">
 																							<label class="form-label">Address</label> <input
 																								class="form-control mb-2" type="text"
 																								id="addressInput"
 																								th:field="${addAddressVariable.address}"
 																								required="required" placeholder="123 street 123">
-																							<div id="addressError" class="text-danger mb-2" style="display: none;"></div>
+																							<div id="addressError" class="text-danger mb-2"
+																								style="display: none;"></div>
 																							<div class="row">
 																								<div class="col-md-12 mb-2">
 																									<!-- Province -->
@@ -965,7 +971,7 @@
 																											th:text="${province.administrativeUnits.shortName}+' '+${province.name}">
 																										</option>
 																									</select>
-																									
+
 																								</div>
 
 																								<div class="col-md-6 mb-2">
@@ -992,9 +998,12 @@
 																										</option>
 																									</select>
 																								</div>
-																								<div id="provinceError" class="text-danger mb-2" style="display: none;"></div>
-																								<div id="districtError" class="text-danger mb-2" style="display: none;"></div>
-																								<div id="wardError" class="text-danger mb-2" style="display: none;"></div>
+																								<div id="provinceError" class="text-danger mb-2"
+																									style="display: none;"></div>
+																								<div id="districtError" class="text-danger mb-2"
+																									style="display: none;"></div>
+																								<div id="wardError" class="text-danger mb-2"
+																									style="display: none;"></div>
 																							</div>
 																						</div>
 
@@ -1002,9 +1011,7 @@
 																					</div>
 																				</div>
 																			</div>
-																			<br>
-																			<button class="btn btn-primary" type="submit">Save
-																				changes</button>
+
 																		</form>
 																	</div>
 																	<div class="modal-footer">
@@ -1078,7 +1085,7 @@
 				if(addressInput.value != null){
 					addressInput.value = '';
 				}
-				provinceSelect.value = '01';
+				provinceSelect.value = '';
 				// Reset district select
 	            districtSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
 	           districtSelect.disabled = false; // Enable it so it's not stuck disabled
@@ -1188,28 +1195,388 @@
 		});
 		</script>
 
-																<th:block th:each="userAdress, i : ${userAdresses}">
-														<div class="card mb-2">
-															<div class="card-body bg-light">
-
+														<th:block th:each="userAdress, i : ${userAdresses}">
+															<div class="card mb-2">
+																<div class="card-body bg-light">
 																	<article class="box mb-3 bg-light">
-																		<a class="btn btn-cart w-auto float-end" id="changeAddress">Change</a>
-
-																		<a class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a> <a
+																		<a class="btn btn-cart w-auto float-end changeAddress"
+																			
+																			th:data-address-id="${userAdress.id}">Change</a><a
+																			class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a> <a
 																			class="btn btn-cart-delete w-auto float-end" href="#">Delete</a>
-																		<h6 th:text="Address + ${i.index+1}"></h6>
+																		<h6 th:text="${userAdress.name}"></h6>
 																		<small class="text-muted d-block" style="width: 70%">
 																			<th:block
 																				th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}"></th:block>
-
 																		</small>
 																	</article>
+																</div>
 															</div>
-														</div>
-																</th:block>
+														</th:block>
 
 													</div>
 												</div>
+																								<div class="modal fade" id="editAddressModal" tabindex="-1"
+													aria-labelledby="editAddressModal" aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h1 class="modal-title fs-5" id="exampleModalLabel">Edit
+																	address</h1>
+																<button type="button" class="btn-close"
+																	data-bs-dismiss="modal" aria-label="Close"></button>
+															</div>
+															<div class="modal-body">
+																<form method="post" th:action="@{/customer/editaddress}"
+																	id="editAddressForm">
+																	<div class="row">
+																		<div class="col-lg-12">
+																			<div class="row gx-3">
+																				<div class="col-lg-12 mb-3">
+																					<input class="form-control mb-2" type="text"
+																						id="addAddressVariable" th:field="${addAddressVariable.id}"
+																						required="required" hidden>
+																					<input class="form-control mb-2" type="text"
+																						name="userId" th:value="${user.id}"
+																						required="required" hidden> <label
+																						class="form-label">Location name</label> <input
+																						class="form-control mb-2" type="text"
+																						th:field="${addAddressVariable.name}"
+																						required="required" placeholder="123 street 123">
+																					<label class="form-label">Address</label> <input
+																						class="form-control mb-2" type="text"
+																						id="editaddressInput"
+																						th:field="${addAddressVariable.address}"
+																						required="required" placeholder="123 street 123">
+																					<div id="editaddressError" class="text-danger mb-2"
+																						style="display: none;"></div>
+																					<div class="row">
+																						<div class="col-md-12 mb-2">
+																							<!-- Province -->
+																							<select class="form-select" id="editprovinceSelect"
+																								th:field="${addAddressVariable.provinces.code}">
+																								<option id="editprovinceOption" value="" selected>Select
+																									province/city</option>
+																								<option th:each="province : ${provinces}"
+																									th:value="${province.code}"
+																									th:text="${province.administrativeUnits.shortName}+' '+${province.name}">
+																								</option>
+																							</select>
+
+																						</div>
+
+																						<div class="col-md-6 mb-2">
+																							<!-- District -->
+																							<select class="form-select" id="editdistrictSelect"
+																								th:field="${addAddressVariable.districts.code}">
+																								<option id="editdistrictOption" value="" selected>Select
+																									district</option>
+																								<option th:each="district : ${districts}"
+																									th:value="${district.code}"
+																									th:text="${district.shortName}+' '+${district.name}">
+																								</option>
+																							</select>
+																						</div>
+																						<div class="col-md-6 mb-2">
+																							<!-- Ward -->
+																							<select class="form-select" id="editwardSelect"
+																								th:field="${addAddressVariable.wards.code}">
+																								<option id="editwardOption" value="" selected>Select
+																									ward</option>
+																								<option th:each="ward : ${wards}"
+																									th:value="${ward.code}"
+																									th:text="${ward.shortName}+' '+${ward.name}">
+																								</option>
+																							</select>
+																						</div>
+																						<div id="editprovinceError" class="text-danger mb-2"
+																							style="display: none;"></div>
+																						<div id="editdistrictError" class="text-danger mb-2"
+																							style="display: none;"></div>
+																						<div id="editwardError" class="text-danger mb-2"
+																							style="display: none;"></div>
+																					</div>
+																				</div>
+
+
+																			</div>
+																		</div>
+																	</div>
+
+																</form>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-cart-delete w-auto"
+																	data-bs-dismiss="modal">Close</button>
+																<button type="button" class="btn btn-cart w-auto"
+																	id="editAddressSubmitButton">Save changes</button>
+															</div>
+														</div>
+													</div>
+												</div>
+												<script th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+												<script>
+												$(document).ready(function() {
+												    $('.changeAddress').on('click', function(event) {
+												        event.preventDefault(); // Prevent default button behavior if it's a link
+
+												        // Get the address ID from a data attribute (you'll need to add this to your button)
+												        // For example: <a class="btn btn-cart w-auto float-end" id="changeAddress" data-address-id="YOUR_ADDRESS_ID_HERE">Change</a>
+												        var editAddressId = $(this).data('address-id');
+														document.getElementById('addAddressVariable').value=editAddressId;
+												        if (editAddressId) {
+												            $.ajax({
+												                url: '/customer/api/address/geteditaddress', // Your Spring Boot endpoint URL
+												                type: 'GET',
+												                data: { editAddressId: editAddressId },
+												                success: function(userAddress) {
+												                    // Check if data is received and is not null
+												                    if (userAddress) {
+												                        // Populate the modal fields with the received data
+												                        // Make sure the names match your UserAddress model properties
+												                        $('#editAddressForm input[name="name"]').val(userAddress.name);
+												                        $('#editAddressForm input[name="address"]').val(userAddress.address);
+
+												                        // Populate the select dropdowns
+												                        // For provinces, districts, and wards, you'll need to set the selected option
+												                        // based on the 'code' property from your UserAddress object.
+												                        // This assumes your select options have a 'value' attribute matching the code.
+												                        if (userAddress.provinces) {
+												                            $('#editprovinceSelect').val(userAddress.provincesCode);
+												                            // Trigger change to load districts if your application logic requires it
+												                            $('#editprovinceSelect').trigger('change');
+												                            $('#editprovinceOption').text(userAddress.provincesUnit+' '+userAddress.provinces);
+												                            $('#editprovinceOption').val(userAddress.provincesCode);
+												                            
+												                        }
+
+												                        if (userAddress.districts) {
+												                            // You might need a slight delay or a callback if district loading is asynchronous
+												                            // and depends on province selection
+												                            setTimeout(function() {
+												                                $('#editdistrictSelect').val(userAddress.districtsCode);
+												                                $('#editdistrictSelect').trigger('change');
+												                                $('#editdistrictOption').text(userAddress.districtsUnit+' '+userAddress.districts);
+													                            $('#editdistrictOption').val(userAddress.districtsCode);
+												                                
+												                            }, 100); // Adjust delay if necessary
+												                        }
+
+												                        if (userAddress.wards) {
+												                             setTimeout(function() {
+												                                $('#editwardSelect').val(userAddress.wardsCode);
+												                                $('#editwardSelect').trigger('change');
+												                                $('#editwardOption').text(userAddress.wardsUnit+' '+userAddress.wards);
+													                            $('#editwardOption').val(userAddress.wardsCode);
+												                            }, 200); // Adjust delay if necessary
+												                        }
+
+
+												                        // If you have a userId input that's hidden and needs to be updated (unlikely for editing)
+												                        // $('#addAddressForm input[name="userId"]').val(userAddress.userId);
+
+
+												                        // Show the modal
+												                        $('#editAddressModal').modal('show');
+												                         
+
+												                        // Optionally, change the form action for updating
+												                        // For jQuery's direct action attribute
+												                        // You might also need to add a hidden input for the addressId to be updated
+												                        if ($('#addAddressForm input[name="id"]').length === 0) { // Check if an ID input already exists
+												                            $('#addAddressForm').prepend('<input type="hidden" name="id" value="' + userAddress.id + '">');
+												                        } else {
+												                            $('#addAddressForm input[name="id"]').val(userAddress.id);
+												                        }
+
+
+												                    } else {
+												                        console.error('No address data received.');
+												                        alert('Error: Could not retrieve address data.');
+												                    }
+												                },
+												                error: function(xhr, status, error) {
+												                    console.error("AJAX Error:", status, error);
+												                    alert('Error loading address for editing. Please try again.');
+												                }
+												            });
+												        } else {
+												            console.error("No address ID found for editing.");
+												            alert('Cannot edit address: No ID provided.');
+												        }
+												    });
+												});
+												</script>
+<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const editprovinceSelect = document.getElementById("editprovinceSelect");
+			const editdistrictSelect = document.getElementById("editdistrictSelect");
+			const editwardSelect = document.getElementById("editwardSelect");
+			
+			const editaddressInput = document.getElementById("editaddressInput");
+			const editAddressModal = document.getElementById('editAddressModal');
+			const editaddressError = document.getElementById("editaddressError");
+			const editprovinceError = document.getElementById("editprovinceError");
+			const editdistrictError = document.getElementById("editdistrictError");
+			const editwardError = document.getElementById("editwardError");
+			
+			function isBlank(str) {
+	            return str === null || str.trim() === '';
+	        }
+			
+			editprovinceSelect.addEventListener("change", function () {
+				const provinceCode = this.value;
+				editdistrictSelect.innerHTML = '<option selected disabled>Loading...</option>';
+				editwardSelect.innerHTML = '<option selected disabled>Ward</option>';
+				editwardSelect.disabled = true;
+
+				fetch(`/api/address/districts?provinceCode=${provinceCode}`)
+				    .then(response => response.json())
+				    .then(data => {
+				        console.log(data);
+				        // Clear existing options BEFORE adding new ones
+				        editdistrictSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
+				        data.forEach(district => {
+				            const option = document.createElement("option");
+				            option.value = district.code;
+				            option.text = district.shortName+ ' ' + district.name;
+				            editdistrictSelect.appendChild(option);
+				        });
+				        editdistrictSelect.disabled = false;
+				    })
+				    .catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
+			});
+
+			editdistrictSelect.addEventListener("change", function () {
+				const districtCode = this.value;
+				editwardSelect.innerHTML = '<option selected disabled>Loading...</option>';
+
+				fetch(`/api/address/wards?districtCode=${districtCode}`)
+					.then(response => response.json())
+					.then(data => {
+						editwardSelect.innerHTML = '<option selected disabled>Ward</option>';
+						data.forEach(ward => {
+							const option = document.createElement("option");
+							option.value = ward.code;
+							option.text = ward.shortName+ ' ' + ward.name;
+							editwardSelect.appendChild(option);
+						});
+						editwardSelect.disabled = false;
+					});
+			});
+			editAddressModal.addEventListener('hidden.bs.modal',function(){
+				if(editaddressInput.value != null){
+					editaddressInput.value = '';
+				}
+				editprovinceSelect.value = '';
+				// Reset district select
+	            editdistrictSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
+	           editdistrictSelect.disabled = false; // Enable it so it's not stuck disabled
+
+	           // Reset ward select
+	           editwardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
+	            editwardSelect.disabled = true;
+			});
+			editAddressSubmitButton.addEventListener('click', function (event) {
+	            // Prevent the default form submission for now
+	            event.preventDefault();
+
+	            let isValid = true;
+
+	            // Validate Address Input
+	            if (isBlank(editaddressInput.value)) {
+	            	editaddressInput.classList.add('is-invalid'); // Add Bootstrap validation error style
+	            	editaddressError.textContent = 'Address cannot be empty or just spaces.';
+	            	editaddressError.style.display = 'block';
+	                isValid = false;
+	            } else {
+	            	editaddressInput.classList.remove('is-invalid');
+	            	editaddressError.style.display = 'none';
+	            	editaddressError.textContent = '';
+	            }
+	            //province error
+	            if (editprovinceSelect.value === '') {
+	            	editprovinceSelect.classList.add('is-invalid');
+	            	editprovinceError.textContent = 'Province and city cannot be empty.';
+	            	editprovinceError.style.display = 'block';
+		            isValid = false;
+		        } else {
+		        	editprovinceSelect.classList.remove('is-invalid');
+		        	editprovinceError.style.display = 'none';
+		        	editprovinceError.textContent = '';
+		        }
+	            //district error
+	            if (editdistrictSelect.value === '') {
+	            	editdistrictSelect.classList.add('is-invalid');
+	            	editdistrictError.textContent = 'District cannot be empty.';
+	            	editdistrictError.style.display = 'block';
+		            isValid = false;
+		        } else {
+		        	editdistrictSelect.classList.remove('is-invalid');
+		        	editdistrictError.style.display = 'none';
+		        	editdistrictError.textContent = '';
+		        }
+	            //ward error
+	            if (editwardSelect.value === '') {
+	            	editwardSelect.classList.add('is-invalid');
+	            	editwardError.textContent = 'Ward cannot be empty.';
+	            	editwardError.style.display = 'block';
+		            isValid = false;
+		        } else {
+		        	editwardSelect.classList.remove('is-invalid');
+		        	editwardError.style.display = 'none';
+		        	editwardError.textContent = '';
+		        }
+
+
+	            if (isValid) {
+	                document.getElementById('editAddressForm').submit();
+	            }
+	        });
+
+	        // --- Clear data when modal closes ---
+	        editAddressModal.addEventListener('hidden.bs.modal', function () {
+	            // Clear the address input
+	            editaddressInput.value = '';
+	            editaddressInput.classList.remove('is-invalid'); // Remove error styles
+	            editaddressError.style.display = 'none';
+	            editaddressError.textContent = '';
+
+	            // Reset province select
+	            editprovinceSelect.value = ''; // Or set to the value of your default "Select province/city" option
+	            editdistrictSelect.innerHTML = '<option value="" disabled selected>Select province/city</option>';
+	            editprovinceSelect.classList.remove('is-invalid'); // Remove error styles
+
+	            // Reset district select
+	            editdistrictSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
+	            editdistrictSelect.disabled = false;
+	            editdistrictSelect.classList.remove('is-invalid'); // Remove error styles
+
+	            // Reset ward select
+	            editwardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
+	            editwardSelect.disabled = true;
+	            editwardSelect.classList.remove('is-invalid'); // Remove error styles
+	        });
+
+	        // Optional: Remove validation errors as user types/changes
+	        editaddressInput.addEventListener('input', function() {
+	            if (!isBlank(this.value)) {
+	                this.classList.remove('is-invalid');
+	                editaddressError.style.display = 'none';
+	                editaddressError.textContent = '';
+	            }
+	        });
+	        editprovinceSelect.addEventListener('change', function() {
+	            this.classList.remove('is-invalid');
+	        });
+	        editdistrictSelect.addEventListener('change', function() {
+	            this.classList.remove('is-invalid');
+	        });
+	        editwardSelect.addEventListener('change', function() {
+	            this.classList.remove('is-invalid');
+	        });
+		});
+		</script>
 												<hr class="my-5">
 												<div class="row" style="max-width: 920px">
 													<div class="col-md">
@@ -1884,6 +2251,7 @@
 				</div>
 			</div>
 		</div>
+		
 	</main>
-
+	
 </body>
