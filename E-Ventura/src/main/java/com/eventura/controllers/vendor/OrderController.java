@@ -1,26 +1,64 @@
 package com.eventura.controllers.vendor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.eventura.dtos.OrderVendorDTO;
+import com.eventura.entities.OrderItems;
+import com.eventura.entities.Orders;
+import com.eventura.entities.VendorProductCategory;
+import com.eventura.services.OrderItemService;
+import com.eventura.services.OrderService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller("vendorOrderController")
 @RequestMapping("vendor/order")
 public class OrderController  {
 	
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	private OrderItemService orderItemService;
 	
 	/*===================== ORDER =====================*/
 	@GetMapping("list")
-	public String orderList(ModelMap modelMap) {
+	public String orderList(ModelMap modelMap, HttpSession session,
+							@RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "order");
+		int vendorId = (Integer) session.getAttribute("vendorId");
+		
+		int pageSize = 10;
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<OrderVendorDTO> orderVendorPages = orderService.findOrdersByVendorPage(vendorId, pageable);
+
+		
+		modelMap.put("orders", orderVendorPages.getContent());
 
 		return "vendor/pages/order/list";
 	}
 	
-	@GetMapping("detail")
-	public String orderDetail(ModelMap modelMap) {
+	@GetMapping("detail/{orderId}")
+	public String orderDetail(@PathVariable("orderId") int orderId, ModelMap modelMap, HttpSession session,
+							  @RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "order");
+		int vendorId = (Integer) session.getAttribute("vendorId");
+		
+		int pageSize = 10;
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<OrderItems> orderItemPages = orderItemService.findOrderItemsByOrderId(orderId, vendorId, pageable);
+		
+		modelMap.put("orderItems", orderItemPages.getContent());
+		modelMap.put("order", orderService.findOrderByOrderId(orderId));
 
 		return "vendor/pages/order/detail";
 	}

@@ -13,6 +13,34 @@
 				<p>View your Category here</p>
 			</div>
 			<div><a class="btn btn-primary btn-sm rounded" href="#">Create new</a></div>
+			<!-- Button trigger modal -->
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+				<i class="material-icons md-plus"></i>Create category
+			</button>
+
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+				aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="exampleModalLabel">Modal
+								title</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary">Save
+								changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Modal -->
+
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
@@ -108,7 +136,7 @@
 				</nav>
 			</div>
 		</th:block>
-		
+
 		<!-- Trường hợp Search By Keyword -->
 		<th:block th:if="${selectedKeyword != null && !#lists.isEmpty(vendorProductCategories)}">
 			<div class="pagination-area mt-15 mb-50">
@@ -116,33 +144,36 @@
 					<ul class="pagination justify-content-start">
 						<!-- Nút về đầu -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/category/searchByKeyword?page=' + ${0}}" aria-label="Next"> <i
-									class="material-icons md-double_arrow"
+							<a class="page-link" th:href="@{'/vendor/category/searchByKeyword?page=' + ${0}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"
 									style="transform: rotate(180deg) translate(15%, -30%);"></i>
 							</a>
 						</li>
 						<!-- Nút trước -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
-								th:href="@{'/vendor/category/searchByKeyword?page=' + ${currentPages-1}}" class="page-link"
-								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+								th:href="@{'/vendor/category/searchByKeyword?page=' + ${currentPages-1}}"
+								class="page-link" aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
 							</a></li>
-		
+
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
-		
-							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
-									th:href="@{'/vendor/category/list?page=' + ${i}}" th:text="${i + 1}"></a></li>
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link" th:href="@{'/vendor/category/list?page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
 						</th:block>
-		
+
 						<!-- Nút tiếp -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
-							<a class="page-link" th:href="@{'/vendor/category/searchByKeyword?page=' + ${currentPages+1}}"
+							<a class="page-link"
+								th:href="@{'/vendor/category/searchByKeyword?page=' + ${currentPages+1}}"
 								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 							</a>
 						</li>
 						<!-- Nút tới cuối -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/category/searchByKeyword?page=' + ${lastPageIndex}}"
+							<a class="page-link"
+								th:href="@{'/vendor/category/searchByKeyword?page=' + ${lastPageIndex}}"
 								aria-label="Next"> <i class="material-icons md-double_arrow"></i>
 							</a>
 						</li>
