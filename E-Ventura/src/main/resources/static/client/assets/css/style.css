@@ -1060,7 +1060,7 @@ h4 {
   height: 35px;
   display: inline-block;
   animation: spinner 1.2s infinite ease-in-out;
-  background: url(../imgs/theme/favicon.svg);
+  background: url(/assets/imgs/theme/favicon.svg);
   box-shadow: 0 0 10px #fff;
 }
 @keyframes spinner {
@@ -1424,7 +1424,7 @@ a.text-brand-3:hover {
 }
 .btn.btn-category {
   background-color: #FD9636;
-  background-image: url(../imgs/page/homepage4/open-close.svg);
+  background-image: url(/assets/imgs/page/homepage4/open-close.svg);
   background-repeat: no-repeat;
   background-position: 17px 9px;
   display: inline-block;
@@ -1450,7 +1450,7 @@ a.text-brand-3:hover {
   color: #0E224D;
 }
 .btn.btn-filter {
-  background-image: url(../imgs/page/shop/filter.svg);
+  background-image: url(/assets/imgs/page/shop/filter.svg);
   background-repeat: no-repeat;
   background-position: 15px 12px;
   background-color: #EBF0F3;
@@ -1470,7 +1470,7 @@ a.text-brand-3:hover {
   padding: 0px 0px 0px 35px;
 }
 .btn.btn-delete {
-  background-image: url(../imgs/page/wishlist/delete.svg);
+  background-image: url(/assets/imgs/page/wishlist/delete.svg);
   background-position: center;
   background-repeat: no-repeat;
   padding: 0px 0px 0px 0px;
@@ -1478,31 +1478,31 @@ a.text-brand-3:hover {
   width: 34px;
 }
 .btn.arrow-back {
-  background-image: url(../imgs/page/cart/back.svg);
+  background-image: url(/assets/imgs/page/cart/back.svg);
   background-position: left 20px center;
   background-repeat: no-repeat;
   padding-left: 45px;
 }
 .btn.arrow-back:hover {
-  background-image: url(../imgs/page/cart/back-hover.svg);
+  background-image: url(/assets/imgs/page/cart/back-hover.svg);
 }
 .btn.arrow-next {
-  background-image: url(../imgs/page/checkout/arrow-next.svg);
+  background-image: url(/assets/imgs/page/checkout/arrow-next.svg);
   background-position: right 20px center;
   background-repeat: no-repeat;
   padding-right: 45px;
 }
 .btn.arrow-next:hover {
-  background-image: url(../imgs/page/cart/arrow-next-hover.svg);
+  background-image: url(/assets/imgs/page/cart/arrow-next-hover.svg);
 }
 .btn.update-cart {
-  background-image: url(../imgs/page/cart/reload.svg);
+  background-image: url(/assets/imgs/page/cart/reload.svg);
   background-position: left 20px center;
   background-repeat: no-repeat;
   padding-left: 45px;
 }
 .btn.update-cart:hover {
-  background-image: url(../imgs/page/cart/reload-hover.svg);
+  background-image: url(/assets/imgs/page/cart/reload-hover.svg);
 }
 .btn.btn-amazon {
   padding: 5px 10px;
@@ -1551,7 +1551,7 @@ a.text-brand-3:hover {
   margin-left: 5px;
 }
 .btn.btn-shop-now {
-  background-image: url(../imgs/page/homepage5/shop-now.svg);
+  background-image: url(/assets/imgs/page/homepage5/shop-now.svg);
   background-position: left 14px center;
   background-repeat: no-repeat;
   padding-left: 45px;
@@ -1564,7 +1564,7 @@ a.text-brand-3:hover {
   z-index: 12;
   right: 0px;
   top: -7px;
-  background: url(../imgs/page/homepage9/close.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage9/close.svg) no-repeat center;
 }
 .btn.btn-success {
   background-color: #5BC694;
@@ -1712,7 +1712,7 @@ a.text-brand-3:hover {
   top: -1px;
   width: 16px;
   height: 16px;
-  background: #FD9636 url(../imgs/page/shop/tick.svg) no-repeat center;
+  background: #FD9636 url(/assets/imgs/page/shop/tick.svg) no-repeat center;
 }
 
 .cb-container-2 {
@@ -1769,7 +1769,7 @@ a.text-brand-3:hover {
   top: 1px;
   width: 16px;
   height: 16px;
-  background: url(../imgs/page/product/checked.svg) no-repeat center;
+  background: url(/assets/imgs/page/product/checked.svg) no-repeat center;
 }
 
 /*COMPONENTS -> FORM*/
@@ -1833,17 +1833,17 @@ a.text-brand-3:hover {
 }
 
 .swiper-button-next {
-  background: url(../imgs/slider/swiper/next.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/slider/swiper/next.svg) no-repeat 0px 0px;
 }
 .swiper-button-next:hover {
-  background: url(../imgs/slider/swiper/next.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/slider/swiper/next.svg) no-repeat 0px 0px;
 }
 
 .swiper-button-prev {
-  background: url(../imgs/slider/swiper/prev.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/slider/swiper/prev.svg) no-repeat 0px 0px;
 }
 .swiper-button-prev:hover {
-  background: url(../imgs/slider/swiper/prev.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/slider/swiper/prev.svg) no-repeat 0px 0px;
 }
 
 .swiper-button-next,
@@ -1900,7 +1900,7 @@ a.text-brand-3:hover {
 }
 
 .swiper-pagination-customs {
-  background: url(../imgs/slider/swiper/dot.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/slider/swiper/dot.svg) no-repeat 0px 0px;
   display: inline-block;
   background-repeat: no-repeat;
   background-size: contain;
@@ -1913,7 +1913,7 @@ a.text-brand-3:hover {
 /*Customize the style representation when pager is activated*/
 .swiper-pagination-customs-active,
 .swiper-pagination-customs:hover {
-  background: url(../imgs/slider/swiper/dot-active.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/slider/swiper/dot-active.svg) no-repeat 0px 0px;
   width: 12px;
   height: 12px;
   margin-bottom: -1px;
@@ -2475,7 +2475,7 @@ a.text-brand-3:hover {
 }
 
 .hurry-up-2 .label {
-  background: url(../imgs/page/homepage4/hurry-up-2.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage4/hurry-up-2.svg) no-repeat 0px 0px;
 }
 .hurry-up-2 .label span {
   top: 30px;
@@ -2491,7 +2491,7 @@ a.text-brand-3:hover {
   left: 0px;
   height: 100px;
   width: 100px;
-  background: url(../imgs/page/homepage2/topdeals.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage2/topdeals.svg) no-repeat 0px 0px;
   z-index: 12;
   border-radius: 0;
 }
@@ -2572,7 +2572,7 @@ a.text-brand-3:hover {
 }
 
 .grid-banner-height {
-  background: url(../imgs/page/homepage2/bg-xiaomi.svg) no-repeat;
+  background: url(/assets/imgs/page/homepage2/bg-xiaomi.svg) no-repeat;
   padding: 35px 20px;
   height: calc(100% - 30px);
   margin-bottom: 30px;
@@ -2586,7 +2586,7 @@ a.text-brand-3:hover {
   right: 0px;
   width: 100%;
   height: 50%;
-  background: url(../imgs/page/homepage2/xiaomi.png) no-repeat left top;
+  background: url(/assets/imgs/page/homepage2/xiaomi.png) no-repeat left top;
   background-size: cover;
 }
 
@@ -2629,7 +2629,7 @@ a.text-brand-3:hover {
 }
 
 .location {
-  background: url(../imgs/page/vendor/location.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/vendor/location.svg) no-repeat 0px 0px;
   padding: 0px 0px 0px 32px;
   color: #8C9EC5;
   font-size: 16px;
@@ -2637,7 +2637,7 @@ a.text-brand-3:hover {
 }
 
 .phone {
-  background: url(../imgs/page/vendor/phone.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/vendor/phone.svg) no-repeat 0px 0px;
   padding: 0px 0px 1px 32px;
   color: #8C9EC5;
   font-size: 16px;
@@ -2989,7 +2989,7 @@ a.text-brand-3:hover {
 }
 .banner-hero.banner-1 .banner-big.banner-big-3 {
   padding: 50px 40px 25px 40px;
-  background-image: url(../imgs/page/homepage4/bg-banner.png);
+  background-image: url(/assets/imgs/page/homepage4/bg-banner.png);
   background-repeat: no-repeat;
   background-position: right top;
   background-size: cover !important;
@@ -3002,19 +3002,19 @@ a.text-brand-3:hover {
   position: relative;
 }
 .banner-hero.banner-1 .banner-small.banner-small-1 {
-  background-image: url(../imgs/page/homepage1/banner-small-1.png);
+  background-image: url(/assets/imgs/page/homepage1/banner-small-1.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 60% auto;
 }
 .banner-hero.banner-1 .banner-small.banner-small-2 {
-  background-image: url(../imgs/page/homepage1/banner-small-2.png);
+  background-image: url(/assets/imgs/page/homepage1/banner-small-2.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 70% auto;
 }
 .banner-hero.banner-1 .banner-small.banner-laptop {
-  background-image: url(../imgs/page/homepage2/laptop.png);
+  background-image: url(/assets/imgs/page/homepage2/laptop.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: auto;
@@ -3026,7 +3026,7 @@ a.text-brand-3:hover {
   left: 0px;
   height: 125px;
   width: 100%;
-  background-image: url(../imgs/page/homepage2/circle-top.png);
+  background-image: url(/assets/imgs/page/homepage2/circle-top.png);
   background-repeat: no-repeat;
   background-position: top left;
   background-size: contain;
@@ -3038,19 +3038,19 @@ a.text-brand-3:hover {
   position: relative;
 }
 .banner-hero.banner-1 .banner-small.banner-player {
-  background-image: url(../imgs/page/homepage2/player.png);
+  background-image: url(/assets/imgs/page/homepage2/player.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 100%;
 }
 .banner-hero.banner-1 .banner-small.banner-apple {
-  background-image: url(../imgs/page/homepage2/apple-day.png);
+  background-image: url(/assets/imgs/page/homepage2/apple-day.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 100%;
 }
 .banner-hero.banner-1 .banner-small.banner-samsung {
-  background-image: url(../imgs/page/homepage2/samsung.png);
+  background-image: url(/assets/imgs/page/homepage2/samsung.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 100%;
@@ -3062,7 +3062,7 @@ a.text-brand-3:hover {
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: contain !important;
-  background-image: url(../imgs/page/homepage8/bg-banner.png);
+  background-image: url(/assets/imgs/page/homepage8/bg-banner.png);
 }
 
 @keyframes hero-thumb-animation {
@@ -3118,7 +3118,7 @@ a.text-brand-3:hover {
   display: inline-block;
   width: 100%;
   height: 670px;
-  background: url(../imgs/page/homepage1/bg-topsell.png) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage1/bg-topsell.png) no-repeat 0px 0px;
   background-size: cover;
   padding: 50px 10px;
 }
@@ -3145,7 +3145,7 @@ a.text-brand-3:hover {
 
 .banner-homepage3 {
   background-color: #D1ECFD;
-  background-image: url(../imgs/page/homepage3/bg-circle.svg);
+  background-image: url(/assets/imgs/page/homepage3/bg-circle.svg);
   background-repeat: no-repeat;
   background-position: bottom right;
   padding-bottom: 0px;
@@ -3573,7 +3573,7 @@ a.text-brand-3:hover {
   background-color: #425A8B;
   color: #ffffff;
   border: 1px solid #ffffff;
-  background-image: url(../imgs/theme/icons/arrow-small-right-w.svg);
+  background-image: url(/assets/imgs/theme/icons/arrow-small-right-w.svg);
   background-repeat: no-repeat;
   background-position: center right 25px;
   padding-right: 56px;
@@ -3614,7 +3614,7 @@ a.text-brand-3:hover {
   background-color: transparent;
   color: #ffffff;
   border: 1px solid #ffffff;
-  background-image: url(../imgs/theme/icons/arrow-small-right-w.svg);
+  background-image: url(/assets/imgs/theme/icons/arrow-small-right-w.svg);
   background-repeat: no-repeat;
   background-position: center right 25px;
   padding-right: 56px;
@@ -3658,7 +3658,7 @@ a.text-brand-3:hover {
 }
 .header-bottom .header-nav .main-menu li.has-children > a::after {
   content: "";
-  background: url(../imgs/page/homepage4/angle-down.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage4/angle-down.svg) no-repeat 0px 0px;
   height: 10px;
   width: 11px;
   position: absolute;
@@ -3669,14 +3669,14 @@ a.text-brand-3:hover {
 .header-bottom .discount {
   display: inline-block;
   padding: 9px 0px 9px 42px;
-  background-image: url(../imgs/page/homepage4/discount.svg);
+  background-image: url(/assets/imgs/page/homepage4/discount.svg);
   background-position: left center;
   background-repeat: no-repeat;
   min-width: 160px;
   max-height: 53px;
 }
 .header-bottom .dropdown-right {
-  background-image: url(../imgs/page/homepage4/arrow-down.svg);
+  background-image: url(/assets/imgs/page/homepage4/arrow-down.svg);
   background-position: right center;
   background-repeat: no-repeat;
   padding: 0px 20px 0px 0px;
@@ -4180,7 +4180,7 @@ a.text-brand-3:hover {
   color: #ffffff !important;
 }
 .top-gray-1000 .dropdown-right {
-  background-image: url(../imgs/page/homepage4/arrow-down.svg);
+  background-image: url(/assets/imgs/page/homepage4/arrow-down.svg);
 }
 
 .top-brand-2 {
@@ -4196,7 +4196,7 @@ a.text-brand-3:hover {
   color: #ffffff !important;
 }
 .top-brand-2 .dropdown-right {
-  background-image: url(../imgs/page/homepage5/arrow-white.svg);
+  background-image: url(/assets/imgs/page/homepage5/arrow-white.svg);
 }
 
 .top-brand-1 {
@@ -4212,7 +4212,7 @@ a.text-brand-3:hover {
   color: #ffffff !important;
 }
 .top-brand-1 .dropdown-right {
-  background-image: url(../imgs/page/homepage5/arrow-white.svg);
+  background-image: url(/assets/imgs/page/homepage5/arrow-white.svg);
 }
 
 .dropdown-right {
@@ -6304,7 +6304,7 @@ a.text-brand-3:hover {
 }
 
 .bg-xbox {
-  background-image: url(../imgs/page/homepage1/xbox.png);
+  background-image: url(/assets/imgs/page/homepage1/xbox.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 260px;
@@ -6318,7 +6318,7 @@ a.text-brand-3:hover {
 }
 
 .bg-controller {
-  background-image: url(../imgs/page/homepage1/controller.png);
+  background-image: url(/assets/imgs/page/homepage1/controller.png);
   background-repeat: no-repeat;
   background-position: bottom left 10px;
   background-size: auto 80%;
@@ -6329,7 +6329,7 @@ a.text-brand-3:hover {
   background-color: #FFF3EA;
   padding: 50px 30px 0px 30px;
   height: 225px;
-  background-image: url(../imgs/page/homepage1/metaverse.png);
+  background-image: url(/assets/imgs/page/homepage1/metaverse.png);
   background-repeat: no-repeat;
   background-position: bottom right;
   background-size: auto 80%;
@@ -6341,7 +6341,7 @@ a.text-brand-3:hover {
   padding: 30px 30px 0px 30px;
   text-align: center;
   height: 225px;
-  background-image: url(../imgs/page/homepage1/electronic.png);
+  background-image: url(/assets/imgs/page/homepage1/electronic.png);
   background-repeat: no-repeat;
   background-position: bottom 5px center;
   background-size: auto 45%;
@@ -6352,7 +6352,7 @@ a.text-brand-3:hover {
   background-color: #DDD3FA;
   padding: 30px 200px 30px 30px;
   height: 225px;
-  background-image: url(../imgs/page/homepage1/phone.png);
+  background-image: url(/assets/imgs/page/homepage1/phone.png);
   background-repeat: no-repeat;
   background-position: bottom right 10px;
   background-size: auto 75%;
@@ -6368,7 +6368,7 @@ a.text-brand-3:hover {
 }
 
 .block-drone {
-  background-image: url(../imgs/page/homepage1/drone.png);
+  background-image: url(/assets/imgs/page/homepage1/drone.png);
   background-repeat: no-repeat;
   background-position: bottom right;
   padding: 25px 200px 25px 35px;
@@ -6377,7 +6377,7 @@ a.text-brand-3:hover {
 }
 
 .block-samsung {
-  background-image: url(../imgs/page/homepage1/samsung.png);
+  background-image: url(/assets/imgs/page/homepage1/samsung.png);
   background-repeat: no-repeat;
   background-position: bottom right;
   padding: 25px 200px 25px 35px;
@@ -6386,7 +6386,7 @@ a.text-brand-3:hover {
 }
 
 .block-iphone {
-  background-image: url(../imgs/page/homepage1/iphone-12.png);
+  background-image: url(/assets/imgs/page/homepage1/iphone-12.png);
   background-repeat: no-repeat;
   background-position: bottom right;
   padding: 25px 35px 25px 35px;
@@ -6431,7 +6431,7 @@ a.text-brand-3:hover {
   left: 0px;
   height: 93px;
   width: 106px;
-  background: url(../imgs/page/homepage2/saleoff.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage2/saleoff.svg) no-repeat 0px 0px;
   font-size: 24px;
   line-height: 32px;
   font-weight: bold;
@@ -6510,7 +6510,7 @@ a.text-brand-3:hover {
 }
 
 .bg-headphone {
-  background-image: url(../imgs/page/homepage2/headphone.png);
+  background-image: url(/assets/imgs/page/homepage2/headphone.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 85%;
@@ -6519,7 +6519,7 @@ a.text-brand-3:hover {
 }
 
 .bg-watch {
-  background-image: url(../imgs/page/homepage2/watch.png);
+  background-image: url(/assets/imgs/page/homepage2/watch.png);
   background-repeat: no-repeat;
   background-position: center bottom;
   background-size: auto 58%;
@@ -6528,7 +6528,7 @@ a.text-brand-3:hover {
 }
 
 .bg-ipad {
-  background-image: url(../imgs/page/homepage2/ipad.png);
+  background-image: url(/assets/imgs/page/homepage2/ipad.png);
   background-repeat: no-repeat;
   background-position: left bottom;
   background-size: 80% auto;
@@ -6548,13 +6548,13 @@ a.text-brand-3:hover {
   top: -62px;
   right: 20px;
   width: 17px;
-  background: url(../imgs/page/homepage2/prev.svg) no-repeat top right;
+  background: url(/assets/imgs/page/homepage2/prev.svg) no-repeat top right;
 }
 
 .swiper-button-next-style-2, .swiper-button-next-style-2:hover {
   top: -62px;
   width: 17px;
-  background: url(../imgs/page/homepage2/next.svg) no-repeat top right;
+  background: url(/assets/imgs/page/homepage2/next.svg) no-repeat top right;
 }
 
 .text-underline {
@@ -6562,7 +6562,7 @@ a.text-brand-3:hover {
 }
 
 .box-slide-bg-1 {
-  background: url(../imgs/page/homepage3/banner.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage3/banner.png) no-repeat bottom right;
   background-size: 70% auto;
   height: 100%;
   display: inline-block;
@@ -6570,7 +6570,7 @@ a.text-brand-3:hover {
 }
 
 .block-water {
-  background-image: url(../imgs/page/homepage3/water.png);
+  background-image: url(/assets/imgs/page/homepage3/water.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 55% auto;
@@ -6579,7 +6579,7 @@ a.text-brand-3:hover {
 }
 
 .block-kitchen {
-  background-image: url(../imgs/page/homepage3/kitchen.png);
+  background-image: url(/assets/imgs/page/homepage3/kitchen.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 85% auto;
@@ -6588,7 +6588,7 @@ a.text-brand-3:hover {
 }
 
 .block-electric {
-  background-image: url(../imgs/page/homepage3/electric.png);
+  background-image: url(/assets/imgs/page/homepage3/electric.png);
   background-repeat: no-repeat;
   background-position: right bottom;
   background-size: 85% auto;
@@ -6598,7 +6598,7 @@ a.text-brand-3:hover {
 
 .box-icon-flash {
   padding: 0px 0px 0px 55px;
-  background-image: url(../imgs/page/homepage3/flash.svg);
+  background-image: url(/assets/imgs/page/homepage3/flash.svg);
   background-repeat: no-repeat;
   background-position: left -13px top 5px;
 }
@@ -6617,7 +6617,7 @@ a.text-brand-3:hover {
 }
 .box-all-hurry-round .box-text-hurryup {
   padding: 2px 0px 2px 50px;
-  background-image: url(../imgs/page/homepage3/clock.svg);
+  background-image: url(/assets/imgs/page/homepage3/clock.svg);
   background-repeat: no-repeat;
   background-position: left 0px top 1px;
 }
@@ -6629,7 +6629,7 @@ a.text-brand-3:hover {
 }
 
 .banner-ads {
-  background: url(../imgs/page/homepage3/bg-ads.png) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage3/bg-ads.png) no-repeat 0px 0px;
   background-size: cover;
   padding: 50px 10px;
   position: relative;
@@ -6641,7 +6641,7 @@ a.text-brand-3:hover {
   left: 0px;
   height: 100%;
   width: 400px;
-  background: url(../imgs/page/homepage3/bg-left-ads.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage3/bg-left-ads.png) no-repeat bottom right;
   background-size: contain;
 }
 .banner-ads::after {
@@ -6651,12 +6651,12 @@ a.text-brand-3:hover {
   right: 0px;
   height: 100%;
   width: 350px;
-  background: url(../imgs/page/homepage3/bg-right-ads.png) no-repeat bottom left;
+  background: url(/assets/imgs/page/homepage3/bg-right-ads.png) no-repeat bottom left;
   background-size: contain;
 }
 
 .card-ads-1 .card-grid-inner {
-  background: url(../imgs/page/homepage3/bg-kitchen.png) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage3/bg-kitchen.png) no-repeat 0px 0px;
   padding: 20px 0px 0px 0px;
   border-radius: 4px;
   overflow: hidden;
@@ -6674,7 +6674,7 @@ a.text-brand-3:hover {
 }
 
 .card-ads-2 .card-grid-inner {
-  background: url(../imgs/page/homepage3/bg-kitchen2.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage3/bg-kitchen2.png) no-repeat bottom right;
   background-size: cover;
   padding: 20px 0px 0px 0px;
   border-radius: 4px;
@@ -6710,12 +6710,12 @@ a.text-brand-3:hover {
 }
 
 .block-ads-1 {
-  background: url(../imgs/page/homepage3/bg-ads-2.png) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage3/bg-ads-2.png) no-repeat 0px 0px;
   padding: 50px 40px;
 }
 
 .block-ads-2 {
-  background: url(../imgs/page/homepage3/bg-ads-3.png) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage3/bg-ads-3.png) no-repeat 0px 0px;
   padding: 50px 40px;
 }
 
@@ -6759,7 +6759,7 @@ a.text-brand-3:hover {
   left: auto;
   width: 17px;
   height: 17px;
-  background: url(../imgs/page/homepage4/arrow-next-white.svg) no-repeat center right;
+  background: url(/assets/imgs/page/homepage4/arrow-next-white.svg) no-repeat center right;
 }
 .box-button-control .swiper-button-prev-style-2 {
   top: auto;
@@ -6769,7 +6769,7 @@ a.text-brand-3:hover {
   height: 17px;
   display: inline-block;
   position: relative;
-  background: url(../imgs/page/homepage4/arrow-prev-white.svg) no-repeat center right;
+  background: url(/assets/imgs/page/homepage4/arrow-prev-white.svg) no-repeat center right;
 }
 
 .box-content .card-grid-style-3 .card-grid-inner .image-box {
@@ -6778,7 +6778,7 @@ a.text-brand-3:hover {
 }
 
 .block-charge {
-  background-image: url(../imgs/page/homepage4/quick-charge.png);
+  background-image: url(/assets/imgs/page/homepage4/quick-charge.png);
   background-repeat: no-repeat;
   background-position: top right;
   padding: 25px 200px 25px 35px;
@@ -6787,7 +6787,7 @@ a.text-brand-3:hover {
 }
 
 .block-player {
-  background-image: url(../imgs/page/homepage4/player.png);
+  background-image: url(/assets/imgs/page/homepage4/player.png);
   background-repeat: no-repeat;
   background-position: bottom right;
   padding: 25px 200px 25px 35px;
@@ -6950,7 +6950,7 @@ a.text-brand-3:hover {
 }
 
 .box-newsletter.bg-brand-2 {
-  background-image: url(../imgs/page/homepage5/bg-newsletter.png);
+  background-image: url(/assets/imgs/page/homepage5/bg-newsletter.png);
   background-position: left center;
   background-repeat: no-repeat;
 }
@@ -7005,7 +7005,7 @@ a.text-brand-3:hover {
   position: relative;
   width: 100%;
   height: 535px;
-  background: url(../imgs/page/homepage6/banner1.png) no-repeat top center;
+  background: url(/assets/imgs/page/homepage6/banner1.png) no-repeat top center;
   background-size: cover;
   margin-bottom: 30px;
 }
@@ -7021,7 +7021,7 @@ a.text-brand-3:hover {
   position: relative;
   width: 100%;
   height: 535px;
-  background: url(../imgs/page/homepage6/banner3.png) no-repeat top center;
+  background: url(/assets/imgs/page/homepage6/banner3.png) no-repeat top center;
   background-size: cover;
   margin-bottom: 30px;
 }
@@ -7062,24 +7062,24 @@ a.text-brand-3:hover {
   left: 40px;
   bottom: 10px;
   top: auto;
-  background: url(../imgs/page/homepage6/prev.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/prev.svg) no-repeat center;
   height: 56px;
   width: 56px;
 }
 .swiper-button-prev-style-4:hover {
-  background: url(../imgs/page/homepage6/prev.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/prev.svg) no-repeat center;
 }
 
 .swiper-button-next-style-4 {
   left: 98px;
   bottom: 10px;
   top: auto;
-  background: url(../imgs/page/homepage6/next.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/next.svg) no-repeat center;
   height: 56px;
   width: 56px;
 }
 .swiper-button-next-style-4:hover {
-  background: url(../imgs/page/homepage6/next.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/next.svg) no-repeat center;
 }
 
 .sale-tag {
@@ -7121,7 +7121,7 @@ a.text-brand-3:hover {
 .banner-bottom-1 {
   width: 100%;
   height: 265px;
-  background: url(../imgs/page/homepage6/reading-table.png) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/reading-table.png) no-repeat center;
   margin-bottom: 30px;
   display: inline-block;
   background-size: cover;
@@ -7131,7 +7131,7 @@ a.text-brand-3:hover {
 .banner-bottom-2 {
   width: 100%;
   height: 265px;
-  background: url(../imgs/page/homepage6/table-lamp.png) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/table-lamp.png) no-repeat center;
   margin-bottom: 30px;
   display: inline-block;
   background-size: cover;
@@ -7141,7 +7141,7 @@ a.text-brand-3:hover {
 .banner-bottom-3 {
   width: 100%;
   height: 566px;
-  background: url(../imgs/page/homepage6/top-rate.png) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/top-rate.png) no-repeat center;
   margin-bottom: 30px;
   display: inline-block;
   background-size: cover;
@@ -7151,7 +7151,7 @@ a.text-brand-3:hover {
 .banner-bottom-4 {
   width: 100%;
   height: 265px;
-  background: url(../imgs/page/homepage6/sofa.png) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/sofa.png) no-repeat center;
   margin-bottom: 30px;
   display: inline-block;
   background-size: cover;
@@ -7161,7 +7161,7 @@ a.text-brand-3:hover {
 .banner-bottom-5 {
   width: 100%;
   height: 265px;
-  background: url(../imgs/page/homepage6/relax.png) no-repeat center;
+  background: url(/assets/imgs/page/homepage6/relax.png) no-repeat center;
   margin-bottom: 30px;
   display: inline-block;
   background-size: cover;
@@ -7184,7 +7184,7 @@ a.text-brand-3:hover {
   background-color: #DBECE5;
   border-radius: 4px;
   padding: 25px 35px;
-  background-image: url(../imgs/page/homepage6/chair.png);
+  background-image: url(/assets/imgs/page/homepage6/chair.png);
   background-repeat: no-repeat;
   background-position: bottom right 5px;
   max-width: 886px;
@@ -7212,7 +7212,7 @@ a.text-brand-3:hover {
   color: #425A8B !important;
 }
 .header-brand-2 .box-header-bottom .header-nav .main-menu li.has-children > a::after {
-  background: url(../imgs/page/homepage7/arrow-down.svg) no-repeat 0px 0px;
+  background: url(/assets/imgs/page/homepage7/arrow-down.svg) no-repeat 0px 0px;
 }
 .header-brand-2 .box-header-bottom .btn-category {
   position: relative;
@@ -7360,7 +7360,7 @@ a.text-brand-3:hover {
   width: 100%;
   height: 100%;
   z-index: 2;
-  background: url(../imgs/page/homepage7/bg-trans.png);
+  background: url(/assets/imgs/page/homepage7/bg-trans.png);
 }
 
 .home7-style .card-grid-inner .image-box {
@@ -7387,7 +7387,7 @@ a.text-brand-3:hover {
   bottom: 0px;
   height: 100%;
   width: 100%;
-  background: url(../imgs/page/homepage7/newsletter-left.png) no-repeat bottom left;
+  background: url(/assets/imgs/page/homepage7/newsletter-left.png) no-repeat bottom left;
   background-size: auto;
   z-index: 1;
 }
@@ -7398,7 +7398,7 @@ a.text-brand-3:hover {
   bottom: 0px;
   height: 100%;
   width: 100%;
-  background: url(../imgs/page/homepage7/newsletter-right.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage7/newsletter-right.png) no-repeat bottom right;
   background-size: auto;
   z-index: 1;
 }
@@ -7440,7 +7440,7 @@ a.text-brand-3:hover {
   position: absolute;
   top: 40px;
   left: 0px;
-  background: url(../imgs/page/homepage8/bg-sale1.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage8/bg-sale1.png) no-repeat bottom right;
   z-index: 1;
 }
 .block-sale-2.circle-2 * {
@@ -7454,7 +7454,7 @@ a.text-brand-3:hover {
   position: absolute;
   top: 40px;
   left: 0px;
-  background: url(../imgs/page/homepage8/bg-sale2.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage8/bg-sale2.png) no-repeat bottom right;
   z-index: 1;
 }
 .block-sale-2.circle-3 * {
@@ -7468,7 +7468,7 @@ a.text-brand-3:hover {
   position: absolute;
   top: 40px;
   left: 0px;
-  background: url(../imgs/page/homepage8/bg-sale3.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage8/bg-sale3.png) no-repeat bottom right;
   z-index: 1;
 }
 
@@ -7521,12 +7521,12 @@ a.text-brand-3:hover {
   top: 50%;
   right: -75px;
   margin-top: -28px;
-  background: url(../imgs/page/homepage8/next.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage8/next.svg) no-repeat center;
   height: 56px;
   width: 56px;
 }
 .swiper-button-next-ecom:hover {
-  background: url(../imgs/page/homepage8/next.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage8/next.svg) no-repeat center;
 }
 
 .swiper-button-prev-ecom {
@@ -7534,12 +7534,12 @@ a.text-brand-3:hover {
   top: 50%;
   margin-top: -28px;
   left: -75px;
-  background: url(../imgs/page/homepage8/prev.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage8/prev.svg) no-repeat center;
   height: 56px;
   width: 56px;
 }
 .swiper-button-prev-ecom:hover {
-  background: url(../imgs/page/homepage8/prev.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage8/prev.svg) no-repeat center;
 }
 
 .box-ads-3 {
@@ -7548,7 +7548,7 @@ a.text-brand-3:hover {
   max-height: 170px;
 }
 .box-ads-3::before {
-  background: url(../imgs/page/homepage8/bg-trans.png);
+  background: url(/assets/imgs/page/homepage8/bg-trans.png);
 }
 .box-ads-3 img {
   height: 100%;
@@ -7556,7 +7556,7 @@ a.text-brand-3:hover {
 }
 
 .bg-newsletter-home8 {
-  background-image: url(../imgs/page/homepage8/bg-newsletter.png);
+  background-image: url(/assets/imgs/page/homepage8/bg-newsletter.png);
   background-repeat: no-repeat;
   background-position: bottom center;
   padding-bottom: 200px;
@@ -7566,7 +7566,7 @@ a.text-brand-3:hover {
 .notify-text {
   display: inline;
   padding: 0px 0px 0px 20px;
-  background: url(../imgs/page/homepage9/check.svg) no-repeat left center;
+  background: url(/assets/imgs/page/homepage9/check.svg) no-repeat left center;
   display: inline-block;
 }
 
@@ -7744,7 +7744,7 @@ a.text-brand-3:hover {
   line-height: 114px;
   max-width: 134px;
   border-radius: 50%;
-  background: url(../imgs/page/homepage10/circle.png) no-repeat center;
+  background: url(/assets/imgs/page/homepage10/circle.png) no-repeat center;
   background-size: contain;
   display: inline-block;
   min-height: 114px;
@@ -7858,7 +7858,7 @@ a.text-brand-3:hover {
   z-index: 1;
   height: 100%;
   width: 100%;
-  background: url(../imgs/page/homepage10/bg-newsletter1.png) no-repeat bottom left;
+  background: url(/assets/imgs/page/homepage10/bg-newsletter1.png) no-repeat bottom left;
   background-size: contain;
 }
 .box-newsletter-home10::after {
@@ -7869,7 +7869,7 @@ a.text-brand-3:hover {
   z-index: 1;
   height: 100%;
   width: 100%;
-  background: url(../imgs/page/homepage10/bg-newsletter2.png) no-repeat bottom right;
+  background: url(/assets/imgs/page/homepage10/bg-newsletter2.png) no-repeat bottom right;
   background-size: contain;
 }
 
@@ -8048,7 +8048,7 @@ a.text-brand-3:hover {
   height: 36px;
   width: 18px;
   cursor: pointer;
-  background: url(../imgs/page/product/minus.svg) no-repeat 0px 7px;
+  background: url(/assets/imgs/page/product/minus.svg) no-repeat 0px 7px;
 }
 .box-quantity .input-quantity .plus-cart {
   position: absolute;
@@ -8057,7 +8057,7 @@ a.text-brand-3:hover {
   height: 36px;
   width: 18px;
   cursor: pointer;
-  background: url(../imgs/page/product/plus.svg) no-repeat 0px 7px;
+  background: url(/assets/imgs/page/product/plus.svg) no-repeat 0px 7px;
 }
 .box-quantity .button-buy {
   width: 100%;
@@ -8109,7 +8109,7 @@ a.text-brand-3:hover {
   left: -49px;
   height: 40px;
   width: 40px;
-  background: url(../imgs/page/product/plus-brand-3.svg) no-repeat center;
+  background: url(/assets/imgs/page/product/plus-brand-3.svg) no-repeat center;
   margin-top: -20px;
 }
 .box-bought-together .box-product-bought .product-bought:first-child::before {
@@ -8398,7 +8398,7 @@ a:hover span {
 }
 
 .product-rate {
-  background-image: url(../imgs/page/product/rating-stars.png);
+  background-image: url(/assets/imgs/page/product/rating-stars.png);
   background-position: 0 -12px;
   background-repeat: repeat-x;
   height: 12px;
@@ -8410,7 +8410,7 @@ a:hover span {
 .product-rating {
   height: 12px;
   background-repeat: repeat-x;
-  background-image: url(../imgs/page/product/rating-stars.png);
+  background-image: url(/assets/imgs/page/product/rating-stars.png);
   background-position: 0 0;
 }
 
@@ -8687,7 +8687,7 @@ a:hover span {
   -webkit-appearance: none;
   -moz-appearance: none;
   background: transparent;
-  background-image: url("../imgs/page/cart/arrow-down.svg");
+  background-image: url("/assets/imgs/page/cart/arrow-down.svg");
   background-repeat: no-repeat;
   background-position: right 5px center;
 }
@@ -8729,7 +8729,7 @@ a:hover span {
 }
 
 .arrow-back-1 {
-  background: url(../imgs/page/checkout/arrow-left.svg) no-repeat left top 12px;
+  background: url(/assets/imgs/page/checkout/arrow-left.svg) no-repeat left top 12px;
   padding: 7px 0px 9px 25px;
   display: inline-block;
   color: #0BA9ED !important;
@@ -8884,7 +8884,7 @@ a:hover span {
 }
 
 .facebook {
-  background: url(../imgs/page/blog/fb.svg) no-repeat center;
+  background: url(/assets/imgs/page/blog/fb.svg) no-repeat center;
   height: 20px;
   width: 20px;
   display: inline-block;
@@ -8892,7 +8892,7 @@ a:hover span {
 }
 
 .printest {
-  background: url(../imgs/page/blog/printest.svg) no-repeat center;
+  background: url(/assets/imgs/page/blog/printest.svg) no-repeat center;
   height: 20px;
   width: 20px;
   display: inline-block;
@@ -8900,7 +8900,7 @@ a:hover span {
 }
 
 .twitter {
-  background: url(../imgs/page/blog/tw.svg) no-repeat center;
+  background: url(/assets/imgs/page/blog/tw.svg) no-repeat center;
   height: 20px;
   width: 20px;
   display: inline-block;
@@ -8908,7 +8908,7 @@ a:hover span {
 }
 
 .instagram {
-  background: url(../imgs/page/blog/ins.svg) no-repeat center;
+  background: url(/assets/imgs/page/blog/ins.svg) no-repeat center;
   height: 20px;
   width: 20px;
   display: inline-block;
@@ -9262,48 +9262,48 @@ a:hover span {
   margin-bottom: 20px;
 }
 .list-steps .item-step .rounded-step .icon-step.step-1 {
-  background-image: url(../imgs/page/account/tick.svg);
+  background-image: url(/assets/imgs/page/account/tick.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
 .list-steps .item-step .rounded-step .icon-step.step-1.active {
-  background-image: url(../imgs/page/account/tick-active.svg);
+  background-image: url(/assets/imgs/page/account/tick-active.svg);
   background-color: #5BC694;
 }
 .list-steps .item-step .rounded-step .icon-step.step-2 {
-  background-image: url(../imgs/page/account/in-production.svg);
+  background-image: url(/assets/imgs/page/account/in-production.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
 .list-steps .item-step .rounded-step .icon-step.step-2.active {
-  background-image: url(../imgs/page/account/in-production-active.svg);
+  background-image: url(/assets/imgs/page/account/in-production-active.svg);
   background-color: #5BC694;
 }
 .list-steps .item-step .rounded-step .icon-step.step-3 {
-  background-image: url(../imgs/page/account/shipping.svg);
+  background-image: url(/assets/imgs/page/account/shipping.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
 .list-steps .item-step .rounded-step .icon-step.step-3.active {
-  background-image: url(../imgs/page/account/shipping-active.svg);
+  background-image: url(/assets/imgs/page/account/shipping-active.svg);
   background-color: #5BC694;
 }
 .list-steps .item-step .rounded-step .icon-step.step-4 {
-  background-image: url(../imgs/page/account/delivery-truck.svg);
+  background-image: url(/assets/imgs/page/account/delivery-truck.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
 .list-steps .item-step .rounded-step .icon-step.step-4.active {
-  background-image: url(../imgs/page/account/delivery-active.svg);
+  background-image: url(/assets/imgs/page/account/delivery-active.svg);
   background-color: #5BC694;
 }
 .list-steps .item-step .rounded-step .icon-step.step-5 {
-  background-image: url(../imgs/page/account/delivered.svg);
+  background-image: url(/assets/imgs/page/account/delivered.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
 .list-steps .item-step .rounded-step .icon-step.step-5.active {
-  background-image: url(../imgs/page/account/delivered-active.svg);
+  background-image: url(/assets/imgs/page/account/delivered-active.svg);
   background-color: #5BC694;
 }
 
@@ -9335,7 +9335,7 @@ a:hover span {
   display: inline-block;
   width: 100%;
   padding: 0px 10px 0px 37px;
-  background: url(../imgs/page/about/checked.svg) no-repeat 10px 1px;
+  background: url(/assets/imgs/page/about/checked.svg) no-repeat 10px 1px;
   flex: 0 0 auto;
   width: 50%;
   margin-bottom: 15px;
@@ -9364,7 +9364,7 @@ a:hover span {
 .breadcrumb li a {
   display: inline-block;
   padding: 0px 30px 0px 0px;
-  background: url(../imgs/page/shop/arrow-right.svg) no-repeat top 5px right 10px;
+  background: url(/assets/imgs/page/shop/arrow-right.svg) no-repeat top 5px right 10px;
 }
 .breadcrumb li:last-child a {
   background-image: none;
@@ -9401,7 +9401,7 @@ a:hover span {
   color: #425A8B;
   display: block;
   padding: 0px 0px 0px 15px;
-  background: url(../imgs/page/shop/arrow-menu.svg) no-repeat 0px 6px;
+  background: url(/assets/imgs/page/shop/arrow-menu.svg) no-repeat 0px 6px;
 }
 .list-nav-arrow li a:hover {
   color: #FD9636;
@@ -9468,7 +9468,7 @@ a:hover span {
   margin-bottom: 5px;
 }
 .list-color li a:hover, .list-color li a.active {
-  background-image: url(../imgs/page/shop/check.svg);
+  background-image: url(/assets/imgs/page/shop/check.svg);
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -9523,26 +9523,26 @@ a:hover span {
   display: inline-block;
   height: 34px;
   width: 34px;
-  background: url(../imgs/page/shop/list.svg) no-repeat center;
+  background: url(/assets/imgs/page/shop/list.svg) no-repeat center;
   background-size: cover;
   border-radius: 4px;
   vertical-align: middle;
 }
 .view-type-list:hover, .view-type-list.active {
-  background: url(../imgs/page/shop/list-hover.svg) no-repeat center;
+  background: url(/assets/imgs/page/shop/list-hover.svg) no-repeat center;
 }
 
 .view-type-grid {
   display: inline-block;
   height: 34px;
   width: 34px;
-  background: url(../imgs/page/shop/grid.svg) no-repeat center;
+  background: url(/assets/imgs/page/shop/grid.svg) no-repeat center;
   background-size: cover;
   border-radius: 4px;
   vertical-align: middle;
 }
 .view-type-grid:hover, .view-type-grid.active {
-  background: url(../imgs/page/shop/grid-hover.svg) no-repeat center;
+  background: url(/assets/imgs/page/shop/grid-hover.svg) no-repeat center;
 }
 
 .dropdown-sort {
@@ -9604,7 +9604,7 @@ a:hover span {
 }
 
 .link-see-more {
-  background: url(../imgs/page/shop/arrow-brand-2.svg) no-repeat top 6px right 0px;
+  background: url(/assets/imgs/page/shop/arrow-brand-2.svg) no-repeat top 6px right 0px;
   color: #FD9636;
   display: inline-block;
   padding: 0px 15px 0px 0px;
@@ -9646,7 +9646,7 @@ a:hover span {
 }
 
 .pagination li .page-prev {
-  background: url(../imgs/page/homepage2/prev.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage2/prev.svg) no-repeat center;
   min-height: 32px;
   padding: 5px 20px;
   border: 0px;
@@ -9656,7 +9656,7 @@ a:hover span {
 }
 
 .pagination li .page-next {
-  background: url(../imgs/page/homepage2/next.svg) no-repeat center;
+  background: url(/assets/imgs/page/homepage2/next.svg) no-repeat center;
   min-height: 32px;
   padding: 5px 20px;
   border: 0px;
@@ -9699,7 +9699,7 @@ a:hover span {
   }
 }
 .filters-icon {
-  background-image: url(../imgs/page/shop/filter.svg);
+  background-image: url(/assets/imgs/page/shop/filter.svg);
   background-repeat: no-repeat;
   background-position: 13px 9px;
   padding: 0px 0px 0px 34px;
