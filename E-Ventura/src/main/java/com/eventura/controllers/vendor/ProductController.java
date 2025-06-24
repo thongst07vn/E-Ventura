@@ -39,7 +39,7 @@ public class ProductController  {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 3;
+		int pageSize = 5;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage = productService.findByVendorIdPage(vendorId,pageable);
 
@@ -59,7 +59,7 @@ public class ProductController  {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 3;
+		int pageSize = 5;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage;
 		
