@@ -28,7 +28,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Users user = findByEmail(username);
-		if(user == null) {
+		
+		if(user == null || user.getDeletedAt()!=null) {
 			throw new UsernameNotFoundException("Email khong ton tai");
 		} else {
 			List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();

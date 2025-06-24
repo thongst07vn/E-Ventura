@@ -5,7 +5,8 @@ import com.eventura.entities.Districts;
 public class DistrictsDTO {
     private String code;
     private String name;
-
+    private String shortName;
+    
     public DistrictsDTO() {
     }
 
@@ -13,11 +14,23 @@ public class DistrictsDTO {
         this.code = code;
         this.name = name;
     }
+    
+    public DistrictsDTO(String code, String name, String shortName) {
+		super();
+		this.code = code;
+		this.name = name;
+		this.shortName = shortName;
+	}
 
-    // Constructor để chuyển từ entity sang DTO
+	// Constructor để chuyển từ entity sang DTO
     public DistrictsDTO(com.eventura.entities.Districts district) {
         this.code = district.getCode();
         this.name = district.getName();
+        if (district.getAdministrativeUnits() != null) {
+            this.shortName = district.getAdministrativeUnits().getShortName();
+        } else {
+            this.shortName = null; // Or handle as appropriate, e.g., an empty string
+        }
     }
 
     // Getter và Setter
@@ -36,4 +49,13 @@ public class DistrictsDTO {
     public void setName(String name) {
         this.name = name;
     }
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+    
 }

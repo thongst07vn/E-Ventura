@@ -8,6 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,14 +35,16 @@ public class ProductController {
 	private CategoryService categoryService;
 	
 	@GetMapping({"productdetails/{id}"})
-	public String prouctDetails(@PathVariable("id") int id,ModelMap modelMap) {
+	public String prouctDetails(@PathVariable("id") int id,ModelMap modelMap, Authentication authentication,
+			@AuthenticationPrincipal UserDetails userDetails) {
 		Products product = productService.findById(id);
 		modelMap.put("product", product);
 		return "customer/pages/product/productdetails";
 	}
 	@GetMapping({"findbycategory/{id}"})
 	public String findByCategory(@PathVariable("id") int id,ModelMap modelMap,@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "30") int pageSize) {
+			@RequestParam(defaultValue = "30") int pageSize, Authentication authentication,
+			@AuthenticationPrincipal UserDetails userDetails) {
 		
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		
@@ -58,7 +63,8 @@ public class ProductController {
 
 	@GetMapping({"search"})
 	public String searchByKeyword(@RequestParam("keyword") String keyword,ModelMap modelMap,@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "30") int pageSize) {
+			@RequestParam(defaultValue = "30") int pageSize, Authentication authentication,
+			@AuthenticationPrincipal UserDetails userDetails) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> products = productService.findByKeywordPage(keyword,pageable);
 		List<ProductCategories> categories = categoryService.findAll();
