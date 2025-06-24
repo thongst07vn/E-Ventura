@@ -21,6 +21,13 @@ public class ProductVariantController  {
 	private ProductVariantService productVariantService;
 	
 	/*===================== PRODUCT VARIANT =====================*/
+	@GetMapping("add")
+	public String add() {
+		
+		
+		return "vendor/pages/productVariant/add";
+	}
+	
 	@GetMapping("edit/{id}")
 	public String edit(@PathVariable("id") int id, ModelMap modelMap) {
 		modelMap.put("currentPage", "product");
