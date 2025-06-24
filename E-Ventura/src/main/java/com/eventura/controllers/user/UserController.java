@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -194,6 +195,21 @@ public class UserController {
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
 			return "redirect:/customer/profile";    	    	
 		}  	    	
+	}
+	@PostMapping({"addaddress"})
+	public String AddAddress(@RequestParam("userId") int userId, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
+		Users user = userService.findById(userId);
+		addAddressVariable.setUsers(user);
+		addAddressVariable.setCreatedAt(new Date());
+		if(addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg","Add address success");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+			return "redirect:/customer/profile";    	
+		} else {
+			redirectAttributes.addFlashAttribute("msg","Add address failed");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+			return "redirect:/customer/profile";    	    	
+		} 		    	
 	}
 
 }

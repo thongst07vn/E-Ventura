@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 23, 2025, 6:51:08 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 24, 2025, 5:03:57 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -51,17 +51,12 @@ public class Users implements java.io.Serializable {
 	public Users() {
 	}
 
-	public Users(Roles roles, String avatar, String firstName, String lastName, String username, String email,
-			String password, Date birthOfDate, String phoneNumber, Date createdAt) {
+	public Users(Roles roles, String avatar, String username, String email, String password, Date createdAt) {
 		this.roles = roles;
 		this.avatar = avatar;
-		this.firstName = firstName;
-		this.lastName = lastName;
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.birthOfDate = birthOfDate;
-		this.phoneNumber = phoneNumber;
 		this.createdAt = createdAt;
 	}
 
@@ -122,7 +117,7 @@ public class Users implements java.io.Serializable {
 		this.avatar = avatar;
 	}
 
-	@Column(name = "first_name", nullable = false)
+	@Column(name = "first_name")
 	public String getFirstName() {
 		return this.firstName;
 	}
@@ -131,7 +126,7 @@ public class Users implements java.io.Serializable {
 		this.firstName = firstName;
 	}
 
-	@Column(name = "last_name", nullable = false)
+	@Column(name = "last_name")
 	public String getLastName() {
 		return this.lastName;
 	}
@@ -177,7 +172,7 @@ public class Users implements java.io.Serializable {
 	}
 
 	@Temporal(TemporalType.DATE)
-	@Column(name = "birth_of_date", nullable = false, length = 10)
+	@Column(name = "birth_of_date", length = 10)
 	public Date getBirthOfDate() {
 		return this.birthOfDate;
 	}
@@ -186,7 +181,7 @@ public class Users implements java.io.Serializable {
 		this.birthOfDate = birthOfDate;
 	}
 
-	@Column(name = "phone_number", nullable = false)
+	@Column(name = "phone_number")
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
