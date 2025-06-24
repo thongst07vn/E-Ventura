@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -196,11 +197,15 @@ public class UserController {
 			return "redirect:/customer/profile";    	    	
 		}  	    	
 	}
+		
 	@PostMapping({"addaddress"})
 	public String AddAddress(@RequestParam("userId") int userId, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
 		Users user = userService.findById(userId);
 		addAddressVariable.setUsers(user);
 		addAddressVariable.setCreatedAt(new Date());
+		if(addAddressVariable.getName()==null || addAddressVariable.getName().trim().isEmpty()) {
+			addAddressVariable.setName(user.getUsername());			
+		}
 		if(addressService.save(addAddressVariable)) {
 			redirectAttributes.addFlashAttribute("msg","Add address success");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
@@ -211,5 +216,31 @@ public class UserController {
 			return "redirect:/customer/profile";    	    	
 		} 		    	
 	}
+	
+	@PostMapping({"editaddress"})
+	public String EditAddress(@RequestParam("userId") int userId, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
+		Users user = userService.findById(userId);
+		addAddressVariable.setUsers(user);
+		addAddressVariable.setCreatedAt(new Date());
+		System.out.println(addAddressVariable.getAddress());
+		System.out.println(addAddressVariable.getName());
+		System.out.println(addAddressVariable.getId());
+		System.out.println(addAddressVariable.getDistricts());
+		System.out.println(addAddressVariable.getProvinces());
+		System.out.println(addAddressVariable.getWards());
+		System.out.println(addAddressVariable.getUsers());
+//		if(addressService.save(addAddressVariable)) {
+//			redirectAttributes.addFlashAttribute("msg","Add address success");
+//			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+//			return "redirect:/customer/profile";    	
+//		} else {
+//			redirectAttributes.addFlashAttribute("msg","Add address failed");
+//			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+//			return "redirect:/customer/profile";    	    	
+//		} 	
+		return "redirect:/customer/profile";    	    	
+		
+	}
+
 
 }

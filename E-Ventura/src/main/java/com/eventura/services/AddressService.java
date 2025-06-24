@@ -14,5 +14,6 @@ public interface AddressService {
 	public List<Wards> findWardsByDistrictCode(String districtCode);
 	
 	public boolean save(UserAddress userAddress);
+	public UserAddress findById(int id);
 	
 }
