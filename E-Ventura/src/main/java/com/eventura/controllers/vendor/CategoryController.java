@@ -38,7 +38,7 @@ public class CategoryController  {
 		modelMap.put("currentPage", "category");
 		int vendorId = (Integer) session.getAttribute("vendorId");
 		
-		int pageSize = 2;
+		int pageSize = 5;
 		Pageable pageable = PageRequest.of(page, pageSize);
 		Page<VendorProductCategory> vendorCategoriesPage = vendorProductCategoryService.findByVendorIdPage(vendorId, pageable);
 		
@@ -59,7 +59,7 @@ public class CategoryController  {
 		modelMap.put("currentPage", "category");
 		int vendorId = (Integer) session.getAttribute("vendorId");
 		
-		int pageSize = 2;
+		int pageSize = 5;
 		Pageable pageable = PageRequest.of(page, pageSize);
 		Page<VendorProductCategory> vendorCategoriesPage = vendorProductCategoryService.findByKeyword(vendorId, keyword, pageable);
 		
