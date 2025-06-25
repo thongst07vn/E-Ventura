@@ -55,49 +55,44 @@
               </div>
             </div>
             <div class="col-lg-6">
-              <h3 class="color-brand-3 mb-25">Samsung 36" French door 28 cu. ft. Smart Energy Star Refrigerator</h3><span class="bytext">by</span><a class="byAUthor" href="shop-vendor-single.html"> Ecom Tech</a>
+              <h3 class="color-brand-3 mb-25" th:text=${product.name}></h3><span class="bytext">by</span>&nbsp;<a class="byAUthor" href="shop-vendor-single.html" th:text="${product.vendors.name}"></a>
               <div class="rating mt-5"><img th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><img th:src="@{/assets/imgs/template/icons/star.svg}" alt="Ecom"><span class="font-xs color-gray-500"> (65)</span></div>
               <div class="border-bottom pt-20 mb-40"></div>
               <div class="box-product-price">
-                <h3 class="color-brand-3 price-main d-inline-block mr-10">$2856.3</h3><span class="color-gray-500 price-line font-xl line-througt">$3225.6</span>
+                <h3 class="color-brand-3 price-main d-inline-block mr-10">$</h3>
+                <h3 class="color-brand-3 price-main d-inline-block mr-10" th:text=${product.price}></h3><span class="color-gray-500 price-line font-xl line-througt">$3225.6</span>
               </div>
-              <div class="product-description mt-20 color-gray-900">– Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>– Nulla sit amet diam elementum, vehicula elit nec, accumsan velit.<br>– Integer consectetur lacus nec vestibulum auctor.<br>– Nulla suscipit tellus vel sem rhoncus auctor.</div>
-              <div class="buy-product mt-20">
-                <p class="font-sm mb-20">Quantity</p>
-                <div class="box-quantity">
-                  <div class="input-quantity">
-                    <input class="font-xl color-brand-3" type="text" value="1"><span class="minus-cart"></span><span class="plus-cart"></span>
-                  </div>
-                  <div class="button-buy"><a class="btn btn-cart" href="shop-cart.html">Add to cart</a><a class="btn btn-buy" href="shop-checkout.html">Buy now</a></div>
-                </div>
-              </div>
-              <div class="border-bottom pt-30 mb-20"></div><a class="mr-30" href="shop-wishlist.html"><span class="btn btn-wishlist mr-5 opacity-100 transform-none"></span><span class="font-md color-gray-900">Add to Wish list</span></a><a href="shop-compare.html"><span class="btn btn-compare mr-5 opacity-100 transform-none"></span><span class="font-md color-gray-900">Add to Compare</span></a>
-              <div class="info-product mt-20 font-md color-gray-900">SKU: EcomTech12321<br>Category: Smartphones<br>Tags: Blue, Smartphone</div>
-              <div class="mt-20"><a class="font-md color-gray-900" href="shop-compare.html">Compare with similar items</a></div>
+              <div class="product-description mt-20 color-gray-900" th:text="${product.description}"></div>
+              
+              <div class="box-product-style-size mt-20">
+								<div class="row">
+									<div class="col-lg-12 col-md-12 mb-20">
+										<p class="font-sm color-gray-900">
+											Style:<span class="color-brand-2 nameStyle">S22</span>
+										</p>
+										<ul class="list-styles">
+											<li class="disabled" title="S22 Ultra">S22 Ultra</li>
+											<li class="active" title="S22">S22</li>
+											<li title="S22 + Standing Cover">S22 + Standing Cover</li>
+										</ul>
+									</div>
+								</div>	
+							</div>
+              
+              <div class="buy-product mt-30">
+								<p class="font-sm mb-20">Quantity</p>
+								<div class="box-quantity">
+									<div class="input-quantity">
+										<span class="font-xl color-brand-3">50</span>
+									</div>
+								</div>
+							</div>
+              
+              <div class="info-product mt-20 font-md color-gray-900">Category:<th:block th:text="${product.productCategories.name}"></th:block></div>
+              
             </div>
           </div>
-          <div class="border-bottom pt-20 mb-40"></div>
-          <h4 class="color-brand-3 mb-20">Frequently Bought Together</h4>
-          <div class="box-bought-together">
-            <div class="box-product-bought">
-              <div class="product-bought"><img th:src="@{/assets/imgs/page/product/img-bought.png}" alt="Ecom"></div>
-              <div class="product-bought"><img th:src="@{/assets/imgs/page/product/img-bought2.png}" alt="Ecom"></div>
-            </div>
-            <div class="price-bought">
-              <h3 class="color-brand-3 mr-10">$2856.3</h3><span class="font-lg color-gray-900">(3 items)</span>
-              <div class="box-btn-add-cart"><a class="btn btn-cart" href="shop-cart.html">Add To Cart</a></div>
-            </div>
-          </div>
-          <label class="cb-container-2">
-            <input type="checkbox" checked="checked"><span class="font-md color-brand-3"><strong>This item:</strong>iPhone 12 Pro Max 128GB Pacific Blue - $1,099.00</span><span class="checkmark"></span>
-          </label>
-          <label class="cb-container-2">
-            <input type="checkbox" checked="checked"><span class="font-md color-brand-3">Apple AirPods Pro, Active Noise Cancellation, Custom Fit - $197.00</span><span class="checkmark"></span>
-          </label>
-          <label class="cb-container-2">
-            <input type="checkbox" checked="checked"><span class="font-md color-brand-3">Apple iMac 24" All-In-One Computer, Apple M1, 8GB RAM, 512GB SSD, macOS Big Sur, Green, MGPJ3LL/A - $1,599.00</span><span class="checkmark"></span>
-          </label>
-          <div class="border-bottom pt-30 mb-10"></div>
+          <div class="border-bottom pt-30 mb-5"></div>
         </div>
       </section>
       <section class="section-box shop-template">
