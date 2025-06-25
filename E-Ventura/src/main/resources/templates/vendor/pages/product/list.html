@@ -126,7 +126,7 @@
 						</th:block>
 
 						<!-- Nút tiếp -->
-						<li class="page-item" th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
 							<a class="page-link" th:href="@{'/vendor/product/list?page=' + ${currentPages+1}}"
 								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 							</a>

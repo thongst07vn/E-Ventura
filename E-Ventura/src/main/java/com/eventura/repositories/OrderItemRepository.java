@@ -15,13 +15,33 @@ import com.eventura.entities.Orders;
 
 @Repository
 public interface OrderItemRepository extends JpaRepository<OrderItems, Integer> {
+	
+	@Query("""
+			  SELECT oi
+			  FROM OrderItems oi
+			  WHERE oi.orders.id = :orderId
+		""")
+	List<OrderItems> findOrderItemsByOrderId(@Param("orderId") Integer orderId, Pageable pageable);
 
 	@Query("""
 			  SELECT oi
 			  FROM OrderItems oi
 			  WHERE oi.orders.id = :orderId
 		""")
-	Page<OrderItems> findOrderItemsByOrderId(@Param("orderId") Integer orderId, Pageable pageable);
+	Page<OrderItems> findOrderItemsByOrderIdPage(@Param("orderId") Integer orderId, Pageable pageable);
+	
+	@Query("""
+		    SELECT SUM(oi.price * oi.quantity)
+		    FROM OrderItems oi
+		    JOIN oi.orders o
+		    JOIN oi.products p
+		    JOIN p.vendors v
+		    WHERE o.id = :orderId AND v.id = :vendorId
+		""")
+		Double findTotalAmountByOrderIdAndVendorId(@Param("orderId") Integer orderId, @Param("vendorId") Integer vendorId);
+
+	
+
 
 
 }

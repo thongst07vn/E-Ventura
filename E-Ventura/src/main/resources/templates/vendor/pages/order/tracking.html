@@ -7,18 +7,24 @@
 
 <body>
 	<section class="content-main">
+		<a th:href="@{'/vendor/order/detail/' + ${orderId}}">
+			<i class="material-icons md-arrow_back">
+
+			</i> Go back</a>
+		<br>
 		<div class="content-header">
 			<div>
 				<h2 class="content-title card-title">Order Tracking</h2>
-				<p>Details for Order ID: 34453012</p>
+				<p>Details for Order ID: <span th:text="${order.id}"></span></p>
 			</div>
 		</div>
 		<div class="card">
 			<header class="card-header">
 				<div class="row align-items-center">
 					<div class="col-lg-6 col-md-6 mb-lg-0 mb-15"><span><i
-								class="material-icons md-calendar_today"></i><b>Wed, Aug 13, 2022,
-								4:34PM</b></span><br><small class="text-muted">Order ID: 3453012</small><br><small
+								class="material-icons md-calendar_today"></i>
+								<b th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></b>
+							</span><br><small class="text-muted">Order ID: <span th:text="${order.id}"></span></small><br><small
 							class="text-muted">Your order has been delivered</small></div>
 					<div class="col-lg-6 col-md-6 ms-auto text-md-end">
 						<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200 mr-15">
@@ -40,8 +46,8 @@
 							<div class="step-icon-wrap">
 								<div class="step-icon"><i class="material-icons md-shopping_cart"></i></div>
 							</div>
-							<h4 class="step-title">Confirmed Order</h4><small class="text-muted text-sm">15 March
-								2022</small>
+							<h4 class="step-title">Confirmed Order</h4><small class="text-muted text-sm">
+								15 March 2022</small>
 						</div>
 						<div class="step completed">
 							<div class="step-icon-wrap">
@@ -78,33 +84,27 @@
 						<article class="icontext align-items-start">
 							<div class="text">
 								<h6 class="mb-1">Customer</h6>
-								<p class="mb-1">John Alexander<br> alex@example.com<br> +998 99 22123456</p><a
-									href="#">View profile</a>
+								<p class="mb-1" th:text="${userAddresses[0].users.lastName + ' ' + userAddresses[0].users.firstName}"></p>
+								<p class="mb-1" th:text="${userAddresses[0].users.email}"></p>
+								<p class="mb-1" th:text="${userAddresses[0].users.phoneNumber}"></p>
 							</div>
 						</article>
 					</div>
 					<div class="col-md-4">
-						<article class="icontext align-items-start">
-							<div class="text">
-								<h6 class="mb-1">Order info</h6>
-								<p class="mb-1">Shipping: Fargo express<br> Pay method: card<br> Status: new</p><a
-									href="#">Download info</a>
-							</div>
-						</article>
 					</div>
 					<div class="col-md-4">
 						<article class="icontext align-items-start">
 							<div class="text">
 								<h6 class="mb-1">Deliver to</h6>
-								<p class="mb-1">City: Tashkent, Uzbekistan<br>Block A, House 123, Floor 2<br> Po Box
-									10000</p><a href="#">View profile</a>
+								<p class="mb-1" th:text="${userAddresses[0].address}"></p>
+								<p class="mb-1" th:text="${userAddresses[0].provinces.name + ' ' + userAddresses[0].districts.name + ' ' + userAddresses[0].wards.name}"></p>
 							</div>
 						</article>
 					</div>
 				</div>
 				<div class="row">
-					<div class="text-center mt-100 mb-50"><a class="btn btn-primary" th:href="@{/vendor/order/detail}">View
-							Order Details</a></div>
+					<div class="text-center mt-100 mb-50"><a class="btn btn-primary" th:href="@{/vendor/order/list}">View
+							Order List</a></div>
 				</div>
 			</div>
 		</div>

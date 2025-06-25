@@ -14,21 +14,33 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-9">
+			<div class="col-md-12">
 				<div class="card mb-4">
 					<header class="card-header">
 						<div class="row gx-3">
+							<!-- SEARCH BY KEYWORD -->
+
 							<div class="col-lg-4 col-md-6 me-auto">
 								<input class="form-control" type="text" placeholder="Search...">
 							</div>
+							<!-- FIND BY STATUS-->
 							<div class="col-lg-2 col-md-3 col-6">
-								<select class="form-select">
-									<option>Status</option>
-									<option>Active</option>
-									<option>Disabled</option>
-									<option>Show all</option>
-								</select>
+								<form id="orderStatusSearchForm" method="GET" th:action="@{/vendor/order/findByStatus}">
+									<select class="form-select" name="orderStatusId" id="orderStatusSelect">
+										<option value="0" th:selected="${selectedOrderStatusId == 0}">All</option>
+										<option th:each="order : ${orders}" 
+											th:value="${order.orderStatus.id}"
+											th:text="${order.orderStatus.name}"
+											th:selected="${order.orderStatus.id == selectedOrderStatusId}"></option>
+									</select>
+								</form>
+								<script>
+									document.getElementById('orderStatusSelect').addEventListener('change', function () {
+										document.getElementById('orderStatusSearchForm').submit();
+									});
+								</script>
 							</div>
+							<!-- PAGINATION -->
 							<div class="col-lg-2 col-md-3 col-6">
 								<select class="form-select">
 									<option>Show 20</option>
@@ -88,60 +100,49 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3">
-				<div class="card mb-4">
-					<div class="card-body">
-						<h5 class="mb-3">Filter by</h5>
-						<form>
-							<div class="mb-4">
-								<label class="form-label" for="order_id">Order ID</label>
-								<input class="form-control" id="order_id" type="text" placeholder="Type here">
-							</div>
-							<div class="mb-4">
-								<label class="form-label" for="order_customer">Customer</label>
-								<input class="form-control" id="order_customer" type="text" placeholder="Type here">
-							</div>
-							<div class="mb-4">
-								<label class="form-label">Order Status</label>
-								<select class="form-select">
-									<option>Published</option>
-									<option>Draft</option>
-								</select>
-							</div>
-							<div class="mb-4">
-								<label class="form-label" for="order_total">Total</label>
-								<input class="form-control" id="order_total" type="text" placeholder="Type here">
-							</div>
-							<div class="mb-4">
-								<label class="form-label" for="order_created_date">Date Added</label>
-								<input class="form-control" id="order_created_date" type="text" placeholder="Type here">
-							</div>
-							<div class="mb-4">
-								<label class="form-label" for="order_modified_date">Date Modified</label>
-								<input class="form-control" id="order_modified_date" type="text"
-									placeholder="Type here">
-							</div>
-							<div class="mb-4">
-								<label class="form-label" for="order_customer_1">Customer</label>
-								<input class="form-control" id="order_customer_1" type="text" placeholder="Type here">
-							</div>
-						</form>
-					</div>
-				</div>
+			
+		</div>
+		<!-- Trường hợp danh sách tất cả sản phẩm -->
+		<th:block th:if="${!#lists.isEmpty(orders)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút về đầu -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/order/list?page=' + ${0}}" aria-label="Next"> <i
+									class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a>
+						</li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+								th:href="@{'/vendor/order/list?page=' + ${currentPages-1}}" class="page-link"
+								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
+		
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+		
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
+									th:href="@{'/vendor/order/list?page=' + ${i}}" th:text="${i + 1}"></a></li>
+						</th:block>
+		
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+							<a class="page-link" th:href="@{'/vendor/order/list?page=' + ${currentPages+1}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+		
+						<!-- Nút tới cuối -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/order/list?page=' + ${lastPageIndex}}" aria-label="Next">
+								<i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
 			</div>
-		</div>
-		<div class="pagination-area mt-15 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
-				</ul>
-			</nav>
-		</div>
+		</th:block>
 	</section>
 </body>
