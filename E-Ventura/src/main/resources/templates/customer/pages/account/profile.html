@@ -1259,7 +1259,7 @@
 																						<div class="col-md-12 mb-2">
 																							<!-- Province -->
 																							<select class="form-select" id="editprovinceSelect"
-																								th:field="${addAddressVariable.provinces.code}">
+																								name="editProvince">
 																								<option id="editprovinceOption" value="" selected>Select
 																									province/city</option>
 																								<option th:each="province : ${provinces}"
@@ -1273,7 +1273,7 @@
 																						<div class="col-md-6 mb-2">
 																							<!-- District -->
 																							<select class="form-select" id="editdistrictSelect"
-																								th:field="${addAddressVariable.districts.code}">
+																								name="editDistrict">
 																								<option id="editdistrictOption" value="" selected>Select
 																									district</option>
 																								<option th:each="district : ${districts}"
@@ -1285,7 +1285,7 @@
 																						<div class="col-md-6 mb-2">
 																							<!-- Ward -->
 																							<select class="form-select" id="editwardSelect"
-																								th:field="${addAddressVariable.wards.code}">
+																								name="editWard">
 																								<option id="editwardOption" value="" selected>Select
 																									ward</option>
 																								<option th:each="ward : ${wards}"
@@ -1661,11 +1661,6 @@ $(document).ready(function() {
                 data: { editAddressId: editAddressId },
                 success: async function(userAddress) { // Made the success function asynchronous
                     // Check if data is received and is not null
-                    console.log('========')
-                    console.log(userAddress.provinces);
-                    console.log(userAddress.provincesCode);
-                    console.log(userAddress.provincesUnit);
-                    console.log('========')
                     if (userAddress) {
                         // Populate simple input fields
                         $('#editAddressForm input[name="name"]').val(userAddress.name);
@@ -1674,28 +1669,17 @@ $(document).ready(function() {
                         // --- Step 1: Populate Provinces ---
                         if (userAddress.provinces) {
                             $('#editprovinceSelect').val(userAddress.provincesCode);
-                            $('#editprovinceSelect').val(userAddress.provincesUnit + ' ' + userAddress.provinces);
-                            $('#editprovinceSelect').val(userAddress.provincesCode);
-                            console.log($('#editprovinceSelect').val());
-                            console.log($('#editprovinceSelect').text());
-                            console.log($('#editprovinceSelect').textContent());
-                            
-                            // Set the text for a display element, if it exists
-                            $('#editprovinceOption').text(userAddress.provincesUnit + ' ' + userAddress.provinces);
-                            $('#editprovinceOption').val(userAddress.provincesCode); // Ensure value is also set for option
-                            console.log($('#editprovinceOption'));
-                      
+                            $('#editprovinceSelect').trigger('change');                          
+                            console.log($('#editprovinceSelect'));
                             // No need to trigger change here if we are programmatically fetching districts/wards
                             // unless there's another independent listener for real-time user selection updates.
                         }
-						console.log(userAddress.districts);
-						console.log(userAddress.provincesCode);
                         // --- Step 2: Populate Districts (after provinces are set) ---
                         if (userAddress.districts && userAddress.provincesCode) {
                             try {
                                 const response = await fetch(`/api/address/districts?provinceCode=${userAddress.provincesCode}`);
                                 const data = await response.json();
-								console.log(data);
+								
                               
                                 
                                 data.forEach(district => {
@@ -1707,10 +1691,9 @@ $(document).ready(function() {
                                 editdistrictSelect.disabled = false; // Enable the district dropdown
                                 
                                 // Set the current district value AFTER all options are loaded
-                                $('#editdistrictSelect').val(userAddress.districtsCode);
-                                // Set the text for a display element, if it exists
-                                $('#editdistrictOption').text(userAddress.districtsUnit + ' ' + userAddress.districts);
-                                $('#editdistrictOption').val(userAddress.districtsCode); // Ensure value is also set for option
+                                $('#editdistrictSelect').val(userAddress.districtsCode);                              
+                                $('#editdistrictSelect').trigger('change');
+                               // Ensure value is also set for option
                             } catch (error) {
                                 console.error('Error fetching districts:', error);
                             }
@@ -1736,9 +1719,9 @@ $(document).ready(function() {
                                 
                                 // Set the current ward value AFTER all options are loaded
                                 $('#editwardSelect').val(userAddress.wardsCode);
+                                $('#editwardSelect').trigger('change');
                                 // Set the text for a display element, if it exists
-                                $('#editwardOption').text(userAddress.wardsUnit + ' ' + userAddress.wards);
-                                $('#editwardOption').val(userAddress.wardsCode); // Ensure value is also set for option
+                                // Ensure value is also set for option
                             } catch (error) {
                                 console.error('Error fetching wards:', error);
                             }

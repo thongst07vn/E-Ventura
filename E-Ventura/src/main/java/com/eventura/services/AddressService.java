@@ -16,4 +16,8 @@ public interface AddressService {
 	public boolean save(UserAddress userAddress);
 	public UserAddress findById(int id);
 	
+	public Provinces findProvinceById(String id);
+	public Districts findDistrictById(String id);
+	public Wards findWardById(String id);
+	
 }
