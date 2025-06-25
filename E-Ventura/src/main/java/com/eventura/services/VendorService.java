@@ -30,4 +30,5 @@ public interface VendorService {
 
 	public double avgVendorReview(int id);
 	
+	public Page<Vendors> findByKeywordPage(String keyword, Pageable pageable);
 }

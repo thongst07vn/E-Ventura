@@ -100,4 +100,10 @@ public class VendorServiceImpl implements VendorService {
 		return vendorReviewsRepository.avgVendorReview(id);
 	}
 
+	@Override
+	public Page<Vendors> findByKeywordPage(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return vendorRepository.findByKeywordPage(keyword, pageable);
+	}
+
 }

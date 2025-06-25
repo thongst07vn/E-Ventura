@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.eventura.entities.ProductReviews;
 import com.eventura.entities.Products;
+import com.eventura.entities.Users;
 
 public interface ProductService {
 	public List<Products> findAll();
@@ -36,7 +37,7 @@ public interface ProductService {
 
 	public double avgProductReview(int id);
 
-	
 	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable);
 
+	public boolean save(Products products);
 }

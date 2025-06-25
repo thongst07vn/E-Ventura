@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.eventura.entities.Products;
 import com.eventura.entities.Users;
+import com.eventura.entities.Vendors;
 
 @Repository
 public interface UserRepository extends JpaRepository<Users, Integer> {
@@ -24,4 +25,13 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 
 	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and u.deletedAt IS NOT NULL ORDER BY u.createdAt DESC")
 	Page<Users> findUsersWithRoleId3ByDeletedAtNOTNULL(Pageable pageable);
+	
+	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and u.deletedAt IS NOT NULL and username like %:keyword% ORDER BY u.createdAt DESC")
+	public Page<Users> findUsersWithRoleId3ByDeletedAtNOTNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
+	
+	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and u.deletedAt IS NULL and username like %:keyword% ORDER BY u.createdAt DESC")
+	Page<Users> findUsersWithRoleId3ByDeletedAtISNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
+	
+	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and username like %:keyword% ORDER BY u.createdAt DESC")
+	Page<Users> findUsersWithRoleId3ByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }
