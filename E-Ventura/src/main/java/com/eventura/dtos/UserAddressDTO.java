@@ -64,67 +64,138 @@ public class UserAddressDTO {
 		this.name = userAddress.getName();
 
     }
-	
+
+
 	public Integer getId() {
 		return id;
 	}
+
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+
 	public String getDistricts() {
 		return districts;
 	}
+
+
 	public void setDistricts(String districts) {
 		this.districts = districts;
 	}
+
+
 	public String getDistrictsUnit() {
 		return districtsUnit;
 	}
+
+
 	public void setDistrictsUnit(String districtsUnit) {
 		this.districtsUnit = districtsUnit;
 	}
+
+
+	public int getDistrictsCode() {
+		return districtsCode;
+	}
+
+
+	public void setDistrictsCode(int districtsCode) {
+		this.districtsCode = districtsCode;
+	}
+
+
 	public String getProvinces() {
 		return provinces;
 	}
+
+
 	public void setProvinces(String provinces) {
 		this.provinces = provinces;
 	}
+
+
 	public String getProvincesUnit() {
 		return provincesUnit;
 	}
+
+
 	public void setProvincesUnit(String provincesUnit) {
 		this.provincesUnit = provincesUnit;
 	}
+
+
+	public int getProvincesCode() {
+		return provincesCode;
+	}
+
+
+	public void setProvincesCode(int provincesCode) {
+		this.provincesCode = provincesCode;
+	}
+
+
 	public int getUsersId() {
 		return usersId;
 	}
+
+
 	public void setUsersId(int usersId) {
 		this.usersId = usersId;
 	}
+
+
 	public String getWards() {
 		return wards;
 	}
+
+
 	public void setWards(String wards) {
 		this.wards = wards;
 	}
+
+
 	public String getWardsUnit() {
 		return wardsUnit;
 	}
+
+
 	public void setWardsUnit(String wardsUnit) {
 		this.wardsUnit = wardsUnit;
 	}
+
+
+	public int getWardsCode() {
+		return wardsCode;
+	}
+
+
+	public void setWardsCode(int wardsCode) {
+		this.wardsCode = wardsCode;
+	}
+
+
 	public String getAddress() {
 		return address;
 	}
+
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
+
+
 	public String getName() {
 		return name;
 	}
+
+
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
 	
 	
 	

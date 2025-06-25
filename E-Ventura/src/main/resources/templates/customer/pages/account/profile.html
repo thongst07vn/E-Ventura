@@ -950,8 +950,9 @@
 																								required="required" hidden> <label
 																								class="form-label">Location name</label> <input
 																								class="form-control mb-2" type="text"
+																								id="addAddressName"
 																								th:field="${addAddressVariable.name}"
-																								required="required" placeholder="123 street 123">
+																								required="required" placeholder="Your address name to easy remember">
 																							<label class="form-label">Address</label> <input
 																								class="form-control mb-2" type="text"
 																								id="addressInput"
@@ -1024,6 +1025,7 @@
 																</div>
 															</div>
 														</div>
+														<!-- script for add address -->
 														<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			const provinceSelect = document.getElementById("provinceSelect");
@@ -1216,7 +1218,7 @@
 
 													</div>
 												</div>
-																								<div class="modal fade" id="editAddressModal" tabindex="-1"
+												<div class="modal fade" id="editAddressModal" tabindex="-1"
 													aria-labelledby="editAddressModal" aria-hidden="true">
 													<div class="modal-dialog">
 														<div class="modal-content">
@@ -1239,11 +1241,14 @@
 																					<input class="form-control mb-2" type="text"
 																						name="userId" th:value="${user.id}"
 																						required="required" hidden> <label
-																						class="form-label">Location name</label> <input
+																						class="form-label">Location name</label> 
+																						<input
 																						class="form-control mb-2" type="text"
+																						id="editAddressName"
 																						th:field="${addAddressVariable.name}"
-																						required="required" placeholder="123 street 123">
-																					<label class="form-label">Address</label> <input
+																						required="required" placeholder="your address name to easy to remember edit">
+																					<label class="form-label">Address</label> 
+																					<input
 																						class="form-control mb-2" type="text"
 																						id="editaddressInput"
 																						th:field="${addAddressVariable.address}"
@@ -1313,101 +1318,8 @@
 															</div>
 														</div>
 													</div>
-												</div>
-												<script th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
-												<script>
-												$(document).ready(function() {
-												    $('.changeAddress').on('click', function(event) {
-												        event.preventDefault(); // Prevent default button behavior if it's a link
-
-												        // Get the address ID from a data attribute (you'll need to add this to your button)
-												        // For example: <a class="btn btn-cart w-auto float-end" id="changeAddress" data-address-id="YOUR_ADDRESS_ID_HERE">Change</a>
-												        var editAddressId = $(this).data('address-id');
-														document.getElementById('addAddressVariable').value=editAddressId;
-												        if (editAddressId) {
-												            $.ajax({
-												                url: '/customer/api/address/geteditaddress', // Your Spring Boot endpoint URL
-												                type: 'GET',
-												                data: { editAddressId: editAddressId },
-												                success: function(userAddress) {
-												                    // Check if data is received and is not null
-												                    if (userAddress) {
-												                        // Populate the modal fields with the received data
-												                        // Make sure the names match your UserAddress model properties
-												                        $('#editAddressForm input[name="name"]').val(userAddress.name);
-												                        $('#editAddressForm input[name="address"]').val(userAddress.address);
-
-												                        // Populate the select dropdowns
-												                        // For provinces, districts, and wards, you'll need to set the selected option
-												                        // based on the 'code' property from your UserAddress object.
-												                        // This assumes your select options have a 'value' attribute matching the code.
-												                        if (userAddress.provinces) {
-												                            $('#editprovinceSelect').val(userAddress.provincesCode);
-												                            // Trigger change to load districts if your application logic requires it
-												                            $('#editprovinceSelect').trigger('change');
-												                            $('#editprovinceOption').text(userAddress.provincesUnit+' '+userAddress.provinces);
-												                            $('#editprovinceOption').val(userAddress.provincesCode);
-												                            
-												                        }
-
-												                        if (userAddress.districts) {
-												                            // You might need a slight delay or a callback if district loading is asynchronous
-												                            // and depends on province selection
-												                            setTimeout(function() {
-												                                $('#editdistrictSelect').val(userAddress.districtsCode);
-												                                $('#editdistrictSelect').trigger('change');
-												                                $('#editdistrictOption').text(userAddress.districtsUnit+' '+userAddress.districts);
-													                            $('#editdistrictOption').val(userAddress.districtsCode);
-												                                
-												                            }, 100); // Adjust delay if necessary
-												                        }
-
-												                        if (userAddress.wards) {
-												                             setTimeout(function() {
-												                                $('#editwardSelect').val(userAddress.wardsCode);
-												                                $('#editwardSelect').trigger('change');
-												                                $('#editwardOption').text(userAddress.wardsUnit+' '+userAddress.wards);
-													                            $('#editwardOption').val(userAddress.wardsCode);
-												                            }, 200); // Adjust delay if necessary
-												                        }
-
-
-												                        // If you have a userId input that's hidden and needs to be updated (unlikely for editing)
-												                        // $('#addAddressForm input[name="userId"]').val(userAddress.userId);
-
-
-												                        // Show the modal
-												                        $('#editAddressModal').modal('show');
-												                         
-
-												                        // Optionally, change the form action for updating
-												                        // For jQuery's direct action attribute
-												                        // You might also need to add a hidden input for the addressId to be updated
-												                        if ($('#addAddressForm input[name="id"]').length === 0) { // Check if an ID input already exists
-												                            $('#addAddressForm').prepend('<input type="hidden" name="id" value="' + userAddress.id + '">');
-												                        } else {
-												                            $('#addAddressForm input[name="id"]').val(userAddress.id);
-												                        }
-
-
-												                    } else {
-												                        console.error('No address data received.');
-												                        alert('Error: Could not retrieve address data.');
-												                    }
-												                },
-												                error: function(xhr, status, error) {
-												                    console.error("AJAX Error:", status, error);
-												                    alert('Error loading address for editing. Please try again.');
-												                }
-												            });
-												        } else {
-												            console.error("No address ID found for editing.");
-												            alert('Cannot edit address: No ID provided.');
-												        }
-												    });
-												});
-												</script>
-<script>
+												</div>										
+											<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			const editprovinceSelect = document.getElementById("editprovinceSelect");
 			const editdistrictSelect = document.getElementById("editdistrictSelect");
@@ -1577,7 +1489,295 @@
 	        });
 		});
 		</script>
-												<hr class="my-5">
+												<script th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+							<!--				  	<script>											  	
+												$(document).ready(function() {
+												    $('.changeAddress').on('click', function(event) {
+												        event.preventDefault(); // Prevent default button behavior if it's a link
+
+												        // Get the address ID from a data attribute (you'll need to add this to your button)
+												        // For example: <a class="btn btn-cart w-auto float-end" id="changeAddress" data-address-id="YOUR_ADDRESS_ID_HERE">Change</a>
+												        var editAddressId = $(this).data('address-id');
+														document.getElementById('addAddressVariable').value=editAddressId;
+												        if (editAddressId) {
+												            $.ajax({
+												                url: '/customer/api/address/geteditaddress', // Your Spring Boot endpoint URL
+												                type: 'GET',
+												                data: { editAddressId: editAddressId },
+												                success: function(userAddress) {
+												                    // Check if data is received and is not null
+												                    if (userAddress) {
+												                        // Populate the modal fields with the received data
+												                        // Make sure the names match your UserAddress model properties
+												                        $('#editAddressForm input[name="name"]').val(userAddress.name);
+												                        $('#editAddressForm input[name="address"]').val(userAddress.address);
+
+												                        // Populate the select dropdowns
+												                        // For provinces, districts, and wards, you'll need to set the selected option
+												                        // based on the 'code' property from your UserAddress object.
+												                        // This assumes your select options have a 'value' attribute matching the code.
+												                        if (userAddress.provinces) {
+												                            $('#editprovinceSelect').val(userAddress.provincesCode);
+												                            // Trigger change to load districts if your application logic requires it
+												                            $('#editprovinceSelect').trigger('change');
+												                            $('#editprovinceOption').text(userAddress.provincesUnit+' '+userAddress.provinces);
+												                            $('#editprovinceOption').val(userAddress.provincesCode);
+												                            
+												                        }
+
+												                        if (userAddress.districts) {
+												                            // You might need a slight delay or a callback if district loading is asynchronous
+												                            // and depends on province selection
+												                            fetch(`/api/address/districts?provinceCode=${userAddress.provincesCode}`)
+																		    .then(response => response.json())
+																		    .then(data => {
+																		        console.log(data);
+																		        // Clear existing options BEFORE adding new ones
+																	            const editdistrictSelect = document.getElementById('editdistrictSelect'); 
+																	            editdistrictSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default option
+																	            
+																	            // Add new options from the fetched data
+																	            data.forEach(district => {
+																	                const option = document.createElement("option");
+																	                option.value = district.code;
+																	                option.text = district.shortName + ' ' + district.name;
+																	                editdistrictSelect.appendChild(option);
+																	                
+																	            });
+																	         // Enable the district dropdown
+																	            editdistrictSelect.disabled = false;
+																	            
+																	            // After all options are added, set the selected value
+																	            // Use jQuery to set the value and trigger change
+																	            $('#editdistrictSelect').val(userAddress.districtsCode);
+																	            $('#editdistrictSelect').trigger('change');
+																	            
+																	            // This part is likely not needed if you're just setting a dropdown's value,
+																	            // but if you have a separate display element, you can set it here.
+																	            $('#editdistrictOption').text(userAddress.districtsUnit + ' ' + userAddress.districts);
+																	            $('#editdistrictOption').val(userAddress.districtsCode);
+																	            
+																		    })
+																		     
+												                        }
+
+												                        if (userAddress.wards) {
+												                        	
+												                        	fetch(`/api/address/wards?districtCode=${userAddress.districtCode}`)
+												        					.then(response => response.json())
+												        					.then(data => {
+												        						editwardSelect.innerHTML = '<option selected disabled>Ward</option>';
+												        						data.forEach(ward => {
+												        							const option = document.createElement("option");
+												        							option.value = ward.code;
+												        							option.text = ward.shortName+ ' ' + ward.name;
+												        							editwardSelect.appendChild(option);
+												        						});
+												        						editwardSelect.disabled = false;
+												        					});
+												                        	
+												                        	fetch(`/api/address/wards?districtCode=${userAddress.districtCode}`)
+																		    .then(response => response.json())
+																		    .then(data => {
+																		        console.log(data);
+																		        // Clear existing options BEFORE adding new ones
+																	            const editwardsSelect = document.getElementById('editwardsSelect'); 
+																	            editwardsSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default option
+																	            
+																	            // Add new options from the fetched data
+																	            data.forEach(ward => {
+																	                const option = document.createElement("option");
+																	                option.value = ward.code;
+																	                option.text = ward.shortName + ' ' + ward.name;
+																	                editdistrictSelect.appendChild(option);
+																	            });
+																	            
+																	            // Enable the district dropdown
+																	            editdistrictSelect.disabled = false;
+																	            
+																	            // After all options are added, set the selected value
+																	            // Use jQuery to set the value and trigger change
+																	            $('#editwardSelect').val(userAddress.wardsCode);
+																	            $('#editwardSelect').trigger('change');
+																	            
+																	            // This part is likely not needed if you're just setting a dropdown's value,
+																	            // but if you have a separate display element, you can set it here.
+																	            $('#editwardOption').text(userAddress.wardsUnit + ' ' + userAddress.wards);
+																	            $('#editwardOption').val(userAddress.wardsCode);
+																		    })
+												                        }
+
+
+												                        // If you have a userId input that's hidden and needs to be updated (unlikely for editing)
+												                        // $('#addAddressForm input[name="userId"]').val(userAddress.userId);
+
+
+												                        // Show the modal
+												                        $('#editAddressModal').modal('show');
+												                         
+
+												                        // Optionally, change the form action for updating
+												                        // For jQuery's direct action attribute
+												                        // You might also need to add a hidden input for the addressId to be updated
+												                        if ($('#addAddressForm input[name="id"]').length === 0) { // Check if an ID input already exists
+												                            $('#addAddressForm').prepend('<input type="hidden" name="id" value="' + userAddress.id + '">');
+												                        } else {
+												                            $('#addAddressForm input[name="id"]').val(userAddress.id);
+												                        }
+
+
+												                    } else {
+												                        console.error('No address data received.');
+												                        alert('Error: Could not retrieve address data.');
+												                    }
+												                },
+												                error: function(xhr, status, error) {
+												                    console.error("AJAX Error:", status, error);
+												                    alert('Error loading address for editing. Please try again.');
+												                }
+												            });
+												        } else {
+												            console.error("No address ID found for editing.");
+												            alert('Cannot edit address: No ID provided.');
+												        }
+												    });
+												});
+												</script>
+							-->
+							<script>                                                
+$(document).ready(function() {
+    $('.changeAddress').on('click', function(event) {
+        event.preventDefault(); // Prevent default button behavior if it's a link
+
+        // Get the address ID from a data attribute
+        var editAddressId = $(this).data('address-id');
+        // Set the address ID to a hidden input field
+        document.getElementById('addAddressVariable').value = editAddressId;
+
+        if (editAddressId) {
+            $.ajax({
+                url: '/customer/api/address/geteditaddress', // Your Spring Boot endpoint URL
+                type: 'GET',
+                data: { editAddressId: editAddressId },
+                success: async function(userAddress) { // Made the success function asynchronous
+                    // Check if data is received and is not null
+                    console.log('========')
+                    console.log(userAddress.provinces);
+                    console.log(userAddress.provincesCode);
+                    console.log(userAddress.provincesUnit);
+                    console.log('========')
+                    if (userAddress) {
+                        // Populate simple input fields
+                        $('#editAddressForm input[name="name"]').val(userAddress.name);
+                        $('#editAddressForm input[name="address"]').val(userAddress.address);
+						
+                        // --- Step 1: Populate Provinces ---
+                        if (userAddress.provinces) {
+                            $('#editprovinceSelect').val(userAddress.provincesCode);
+                            $('#editprovinceSelect').val(userAddress.provincesUnit + ' ' + userAddress.provinces);
+                            $('#editprovinceSelect').val(userAddress.provincesCode);
+                            console.log($('#editprovinceSelect').val());
+                            console.log($('#editprovinceSelect').text());
+                            console.log($('#editprovinceSelect').textContent());
+                            
+                            // Set the text for a display element, if it exists
+                            $('#editprovinceOption').text(userAddress.provincesUnit + ' ' + userAddress.provinces);
+                            $('#editprovinceOption').val(userAddress.provincesCode); // Ensure value is also set for option
+                            console.log($('#editprovinceOption'));
+                      
+                            // No need to trigger change here if we are programmatically fetching districts/wards
+                            // unless there's another independent listener for real-time user selection updates.
+                        }
+						console.log(userAddress.districts);
+						console.log(userAddress.provincesCode);
+                        // --- Step 2: Populate Districts (after provinces are set) ---
+                        if (userAddress.districts && userAddress.provincesCode) {
+                            try {
+                                const response = await fetch(`/api/address/districts?provinceCode=${userAddress.provincesCode}`);
+                                const data = await response.json();
+								console.log(data);
+                              
+                                
+                                data.forEach(district => {
+                                    const option = document.createElement("option");
+                                    option.value = district.code;
+                                    option.text = district.shortName + ' ' + district.name;
+                                    editdistrictSelect.appendChild(option);
+                                });
+                                editdistrictSelect.disabled = false; // Enable the district dropdown
+                                
+                                // Set the current district value AFTER all options are loaded
+                                $('#editdistrictSelect').val(userAddress.districtsCode);
+                                // Set the text for a display element, if it exists
+                                $('#editdistrictOption').text(userAddress.districtsUnit + ' ' + userAddress.districts);
+                                $('#editdistrictOption').val(userAddress.districtsCode); // Ensure value is also set for option
+                            } catch (error) {
+                                console.error('Error fetching districts:', error);
+                            }
+                        }
+
+                        // --- Step 3: Populate Wards (after districts are set) ---
+                        // Ensure userAddress.districtsCode is used for the API call
+                        if (userAddress.wards && userAddress.districtsCode) { 
+                            try {
+                                const response = await fetch(`/api/address/wards?districtCode=${userAddress.districtsCode}`);
+                                const data = await response.json();
+
+                                const editwardSelect = document.getElementById('editwardSelect'); // Ensure this ID matches your HTML
+                                editwardSelect.innerHTML = '<option selected disabled>Ward</option>'; // Keep the default option
+                                
+                                data.forEach(ward => {
+                                    const option = document.createElement("option");
+                                    option.value = ward.code;
+                                    option.text = ward.shortName + ' ' + ward.name;
+                                    editwardSelect.appendChild(option);
+                                });
+                                editwardSelect.disabled = false; // Enable the ward dropdown
+                                
+                                // Set the current ward value AFTER all options are loaded
+                                $('#editwardSelect').val(userAddress.wardsCode);
+                                // Set the text for a display element, if it exists
+                                $('#editwardOption').text(userAddress.wardsUnit + ' ' + userAddress.wards);
+                                $('#editwardOption').val(userAddress.wardsCode); // Ensure value is also set for option
+                            } catch (error) {
+                                console.error('Error fetching wards:', error);
+                            }
+                        }
+
+                        // Show the modal after all dropdowns are potentially populated
+                        $('#editAddressModal').modal('show');
+                         
+                        // Handle hidden ID input for form submission
+                        if ($('#addAddressForm input[name="id"]').length === 0) { // Check if an ID input already exists
+                            $('#addAddressForm').prepend('<input type="hidden" name="id" value="' + userAddress.id + '">');
+                        } else {
+                            $('#addAddressForm input[name="id"]').val(userAddress.id);
+                        }
+
+                    } else {
+                        console.error('No address data received.');
+                        // Use a custom message box instead of alert()
+                        // You would need to implement a custom modal or div for this.
+                        // For demonstration, a console log is used.
+                        console.log('Error: Could not retrieve address data.'); 
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    // Use a custom message box instead of alert()
+                    console.log('Error loading address for editing. Please try again.');
+                }
+            });
+        } else {
+            console.error("No address ID found for editing.");
+            // Use a custom message box instead of alert()
+            console.log('Cannot edit address: No ID provided.');
+        }
+    });
+});
+</script>
+		
+	
 												<div class="row" style="max-width: 920px">
 													<div class="col-md">
 														<div class="card">

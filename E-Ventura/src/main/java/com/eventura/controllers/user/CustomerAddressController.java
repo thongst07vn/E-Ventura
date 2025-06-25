@@ -58,7 +58,18 @@ public class CustomerAddressController {
 	@GetMapping({"geteditaddress"})
 	public UserAddressDTO GetEditAddress(@RequestParam("editAddressId") int editAddressId) {
 		UserAddress userAddress = addressService.findById(editAddressId);
-		return new UserAddressDTO(userAddress); 		    	
+		UserAddressDTO userAddressDTO = new UserAddressDTO(userAddress);
+		System.out.println(userAddressDTO.getAddress());
+		System.out.println(userAddressDTO.getDistricts());
+		System.out.println(userAddressDTO.getDistrictsCode());
+		System.out.println(userAddressDTO.getDistrictsUnit());
+		System.out.println(userAddressDTO.getProvinces());
+		System.out.println(userAddressDTO.getProvincesCode());
+		System.out.println(userAddressDTO.getProvincesUnit());
+		System.out.println(userAddressDTO.getWards());
+		System.out.println(userAddressDTO.getWardsCode());
+		System.out.println(userAddressDTO.getWardsUnit());
+		return userAddressDTO; 		    	
 	}
 
 }
