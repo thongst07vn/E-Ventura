@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 24, 2025, 5:03:57 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 23, 2025, 6:51:08 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -29,24 +29,22 @@ public class UserAddress implements java.io.Serializable {
 	private String address;
 	private Date createdAt;
 	private Date deletedAt;
-	private String name;
 
 	public UserAddress() {
 	}
 
 	public UserAddress(Districts districts, Provinces provinces, Users users, Wards wards, String address,
-			Date createdAt, String name) {
+			Date createdAt) {
 		this.districts = districts;
 		this.provinces = provinces;
 		this.users = users;
 		this.wards = wards;
 		this.address = address;
 		this.createdAt = createdAt;
-		this.name = name;
 	}
 
 	public UserAddress(Districts districts, Provinces provinces, Users users, Wards wards, String address,
-			Date createdAt, Date deletedAt, String name) {
+			Date createdAt, Date deletedAt) {
 		this.districts = districts;
 		this.provinces = provinces;
 		this.users = users;
@@ -54,7 +52,6 @@ public class UserAddress implements java.io.Serializable {
 		this.address = address;
 		this.createdAt = createdAt;
 		this.deletedAt = deletedAt;
-		this.name = name;
 	}
 
 	@Id
@@ -136,15 +133,6 @@ public class UserAddress implements java.io.Serializable {
 
 	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
-	}
-
-	@Column(name = "name", nullable = false)
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 }

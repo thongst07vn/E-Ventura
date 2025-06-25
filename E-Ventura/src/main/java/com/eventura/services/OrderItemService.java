@@ -9,5 +9,9 @@ import com.eventura.dtos.OrderVendorDTO;
 import com.eventura.entities.OrderItems;
 
 public interface OrderItemService {
-	public Page<OrderItems> findOrderItemsByOrderId(int orderId, int vendorId, Pageable pageable);
+	public Page<OrderItems> findOrderItemsByOrderIdPage(int orderId, int vendorId, Pageable pageable);
+	
+	public double findTotalAmountByOrderIdAndVendorId(int orderId, int vendorId);
+	
+
 }

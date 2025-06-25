@@ -21,10 +21,10 @@ public class OrderItemServiceImpl implements OrderItemService{
 	private OrderItemRepository orderItemRepository;
 
 	@Override
-	public Page<OrderItems> findOrderItemsByOrderId(int orderId, int vendorId, Pageable pageable) {
+	public Page<OrderItems> findOrderItemsByOrderIdPage(int orderId, int vendorId, Pageable pageable) {
 		// TODO Auto-generated method stub
 		   // Lấy tất cả OrderItems theo orderId và phân trang
-	    Page<OrderItems> orderItemsPage = orderItemRepository.findOrderItemsByOrderId(orderId, pageable);
+	    Page<OrderItems> orderItemsPage = orderItemRepository.findOrderItemsByOrderIdPage(orderId, pageable);
 	    
 	    // Lọc các OrderItems theo vendorId
 	    List<OrderItems> filteredOrderItems = orderItemsPage.stream()
@@ -34,4 +34,11 @@ public class OrderItemServiceImpl implements OrderItemService{
 	    // Chuyển lại List thành Page
 	    return new PageImpl<>(filteredOrderItems, pageable, orderItemsPage.getTotalElements());
 	}
+
+	@Override
+	public double findTotalAmountByOrderIdAndVendorId(int orderId, int vendorId) {
+		// TODO Auto-generated method stub
+		return orderItemRepository.findTotalAmountByOrderIdAndVendorId(orderId, vendorId);
+	}
+
 }

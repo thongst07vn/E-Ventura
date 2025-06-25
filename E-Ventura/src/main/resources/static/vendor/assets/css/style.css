@@ -86,6 +86,10 @@ input[type=number]:focus,
   box-shadow: none;
 }
 
+.step-icon i{
+	transform: translateY(120%);
+}
+
 input:focus::-moz-placeholder {
   opacity: 0;
   -moz-transition: 0.4s;
