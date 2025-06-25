@@ -106,4 +106,15 @@ public class ProductServiceImpl implements ProductService {
 		return productRepository.findByKeywordPage(keyword, pageable);
 	}
 
+	@Override
+	public boolean save(Products products) {
+		// TODO Auto-generated method stub
+		try {
+			productRepository.save(products);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 }

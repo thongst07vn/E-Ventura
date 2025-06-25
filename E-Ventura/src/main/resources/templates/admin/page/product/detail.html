@@ -232,71 +232,18 @@
 																		<span class="font-xs color-gray-700"><th:block
 																				th:text="${#dates.format(productReview.createdAt, 'MMMM d, yyyy')}+ ' at ' + ${#dates.format(productReview.createdAt, 'h:mm a')}"></th:block></span>
 																	</div>
-																	<div class="product-rate d-inline-block">
+																	<div class="d-inline-block mx-2">
 																		<th:block
-																			th:if="${productReview.rating > 0 && productReview.rating <= 1}">
-																			<div class="product-rating" style="width: 100%">
-																				<ul class="rating-stars">
-																					<li class="stars-active" style="width: 20%;"><img
-																						th:src="@{/assets/imgs/icons/stars-active.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																					<li><img
-																						th:src="@{/assets/imgs/icons/starts-disable.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																				</ul>
-																			</div>
-																		</th:block>
-																		<th:block
-																			th:if="${productReview.rating > 1 && productReview.rating <= 2}">
-																			<div class="product-rating" style="width: 100%">
-																				<ul class="rating-stars">
-																					<li class="stars-active" style="width: 40%;"><img
-																						th:src="@{/assets/imgs/icons/stars-active.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																					<li><img
-																						th:src="@{/assets/imgs/icons/starts-disable.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																				</ul>
-																			</div>
-																		</th:block>
-																		<th:block
-																			th:if="${productReview.rating > 2 && productReview.rating <= 3}">
-																			<div class="product-rating" style="width: 100%">
-																				<ul class="rating-stars">
-																					<li class="stars-active" style="width: 60%;"><img
-																						th:src="@{/assets/imgs/icons/stars-active.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																					<li><img
-																						th:src="@{/assets/imgs/icons/starts-disable.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																				</ul>
-																			</div>
-																		</th:block>
-																		<th:block
-																			th:if="${productReview.rating > 3 && productReview.rating <= 4}">
-																			<div class="product-rating" style="width: 100%">
-																				<ul class="rating-stars">
-																					<li class="stars-active" style="width: 80%;"><img
-																						th:src="@{/assets/imgs/icons/stars-active.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																					<li><img
-																						th:src="@{/assets/imgs/icons/starts-disable.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																				</ul>
-																			</div>
-																		</th:block>
-																		<th:block
-																			th:if="${productReview.rating > 4 && productReview.rating < 5}">
-																			<div class="product-rating" style="width: 100%">
-																				<ul class="rating-stars">
-																					<li class="stars-active" style="width: 100%;"><img
-																						th:src="@{/assets/imgs/icons/stars-active.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																					<li><img
-																						th:src="@{/assets/imgs/icons/starts-disable.svg}"
-																						alt="stars" style="height: 20px;"></li>
-																				</ul>
-																			</div>
+																			th:with="displayRating=${productReview.rating != null ? productReview.rating : 0}, cappedRating=${displayRating > 5 ? 5 : displayRating}, width=${cappedRating * 20}">
+																			<ul class="rating-stars">
+																				<li class="stars-active"
+																					th:style="'width:' + ${width} + '%'"><img
+																					th:src="@{/assets/imgs/icons/stars-active.svg}"
+																					alt="stars" style="height: 20px;"></li>
+																				<li><img
+																					th:src="@{/assets/imgs/icons/starts-disable.svg}"
+																					alt="stars" style="height: 20px;"></li>
+																			</ul>
 																		</th:block>
 
 																	</div>
@@ -315,7 +262,7 @@
 							</div>
 							<div class="tab-pane fade" id="tab-vendor" role="tabpanel"
 								aria-labelledby="tab-vendor">
-								<div class="vendor-logo d-flex mb-30">
+								<a class="vendor-logo d-flex mb-30" th:href="@{'/admin/vendor/detail/'+${product.vendors.users.id}}">
 									<th:block
 										th:if="${product.vendors.users.avatar.contains('https:')}">
 										<img class="img-md img-avatar"
@@ -330,8 +277,7 @@
 
 									<div class="vendor-name ml-15">
 										<h6>
-											<a href="shop-vendor-single.html"><th:block
-													th:text="${product.vendors.name}"></th:block></a>
+											<th:block th:text="${product.vendors.name}"></th:block>
 										</h6>
 										<div class="product-rate-cover text-end">
 											<div class="rating mt-5">
@@ -353,7 +299,7 @@
 											</div>
 										</div>
 									</div>
-								</div>
+								</a>
 								<ul class="contact-infor mb-50">
 									<li><img
 										th:src="@{/assets/imgs/page/product/icon-location.svg}" alt=""><strong>Address:</strong><span>

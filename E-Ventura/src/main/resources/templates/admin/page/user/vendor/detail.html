@@ -43,10 +43,10 @@
 					</div>
 					<!-- col.//-->
 					<div class="col-xl-6 text-md-end">
+
 						<form class="w-auto d-inline-block" method="post"
 							th:action="@{/admin/vendor/edit}" id="editDeletedAtForm">
-							<label class="switch">
-								<th:block
+							<label class="switch"> <th:block
 									th:if="${vendor.users.deletedAt==null}">
 									<input type="checkbox" checked id="mySwitch">
 									<span class="slider round"></span>
@@ -54,11 +54,19 @@
 									<input type="checkbox" id="mySwitch">
 									<span class="slider round"></span>
 								</th:block>
-							</label>
-							<input type="hidden" name="id" th:value="${id}" />
-							<input type="hidden" name="actionType" id="actionType" th:value="${actionType}" />
+							</label> <input type="hidden" name="id" th:value="${id}" /> <input
+								type="hidden" name="actionType" id="actionType"
+								th:value="${actionType}" />
 						</form>
-
+						<p class="mt-15">Vendor Status:
+						<h6 style="display: inline-block; vertical-align: middle;"></h6>
+						<th:block th:if="${vendor.users.deletedAt == null}">
+							<span class="badge rounded-pill alert-success">Enable</span>
+						</th:block>
+						<th:block th:if="${vendor.users.deletedAt != null}">
+							<span class="badge rounded-pill alert-danger">Disable</span>
+						</th:block>
+						</p>
 						<script>
 						  const switchElement = document.getElementById('mySwitch');
 						  const actionTypeInput = document.getElementById('actionType'); // Get the new hidden input
@@ -146,46 +154,97 @@
 		<!-- card.//-->
 		<div class="card mb-4">
 			<div class="card-body">
-				<h5 class="card-title">Products by seller</h5>
+			<div class="row">				
+				<h5 class="card-title col-6">Products by seller</h5>
+				
+			</div>
 				<div class="row">
 					<div class="col-xl-2 col-lg-3 col-md-6"
 						th:each="product : ${products}">
-						<div class="card card-product-grid">
-							<a class="img-wrap" href="#"> <th:block
-									th:if="${product.mediases[0].name.contains('https:')}">
-									<img class="img-sm img-thumbnail"
-										th:src="${product.mediases[0].name}" alt="Item">
-								</th:block> <th:block
-									th:if="${!product.mediases[0].name.contains('https:')}">
-									<img class="img-sm img-thumbnail"
-										th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}"
-										alt="Item"></a>
-							<div class="info-wrap">
-								<a class="title" href="#"><th:block
-										th:text="${product.name}"></th:block></a>
-								<div class="price mt-1">
-									$
-									<th:block th:text="${product.price}"></th:block>
+						<th:block th:if="${product.products.deletedAt==null}">
+							<div class="card card-product-grid">
+								<a class="img-wrap"
+									th:href="@{'/admin/product/detail/'+${product.products.id}}">
+									<th:block
+										th:if="${product.products.mediases[0].name.contains('https:')}">
+										<img class="img-sm img-thumbnail"
+											th:src="${product.products.mediases[0].name}" alt="Item">
+									</th:block> <th:block
+										th:if="${!product.products.mediases[0].name.contains('https:')}">
+										<img class="img-sm img-thumbnail"
+											th:src="@{'/assets/imgs/others/' + ${product.products.mediases[0].name}}"
+											alt="Item">
+								</a>
+								<div class="info-wrap">
+									<a class="title" href="#"><th:block
+											th:text="${product.products.name}"></th:block></a>
+									<div class="price mt-1">
+										$
+										<th:block th:text="${product.products.price}"></th:block>
+									</div>
+									<th:block
+										th:with="displayRating=${product.rating != null ? product.rating : 0},
+             cappedRating=${displayRating > 5 ? 5 : displayRating},
+             width=${cappedRating * 20}">
+										<ul class="rating-stars" style="width: 65px;">
+											<li class="stars-active" th:style="'width:' + ${width} + '%'"><img
+												th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"></li>
+											<li style="width: 100%;"><img
+												th:src="@{/assets/imgs/icons/starts-disable.svg}"
+												alt="stars"></li>
+										</ul>
+									</th:block>
 								</div>
 							</div>
-						</div>
+						</th:block>
 					</div>
 				</div>
 			</div>
 		</div>
-		<!-- card <div class="pagination-area mt-30 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-							class="material-icons md-chevron_right"></i></a></li>
-				</ul>
-			</nav>
-		</div>//-->
+		<!-- card //-->
+		
+		<!-- Trường hợp danh sách tất cả sản phẩm -->
+		<th:block th:if="${selectedCategoryId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút về đầu -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+							<a class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${0}}" aria-label="Next"> <i
+									class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a>
+						</li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+								th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${currentPages-1}}" class="page-link"
+								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
 
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${currentPages+1}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+
+						<!-- Nút tới cuối -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${lastPageIndex}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
 	</section>
 </body>

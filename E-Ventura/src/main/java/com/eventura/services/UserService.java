@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.entities.Vendors;
 
 public interface UserService extends UserDetailsService {
 	
@@ -23,5 +24,8 @@ public interface UserService extends UserDetailsService {
 	public Page<Users> findAlls(Pageable pageable);
 	public Page<Users> findAllByDeletedAtISNUL(Pageable pageable);
 	public Page<Users> findAllByDeletedAtISNOTNUL(Pageable pageable);
+	public Page<Users> findUsersWithRoleId3ByDeletedAtNOTNULLByKeyword(String keyword, Pageable pageable);
+	public Page<Users> findUsersWithRoleId3ByDeletedAtISNULLByKeyword(String keyword, Pageable pageable);
+	public Page<Users> findUsersWithRoleId3ByKeyword(String keyword, Pageable pageable);
 	
 }

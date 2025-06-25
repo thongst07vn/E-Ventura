@@ -10,15 +10,26 @@
 		<div class="content-header">
 			<h2 class="content-title">Customer list</h2>
 			<div>
-				<a class="btn btn-primary" href="#"><i
-					class="material-icons md-plus"></i> Create Customer</a>
+				
 			</div>
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
 				<div class="row gx-3">
 					<div class="col-lg-4 col-md-6 me-auto">
-						<input class="form-control" type="text" placeholder="Search...">
+						<form method="get" th:action="@{/admin/user/search-by-keyword}"
+							id="productSearchForm">
+							<input class="form-control font-xs" type="text" value=""
+								placeholder="Search....." name="keyword"
+								id="productSearchKeyword">
+						</form>
+						<script>
+							document.getElementById('productSearchKeyword').addEventListener('keyup', function(event) {									
+								 if (event.key === 'Enter' || event.keyCode === 13) {
+								        document.getElementById('productSearchForm').submit();
+								    }
+                            });
+						</script>
 					</div>
 
 					<div class="col-lg-2 col-md-3 col-6">
@@ -32,6 +43,7 @@
 							</select>
 						</form>
 					</div>
+
 					<div class="col-lg-2 col-md-3 col-6">
 						<select id="pageSizeSelect" class="form-select"
 							onchange="changePageSize()">
@@ -64,7 +76,13 @@
 						    const newUrl = new URL(window.location.origin + window.location.pathname);
 						    newUrl.searchParams.set('page', currentPage);
 						    newUrl.searchParams.set('pageSize', pageSize);
-						
+							if (window.location.pathname === '/admin/user/search-by-keyword') {
+					           const keyword = urlParams.get('keyword');
+					          if (keyword !== null) { 
+					                newUrl.searchParams.set('keyword', keyword);
+					            }
+					       }
+											
 						    // Tải lại trang với URL mới
 						    window.location.href = newUrl.toString();
 						}
@@ -103,7 +121,7 @@
 											</div>
 											<div class="info pl-3">
 												<h6 class="mb-0 title">
-													<th:block th:text="${user.firstName}+' '+${user.lastName}"></th:block>
+													<th:block th:text="${user.username}"></th:block>
 												</h6>
 											</div>
 									</a></td>
@@ -134,21 +152,22 @@
 		<!-- card end
 		
 		//-->
-		<th:block th:if="${!#lists.isEmpty(users.content)}">
+		<th:block th:if="${keyword!=null &&!#lists.isEmpty(users.content)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'hidden'"><a
 							class="page-link"
-							th:href="@{'?page=' + ${0}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
-							aria-label="Next"> <i class="material-icons md-double_arrow" style="transform: rotate(180deg) translate(15%, -30%); "></i>
+							th:href="@{'/admin/user/search-by-keyword?keyword='+${keyword}+'&page=' + ${0}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
 						</a></li>
 						<!-- Nút trước -->
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'disabled'"><a
 							class="page-link"
-							th:href="@{'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							th:href="@{'/admin/user/search-by-keyword?keyword='+${keyword}+'&page=' + ${currentPages-1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
 							aria-label="Previous"> <i
 								class="material-icons md-chevron_left"></i>
 						</a></li>
@@ -159,7 +178,7 @@
 							<li class="page-item"
 								th:classappend="${i} == ${currentPages} ? 'active'"><a
 								class="page-link"
-								th:href="@{'?page=' + ${i}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+								th:href="@{'/admin/user/search-by-keyword?keyword='+${keyword}+'&page=' + ${i}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
 								th:text="${i + 1}"></a></li>
 						</th:block>
 
@@ -167,7 +186,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
 							<a class="page-link"
-							th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							th:href="@{'/admin/user/search-by-keyword?keyword='+${keyword}+'&page=' + ${currentPages+1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
 							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 						</a>
 						</li>
@@ -175,7 +194,57 @@
 						<li class="page-item"
 							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
 							<a class="page-link"
-							th:href="@{'?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							th:href="@{'/admin/user/search-by-keyword?keyword='+${keyword}+'&page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							aria-label="Next"><i class="material-icons md-double_arrow"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+		<th:block th:if="${keyword==null && !#lists.isEmpty(users.content)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
+							class="page-link"
+							th:href="@{'/admin/customer/list?page=' + ${0}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
+						<!-- Nút trước -->
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							class="page-link"
+							th:href="@{'/admin/customer/list?page=' + ${currentPages-1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/admin/customer/list?page=' + ${i}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/admin/customer/list?page=' + ${currentPages+1}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'/admin/customer/list?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
 							aria-label="Next"><i class="material-icons md-double_arrow"></i>
 						</a>
 						</li>

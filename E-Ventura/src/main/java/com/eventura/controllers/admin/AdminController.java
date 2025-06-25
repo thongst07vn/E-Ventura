@@ -3,6 +3,7 @@ package com.eventura.controllers.admin;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.eventura.configurations.AccountOAuth2UserServices;
 import com.eventura.dtos.ProductDTO;
 import com.eventura.entities.ProductCategories;
@@ -32,7 +35,10 @@ import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
+import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("admin")
@@ -47,6 +53,8 @@ public class AdminController {
 	private ProductService productService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private VendorProductCategoryService vendorProductCategoryService;
 
 	AdminController(AccountOAuth2UserServices accountOAuth2UserServices) {
 		this.accountOAuth2UserServices = accountOAuth2UserServices;
@@ -109,19 +117,19 @@ public class AdminController {
 
 		// Lặp qua productPage và thêm các ProductDTO vào List
 		for (Products product : productPage) {
-			if (!productService.findProductReview(product.getId()).isEmpty()) {
-				productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-			} else {
-				productDTOList.add(new ProductDTO(product, 0));
+			if (product.getDeletedAt() == null) {
+				if (!productService.findProductReview(product.getId()).isEmpty()) {
+					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+				} else {
+					productDTOList.add(new ProductDTO(product, 0));
+				}
 			}
-		    
+
 		}
 
 		// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
-		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(
-		    productDTOList,
-		    productPage.getPageable(), // Lấy thông tin Pageable từ productPage
-		    productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
+		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+				productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
 		);
 		map.put("products", productDTOPage.getContent());
 		model.addAttribute("currentPages", page);
@@ -132,6 +140,21 @@ public class AdminController {
 		map.put("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "product");
 		return "admin/page/product/list";
+	}
+
+	@PostMapping("product/delete")
+	public String productEdit(@RequestParam("id") int id, RedirectAttributes redirectAttributes) {
+		Products product = productService.findById(id);
+		product.setDeletedAt(new Date());
+		if (productService.save(product)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Product deleted successfully!");
+			return "redirect:/admin/product/list";
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Failed to delete product!");
+			return "redirect:/admin/product/list";
+		}
 	}
 
 	@GetMapping("product/detail/{id}")
@@ -173,7 +196,7 @@ public class AdminController {
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage;
-		
+
 		if (categoryId == 0) {
 			// Lấy tất cả sản phẩm, phân trang
 			productPage = productService.findAlls(pageable);
@@ -181,19 +204,19 @@ public class AdminController {
 
 			// Lặp qua productPage và thêm các ProductDTO vào List
 			for (Products product : productPage) {
-				if (!productService.findProductReview(product.getId()).isEmpty()) {
-					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-				} else {
-					productDTOList.add(new ProductDTO(product, 0));
-				}
-			    
-			}
+				if (product.getDeletedAt() == null) {
 
+					if (!productService.findProductReview(product.getId()).isEmpty()) {
+						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+					} else {
+						productDTOList.add(new ProductDTO(product, 0));
+					}
+				}
+
+			}
 			// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
-			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(
-			    productDTOList,
-			    productPage.getPageable(), // Lấy thông tin Pageable từ productPage
-			    productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
+			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+					productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
 			);
 			map.put("products", productDTOPage.getContent());
 //			map.put("products", productPage.getContent());
@@ -204,19 +227,19 @@ public class AdminController {
 
 			// Lặp qua productPage và thêm các ProductDTO vào List
 			for (Products product : productPage) {
-				if (!productService.findProductReview(product.getId()).isEmpty()) {
-					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-				} else {
-					productDTOList.add(new ProductDTO(product, 0));
+				if (product.getDeletedAt() == null) {
+					if (!productService.findProductReview(product.getId()).isEmpty()) {
+						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+					} else {
+						productDTOList.add(new ProductDTO(product, 0));
+					}
 				}
-			    
-			}
 
+			}
+			productDTOList.sort(Comparator.comparing(ProductDTO::getRating, Comparator.reverseOrder()));
 			// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
-			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(
-			    productDTOList,
-			    productPage.getPageable(), // Lấy thông tin Pageable từ productPage
-			    productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
+			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+					productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
 			);
 			map.put("products", productDTOPage.getContent());
 //			map.put("products", productPage.getContent());
@@ -250,19 +273,17 @@ public class AdminController {
 
 			// Lặp qua productPage và thêm các ProductDTO vào List
 			for (Products product : productPage) {
-				if (!productService.findProductReview(product.getId()).isEmpty()) {
-					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-				} else {
-					productDTOList.add(new ProductDTO(product, 0));
+				if (product.getDeletedAt() == null) {
+					if (!productService.findProductReview(product.getId()).isEmpty()) {
+						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+					} else {
+						productDTOList.add(new ProductDTO(product, 0));
+					}
 				}
-			    
 			}
-
 			// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
-			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(
-			    productDTOList,
-			    productPage.getPageable(), // Lấy thông tin Pageable từ productPage
-			    productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
+			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+					productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
 			);
 			map.put("products", productDTOPage.getContent());
 //			map.put("products", productPage.getContent());
@@ -273,19 +294,18 @@ public class AdminController {
 
 			// Lặp qua productPage và thêm các ProductDTO vào List
 			for (Products product : productPage) {
-				if (!productService.findProductReview(product.getId()).isEmpty()) {
-					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-				} else {
-					productDTOList.add(new ProductDTO(product, 0));
-				}
-			    
+				 if (product.getDeletedAt() == null) {					 
+					 if (!productService.findProductReview(product.getId()).isEmpty()) {
+						 productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+					 } else {
+						 productDTOList.add(new ProductDTO(product, 0));
+					 }
+				 }
 			}
-
+			productDTOList.sort(Comparator.comparing(ProductDTO::getRating, Comparator.reverseOrder()));
 			// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
-			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(
-			    productDTOList,
-			    productPage.getPageable(), // Lấy thông tin Pageable từ productPage
-			    productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
+			Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+					productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
 			);
 			map.put("products", productDTOPage.getContent());
 //			map.put("products", productPage.getContent());
@@ -324,7 +344,7 @@ public class AdminController {
 	@GetMapping("customer/list")
 	public String customerList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter) {
-		Pageable pageable = PageRequest.of(page, pageSize);
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Users> userPage;
 
 		switch (filter) {
@@ -346,6 +366,36 @@ public class AdminController {
 		model.addAttribute("currentPage", "user");
 		model.addAttribute("filter", filter);
 		model.addAttribute("pageSize", pageSize);
+		return "admin/page/user/customer/list";
+	}
+
+	@GetMapping("user/search-by-keyword")
+	public String userSearchByKeyword(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter,
+			@RequestParam("keyword") String keyword) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Users> userPage;
+
+		switch (filter) {
+		case "enabled":
+			userPage = userService.findUsersWithRoleId3ByDeletedAtISNULLByKeyword(keyword, pageable);
+			break;
+		case "disabled":
+			userPage = userService.findUsersWithRoleId3ByDeletedAtNOTNULLByKeyword(keyword, pageable);
+			break;
+		case "show_all":
+		default:
+			userPage = userService.findUsersWithRoleId3ByKeyword(keyword, pageable);
+			break;
+		}
+		modelMap.put("users", userPage);
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", userPage.getTotalPages());
+		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
+		model.addAttribute("currentPage", "user");
+		model.addAttribute("filter", filter);
+		model.addAttribute("pageSize", pageSize);
+		modelMap.put("keyword", keyword);
 		return "admin/page/user/customer/list";
 	}
 
@@ -392,24 +442,66 @@ public class AdminController {
 			@RequestParam(defaultValue = "12") int pageSize) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Vendors> userPage = vendorService.findAlls(pageable);
-		
-		
 		modelMap.put("vendors", userPage.getContent());
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
 		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
 		model.addAttribute("pageSize", pageSize);
+
+		model.addAttribute("currentPage", "user");
+		return "admin/page/user/vendor/list";
+	}
+
+	@GetMapping("vendor/search-by-keyword")
+	public String vendorSearchByKeyword(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "12") int pageSize, @RequestParam("keyword") String keyword) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Vendors> userPage = vendorService.findByKeywordPage(keyword, pageable);
+		modelMap.put("vendors", userPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", userPage.getTotalPages());
+		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+		modelMap.put("keyword", keyword);
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/list";
 	}
 
 	@GetMapping("vendor/detail/{id}")
-	public String vendorDetail(Model model, @PathVariable("id") int id, ModelMap modelMap) {
+	public String vendorDetail(Model model, @PathVariable("id") int id, ModelMap modelMap,
+			@RequestParam(defaultValue = "0") int page) {
+		int pageSize = 6;
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Products> productPage = productService.findByVendorIdPage(id, pageable);
+		// Khởi tạo một List để chứa các ProductDTO
+		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
+
+		// Lặp qua productPage và thêm các ProductDTO vào List
+		for (Products product : productPage) {
+			if (product.getDeletedAt() == null) {
+				if (!productService.findProductReview(product.getId()).isEmpty()) {
+					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+				} else {
+					productDTOList.add(new ProductDTO(product, 0));
+				}
+			}
+
+		}
+
+		// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
+		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+				productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
+		);
+
+		modelMap.put("products", productDTOPage.getContent());
+		modelMap.put("vendorCategories", vendorProductCategoryService.findByVendorId(id));
+		modelMap.put("currentPages", page);
+		modelMap.put("totalPages", productPage.getTotalPages());
+		modelMap.put("lastPageIndex", productPage.getTotalPages() - 1);
 		modelMap.put("vendor", vendorService.findById(id));
 		modelMap.put("income", vendorService.sumByVendorId(id));
 		modelMap.put("totalSell", vendorService.countByVendorId(id));
 		modelMap.put("vendorAddresses", userService.findAddressUser(id));
-		modelMap.put("products", productService.findByVendorId(id));
 		modelMap.put("id", id);
 		if (vendorService.findById(id).getUsers().getDeletedAt() != null) {
 			modelMap.put("actionType", "disable");
@@ -417,6 +509,7 @@ public class AdminController {
 
 			modelMap.put("actionType", "enable");
 		}
+
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/detail";
 	}
@@ -427,8 +520,10 @@ public class AdminController {
 
 		if ("enable".equals(actionType)) {
 			users.setDeletedAt(new Date()); // Set to current date for disabling
+			vendorService.findById(id).setUpdatedAt(new Date()); // Set to current date for disabling
 		} else if ("disable".equals(actionType)) {
 			users.setDeletedAt(null); // Set to null for enabling
+			vendorService.findById(id).setUpdatedAt(new Date()); // Set to current date for disabling
 		} else {
 			// Handle unexpected actionType, maybe log an error or return an error page
 			System.err.println("Invalid actionType received: " + actionType);
