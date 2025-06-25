@@ -18,6 +18,7 @@ import com.eventura.entities.Orders;
 import com.eventura.entities.VendorProductCategory;
 import com.eventura.services.OrderItemService;
 import com.eventura.services.OrderService;
+import com.eventura.services.OrderStatusService;
 import com.eventura.services.UserAddressService;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +29,8 @@ public class OrderController  {
 	
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private OrderStatusService orderStatusService;
 	@Autowired
 	private OrderItemService orderItemService;
 	@Autowired
@@ -50,6 +53,8 @@ public class OrderController  {
 		modelMap.put("totalPage", orderVendorPages.getTotalPages());
 		modelMap.put("lastPageIndex", orderVendorPages.getTotalPages() - 2);
 
+		
+		modelMap.put("orderStatuses", orderStatusService.findAll());
 		return "vendor/pages/order/list";
 	}
 	
