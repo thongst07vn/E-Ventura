@@ -218,27 +218,25 @@ public class UserController {
 	}
 	
 	@PostMapping({"editaddress"})
-	public String EditAddress(@RequestParam("userId") int userId, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
+	public String EditAddress(@RequestParam("userId") int userId,@RequestParam("editProvince") String editProvince,@RequestParam("editDistrict") String editDistrict,@RequestParam("editWard") String editWard, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
 		Users user = userService.findById(userId);
 		addAddressVariable.setUsers(user);
 		addAddressVariable.setCreatedAt(new Date());
-		System.out.println(addAddressVariable.getAddress());
-		System.out.println(addAddressVariable.getName());
-		System.out.println(addAddressVariable.getId());
-		System.out.println(addAddressVariable.getDistricts());
-		System.out.println(addAddressVariable.getProvinces());
-		System.out.println(addAddressVariable.getWards());
-		System.out.println(addAddressVariable.getUsers());
-//		if(addressService.save(addAddressVariable)) {
-//			redirectAttributes.addFlashAttribute("msg","Add address success");
-//			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-//			return "redirect:/customer/profile";    	
-//		} else {
-//			redirectAttributes.addFlashAttribute("msg","Add address failed");
-//			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-//			return "redirect:/customer/profile";    	    	
-//		} 	
-		return "redirect:/customer/profile";    	    	
+		addAddressVariable.setProvinces(addressService.findProvinceById(editProvince));
+		addAddressVariable.setDistricts(addressService.findDistrictById(editDistrict));
+		addAddressVariable.setWards(addressService.findWardById(editWard));
+
+
+		if(addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg","Edit address success");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+			return "redirect:/customer/profile";    	
+		} else {
+			redirectAttributes.addFlashAttribute("msg","Edit address failed");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+			return "redirect:/customer/profile";    	    	
+		} 	
+//		return "redirect:/customer/profile";    	    	
 		
 	}
 

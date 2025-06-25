@@ -60,5 +60,23 @@ public class AddressServiceImpl implements AddressService {
 	public UserAddress findById(int id) {
 		return userAddressRepository.findById(id).get();
 	}
+
+	@Override
+	public Provinces findProvinceById(String id) {
+		// TODO Auto-generated method stub
+		return provinceRepository.findById(id).get();
+	}
+
+	@Override
+	public Districts findDistrictById(String id) {
+		// TODO Auto-generated method stub
+		return districtRepository.findById(id).get();
+	}
+
+	@Override
+	public Wards findWardById(String id) {
+		// TODO Auto-generated method stub
+		return wardRepository.findById(id).get();
+	}
 	
 }
