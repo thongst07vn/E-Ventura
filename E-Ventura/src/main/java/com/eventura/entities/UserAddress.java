@@ -20,7 +20,6 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = "user_address")
 public class UserAddress implements java.io.Serializable {
-	private int blabla;
 	private Integer id;
 	private Districts districts;
 	private Provinces provinces;
