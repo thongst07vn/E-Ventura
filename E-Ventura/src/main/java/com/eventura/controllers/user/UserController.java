@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -233,6 +234,24 @@ public class UserController {
 			return "redirect:/customer/profile";    	
 		} else {
 			redirectAttributes.addFlashAttribute("msg","Edit address failed");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+			return "redirect:/customer/profile";    	    	
+		} 	
+//		return "redirect:/customer/profile";    	    	
+		
+	}
+	
+	@PostMapping({"deleteaddress"})
+	public String DeleteAddress(@RequestParam("addressId") int addressId,RedirectAttributes redirectAttributes) {
+		UserAddress address = addressService.findById(addressId);
+		address.setDeletedAt(new Date());
+		System.out.println(address.getName());
+		if(addressService.save(address)) {
+			redirectAttributes.addFlashAttribute("msg","Delete address success");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+			return "redirect:/customer/profile";    	
+		} else {
+			redirectAttributes.addFlashAttribute("msg","Delete address failed");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
 			return "redirect:/customer/profile";    	    	
 		} 	
