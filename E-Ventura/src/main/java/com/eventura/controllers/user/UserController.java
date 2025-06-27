@@ -80,14 +80,7 @@ public class UserController {
 		return "customer/pages/login/login";
 	}
 
-	// User Cart
-	@GetMapping({ "cart" })
-	public String cartList(Authentication authentication, ModelMap modelMap) {
-		if (authentication != null) {
-			modelMap.put("user", userService.findByEmail(authentication.getName()));
-		}
-		return "customer/pages/cart/cartlist";
-	}
+
 
 	// User profile
 	@GetMapping({ "profile" })

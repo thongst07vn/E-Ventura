@@ -145,9 +145,9 @@
 									</div>
 									<div class="info-right">
 										<a class="font-xs color-gray-500"
-											href="shop-vendor-single.html" th:text="${pro.description}"></a><br> <a
+											th:href="@{'/product/productdetails/'+${pro.id}}" th:text="${pro.description}"></a><br> <a
 											class="color-brand-3 font-sm-bold"
-											href="shop-single-product-2.html" th:text="${pro.name}"></a>
+											th:href="@{'/product/productdetails/'+${pro.id}}" th:text="${pro.name}"></a>
 										<div class="rating">
 											<img th:src="@{/assets/imgs/template/icons/star.svg}"
 												alt="Ecom"><img

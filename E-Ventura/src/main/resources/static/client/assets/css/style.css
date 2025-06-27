@@ -3620,6 +3620,49 @@ a.text-brand-3:hover {
   padding-right: 56px;
 }
 
+/* rating-stars */
+.rating-stars {
+  display: inline-block;
+  vertical-align: middle;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  white-space: nowrap;
+  clear: both;
+  line-height: 0.8;
+}
+.rating-stars i {
+  font-size: 14px;
+  color: #ccc;
+  display: inline;
+}
+.rating-stars img {
+  height: 12px;
+  max-width: none;
+}
+.rating-stars li {
+  display: block;
+  text-overflow: clip;
+  white-space: nowrap;
+  z-index: 1;
+}
+.rating-stars li.stars-active {
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+.rating-stars li.stars-active i {
+  color: orange;
+}
+.rating-stars.stars-lg img {
+  height: 24px;
+  max-width: none;
+}
+
+
 @media (min-width: 1400px) {
   .header-container .container {
     max-width: 1360px;
@@ -8027,11 +8070,11 @@ a.text-brand-3:hover {
 .box-quantity {
   display: flex;
   width: 100%;
+  justify-content: center;
 }
 .box-quantity .input-quantity {
   min-width: 99px;
   max-width: 99px;
-  margin-right: 20px;
   position: relative;
 }
 .box-quantity .input-quantity input {
@@ -8588,7 +8631,7 @@ a:hover span {
   margin-bottom: 10px;
 }
 .head-wishlist .item-wishlist {
-  padding: 5px 15px;
+  padding: 5px 20px;
   background-color: #F0F3F8;
   border-radius: 4px;
 }
@@ -8617,14 +8660,15 @@ a:hover span {
   margin: 3px 0px 0px 0px;
 }
 .item-wishlist .wishlist-product {
-  width: 52%;
+  width: 40%;
+  text-align: center;
 }
 .item-wishlist .wishlist-price {
-  width: 12%;
+  width: 15%;
   text-align: center;
 }
 .item-wishlist .wishlist-status {
-  width: 12%;
+  width: 15%;
   text-align: center;
 }
 .item-wishlist .wishlist-status .btn.btn-gray {
@@ -8639,13 +8683,14 @@ a:hover span {
   padding: 6px 15px;
 }
 .item-wishlist .wishlist-remove {
-  width: 8%;
+  width: 11%;
   text-align: center;
 }
 
 .product-wishlist {
   display: flex;
   width: 100%;
+  justify-content: center;
 }
 .product-wishlist .product-image {
   min-width: 130px;
@@ -8664,10 +8709,12 @@ a:hover span {
   align-content: center;
   flex-wrap: wrap;
   padding-right: 15px;
+  justify-content: center;
 }
 .product-wishlist .product-info a {
   display: block;
   margin-bottom: 5px;
+  text-align: start;
 }
 .product-wishlist .product-info .rating {
   width: 100%;
