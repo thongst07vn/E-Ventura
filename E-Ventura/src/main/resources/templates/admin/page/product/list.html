@@ -10,7 +10,7 @@
 		<div class="content-header">
 			<div>
 				<h2 class="content-title card-title">Products List</h2>
-				<p>Lorem ipsum dolor sit amet.</p>
+				<p>Product List</p>
 			</div>
 			<div></div>
 		</div>
@@ -18,14 +18,24 @@
 			<header class="card-header">
 				<div class="row align-items-center">
 					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+						<label>&nbsp;</label>
 						<form id="categorySearchForm" method="get"
 							th:action="@{/admin/product/search-by-category}">
 							<select class="form-select" name="categoryId" id="categorySelect">
 								<option value="0" th:selected="${selectedCategoryId == 0}">All
 									category</option>
-								<option th:each="category : ${categories}"
-									th:value="${category.id}" th:text="${category.name}"
-									th:selected="${category.id == selectedCategoryId}"></option>
+
+								<th:block th:each="category : ${categories}"
+									th:if="${category.deletedAt == null and category.name != 'Other'}">
+									<option th:value="${category.id}" th:text="${category.name}"
+										th:selected="${category.id == selectedCategoryId}"></option>
+								</th:block>
+
+								<th:block th:each="category : ${categories}"
+									th:if="${category.deletedAt == null and category.name == 'Other'}">
+									<option th:value="${category.id}" th:text="${category.name}"
+										th:selected="${category.id == selectedCategoryId}"></option>
+								</th:block>
 							</select>
 						</form>
 						<script>
@@ -35,6 +45,7 @@
 						</script>
 					</div>
 					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
+						<label>&nbsp;</label>
 						<form id="vendorSearchForm" method="get"
 							th:action="@{/admin/product/search-by-vendor}">
 							<select class="form-select" name="vendorId" id="vendorSelect">
@@ -54,7 +65,78 @@
 					</div>
 
 
-					<div class="col-md-2 col-6"></div>
+					<div class="col-md-2 col-6">
+						<label>Sort By Rating: </label>
+						<form method="get" th:action="@{/admin/product/sort-by-rating}" id="ratingForm">
+							<ul class="rating-stars">
+								<li class="stars-active" style="width: 0%;"><img
+									src="/assets/imgs/icons/stars-active.svg" alt="active stars"
+									style="height: 30px;"></li>
+								<li class="stars-inactive"><img
+									src="/assets/imgs/icons/starts-disable.svg"
+									alt="inactive stars" style="height: 30px;"></li>
+							</ul>
+							<input type="hidden" name="minRating" th:value=${minRating} id="ratingValue">
+						</form>
+						<script>
+							 document.addEventListener('DOMContentLoaded', () => {
+						        const ratingStarsContainer = document.querySelector('.rating-stars');
+						        const starsActive = ratingStarsContainer.querySelector('.stars-active');
+						        const ratingValueInput = document.getElementById('ratingValue'); // Lấy trường input ẩn
+						        const ratingForm = document.getElementById('ratingForm'); // Lấy form
+						        const percentagePerHalfStar = 10;
+						        let currentRatingWidth = 0;
+						
+						        // Hàm để cập nhật hiển thị và tính toán giá trị rating
+						        const updateRating = (e) => {
+						            const containerWidth = ratingStarsContainer.offsetWidth;
+						            const mouseX = e.clientX - ratingStarsContainer.getBoundingClientRect().left;
+						
+						            let percentage = (mouseX / containerWidth) * 100;
+						            percentage = Math.round(percentage / percentagePerHalfStar) * percentagePerHalfStar;
+						
+						            if (percentage < 0) percentage = 0;
+						            if (percentage > 100) percentage = 100;
+						
+						            starsActive.style.width = `${percentage}%`;
+						            currentRatingWidth = percentage;
+						
+						            const rating = (percentage / percentagePerHalfStar) * 0.5;
+						            ratingValueInput.value = rating; // Cập nhật giá trị của input ẩn
+						
+						            console.log(`Rating (0-5 stars): ${rating}`);
+						            console.log(`Saved Width: ${currentRatingWidth}%`);
+						
+						            // Gửi form ngay lập tức sau khi giá trị được cập nhật
+						            ratingForm.submit();
+						        };
+						
+						        // Lắng nghe sự kiện 'click' trên vùng chứa rating-stars để lưu giá trị và gửi form
+						        ratingStarsContainer.addEventListener('click', updateRating);
+						
+						        // Lắng nghe sự kiện 'mousemove' để hiển thị tạm thời khi di chuột
+						        ratingStarsContainer.addEventListener('mousemove', (e) => {
+						            const containerWidth = ratingStarsContainer.offsetWidth;
+						            const mouseX = e.clientX - ratingStarsContainer.getBoundingClientRect().left;
+						
+						            let percentage = (mouseX / containerWidth) * 100;
+						            percentage = Math.round(percentage / percentagePerHalfStar) * percentagePerHalfStar;
+						
+						            if (percentage < 0) percentage = 0;
+						            if (percentage > 100) percentage = 100;
+						
+						            starsActive.style.width = `${percentage}%`;
+						        });
+						
+						        // Lắng nghe sự kiện 'mouseleave' để đặt lại về giá trị đã lưu khi chuột rời khỏi
+						        ratingStarsContainer.addEventListener('mouseleave', () => {
+						            starsActive.style.width = `${currentRatingWidth}%`;
+						            console.log(`Restored Width on Mouse Leave: ${currentRatingWidth}%`);
+						        });
+						    });
+						</script>
+					</div>
+
 					<div class="col-md-2 col-6"></div>
 
 				</div>
