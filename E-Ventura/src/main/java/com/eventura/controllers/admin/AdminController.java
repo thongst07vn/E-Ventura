@@ -1,13 +1,20 @@
 package com.eventura.controllers.admin;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2UserServices;
@@ -37,6 +45,7 @@ import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
+import com.example.demo.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -85,25 +94,117 @@ public class AdminController {
 //		map.put("categories", categoryService.findAll());
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<ProductCategories> catePage = categoryService.findAlls(pageable);
-		map.put("categories", catePage);
+		map.put("categories", catePage.getContent().stream()
+	            .filter(category -> category.getDeletedAt() == null && category.getId() != 1)
+	            .collect(Collectors.toList()));
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", catePage.getTotalPages());
 		model.addAttribute("lastPageIndex", catePage.getTotalPages() - 1);
 		model.addAttribute("pageSize", pageSize);
+		map.put("category",new ProductCategories());
+		model.addAttribute("currentPage", "category");
+		return "admin/page/category/list";
+	}
+	@GetMapping("category/search-by-keyword")
+	public String categorySearchByKeyword(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "20") int pageSize, @RequestParam("keyword") String keyword) {
+//		map.put("categories", categoryService.findAll());
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<ProductCategories> catePage = categoryService.findByKeywordPage(keyword,pageable);
+		map.put("categories", catePage.getContent().stream()
+	            .filter(category -> category.getDeletedAt() == null && category.getId() != 1)
+	            .collect(Collectors.toList()));
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", catePage.getTotalPages());
+		model.addAttribute("lastPageIndex", catePage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+		map.put("category",new ProductCategories());
+		map.put("keyword", keyword);
 		model.addAttribute("currentPage", "category");
 		return "admin/page/category/list";
 	}
 
-	@GetMapping("category/add")
-	public String addCategory(Model model) {
-		model.addAttribute("currentPage", "category");
-		return "admin/page/category/add";
+	@PostMapping("category/delete")
+	public String categoryDelete(@RequestParam("id") int id, RedirectAttributes redirectAttributes) {
+		ProductCategories productCategories = categoryService.findById(id);
+		ProductCategories productCategories1 = categoryService.findById(1);
+		productCategories.setDeletedAt(new Date());
+	    for(Products product : productService.findByCategoryId(productCategories.getId())) {
+	    	product.setProductCategories(productCategories1);
+	    }
+		if (categoryService.save(productCategories)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Category "+productCategories.getName()+" deleted successfully!");
+			return "redirect:/admin/category/list";
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Failed to delete "+productCategories.getName()+"!");
+			return "redirect:/admin/category/list";
+		}
 	}
-
-	@GetMapping("category/edit")
-	public String editCategory(Model model) {
-		model.addAttribute("currentPage", "category");
-		return "admin/page/category/edit";
+	@PostMapping("category/add")
+	public String categoryAdd(@ModelAttribute("category") ProductCategories category, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+		category.setCreatedAt(new Date());
+		category.setUpdatedAt(new Date());
+		 // 2. Handle file upload for avatar
+	    if (file != null && !file.isEmpty()) {
+	        try {
+	            String fileName = FileHelper.generateFileName(file.getOriginalFilename());
+	            // Using getFile() might fail if running from a JAR; consider using getResourceAsStream() and Files.copy()
+	            // Or get a path outside of the JAR for persistent storage
+	            File imagesFolder = new ClassPathResource("static/assets/imgs/others/").getFile();
+	            Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
+	            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+	            category.setPhoto(fileName);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            // If file upload fails, fall back to existing avatar if available
+	            category.setPhoto("noimg.jpg");
+	            // Optionally, rethrow a custom exception or add a logging message
+	        }
+	    }else {
+	    	 category.setPhoto("noimg.jpg");
+		}
+		if (categoryService.save(category)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Category "+category.getName()+" add successfully!");
+			return "redirect:/admin/category/list";
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Failed to add "+category.getName()+"!");
+			return "redirect:/admin/category/list";
+		}
+	}
+	@PostMapping("category/edit")
+	public String categoryEdit(@ModelAttribute("category") ProductCategories category, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+		category.setCreatedAt(new Date());
+		category.setUpdatedAt(new Date());
+		// 2. Handle file upload for avatar
+		if (file != null && !file.isEmpty()) {
+			try {
+				String fileName = FileHelper.generateFileName(file.getOriginalFilename());
+				if(category.getPhoto() != fileName) {					
+					// Using getFile() might fail if running from a JAR; consider using getResourceAsStream() and Files.copy()
+					// Or get a path outside of the JAR for persistent storage
+					File imagesFolder = new ClassPathResource("static/assets/imgs/others/").getFile();
+					Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
+					Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+					category.setPhoto(fileName);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if (categoryService.save(category)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Category edit successfully!");
+			return "redirect:/admin/category/list";
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Failed to edit!");
+			return "redirect:/admin/category/list";
+		}
+		
 	}
 
 	// ======= PRODUCT ========
@@ -112,7 +213,6 @@ public class AdminController {
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage = productService.findAlls(pageable);
-		// Khởi tạo một List để chứa các ProductDTO
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		// Lặp qua productPage và thêm các ProductDTO vào List
@@ -126,16 +226,54 @@ public class AdminController {
 			}
 
 		}
-
-		// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
 		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
-				productPage.getTotalElements() // Lấy tổng số phần tử từ productPage
+				productPage.getTotalElements()
 		);
 		map.put("products", productDTOPage.getContent());
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", productPage.getTotalPages());
 		model.addAttribute("lastPageIndex", productPage.getTotalPages() - 1);
 
+		map.put("categories", categoryService.findAll());
+		map.put("vendors", vendorService.findAll());
+		map.put("minRating", 0);
+		model.addAttribute("currentPage", "product");
+		return "admin/page/product/list";
+	}
+	@GetMapping("product/sort-by-rating")
+	public String producRating(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page,@RequestParam("minRating") double minRating) {
+		int pageSize = 10;
+		List<ProductDTO> allProductDTOList = new ArrayList<>();
+		Page<Products> productPage;
+		do {
+            Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+            productPage = productService.findAlls(pageable);
+
+            for (Products product : productPage) {
+                if (product.getDeletedAt() == null) {
+                    if (!productService.findProductReview(product.getId()).isEmpty()) {
+                        allProductDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+                    } else {
+                        allProductDTOList.add(new ProductDTO(product, 0));
+                    }
+                }
+            }
+            page++;
+        } while (productPage.hasNext()); // Continue as long as there are more pages
+
+        // Now filter the entire list of products collected from all pages
+        List<ProductDTO> filteredProductDTOList = allProductDTOList.stream()
+                .filter(productDTO -> productDTO.getRating() <= minRating)
+                .sorted(Comparator.comparing(ProductDTO::getRating).reversed())
+                .collect(Collectors.toList());
+        Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(filteredProductDTOList, productPage.getPageable(),
+        		filteredProductDTOList.size()
+		);
+		map.put("products", productDTOPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", productDTOPage.getTotalPages());
+		model.addAttribute("lastPageIndex", productDTOPage.getTotalPages() - 1);
+		
 		map.put("categories", categoryService.findAll());
 		map.put("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "product");

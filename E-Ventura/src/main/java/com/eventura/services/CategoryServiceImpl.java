@@ -33,5 +33,22 @@ public class CategoryServiceImpl implements CategoryService{
 		return categoryRepository.findById(id).get();
 	}
 
+	@Override
+	public Page<ProductCategories> findByKeywordPage(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return categoryRepository.findByKeywordPage(keyword, pageable);
+	}
+
+	@Override
+	public boolean save(ProductCategories productCategories) {
+		// TODO Auto-generated method stub
+		try {
+			categoryRepository.save(productCategories);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 
 }

@@ -15,12 +15,12 @@
 			<div>
 				<!-- Button trigger modal -->
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-					data-bs-target="#exampleModal">
+					data-bs-target="#createModal">
 					<i class="material-icons md-plus"></i>Create category
 				</button>
 
 				<!-- Modal -->
-				<div class="modal fade" id="exampleModal" tabindex="-1"
+				<div class="modal fade" id="createModal" tabindex="-1"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -30,13 +30,137 @@
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
 									aria-label="Close"></button>
 							</div>
-							<div class="modal-body">...</div>
+							<form method="post" th:action="@{/admin/category/add}"
+								enctype="multipart/form-data" id="formAdd">
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-lg-12">
+											<div class="row gx-3">
+												<div class="col-lg-12 mb-3">
+													<label class="form-label">Name</label> <input
+														class="form-control" type="tel" id="cateName"
+														th:field="${category.name}" placeholder="category name"
+														required="required">
+													<div id="cateNameError" class="mt-3" style="color: red;"></div>
+												</div>
+												<!-- col .//-->
+
+											</div>
+										</div>
+										<aside class="col-lg-12">
+											<label class="form-label">Image</label>
+											<figure class="text-lg-center">
+												<img id="userAvatar" class="img-lg mb-3 img-avatar"
+													th:src="@{/assets/imgs/others/noimg.jpg}" alt="User Photo">
+												<figcaption>
+													<input type="file" name="file" id="actualFileInput" hidden
+														accept=".png,.jpg"> <a href="#"
+														class="btn btn-light w-auto" id="uploadButton"><i
+														class="icons material-icons md-backup font-md"></i> Upload
+													</a>
+
+													<script type="text/javascript">
+														document
+																.addEventListener(
+																		'DOMContentLoaded',
+																		function() {
+																			const actualFileInput = document
+																					.getElementById('actualFileInput');
+																			const uploadButton = document
+																					.getElementById('uploadButton');
+																			const userAvatar = document
+																					.getElementById('userAvatar'); // Get the image element
+
+																			// Store the previous object URL to revoke it later for memory management
+																			let currentObjectURL = null;
+
+																			// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
+																			uploadButton
+																					.addEventListener(
+																							'click',
+																							function(
+																									event) {
+																								event
+																										.preventDefault(); // Prevent the default anchor link behavior
+																								actualFileInput
+																										.click(); // Programmatically click the hidden file input
+																							});
+
+																			// When a file is selected in the hidden input, update the display and the image src
+																			actualFileInput
+																					.addEventListener(
+																							'change',
+																							function() {
+																								if (this.files
+																										&& this.files.length > 0) {
+																									const selectedFile = this.files[0];
+
+																									// Create a URL for the selected file
+																									const fileURL = URL
+																											.createObjectURL(selectedFile);
+
+																									// If there was a previous object URL, revoke it to free up memory
+																									if (currentObjectURL) {
+																										URL
+																												.revokeObjectURL(currentObjectURL);
+																									}
+																									currentObjectURL = fileURL; // Store the new object URL
+
+																									// Set the src of the image to the new file URL
+																									userAvatar.src = fileURL;
+
+																								}
+																							});
+
+																			// Optional: Store the initial avatar URL if you ever want to revert
+																			// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
+
+																			// Clean up object URLs when the page unloads to prevent memory leaks
+																			window
+																					.addEventListener(
+																							'beforeunload',
+																							function() {
+																								if (currentObjectURL) {
+																									URL
+																											.revokeObjectURL(currentObjectURL);
+																								}
+																							});
+																		});
+													</script>
+												</figcaption>
+											</figure>
+										</aside>
+									</div>
+								</div>
+							</form>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary"
 									data-bs-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Save
+								<button type="button" class="btn btn-primary" id="formButtonAdd">Save
 									changes</button>
 							</div>
+							<script>
+							document.getElementById('formButtonAdd').addEventListener('click', function(event) {
+								 	const cateNameInput = document.getElementById('cateName');
+						            const cateNameError = document.getElementById('cateNameError');
+						            const userAvatar = document.getElementById('userAvatar');
+					                cateNameError.textContent = '';
+					
+					                if (cateNameInput.value.trim() === '') {
+					                    cateNameError.textContent = 'Category name is required.';
+					                    event.preventDefault(); // Prevent form submission
+					                }else{
+					                	document.getElementById('formAdd').submit()
+					                }
+                            });
+                            createModal.addEventListener('hidden.bs.modal',function(){
+								if(cateName.value != null){
+									cateName.value = '';
+									cateNameError.textContent=''
+									userAvatar.src = '/assets/imgs/others/noimg.jpg';
+								}
+							});
+						</script>
 						</div>
 					</div>
 				</div>
@@ -47,17 +171,30 @@
 			<header class="card-header">
 				<div class="row gx-3">
 					<div class="col-lg-4 col-md-6 me-auto">
-						<input class="form-control" type="text" placeholder="Search...">
+						<form method="get"
+							th:action="@{/admin/category/search-by-keyword}"
+							id="categorySearchForm">
+							<input class="form-control font-xs" type="text" value=""
+								placeholder="Search....." name="keyword"
+								id="categorySearchKeyword">
+						</form>
+						<script>
+							document.getElementById('categorySearchKeyword').addEventListener('keyup', function(event) {									
+								 if (event.key === 'Enter' || event.keyCode === 13) {
+								        document.getElementById('categorySearchForm').submit();
+								    }
+                            });
+						</script>
 					</div>
 					<div class="col-lg-2 col-md-3 col-6">
 						<select id="pageSizeSelect" class="form-select"
 							onchange="changePageSize()">
-							<option th:value="12" th:text="'Show 12'"
-								th:selected="${pageSize == 12}"></option>
-							<option th:value="24" th:text="'Show 24'"
-								th:selected="${pageSize == 24}"></option>
-							<option th:value="36" th:text="'Show 36'"
-								th:selected="${pageSize == 36}"></option>
+							<option th:value="5" th:text="'Show 5'"
+								th:selected="${pageSize == 20}"></option>
+							<option th:value="30" th:text="'Show 30'"
+								th:selected="${pageSize == 30}"></option>
+							<option th:value="40" th:text="'Show 40'"
+								th:selected="${pageSize == 40}"></option>
 						</select>
 					</div>
 
@@ -65,7 +202,7 @@
 						document.addEventListener('DOMContentLoaded', () => {
 					        const select = document.getElementById('pageSizeSelect');
 					        const urlParams = new URLSearchParams(window.location.search);
-					        const pageSize = urlParams.get('pageSize') || '12'; // default là 5
+					        const pageSize = urlParams.get('pageSize') || '5'; // default là 5
 					        select.value = pageSize;
 					    });
 						function changePageSize() {
@@ -81,7 +218,12 @@
 						    const newUrl = new URL(window.location.origin + window.location.pathname);
 						    newUrl.searchParams.set('page', currentPage);
 						    newUrl.searchParams.set('pageSize', pageSize);
-						
+							if (window.location.pathname === '/admin/category/search-by-keyword') {
+					           const keyword = urlParams.get('keyword');
+					          if (keyword !== null) { 
+					                newUrl.searchParams.set('keyword', keyword);
+					            }
+					       }
 						    // Tải lại trang với URL mới
 						    window.location.href = newUrl.toString();
 						}
@@ -94,85 +236,358 @@
 					<div
 						class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
 						<div class="col" th:each="category : ${categories} ">
-							<th:block th:if="${category.deletedAt == null}">
-								<div class="card card-product-grid">
-									<div>
-										<a class="img-wrap" href="#"> <img
-											class="img-sm img-thumbnail"
+							<div class="card card-product-grid">
+								<div>
+									<div class="img-wrap" href="#">
+										<img class="img-sm img-thumbnail"
 											th:src="@{'/assets/imgs/others/' + ${category.photo}}"
-											height="300px" width="300px" alt="User pic">
-										</a>
-									</div>
-
-									<div class="info-wrap">
-										<a class="title text-truncate"
-											style="font-size: 25; color: black;" href="#"><th:block
-												th:text=${category.name}></th:block></a>
-										<!-- price.//-->
-										<a class="btn btn-sm font-sm rounded btn-brand"
-											th:href="@{/admin/category/edit}"><i
-											class="material-icons md-edit"></i> Edit</a><a
-											class="btn btn-sm font-sm btn-light rounded" href="#"><i
-											class="material-icons md-delete_forever"></i> Delete</a>
+											height="300" width="300" style="object-fit: cover; height: 300px; width: 300px" alt="User pic">
 									</div>
 								</div>
-								<!-- card-product  end//-->
-								<!-- col.//-->
-							</th:block>
+
+								<div class="info-wrap">
+									<p class="title text-truncate"
+										style="font-size: 25; color: black;">
+										<th:block th:text=${category.name}></th:block>
+									</p>
+									<div class="row mt-3">
+										<div class="col-6">
+											<div>
+												<!-- Button trigger modal -->
+												<button type="button" class="btn rounded btn-brand editCate"
+													data-bs-toggle="modal" data-bs-target="#editModal" th:data-address-id="${category.id}">
+													<i style="transform: translateY(-1px);"
+														class="material-icons md-edit"></i> Edit
+												</button>
+												<script th:src="@{/admin/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+												<script>
+												$(document).ready(function() { 
+													$('.editCate').on('click', function(){
+														var cateId = $(this).data('address-id');
+														console.log(cateId)
+														$.ajax({
+															url:"/admin/api/category",
+															tyoe:"GET",
+															data:{editCategoryId:cateId},
+															success:function(data) {
+																if(data){
+																	$("#cateNameEdit").val(data.name)
+																	$("#cateIdEdit").val(data.id)
+																	$("#catePhoto").val(data.photo)
+																	$("#cateImg").attr("src", "/assets/imgs/others/"+data.photo);
+																}
+															}
+														})
+													})
+												})
+												</script>
+												<!-- Modal -->
+
+											</div>
+										</div>
+										<form method="post" th:action="@{/admin/category/delete}"
+											th:id="'formDelete_' + ${category.id}" class="col-6">
+											<input type="hidden" name="id" th:value="${category.id}" />
+											<button class="btn btn-light rounded delete-button"
+												type="button" th:data-product-id="${category.id}">
+												<i style="transform: translateY(-1px);"
+													class="material-icons md-delete_forever"></i> Delete
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+							<!-- card-product  end//-->
 						</div>
+						<script>
+							   document.querySelectorAll('.delete-button').forEach(button => {
+							        button.addEventListener('click', function(e) {
+							            e.preventDefault(); 
+							            const productId = this.dataset.productId; // Get product ID from data attribute
+							            const form = document.getElementById('formDelete_' + productId); // Target the specific form
+							
+							            Swal.fire({
+							                title: "Are you sure?",
+							                text: "You won't be able to revert this!",
+							                icon: 'warning',
+							                showCancelButton: true,
+							                confirmButtonColor: "#3085d6",
+							                cancelButtonColor: "#d33",
+							                confirmButtonText: "Yes, delete it!"
+							            }).then((result) => {
+							                if (result.isConfirmed) {
+							                    form.submit(); // Submit the specific form
+							                }
+							            });
+							        });
+							    });
+							
+							    // JavaScript to display SweetAlert2 based on flash attributes
+							    document.addEventListener('DOMContentLoaded', function() {
+							        const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+							        const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+							
+							        if (sweetAlertStatus && sweetAlertMessage) {
+							            Swal.fire({
+							                icon: sweetAlertStatus, // 'success' or 'error'
+							                title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+							                text: sweetAlertMessage,
+							                showConfirmButton: false,
+							                timer: 3000 // Automatically close after 3 seconds
+							            });
+							        }
+							    });
+							</script>
 					</div>
 				</div>
 			</th:block>
+			
 
 		</div>
-		<!-- card end//-->
-		<div class="pagination-area mt-15 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item"
-						th:classappend="${currentPages == 0} ? 'hidden'"><a
-						class="page-link"
-						th:href="@{'?page=' + ${0}+'&pageSize='+${pageSize}}"
-						aria-label="Next"> <i class="material-icons md-double_arrow"
-							style="transform: rotate(180deg) translate(15%, -30%);"></i>
-					</a></li>
-					<!-- Nút trước -->
-					<li class="page-item"
-						th:classappend="${currentPages == 0} ? 'disabled'"><a
-						class="page-link"
-						th:href="@{'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
-						aria-label="Previous"> <i
-							class="material-icons md-chevron_left"></i>
-					</a></li>
+		<div class="modal fade" id="editModal" tabindex="-1"
+				aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="exampleModalLabel">Modal
+								title</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="Close"></button>
+						</div>
+						<form method="post" th:action="@{/admin/category/edit}"
+							enctype="multipart/form-data" id="formEdit">
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="row gx-3">
+											<div class="col-lg-12 mb-3">
+												<label class="form-label">Name</label> <input
+													class="form-control" type="tel" id="cateNameEdit"
+													th:field="${category.name}" placeholder="category name"
+													required="required">
+												<div id="cateNameEditError" class="mt-3" style="color: red;"></div>
+											</div>
+											<!-- col .//-->
+											<input type="hidden" id="cateIdEdit" th:field="${category.id}"/>
+											<input type="hidden" id="catePhoto" th:field="${category.photo}"/>
+										</div>
+									</div>
+									<aside class="col-lg-12">
+										<label class="form-label">Image</label>
+										<figure class="text-lg-center">
+											<img id="cateImg" class="img-lg mb-3"
+												alt="User Photo">
+											<figcaption>
+												<input type="file" name="file" id="actualCateFileInput"
+													hidden accept=".png,.jpg"> <a href="#"
+													class="btn btn-light w-auto" id="uploadCateButton"><i
+													class="icons material-icons md-backup font-md"></i> Upload
+												</a>
+												<script type="text/javascript">
+													document
+															.addEventListener(
+																	'DOMContentLoaded',
+																	function() {
+																		const actualFileInput = document
+																				.getElementById('actualCateFileInput');
+																		const uploadButton = document
+																				.getElementById('uploadCateButton');
+																		const userAvatar = document
+																				.getElementById('cateImg'); // Get the image element
 
-					<!-- Các trang -->
-					<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+																		// Store the previous object URL to revoke it later for memory management
+																		let currentObjectURL = null;
+
+																		// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
+																		uploadButton
+																				.addEventListener(
+																						'click',
+																						function(
+																								event) {
+																							event
+																									.preventDefault(); // Prevent the default anchor link behavior
+																							actualFileInput
+																									.click(); // Programmatically click the hidden file input
+																						});
+
+																		// When a file is selected in the hidden input, update the display and the image src
+																		actualFileInput
+																				.addEventListener(
+																						'change',
+																						function() {
+																							if (this.files
+																									&& this.files.length > 0) {
+																								const selectedFile = this.files[0];
+
+																								// Create a URL for the selected file
+																								const fileURL = URL
+																										.createObjectURL(selectedFile);
+
+																								// If there was a previous object URL, revoke it to free up memory
+																								if (currentObjectURL) {
+																									URL
+																											.revokeObjectURL(currentObjectURL);
+																								}
+																								currentObjectURL = fileURL; // Store the new object URL
+
+																								// Set the src of the image to the new file URL
+																								userAvatar.src = fileURL;
+
+																							}
+																						});
+
+																		// Optional: Store the initial avatar URL if you ever want to revert
+																		// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
+
+																		// Clean up object URLs when the page unloads to prevent memory leaks
+																		window
+																				.addEventListener(
+																						'beforeunload',
+																						function() {
+																							if (currentObjectURL) {
+																								URL
+																										.revokeObjectURL(currentObjectURL);
+																							}
+																						});
+																	});
+												</script>
+											</figcaption>
+										</figure>
+									</aside>
+								</div>
+							</div>
+						</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" id="formButtonEdit">Save
+								changes</button>
+						</div>
+						<script>
+							document.getElementById('formButtonEdit').addEventListener('click', function(event) {
+								 	const cateNameInput = document.getElementById('cateNameEdit');
+						            const cateNameError = document.getElementById('cateNameEditError');
+						            const userAvatar = document.getElementById('cateImg');
+					                cateNameError.textContent = '';
+					
+					                if (cateNameInput.value.trim() === '') {
+					                    cateNameError.textContent = 'Category name is required.';
+					                    event.preventDefault(); // Prevent form submission
+					                }else{
+					                	document.getElementById('formEdit').submit()
+					                }
+	                           });
+	                           createModal.addEventListener('hidden.bs.modal',function(){
+								if(cateNameEdit.value != null){
+									cateNameEdit.value = '';
+									cateNameEditError.textContent=''
+									cateImg.src = '/assets/imgs/others/noimg.jpg';
+								}
+							});
+						</script>
+					</div>
+				</div>
+			</div>
+		<!-- card end//-->
+		<th:block th:if="${keyword!=null && !#lists.isEmpty(categories)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
+							class="page-link"
+							th:href="@{'admin/category/search-by-keyword?keyword='+${keyword}+'&page=' + ${0}+'&pageSize='+${pageSize}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
+						<!-- Nút trước -->
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							class="page-link"
+							th:href="@{'admin/category/search-by-keyword?keyword='+${keyword}+'&page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+							aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'admin/category/search-by-keyword?keyword='+${keyword}+'&page=' + ${i}+'&pageSize='+${pageSize}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'admin/category/search-by-keyword?keyword='+${keyword}+'&page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
 
 						<li class="page-item"
-							th:classappend="${i} == ${currentPages} ? 'active'"><a
+							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'admin/category/search-by-keyword?keyword='+${keyword}+'&page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							aria-label="Next"><i class="material-icons md-double_arrow"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+		<th:block th:if="${keyword==null && !#lists.isEmpty(categories)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
 							class="page-link"
-							th:href="@{'?page=' + ${i}+'&pageSize='+${pageSize}}"
-							th:text="${i + 1}"></a></li>
-					</th:block>
+							th:href="@{'/admin/category/list?page=' + ${0}+'&pageSize='+${pageSize}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
+						<!-- Nút trước -->
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							class="page-link"
+							th:href="@{'/admin/category/list?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+							aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
 
-					<!-- Nút tiếp -->
-					<li class="page-item"
-						th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
-						<a class="page-link"
-						th:href="@{'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
-						aria-label="Next"> <i class="material-icons md-chevron_right"></i>
-					</a>
-					</li>
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
 
-					<li class="page-item"
-						th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
-						<a class="page-link"
-						th:href="@{'?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
-						aria-label="Next"><i class="material-icons md-double_arrow"></i>
-					</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/admin/category/list?page=' + ${i}+'&pageSize='+${pageSize}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/admin/category/list?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'/admin/category/list?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&filter='+${filter}}"
+							aria-label="Next"><i class="material-icons md-double_arrow"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
 	</section>
 </body>
