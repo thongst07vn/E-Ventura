@@ -22,7 +22,7 @@
 			<div class="preloader-inner position-relative">
 				<div class="text-center">
 					<img class="mb-10"
-						th:src="@{/client/assets/imgs/template/favicon.svg}" alt="Ecom">
+						th:src="@{/assets/imgs/template/favicon.svg}" alt="Ecom">
 					<div class="preloader-dots"></div>
 				</div>
 			</div>
@@ -35,7 +35,7 @@
 				<div class="header-left">
 					<div class="header-logo">
 						<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
-							th:src="@{/client/assets/imgs/template/logo.svg}"></a>
+							th:src="@{/assets/imgs/template/logo.svg}"></a>
 					</div>
 
 				</div>
@@ -71,10 +71,12 @@
 		<section class="section-box shop-template mt-60">
 			<div class="container">
 				<div class="row mb-100">
-					<div class="col-lg-3"></div>
 					<div class="col-lg-6">
 						<h3>Vendor Login</h3>
+
 						<p class="font-md color-gray-500">Welcome back!</p>
+						<h5 th:text="${msgActive}" class="text-success"></h5>
+
 						<h5 th:text="${msg}" class="text-danger"></h5>
 						<form method="post" th:action="@{/vendor/process-login}">
 							<div class="form-register mt-30 mb-30">
@@ -115,6 +117,16 @@
 							</div>
 						</form>
 
+					</div>
+					<div class="col-lg-6">
+						<div class="box-login-social pt-65 pl-50">
+							<h5 class="text-center">Use Social Network Account</h5>
+							<div class="box-button-login mt-25"><a class="btn btn-login font-md-bold color-brand-3 mb-15">Sign in with<img
+										th:src="@{/assets/imgs/page/account/google.svg}" alt="Ecom"></a><a
+									class="btn btn-login font-md-bold color-brand-3 mb-15">Sign in with <span
+										class="color-blue font-md-bold">Facebook</span></a></div>
+							
+						</div>
 					</div>
 
 				</div>

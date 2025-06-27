@@ -71,6 +71,8 @@ public class ProductController  {
 			modelMap.put("products", productPage.getContent());
 		}
 		
+		System.out.println(productPage.getTotalPages());
+		
 		modelMap.put("currentPages", page);
 		modelMap.put("totalPage", productPage.getTotalPages());
 		modelMap.put("lastPageIndex", productPage.getTotalPages() - 1);

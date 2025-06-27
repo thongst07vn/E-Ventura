@@ -164,7 +164,7 @@
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
 
-							<li class="page-item" th:classappend="${i} == ${currentPage} ? 'active'"><a
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
 									class="page-link" th:href="@{'/vendor/product/searchByVendorCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${i}}"
 									th:text="${i + 1}"></a></li>
 						</th:block>
