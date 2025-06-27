@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 27, 2025, 10:26:46 AM by Hibernate Tools 4.3.6.Final
+// Generated Jun 27, 2025, 5:59:04 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -23,8 +23,8 @@ public class CartItems implements java.io.Serializable {
 
 	private Integer id;
 	private Carts carts;
+	private ProductVariants productVariants;
 	private Products products;
-	private int productVariantId;
 	private int quantity;
 	private Date createdAt;
 	private Date updatedAt;
@@ -32,11 +32,11 @@ public class CartItems implements java.io.Serializable {
 	public CartItems() {
 	}
 
-	public CartItems(Carts carts, Products products, int productVariantId, int quantity, Date createdAt,
+	public CartItems(Carts carts, ProductVariants productVariants, Products products, int quantity, Date createdAt,
 			Date updatedAt) {
 		this.carts = carts;
+		this.productVariants = productVariants;
 		this.products = products;
-		this.productVariantId = productVariantId;
 		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
@@ -65,6 +65,16 @@ public class CartItems implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_variant_id", nullable = false)
+	public ProductVariants getProductVariants() {
+		return this.productVariants;
+	}
+
+	public void setProductVariants(ProductVariants productVariants) {
+		this.productVariants = productVariants;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id", nullable = false)
 	public Products getProducts() {
 		return this.products;
@@ -72,15 +82,6 @@ public class CartItems implements java.io.Serializable {
 
 	public void setProducts(Products products) {
 		this.products = products;
-	}
-
-	@Column(name = "product_variant_id", nullable = false)
-	public int getProductVariantId() {
-		return this.productVariantId;
-	}
-
-	public void setProductVariantId(int productVariantId) {
-		this.productVariantId = productVariantId;
 	}
 
 	@Column(name = "quantity", nullable = false)

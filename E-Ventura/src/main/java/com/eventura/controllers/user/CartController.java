@@ -1,5 +1,6 @@
 package com.eventura.controllers.user;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.eventura.configurations.AccountOAuth2User;
+import com.eventura.dtos.CartItemsDTO;
 import com.eventura.entities.CartItems;
 import com.eventura.entities.Carts;
+import com.eventura.entities.Coupons;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.UserAddress;
@@ -30,6 +33,7 @@ import com.eventura.entities.Users;
 import com.eventura.entities.Vendors;
 import com.eventura.services.CartService;
 import com.eventura.services.CategoryService;
+import com.eventura.services.CouponsService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorService;
@@ -49,12 +53,16 @@ public class CartController {
 	private VendorService vendorService;
 	@Autowired
 	private CartService cartService;
+	@Autowired
+	private CouponsService couponsService;
 	
 	// User Cart
 	@GetMapping({"cartitems"})
 	public String cartList(Authentication authentication, ModelMap modelMap, @AuthenticationPrincipal UserDetails userDetails) {
 		Users user = null;
-		
+		List<Coupons> allCoupons = couponsService.findAllCoupons();		
+		List<CartItemsDTO> cartDTOitems = new ArrayList<>();
+		double afterDiscount =0;
 		if (userDetails != null) {
 			user = userService.findByEmail(userDetails.getUsername());
 		} else if (authentication != null) {
@@ -63,7 +71,23 @@ public class CartController {
 		}
 		List<Carts> carts = cartService.findCartByUserId(user.getId());
 		modelMap.put("carts", carts);
-
+		modelMap.put("coupons", allCoupons);
+		for(Carts cart : carts) {
+			for(CartItems cartItem: cart.getCartItemses()) {				
+				for(Coupons coupon: allCoupons) {
+					if(coupon.getProducts().getId() == cartItem.getProducts().getId()) {
+						if(coupon.getDiscountUnit().equals("percent")) {
+							afterDiscount = cartItem.getProducts().getPrice() - (cartItem.getProducts().getPrice()*coupon.getDiscountValue());							
+						}
+						if(coupon.getDiscountUnit().equals("money")) {
+							afterDiscount = cartItem.getProducts().getPrice() - coupon.getDiscountValue();
+						}
+						cartDTOitems.add(new CartItemsDTO(cartItem,afterDiscount));
+					}
+				}
+			}
+		}
+		modelMap.put("cartDtoItems", cartDTOitems);
 		return "customer/pages/cart/cartlist";
 	}
 	

@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 24, 2025, 5:03:57 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 27, 2025, 5:59:04 PM by Hibernate Tools 4.3.6.Final
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

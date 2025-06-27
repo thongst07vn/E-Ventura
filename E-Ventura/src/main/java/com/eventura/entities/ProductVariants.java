@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 24, 2025, 5:03:57 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 27, 2025, 5:59:04 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -29,33 +29,39 @@ public class ProductVariants implements java.io.Serializable {
 	private Products products;
 	private String value;
 	private Double additionalPrice;
+	private int quantity;
 	private Date createdAt;
 	private Date updatedAt;
 	private Set<OrderReturns> orderReturnses = new HashSet<OrderReturns>(0);
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
+	private Set<CartItems> cartItemses = new HashSet<CartItems>(0);
 
 	public ProductVariants() {
 	}
 
-	public ProductVariants(ProductAttributes productAttributes, Products products, String value, Date createdAt,
-			Date updatedAt) {
+	public ProductVariants(ProductAttributes productAttributes, Products products, String value, int quantity,
+			Date createdAt, Date updatedAt) {
 		this.productAttributes = productAttributes;
 		this.products = products;
 		this.value = value;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
 	public ProductVariants(ProductAttributes productAttributes, Products products, String value, Double additionalPrice,
-			Date createdAt, Date updatedAt, Set<OrderReturns> orderReturnses, Set<OrderItems> orderItemses) {
+			int quantity, Date createdAt, Date updatedAt, Set<OrderReturns> orderReturnses,
+			Set<OrderItems> orderItemses, Set<CartItems> cartItemses) {
 		this.productAttributes = productAttributes;
 		this.products = products;
 		this.value = value;
 		this.additionalPrice = additionalPrice;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.orderReturnses = orderReturnses;
 		this.orderItemses = orderItemses;
+		this.cartItemses = cartItemses;
 	}
 
 	@Id
@@ -108,6 +114,15 @@ public class ProductVariants implements java.io.Serializable {
 		this.additionalPrice = additionalPrice;
 	}
 
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false, length = 19)
 	public Date getCreatedAt() {
@@ -144,6 +159,15 @@ public class ProductVariants implements java.io.Serializable {
 
 	public void setOrderItemses(Set<OrderItems> orderItemses) {
 		this.orderItemses = orderItemses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productVariants")
+	public Set<CartItems> getCartItemses() {
+		return this.cartItemses;
+	}
+
+	public void setCartItemses(Set<CartItems> cartItemses) {
+		this.cartItemses = cartItemses;
 	}
 
 }
