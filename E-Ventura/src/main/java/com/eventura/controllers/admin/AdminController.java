@@ -5,8 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -47,13 +45,11 @@ import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
 import com.example.demo.helpers.FileHelper;
 
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("admin")
 public class AdminController {
 
-	private final AccountOAuth2UserServices accountOAuth2UserServices;
 	@Autowired
 	private CategoryService categoryService;
 	@Autowired
@@ -66,7 +62,6 @@ public class AdminController {
 	private VendorProductCategoryService vendorProductCategoryService;
 
 	AdminController(AccountOAuth2UserServices accountOAuth2UserServices) {
-		this.accountOAuth2UserServices = accountOAuth2UserServices;
 	}
 
 	// ======= Login ========
@@ -159,7 +154,7 @@ public class AdminController {
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	            // If file upload fails, fall back to existing avatar if available
-	            category.setPhoto("noimg.jpg");
+	            category.setPhoto("noimg.jpg");	
 	            // Optionally, rethrow a custom exception or add a logging message
 	        }
 	    }else {
@@ -237,45 +232,6 @@ public class AdminController {
 		map.put("categories", categoryService.findAll());
 		map.put("vendors", vendorService.findAll());
 		map.put("minRating", 0);
-		model.addAttribute("currentPage", "product");
-		return "admin/page/product/list";
-	}
-	@GetMapping("product/sort-by-rating")
-	public String producRating(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page,@RequestParam("minRating") double minRating) {
-		int pageSize = 10;
-		List<ProductDTO> allProductDTOList = new ArrayList<>();
-		Page<Products> productPage;
-		do {
-            Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-            productPage = productService.findAlls(pageable);
-
-            for (Products product : productPage) {
-                if (product.getDeletedAt() == null) {
-                    if (!productService.findProductReview(product.getId()).isEmpty()) {
-                        allProductDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-                    } else {
-                        allProductDTOList.add(new ProductDTO(product, 0));
-                    }
-                }
-            }
-            page++;
-        } while (productPage.hasNext()); // Continue as long as there are more pages
-
-        // Now filter the entire list of products collected from all pages
-        List<ProductDTO> filteredProductDTOList = allProductDTOList.stream()
-                .filter(productDTO -> productDTO.getRating() <= minRating)
-                .sorted(Comparator.comparing(ProductDTO::getRating).reversed())
-                .collect(Collectors.toList());
-        Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(filteredProductDTOList, productPage.getPageable(),
-        		filteredProductDTOList.size()
-		);
-		map.put("products", productDTOPage.getContent());
-		model.addAttribute("currentPages", page);
-		model.addAttribute("totalPages", productDTOPage.getTotalPages());
-		model.addAttribute("lastPageIndex", productDTOPage.getTotalPages() - 1);
-		
-		map.put("categories", categoryService.findAll());
-		map.put("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "product");
 		return "admin/page/product/list";
 	}
@@ -464,7 +420,40 @@ public class AdminController {
 		map.put("currentPage", "product");
 		return "admin/page/product/list";
 	}
+	@GetMapping("product/search-by-keyword")
+	public String productBykeyword(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page,
+			@RequestParam("keyword") String keyword) {
+		int pageSize = 10;
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Products> productPage = productService.findByKeywordPage(keyword,pageable);
+		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
+		for (Products product : productPage) {
+			if (product.getDeletedAt() == null) {
+				if (!productService.findProductReview(product.getId()).isEmpty()) {
+					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+				} else {
+					productDTOList.add(new ProductDTO(product, 0));
+				}
+			}
+
+		}
+		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+				productPage.getTotalElements()
+		);
+		map.put("products", productDTOPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", productPage.getTotalPages());
+		model.addAttribute("lastPageIndex", productPage.getTotalPages() - 1);
+
+		map.put("categories", categoryService.findAll());
+		map.put("vendors", vendorService.findAll());
+		map.put("minRating", 0);
+		map.put("keyword", keyword);
+		model.addAttribute("currentPage", "product");
+		return "admin/page/product/list";
+	}
+	
 	// ======= Order ========
 	@GetMapping("order/list")
 	public String orderList(Model model) {

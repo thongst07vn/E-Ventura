@@ -17,8 +17,24 @@
 		<div class="card mb-4">
 			<header class="card-header">
 				<div class="row align-items-center">
-					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-						<label>&nbsp;</label>
+					<div class="col-md-6 col-6">
+						<form method="get"
+							th:action="@{/admin/product/search-by-keyword}"
+							id="productSearchForm">
+							<input class="form-control font-xs" type="text" value=""
+								placeholder="Search....." name="keyword"
+								id="productSearchKeyword">
+						</form>
+						<script>
+							document.getElementById('productSearchKeyword').addEventListener('keyup', function(event) {									
+								 if (event.key === 'Enter' || event.keyCode === 13) {
+							        document.getElementById('productSearchForm').submit();
+							    }
+                            });
+						</script>
+					</div>
+				
+					<div class="col-md-3 col-6 me-auto mb-md-0 mb-3">
 						<form id="categorySearchForm" method="get"
 							th:action="@{/admin/product/search-by-category}">
 							<select class="form-select" name="categoryId" id="categorySelect">
@@ -44,8 +60,7 @@
 						    });
 						</script>
 					</div>
-					<div class="col-md-3 col-12 me-auto mb-md-0 mb-3">
-						<label>&nbsp;</label>
+					<div class="col-md-3 col-6 me-auto mb-md-0 mb-3">
 						<form id="vendorSearchForm" method="get"
 							th:action="@{/admin/product/search-by-vendor}">
 							<select class="form-select" name="vendorId" id="vendorSelect">
@@ -64,81 +79,6 @@
 						</script>
 					</div>
 
-
-					<div class="col-md-2 col-6">
-						<label>Sort By Rating: </label>
-						<form method="get" th:action="@{/admin/product/sort-by-rating}" id="ratingForm">
-							<ul class="rating-stars">
-								<li class="stars-active" style="width: 0%;"><img
-									src="/assets/imgs/icons/stars-active.svg" alt="active stars"
-									style="height: 30px;"></li>
-								<li class="stars-inactive"><img
-									src="/assets/imgs/icons/starts-disable.svg"
-									alt="inactive stars" style="height: 30px;"></li>
-							</ul>
-							<input type="hidden" name="minRating" th:value=${minRating} id="ratingValue">
-						</form>
-						<script>
-							 document.addEventListener('DOMContentLoaded', () => {
-						        const ratingStarsContainer = document.querySelector('.rating-stars');
-						        const starsActive = ratingStarsContainer.querySelector('.stars-active');
-						        const ratingValueInput = document.getElementById('ratingValue'); // Lấy trường input ẩn
-						        const ratingForm = document.getElementById('ratingForm'); // Lấy form
-						        const percentagePerHalfStar = 10;
-						        let currentRatingWidth = 0;
-						
-						        // Hàm để cập nhật hiển thị và tính toán giá trị rating
-						        const updateRating = (e) => {
-						            const containerWidth = ratingStarsContainer.offsetWidth;
-						            const mouseX = e.clientX - ratingStarsContainer.getBoundingClientRect().left;
-						
-						            let percentage = (mouseX / containerWidth) * 100;
-						            percentage = Math.round(percentage / percentagePerHalfStar) * percentagePerHalfStar;
-						
-						            if (percentage < 0) percentage = 0;
-						            if (percentage > 100) percentage = 100;
-						
-						            starsActive.style.width = `${percentage}%`;
-						            currentRatingWidth = percentage;
-						
-						            const rating = (percentage / percentagePerHalfStar) * 0.5;
-						            ratingValueInput.value = rating; // Cập nhật giá trị của input ẩn
-						
-						            console.log(`Rating (0-5 stars): ${rating}`);
-						            console.log(`Saved Width: ${currentRatingWidth}%`);
-						
-						            // Gửi form ngay lập tức sau khi giá trị được cập nhật
-						            ratingForm.submit();
-						        };
-						
-						        // Lắng nghe sự kiện 'click' trên vùng chứa rating-stars để lưu giá trị và gửi form
-						        ratingStarsContainer.addEventListener('click', updateRating);
-						
-						        // Lắng nghe sự kiện 'mousemove' để hiển thị tạm thời khi di chuột
-						        ratingStarsContainer.addEventListener('mousemove', (e) => {
-						            const containerWidth = ratingStarsContainer.offsetWidth;
-						            const mouseX = e.clientX - ratingStarsContainer.getBoundingClientRect().left;
-						
-						            let percentage = (mouseX / containerWidth) * 100;
-						            percentage = Math.round(percentage / percentagePerHalfStar) * percentagePerHalfStar;
-						
-						            if (percentage < 0) percentage = 0;
-						            if (percentage > 100) percentage = 100;
-						
-						            starsActive.style.width = `${percentage}%`;
-						        });
-						
-						        // Lắng nghe sự kiện 'mouseleave' để đặt lại về giá trị đã lưu khi chuột rời khỏi
-						        ratingStarsContainer.addEventListener('mouseleave', () => {
-						            starsActive.style.width = `${currentRatingWidth}%`;
-						            console.log(`Restored Width on Mouse Leave: ${currentRatingWidth}%`);
-						        });
-						    });
-						</script>
-					</div>
-
-					<div class="col-md-2 col-6"></div>
-
 				</div>
 			</header>
 			<!-- card-header end//-->
@@ -147,7 +87,7 @@
 					<article class="itemlist" th:each="product : ${products}">
 						<th:block th:if="${product.products.deletedAt==null}">
 							<div class="row align-items-center">
-								<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
+								<div class="col-lg-5 col-sm-2 col-5 flex-grow-1 col-name">
 									<a class="itemside" href="#">
 										<div class="left">
 											<th:block
@@ -170,19 +110,19 @@
 										</div>
 									</a>
 								</div>
-								<div class="col-lg-2 col-sm-2 col-4 col-price">
+								<div class="col-lg-1 col-sm-1 col-1 col-price">
 									<span>$<th:block th:text="${product.products.price}"></th:block></span>
 								</div>
-								<div class="col-lg-2 col-sm-2 col-4 col-status">
+								<div class="col-lg-1 col-sm-1 col-1 col-status">
 									<th:block
 										th:text="${#strings.substring(product.products.description, 0, 10) + '...'}"></th:block>
 								</div>
-								<div class="col-lg-1 col-sm-2 col-4 col-date">
+								<div class="col-lg-1 col-sm-1 col-1 col-date">
 									<span><th:block
 											th:text="${product.products.vendors.name}"></th:block></span>
 								</div>
-								<div class="col-lg-1 col-sm-2 col-4 col-date">
-									<span> <th:block
+								<div class="col-lg-2 col-sm-2 col-2 col-date">
+									<th:block
 											th:with="displayRating=${product.rating != null ? product.rating : 0},
 	             cappedRating=${displayRating > 5 ? 5 : displayRating},
 	             width=${cappedRating * 20}">
@@ -196,9 +136,8 @@
 													alt="stars" style="height: 20px;"></li>
 											</ul>
 										</th:block>
-									</span>
 								</div>
-								<div class="col-lg-1 col-sm-1 col-2 col-action text-end"
+								<div class="col-lg-1 col-sm-2 col-2 col-action text-end"
 									style="padding-right: 0">
 									<a class="btn btn-sm rounded btn-brand mr-5"
 										th:href="@{'/admin/product/detail/'+${product.products.id}}"><i
@@ -206,7 +145,7 @@
 								</div>
 								<form method="post" th:action="@{/admin/product/delete}"
 									th:id="'formDelete_' + ${product.products.id}"
-									class="col-lg-1 col-sm-1 col-2 col-action"
+									class="col-lg-1 col-sm-2 col-2 col-action"
 									style="padding-left: 0">
 									<input type="hidden" name="id"
 										th:value="${product.products.id}" />
@@ -268,7 +207,7 @@
 		<!-- card end//-->
 		<!-- Trường hợp danh sách theo category -->
 		<th:block
-			th:if="${selectedCategoryId != null && selectedVendorId == null && !#lists.isEmpty(products)}">
+			th:if="${selectedCategoryId != null && selectedVendorId == null && keyword == null && !#lists.isEmpty(products)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
@@ -318,7 +257,7 @@
 		</th:block>
 		<!-- Trường hợp danh sách theo vendor -->
 		<th:block
-			th:if="${selectedVendorId != null && selectedCategoryId == null && !#lists.isEmpty(products)}">
+			th:if="${selectedVendorId != null && selectedCategoryId  == null && keyword == null && !#lists.isEmpty(products)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
@@ -367,9 +306,59 @@
 			</div>
 		</th:block>
 
+		<!-- Trường hợp danh sách keyword sản phẩm -->
+		<th:block
+			th:if="${keyword != null && selectedCategoryId == null && selectedVendorId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
+							class="page-link" th:href="@{'/admin/product/search-by-keyword?keyword='+${keyword} +'&page=' + ${0}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
+						<!-- Nút trước -->
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							th:href="@{'/admin/product/search-by-keyword?keyword='+${keyword} +'&page=' + ${currentPages-1}}"
+							class="page-link" aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/admin/product/search-by-keyword?keyword='+${keyword} +'&page=' + ${i}}"
+								th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/admin/product/search-by-keyword?keyword='+${keyword} +'&page=' + ${currentPages+1}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
+						</li>
+
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'/admin/product/search-by-keyword?keyword='+${keyword} +'&page=' + ${lastPageIndex}}"
+							aria-label="Next"><i class="material-icons md-double_arrow"></i>
+						</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
 		<!-- Trường hợp danh sách tất cả sản phẩm -->
 		<th:block
-			th:if="${selectedCategoryId == null && selectedVendorId == null && !#lists.isEmpty(products)}">
+			th:if="${selectedCategoryId == null && selectedVendorId == null && keyword == null && !#lists.isEmpty(products)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
