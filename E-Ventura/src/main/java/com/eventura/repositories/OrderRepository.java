@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.eventura.dtos.OrderVendorDTO;
 import com.eventura.entities.Orders;
+import com.eventura.entities.VendorProductCategory;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Orders, Integer> {
@@ -21,7 +22,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 		        o.name,
 		        o.createdAt,
 		        SUM(oi.price * oi.quantity),
-		        os.orderStatus 
+		        os.orderStatus
 		    )
 		    FROM Orders o
 		    JOIN o.orderItemses oi
@@ -31,12 +32,48 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 		    WHERE v.id = :vendorId
 		    GROUP BY o.id, o.name, o.createdAt, os.orderStatus
 		""")
-		Page<OrderVendorDTO> findOrdersByVendorPage(@Param("vendorId") Integer vendorId, Pageable pageable);
+	Page<OrderVendorDTO> findOrdersByVendorPage(@Param("vendorId") Integer vendorId, Pageable pageable);
 	
 	@Query("From Orders where id = :orderId")
 	Orders findOrderByOrderId(@Param("orderId") int orderId);
 	
-
+	@Query("""
+			SELECT new com.eventura.dtos.OrderVendorDTO(
+		        o.id,
+		        o.name,
+		        o.createdAt,
+		        SUM(oi.price * oi.quantity),
+		        oios.orderStatus
+		    )
+		    FROM Orders o
+		    JOIN o.orderItemses oi
+		    JOIN oi.products p
+		    JOIN p.vendors v
+		    LEFT JOIN oi.orderItemsOrderStatuses oios
+		    JOIN oios.orderStatus os
+		    WHERE v.id = :vendorId AND os.id = :statusId
+		    GROUP BY o.id, o.name, o.createdAt, oios.orderStatus
+		""")
+	Page<OrderVendorDTO> findOrdersByStatusPage(@Param("vendorId") Integer vendorId, @Param("statusId") Integer statusId, Pageable pageable);
+	
+	@Query("""
+			SELECT new com.eventura.dtos.OrderVendorDTO(
+		        o.id,
+		        o.name,
+		        o.createdAt,
+		        SUM(oi.price * oi.quantity),
+		        oios.orderStatus
+		    )
+		    FROM Orders o
+		    JOIN o.orderItemses oi
+		    JOIN oi.products p
+		    JOIN p.vendors v
+		    LEFT JOIN oi.orderItemsOrderStatuses oios
+		    JOIN oios.orderStatus os
+		    WHERE v.id = :vendorId AND o.name like %:keyword%
+		    GROUP BY o.id, o.name, o.createdAt, oios.orderStatus
+		""")
+	Page<OrderVendorDTO> findByKeyword(@Param("vendorId") int vendorId, @Param("keyword") String keyword, Pageable pageable);
 
 }
 

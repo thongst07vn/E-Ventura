@@ -11,7 +11,7 @@ public class OrderVendorDTO {
     private String orderName;
     private Date createdAt;
     private Double totalAmount;
-    private OrderStatus orderStatus;  
+    private OrderStatus orderStatus; 
 
     // Constructor ánh xạ dữ liệu
     public OrderVendorDTO(Integer orderId, String orderName, Date createdAt, 
@@ -30,6 +30,7 @@ public class OrderVendorDTO {
 	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
 	}
+
 
 	public String getOrderName() {
 		return orderName;

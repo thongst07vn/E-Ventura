@@ -29,4 +29,19 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findOrderByOrderId(orderId);
 	}
 
+	@Override
+	public Page<OrderVendorDTO> findOrdersByStatusPage(int vendorId, int statusId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return orderRepository.findOrdersByStatusPage(vendorId, statusId, pageable);
+	}
+
+	@Override
+	public Page<OrderVendorDTO> findByKeyword(int vendorId, String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return orderRepository.findByKeyword(vendorId, keyword, pageable);
+	}
+	
+	
+	
+
 }
