@@ -111,29 +111,74 @@
 																		</div>
 																	</div>
 																	<div class="wishlist-price">
+																		<th:block th:with="foundDiscountItem=${false}">
+																			<th:block th:each="dtoItem : ${cartDtoItems}">
+																				<th:block
+																					th:if="${dtoItem.productId == cartItem.products.id && dtoItem.productVariantId == cartItem.productVariants.id}">
+																					<th:block th:with="foundDiscountItem=${true}"></th:block>
+																				</th:block>
+																			</th:block>
 
-																		<h4 class="color-brand-3">
-																			$
-																			<th:block th:text="${cartItem.products.price}"></th:block>
-																		</h4>
+																			<th:block th:if="${foundDiscountItem}">
+																				<p
+																					class="color-gray-500 price-line font-sm line-througt text-end"
+																					th:text="${cartItem.products.price}"></p>
+																				<h5 class="color-brand-3">
+																					$
+																					<th:block
+																						th:text="${foundDiscountItem.afterDiscountPrice}"></th:block>
+																				</h5>
+																			</th:block>
+																			<th:block th:unless="${foundDiscountItem}">
+																				<h5 class="color-brand-3">
+																					$
+																					<th:block th:text="${cartItem.products.price}"></th:block>
+																				</h5>
+																			</th:block>
+																		</th:block>
 																	</div>
 																	<div class="wishlist-status">
 																		<div class="box-quantity">
 																			<div class="input-quantity">
 																				<input class="font-xl color-brand-3" type="text"
-																					value="1"><span class="minus-cart"></span><span
-																					class="plus-cart"></span>
+																					th:value="${cartItem.quantity}"><span
+																					class="minus-cart"></span><span class="plus-cart"></span>
 																			</div>
 
 																		</div>
 																	</div>
 																	<div class="wishlist-action">
 
-																		<h4 class="color-brand-3">
-																			$
-																			<th:block
-																				th:text="${cartItem.products.price*cartItem.quantity}"></th:block>
-																		</h4>
+																		<th:block
+																			th:if="${cartDtoItems!=null && !#lists.isEmpty(cartDtoItems)}">
+																			<th:block th:each="cartDtoItem : ${cartDtoItems}">
+																				<th:block
+																					th:if="${cartItem.products.id == cartDtoItem.productId && cartItem.productVariants.id == cartDtoItem.productVariantId}">
+
+																					<h5 class="color-brand-3">
+																						$
+																						<th:block
+																							th:text="${cartDtoItem.afterDiscountPrice*cartItem.quantity}"></th:block>
+
+																					</h5>
+																				</th:block>
+
+																			</th:block>
+
+																		</th:block>
+																		<th:block
+																			th:if="${cartDtoItems==null && #lists.isEmpty(cartDtoItems)}">
+																			<h5 class="color-brand-3">
+																				$
+																				<th:block
+																					th:text="${cartItem.products.price*cartItem.quantity}"></th:block>
+																			</h5>
+
+																		</th:block>
+
+
+
+
 																	</div>
 																	<div class="wishlist-remove">
 																		<a class="btn btn-delete" href="#"></a>
@@ -145,11 +190,12 @@
 													</div>
 												</div>
 											</th:block>
-										<div class="form-group d-flex">
-											<input class="form-control mr-15"
-												placeholder="Enter Your Coupon">
-											<button class="btn btn-buy w-auto">Apply</button>
-										</div>
+											<div class="form-group d-flex">
+
+												<h3 class="form-control mr-15">Apply a coupon</h3>
+												<button class="btn btn-buy w-auto">Apply</button>
+											</div>
+											<div></div>
 
 
 
@@ -159,11 +205,12 @@
 								</div>
 							</th:block>
 
-							
+
 						</div>
 					</div>
 					<div class="col-lg-3">
-						<div class="summary-cart sticky-top" style="top: 15%; z-index: 999;">
+						<div class="summary-cart sticky-top"
+							style="top: 15%; z-index: 999;">
 							<div class="border-bottom mb-10">
 								<div class="row">
 									<div class="col-6">
@@ -210,10 +257,10 @@
 							</div>
 						</div>
 					</div>
-				</div>				
+				</div>
 			</div>
 		</section>
-		
+
 	</main>
 
 </body>
