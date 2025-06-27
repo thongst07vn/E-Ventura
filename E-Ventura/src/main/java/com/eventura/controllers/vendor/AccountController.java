@@ -59,9 +59,78 @@ public class AccountController {
 	}
 
 	@PostMapping("register")
-	public String register(@ModelAttribute("user") Users user, @ModelAttribute("userAddress") UserAddress userAddress, @RequestParam("rePassword") String rePassword,
-			@RequestParam("provinceCode") String provinceCode, @RequestParam("districtCode") String districtCode,
-			@RequestParam("wardCode") String wardCode, RedirectAttributes redirectAttributes) {
+	public String register(@ModelAttribute("user") Users user, 
+	                       @ModelAttribute("userAddress") UserAddress userAddress, 
+	                       @RequestParam("rePassword") String rePassword,
+	                       @RequestParam(value = "provinceCode", required = false) String provinceCode,
+	                       @RequestParam(value = "districtCode", required = false) String districtCode,
+	                       @RequestParam(value = "wardCode", required = false) String wardCode,
+	                       RedirectAttributes redirectAttributes) {
+		
+		// Check if first name and last name are empty
+	    if (user.getFirstName() == null || user.getFirstName().trim().isEmpty() || 
+	        user.getLastName() == null || user.getLastName().trim().isEmpty()) {
+	        redirectAttributes.addFlashAttribute("msgErrorName", "* Last name or First name cannot be empty.");
+	        return "redirect:/vendor/account/register";
+	    }
+
+	    // Check if phone number is 10 digits
+	    if (user.getPhoneNumber() == null || !user.getPhoneNumber().matches("\\d{10}")) {
+	        redirectAttributes.addFlashAttribute("msgErrorPhone", "* Phone number must be 10 digits.");
+	        return "redirect:/vendor/account/register";
+	    }
+	    
+	    if(user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+	    	redirectAttributes.addFlashAttribute("msgErrorEmail", "* Email cannot be empty");
+	        return "redirect:/vendor/account/register";
+	    }else {
+	    	// Check if email already exists
+		    Users existingUser = userService.findByEmail(user.getEmail());
+		    if (existingUser != null) {
+		        redirectAttributes.addFlashAttribute("msgErrorEmail", "* Email is already in use.");
+		        return "redirect:/vendor/account/register";
+		    }
+	    }
+	    
+	    if(user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+	    	redirectAttributes.addFlashAttribute("msgErrorUsername", "* Username cannot be empty");
+	        return "redirect:/vendor/account/register";
+	    }else {
+	    	// Check if username already exists
+		    Users existingUsername = userService.findByUsername(user.getUsername());
+		    if (existingUsername != null) {
+		        redirectAttributes.addFlashAttribute("msgErrorUsername", "* Username is already in use.");
+		        return "redirect:/vendor/account/register";
+		    }
+	    }
+	    
+	    // Check if password is between 8 and 16 characters, contains at least 1 uppercase letter and 1 number
+	    String password = user.getPassword();
+	    String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,16}$";  // Regex to validate password
+
+	    if (!password.matches(passwordPattern)) {
+	        redirectAttributes.addFlashAttribute("msgErrorPasswordStrength", "Password must be between 8 and 16 characters, and include at least 1 uppercase letter and 1 number.");
+	        return "redirect:/vendor/account/register";
+	    }
+	    
+	    // Check if password and confirm password match
+	    if (!user.getPassword().equals(rePassword)) {
+	        redirectAttributes.addFlashAttribute("msgErrorPassword", "* Password and confirm password do not match.");
+	        return "redirect:/vendor/account/register";
+	    }
+
+	    // Check if Provine / District / Ward is empty
+	    if (provinceCode == null || districtCode == null || wardCode == null) {
+	        redirectAttributes.addFlashAttribute("msgErrorPDW", "* Province-Districts-Ward cannot be empty");
+	        return "redirect:/vendor/account/register";
+	    }
+
+	    // Check if address is empty
+	    if (userAddress.getAddress() == null || userAddress.getAddress().trim().isEmpty() ) {
+	        redirectAttributes.addFlashAttribute("msgErrorAddress", "* Address cannot be empty.");
+	        return "redirect:/vendor/account/register";
+	    }
+	    
 		/* ROLE */
 		Roles role = new Roles();
 		role.setId(2);
@@ -92,8 +161,19 @@ public class AccountController {
 
 				String from = environment.getProperty("spring.mail.username");
 				String to = user.getEmail();
-				String subject = "Verify Account";
-				String body = "Click <a href='" + url + "'>here</a> to activate your account";
+				String subject = "Verify Vendor";
+				String body = "<div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;'>" +
+			              "<h2 style='color: #4CAF50;'>VENDOR INFORMATION:</h2>" +
+			              "<div style='background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
+			              "<p style='font-size: 14px; color: #333;'><strong>Fullname:</strong> " + user.getFirstName() + " " + user.getLastName() + "</p>" +
+			              "<p style='font-size: 14px; color: #333;'><strong>Username:</strong> " + user.getUsername() + "</p>" +
+			              "<p style='font-size: 14px; color: #333;'><strong>Phone Number:</strong> " + user.getPhoneNumber() + "</p>" +
+			              "<p style='font-size: 14px; color: #333;'><strong>Email:</strong> " + user.getEmail() + "</p>" +
+			              "<p style='font-size: 14px; color: #333;'><strong>Address:</strong> " + userAddress.getAddress() + ", " + userAddress.getWards().getName() + ", " + userAddress.getDistricts().getName() + ", " + userAddress.getProvinces().getName() + "</p>" +
+			              "</div>" +
+			              "<p style='font-size: 14px; color: #333;'>Click <a href='" + url + "' style='color: #4CAF50; text-decoration: none;'>here</a> to activate your Vendor Account.</p>" +
+			              "</div>";
+
 
 				if (mailService.send(from, to, subject, body)) {
 					redirectAttributes.addFlashAttribute("msg", "Vào email để kích hoạt tài khoản");

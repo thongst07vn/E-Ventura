@@ -126,6 +126,12 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findUsersWithRoleId3ByKeyword(keyword, pageable);
 	}
 
+	@Override
+	public Users findByUsername(String username) {
+		// TODO Auto-generated method stub
+		return userRepository.findByUsername(username);
+	}
+
 
 
 	

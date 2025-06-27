@@ -17,6 +17,9 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 	@Query("from Users where email = :email")
 	public Users findByEmail(@Param("email") String email);
 	
+	@Query("from Users where username = :username")
+	public Users findByUsername(@Param("username") String username);
+	
 	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 ORDER BY u.createdAt DESC")
 	Page<Users> findUsersWithRoleId3(Pageable pageable);
 
