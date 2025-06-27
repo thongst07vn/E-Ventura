@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 24, 2025, 5:03:57 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 27, 2025, 10:26:46 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -35,6 +35,7 @@ public class Products implements java.io.Serializable {
 	private Date updatedAt;
 	private Date deletedAt;
 	private Set<ProductVariants> productVariantses = new HashSet<ProductVariants>(0);
+	private Set<CartItems> cartItemses = new HashSet<CartItems>(0);
 	private Set<OrderReturns> orderReturnses = new HashSet<OrderReturns>(0);
 	private Set<ProductReviews> productReviewses = new HashSet<ProductReviews>(0);
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
@@ -58,8 +59,8 @@ public class Products implements java.io.Serializable {
 
 	public Products(ProductCategories productCategories, Vendors vendors, String name, String description, double price,
 			int quantity, Date createdAt, Date updatedAt, Date deletedAt, Set<ProductVariants> productVariantses,
-			Set<OrderReturns> orderReturnses, Set<ProductReviews> productReviewses, Set<OrderItems> orderItemses,
-			Set<Medias> mediases, Set<Coupons> couponses) {
+			Set<CartItems> cartItemses, Set<OrderReturns> orderReturnses, Set<ProductReviews> productReviewses,
+			Set<OrderItems> orderItemses, Set<Medias> mediases, Set<Coupons> couponses) {
 		this.productCategories = productCategories;
 		this.vendors = vendors;
 		this.name = name;
@@ -70,6 +71,7 @@ public class Products implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
 		this.productVariantses = productVariantses;
+		this.cartItemses = cartItemses;
 		this.orderReturnses = orderReturnses;
 		this.productReviewses = productReviewses;
 		this.orderItemses = orderItemses;
@@ -182,6 +184,15 @@ public class Products implements java.io.Serializable {
 
 	public void setProductVariantses(Set<ProductVariants> productVariantses) {
 		this.productVariantses = productVariantses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "products")
+	public Set<CartItems> getCartItemses() {
+		return this.cartItemses;
+	}
+
+	public void setCartItemses(Set<CartItems> cartItemses) {
+		this.cartItemses = cartItemses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "products")

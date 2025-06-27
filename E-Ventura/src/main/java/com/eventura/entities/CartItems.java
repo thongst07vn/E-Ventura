@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 24, 2025, 5:03:57 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 27, 2025, 10:26:46 AM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -23,7 +23,7 @@ public class CartItems implements java.io.Serializable {
 
 	private Integer id;
 	private Carts carts;
-	private int productId;
+	private Products products;
 	private int productVariantId;
 	private int quantity;
 	private Date createdAt;
@@ -32,9 +32,10 @@ public class CartItems implements java.io.Serializable {
 	public CartItems() {
 	}
 
-	public CartItems(Carts carts, int productId, int productVariantId, int quantity, Date createdAt, Date updatedAt) {
+	public CartItems(Carts carts, Products products, int productVariantId, int quantity, Date createdAt,
+			Date updatedAt) {
 		this.carts = carts;
-		this.productId = productId;
+		this.products = products;
 		this.productVariantId = productVariantId;
 		this.quantity = quantity;
 		this.createdAt = createdAt;
@@ -63,13 +64,14 @@ public class CartItems implements java.io.Serializable {
 		this.carts = carts;
 	}
 
-	@Column(name = "product_id", nullable = false)
-	public int getProductId() {
-		return this.productId;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "product_id", nullable = false)
+	public Products getProducts() {
+		return this.products;
 	}
 
-	public void setProductId(int productId) {
-		this.productId = productId;
+	public void setProducts(Products products) {
+		this.products = products;
 	}
 
 	@Column(name = "product_variant_id", nullable = false)
