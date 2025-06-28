@@ -19,10 +19,14 @@ import com.eventura.entities.Provinces;
 import com.eventura.entities.Roles;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.entities.VendorSettings;
+import com.eventura.entities.Vendors;
 import com.eventura.entities.Wards;
 import com.eventura.services.AddressService;
 import com.eventura.services.MailService;
 import com.eventura.services.UserService;
+import com.eventura.services.VendorService;
+import com.eventura.services.VendorSettingService;
 
 @Controller("vendorAccountController")
 @RequestMapping("vendor/account")
@@ -32,6 +36,10 @@ public class AccountController {
 	private AddressService addressService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private VendorSettingService vendorSettingService;
+	@Autowired
+	private VendorService vendorService;
 	@Autowired
 	private MailService mailService;
 	@Autowired
@@ -50,10 +58,14 @@ public class AccountController {
 	public String register(ModelMap modelMap) {
 		Users user = new Users();
 		UserAddress userAddress = new UserAddress();
+		Vendors vendor = new Vendors();
 
+		
 		modelMap.put("user", user);
 		modelMap.put("userAddress", userAddress);
+		modelMap.put("vendor", vendor);
 		modelMap.put("provinces", addressService.findAllProvinces());
+		modelMap.put("vendorSettings", vendorSettingService.findAll());
 
 		return "vendor/pages/login/register";
 	}
@@ -61,11 +73,14 @@ public class AccountController {
 	@PostMapping("register")
 	public String register(@ModelAttribute("user") Users user, 
 	                       @ModelAttribute("userAddress") UserAddress userAddress, 
+	                       @ModelAttribute("vendor") Vendors vendor,
+	                       @RequestParam("vendorSettingId") int vendorSettingId,
 	                       @RequestParam("rePassword") String rePassword,
 	                       @RequestParam(value = "provinceCode", required = false) String provinceCode,
 	                       @RequestParam(value = "districtCode", required = false) String districtCode,
 	                       @RequestParam(value = "wardCode", required = false) String wardCode,
-	                       RedirectAttributes redirectAttributes) {
+	                       RedirectAttributes redirectAttributes,
+	                       ModelMap modelMap) {
 		
 		// Check if first name and last name are empty
 	    if (user.getFirstName() == null || user.getFirstName().trim().isEmpty() || 
@@ -103,7 +118,7 @@ public class AccountController {
 		        return "redirect:/vendor/account/register";
 		    }
 	    }
-	    
+	    	    
 	    // Check if password is between 8 and 16 characters, contains at least 1 uppercase letter and 1 number
 	    String password = user.getPassword();
 	    String passwordPattern = "^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{8,16}$";  // Regex to validate password
@@ -131,6 +146,22 @@ public class AccountController {
 	        return "redirect:/vendor/account/register";
 	    }
 	    
+	    if(vendor.getName() == null || vendor.getName().trim().isEmpty()) {
+	    	redirectAttributes.addFlashAttribute("msgErrorVendorName", "* Vendor's Name cannot be empty");
+	        return "redirect:/vendor/account/register";
+	    }
+	    
+	    if(vendor.getContactName() == null || vendor.getContactName().trim().isEmpty()) {
+	    	redirectAttributes.addFlashAttribute("msgErrorVendorContactName", "* Vendor Contact Name cannot be empty");
+	        return "redirect:/vendor/account/register";
+	    }
+	    
+	    if(vendor.getContactEmail() == null || vendor.getContactEmail().trim().isEmpty()) {
+	    	redirectAttributes.addFlashAttribute("msgErrorVendorContactEmail", "* Vendor Contact Email cannot be empty");
+	        return "redirect:/vendor/account/register";
+	    }
+
+	    
 		/* ROLE */
 		Roles role = new Roles();
 		role.setId(2);
@@ -141,12 +172,13 @@ public class AccountController {
 		user.setCreatedAt(new Date());
 		user.setDeletedAt(new Date());
 		user.setRoles(role);
+				
 
 		/* USER ADDRESS */
 		Provinces provinces = addressService.findProvinceById(provinceCode);
 		Districts districts = addressService.findDistrictById(districtCode);
 		Wards wards = addressService.findWardById(wardCode);
-
+	
 		userAddress.setUsers(user);
 		userAddress.setCreatedAt(new Date());
 		userAddress.setProvinces(provinces);
@@ -154,42 +186,101 @@ public class AccountController {
 		userAddress.setWards(wards);
 		userAddress.setName("Bao");
 
-		if (userService.save(user)) {
-			if (addressService.save(userAddress)) {
-				String baseUrl = environment.getProperty("base_url"); // Đọc cấu hình base_url từ application.properties
-				String url = baseUrl + "vendor/account/verify?email=" + user.getEmail();
+		 try {
+		        if (userService.save(user)) {
+		            System.out.println("User saved successfully.");
+		        	/* VENDOR */
+		    		vendor.setId(user.getId());
+		    		vendor.setDescription("Your Description will be here !");	
+		    		vendor.setVendorSettings(vendorSettingService.findById(vendorSettingId));
+		    		vendor.setCreatedAt(new Date());
+		    		vendor.setUpdatedAt(new Date());
+		    		System.out.println(vendor.getId() + ',' + vendor.getName() + ',' + vendor.getContactName() + ',' + vendor.getContactEmail() + ',' + vendor.getDescription() + ',' + vendor.getVendorSettings().getVendorType() + ',' + vendor.getCreatedAt() + ',' + vendor.getUpdatedAt());
+		            if (addressService.save(userAddress)) {
+		                System.out.println("Address saved successfully.");
+		                if(vendorService.save(vendor)) {
+		                    System.out.println("Vendor saved successfully.");
+		                    String baseUrl = environment.getProperty("base_url");
+		                    String url = baseUrl + "vendor/account/verify?email=" + user.getEmail();
 
-				String from = environment.getProperty("spring.mail.username");
-				String to = user.getEmail();
-				String subject = "Verify Vendor";
-				String body = "<div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;'>" +
-			              "<h2 style='color: #4CAF50;'>VENDOR INFORMATION:</h2>" +
-			              "<div style='background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
-			              "<p style='font-size: 14px; color: #333;'><strong>Fullname:</strong> " + user.getFirstName() + " " + user.getLastName() + "</p>" +
-			              "<p style='font-size: 14px; color: #333;'><strong>Username:</strong> " + user.getUsername() + "</p>" +
-			              "<p style='font-size: 14px; color: #333;'><strong>Phone Number:</strong> " + user.getPhoneNumber() + "</p>" +
-			              "<p style='font-size: 14px; color: #333;'><strong>Email:</strong> " + user.getEmail() + "</p>" +
-			              "<p style='font-size: 14px; color: #333;'><strong>Address:</strong> " + userAddress.getAddress() + ", " + userAddress.getWards().getName() + ", " + userAddress.getDistricts().getName() + ", " + userAddress.getProvinces().getName() + "</p>" +
-			              "</div>" +
-			              "<p style='font-size: 14px; color: #333;'>Click <a href='" + url + "' style='color: #4CAF50; text-decoration: none;'>here</a> to activate your Vendor Account.</p>" +
-			              "</div>";
+		                    String from = environment.getProperty("spring.mail.username");
+		                    String to = user.getEmail();
+		                    String subject = "Verify Vendor";
+		                    String body = "<div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;'>" +
+		                                  "<h2 style='color: #4CAF50;'>VENDOR INFORMATION:</h2>" +
+		                                  "<div style='background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>" +
+		                                  "<p style='font-size: 14px; color: #333;'><strong>Fullname:</strong> " + user.getFirstName() + " " + user.getLastName() + "</p>" +
+		                                  "<p style='font-size: 14px; color: #333;'><strong>Username:</strong> " + user.getUsername() + "</p>" +
+		                                  "<p style='font-size: 14px; color: #333;'><strong>Phone Number:</strong> " + user.getPhoneNumber() + "</p>" +
+		                                  "<p style='font-size: 14px; color: #333;'><strong>Email:</strong> " + user.getEmail() + "</p>" +
+		                                  "<p style='font-size: 14px; color: #333;'><strong>Address:</strong> " + userAddress.getAddress() + ", " + userAddress.getWards().getName() + ", " + userAddress.getDistricts().getName() + ", " + userAddress.getProvinces().getName() + "</p>" +
+		                                  "</div>" +
+		                                  "<p style='font-size: 14px; color: #333;'>Click <a href='" + url + "' style='color: #4CAF50; text-decoration: none;'>here</a> to activate your Vendor Account.</p>" +
+		                                  "</div>";
 
+		                    if (mailService.send(from, to, subject, body)) {
+		                        redirectAttributes.addFlashAttribute("msg", "Vào email để kích hoạt tài khoản");
+		                    } else {
+		                        redirectAttributes.addFlashAttribute("msgFailed", "Gửi mail kích hoạt tài khoản thất bại");
+		                       
 
-				if (mailService.send(from, to, subject, body)) {
-					redirectAttributes.addFlashAttribute("msg", "Vào email để kích hoạt tài khoản");
-				} else {
-					redirectAttributes.addFlashAttribute("msg", "Gửi mail kích hoạt tài khoản thất bại");
-				}
-				return "redirect:/vendor/account/register";
-
-			} else {
-				redirectAttributes.addFlashAttribute("msg", "Register Failed");
-				return "redirect:/vendor/account/register";
-			}
-		}
-
-		return "redirect:/vendor/account/register";
+		                    }
+		                    return "redirect:/vendor/account/register";
+		                } else {
+		                    redirectAttributes.addFlashAttribute("msgFailed", "Register Failed");
+		                    setModelMap(modelMap, user, userAddress, vendor);
+		                    return "redirect:/vendor/account/register";
+		                }
+		            } else {
+		                redirectAttributes.addFlashAttribute("msgFailed", "Failed to save address");
+		                return "redirect:/vendor/account/register";
+		            }
+		        } else {
+		            redirectAttributes.addFlashAttribute("msgFailed", "Failed to save user");
+		            return "redirect:/vendor/account/register";
+		        }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        redirectAttributes.addFlashAttribute("msgFailed", "Unexpected error: " + e.getMessage());
+		        return "redirect:/vendor/account/register";
+		    }
 	}
+
+	private void setModelMap(ModelMap modelMap, Users user, UserAddress userAddress, Vendors vendor) {
+	    modelMap.put("selectedLastName", user.getLastName());
+	    modelMap.put("selectedFirstName", user.getFirstName());
+	    modelMap.put("selectedPhone", user.getPhoneNumber());
+	    modelMap.put("selectedEmail", user.getEmail());
+	    modelMap.put("selectedUsername", user.getUsername());
+	    modelMap.put("selectedProvinceCode", userAddress.getProvinces().getCode());
+	    modelMap.put("selectedDistrictCode", userAddress.getDistricts().getCode());
+	    modelMap.put("selectedWardCode", userAddress.getWards().getCode());
+	    modelMap.put("selectedAddress", userAddress.getAddress());
+	    modelMap.put("selectedVendorName", vendor.getName());
+	    modelMap.put("selectedVendorContactName", vendor.getContactName());
+	    modelMap.put("selectedVendorContactEmail", vendor.getContactEmail());
+	    modelMap.put("selectedVendorTypeCode", vendor.getVendorSettings().getId());
+	}
+	
+	/* Verify */
+	@GetMapping("test")
+	public String test() {
+	    Vendors vendor = new Vendors();
+	    vendor.setId(20);
+	    vendor.setName("Bao");
+	    vendor.setContactName("sdsdsd");
+	    vendor.setContactEmail("sdsd@gmail.com");
+	    vendor.setDescription("Your Description will be here !");  
+	    vendor.setVendorSettings(vendorSettingService.findById(1));
+	    vendor.setCreatedAt(new Date());
+	    vendor.setUpdatedAt(new Date());
+	    
+	    // Lưu đối tượng vendor vào cơ sở dữ liệu
+	    vendorService.save(vendor);  // Giả sử bạn đã inject vendorService
+	    
+	    return "vendor/pages/login/login";  // Chuyển hướng về trang đăng ký
+	}
+
 
 	/* Verify */
 	@GetMapping({ "verify" })

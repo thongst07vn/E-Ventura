@@ -300,6 +300,7 @@ public class SecurityConfiguration {
 				a.requestMatchers(
 					"/vendor/account/login",        // Allow unauthenticated access to the customer login page
 					"/vendor/account/register",
+					"/vendor/account/test",
 					"/vendor/process-login",
 					"/vendor/assets/**",
 					"/vendor/account/verify"

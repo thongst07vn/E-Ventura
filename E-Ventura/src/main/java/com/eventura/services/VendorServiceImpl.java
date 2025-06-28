@@ -106,4 +106,16 @@ public class VendorServiceImpl implements VendorService {
 		return vendorRepository.findByKeywordPage(keyword, pageable);
 	}
 
+	@Override
+	public boolean save(Vendors vendor) {
+		// TODO Auto-generated method stub
+		try {
+			vendorRepository.save(vendor);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }
