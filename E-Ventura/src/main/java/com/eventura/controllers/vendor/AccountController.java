@@ -265,18 +265,10 @@ public class AccountController {
 	/* Verify */
 	@GetMapping("test")
 	public String test() {
-	    Vendors vendor = new Vendors();
-	    vendor.setId(20);
-	    vendor.setName("Bao");
-	    vendor.setContactName("sdsdsd");
-	    vendor.setContactEmail("sdsd@gmail.com");
-	    vendor.setDescription("Your Description will be here !");  
-	    vendor.setVendorSettings(vendorSettingService.findById(1));
-	    vendor.setCreatedAt(new Date());
-	    vendor.setUpdatedAt(new Date());
 	    
-	    // Lưu đối tượng vendor vào cơ sở dữ liệu
-	    vendorService.save(vendor);  // Giả sử bạn đã inject vendorService
+		Users users = userService.findByEmail("thongst07vn@gmail.com");
+	    users.setVendors(new Vendors(users,vendorSettingService.findById(1),"Bao","sdsdsd","sdsd@gmail.com","Your Description will be here !",new Date(),new Date()));
+	    vendorService.save(users.getVendors());  // Giả sử bạn đã inject vendorService
 	    
 	    return "vendor/pages/login/login";  // Chuyển hướng về trang đăng ký
 	}
