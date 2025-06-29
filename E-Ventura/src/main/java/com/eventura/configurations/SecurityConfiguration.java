@@ -35,6 +35,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Configuration
 @EnableWebSecurity
@@ -276,6 +277,9 @@ public class SecurityConfiguration {
 					@Override
 					public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
 							throws IOException, ServletException {
+						if (request.getSession() != null) {
+					        request.setAttribute("hasLoggedHomeAccess",false);
+					    }
 						response.sendRedirect("/customer/login?logout"); // Redirect to customer login page after logout
 					}
 				});

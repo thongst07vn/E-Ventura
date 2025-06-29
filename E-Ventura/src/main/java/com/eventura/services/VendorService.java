@@ -33,4 +33,9 @@ public interface VendorService {
 	public Page<Vendors> findByKeywordPage(String keyword, Pageable pageable);
 	
 	public boolean save(Vendors vendor);
+	
+	public Page<Vendors> findAllVendorsByDeletedAtISNUL(Pageable pageable);
+	public Page<Vendors> findAllVendorsByDeletedAtISNOTNUL(Pageable pageable);
+	public Page<Vendors> findVendorsByDeletedAtNOTNULLByKeyword(String keyword, Pageable pageable);
+	public Page<Vendors> findVendorsByDeletedAtISNULLByKeyword(String keyword, Pageable pageable);
 }

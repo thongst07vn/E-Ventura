@@ -13,5 +13,5 @@ public interface OrderItemService {
 	
 	public double findTotalAmountByOrderIdAndVendorId(int orderId, int vendorId);
 	
-
+	public Page<OrderItems> findAlls(Pageable pageable);
 }

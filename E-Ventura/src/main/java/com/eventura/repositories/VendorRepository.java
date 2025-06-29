@@ -15,4 +15,18 @@ import com.eventura.entities.Vendors;
 public interface VendorRepository extends JpaRepository<Vendors, Integer> {
 	@Query("from Vendors where name like %:keyword%")
 	public Page<Vendors>  findByKeywordPage(@Param("keyword") String keyword,Pageable pageable);
+	
+
+	@Query("FROM Vendors where users.deletedAt IS NULL")
+	Page<Vendors> findVendorByDeletedAtISNULL(Pageable pageable);
+
+	@Query("FROM Vendors where users.deletedAt IS NOT NULL")
+	Page<Vendors> findVendorsByDeletedAtNOTNULL(Pageable pageable);
+	
+	@Query("FROM Vendors where  users.deletedAt IS NOT NULL and name like %:keyword%")
+	public Page<Vendors> findVendorsByDeletedAtNOTNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
+	
+	@Query("FROM Vendors where  users.deletedAt IS NULL and name like %:keyword%")
+	Page<Vendors> findVendorsByDeletedAtISNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
+
 }

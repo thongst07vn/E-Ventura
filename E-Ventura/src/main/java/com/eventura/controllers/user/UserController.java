@@ -39,6 +39,8 @@ import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.example.demo.helpers.FileHelper;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping({ "customer", "/" })
 
@@ -57,7 +59,7 @@ public class UserController {
 	private AddressService addressService;
 
 	@GetMapping({ "home", "/" })
-	public String home(ModelMap modelMap) {
+	public String home(ModelMap modelMap,HttpSession session) {
 		List<ProductCategories> categories = categoryService.findAll();
 		List<Products> top10products = productService.findTopNewProduct();
 

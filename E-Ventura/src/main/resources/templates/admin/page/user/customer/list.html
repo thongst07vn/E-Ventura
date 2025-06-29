@@ -36,7 +36,7 @@
 						<form method="GET" th:action="@{/admin/customer/list}">
 							<select class="form-select" name="filter"
 								onchange="this.form.submit()">
-								<option value="show_all" th:selected="${filter == 'show_all'}">Show
+								<option value="show_all" th:selected="${filter == 'show_all'}">Status
 									all</option>
 								<option value="enabled" th:selected="${filter == 'enabled'}">Enabled</option>
 								<option value="disabled" th:selected="${filter == 'disabled'}">Disabled</option>

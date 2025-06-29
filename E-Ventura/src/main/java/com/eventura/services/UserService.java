@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.eventura.entities.ActivityLog;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
 import com.eventura.entities.Vendors;
@@ -29,4 +30,7 @@ public interface UserService extends UserDetailsService {
 	public Page<Users> findUsersWithRoleId3ByDeletedAtISNULLByKeyword(String keyword, Pageable pageable);
 	public Page<Users> findUsersWithRoleId3ByKeyword(String keyword, Pageable pageable);
 	
+	public boolean saveActivityLog(ActivityLog activityLog);
+	public int countActivityLogPC();
+	public int countActivityLogPhone();
 }
