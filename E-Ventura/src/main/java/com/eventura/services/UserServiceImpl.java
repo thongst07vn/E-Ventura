@@ -56,6 +56,7 @@ public class UserServiceImpl implements UserService {
 			userRepository.save(account);
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
