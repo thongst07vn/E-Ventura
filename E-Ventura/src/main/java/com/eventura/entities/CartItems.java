@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 27, 2025, 5:59:04 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 29, 2025, 6:40:48 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -26,18 +26,20 @@ public class CartItems implements java.io.Serializable {
 	private ProductVariants productVariants;
 	private Products products;
 	private int quantity;
+	private String combination;
 	private Date createdAt;
 	private Date updatedAt;
 
 	public CartItems() {
 	}
 
-	public CartItems(Carts carts, ProductVariants productVariants, Products products, int quantity, Date createdAt,
-			Date updatedAt) {
+	public CartItems(Carts carts, ProductVariants productVariants, Products products, int quantity, String combination,
+			Date createdAt, Date updatedAt) {
 		this.carts = carts;
 		this.productVariants = productVariants;
 		this.products = products;
 		this.quantity = quantity;
+		this.combination = combination;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -91,6 +93,15 @@ public class CartItems implements java.io.Serializable {
 
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
+	}
+
+	@Column(name = "combination", nullable = false, length = 250)
+	public String getCombination() {
+		return this.combination;
+	}
+
+	public void setCombination(String combination) {
+		this.combination = combination;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

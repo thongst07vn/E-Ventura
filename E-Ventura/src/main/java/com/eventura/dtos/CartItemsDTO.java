@@ -1,59 +1,70 @@
 package com.eventura.dtos;
 
-import java.util.Date;
-
 import com.eventura.entities.CartItems;
-import com.eventura.entities.Carts;
-import com.eventura.entities.Districts;
-import com.eventura.entities.Products;
 
 public class CartItemsDTO {
-   
-	private int productId;
-	private double afterDiscountPrice;
-	private int productVariantId;
-		
-	public CartItemsDTO() {
-		super();
-	}
-	
-	public CartItemsDTO(int productId, double afterDiscountPrice, int productVariantId) {
-		super();
-		this.productId = productId;
-		this.afterDiscountPrice = afterDiscountPrice;
-		this.productVariantId = productVariantId;
-	}
+    private CartItems cartItem;
+    private double afterDiscountPrice;
+    private double originalPrice; // Thêm trường này
+    private boolean hasDiscount; // Thêm trường này
+    private String combination;
+    // Existing constructor (can be updated or kept)
+    public CartItemsDTO(CartItems cartItem, double afterDiscountPrice, String combination) {
+        this.cartItem = cartItem;
+        this.afterDiscountPrice = afterDiscountPrice;
+        this.originalPrice = cartItem.getProducts().getPrice();
+        this.hasDiscount = (afterDiscountPrice != originalPrice);
+        this.combination = combination;
+    }
 
-	public CartItemsDTO(CartItems cartItem, double afterDiscountPrice) {
-		super();
-		this.productId = cartItem.getProducts().getId();
-		this.afterDiscountPrice = afterDiscountPrice;
-		this.productVariantId = cartItem.getProductVariants().getId();
-	}
-	public int getProductId() {
-		return productId;
-	}
-	public void setProductId(int productId) {
-		this.productId = productId;
-	}
-	public double getAfterDiscountPrice() {
-		return afterDiscountPrice;
-	}
-	public void setAfterDiscountPrice(double afterDiscountPrice) {
-		this.afterDiscountPrice = afterDiscountPrice;
-	}
-
-	public int getProductVariantId() {
-		return productVariantId;
-	}
-
-	public void setProductVariantId(int productVariantId) {
-		this.productVariantId = productVariantId;
-	}
-	
-	
-	
+    // New constructor with full parameters
+    public CartItemsDTO(CartItems cartItem, double afterDiscountPrice, double originalPrice, boolean hasDiscount, String combination) {
+        this.cartItem = cartItem;
+        this.afterDiscountPrice = afterDiscountPrice;
+        this.originalPrice = originalPrice;
+        this.hasDiscount = hasDiscount;
+        this.combination = combination;
+    }
     
-	
+    // Getters and setters
+    public CartItems getCartItem() {
+        return cartItem;
+    }
 
+    public void setCartItem(CartItems cartItem) {
+        this.cartItem = cartItem;
+    }
+
+    public double getAfterDiscountPrice() {
+        return afterDiscountPrice;
+    }
+
+    public void setAfterDiscountPrice(double afterDiscountPrice) {
+        this.afterDiscountPrice = afterDiscountPrice;
+    }
+
+    public double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public boolean isHasDiscount() {
+        return hasDiscount;
+    }
+
+    public void setHasDiscount(boolean hasDiscount) {
+        this.hasDiscount = hasDiscount;
+    }
+
+	public String getCombination() {
+		return combination;
+	}
+
+	public void setCombination(String combination) {
+		this.combination = combination;
+	}
+    
 }
