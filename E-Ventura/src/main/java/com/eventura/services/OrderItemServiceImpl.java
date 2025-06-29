@@ -41,4 +41,9 @@ public class OrderItemServiceImpl implements OrderItemService{
 		return orderItemRepository.findTotalAmountByOrderIdAndVendorId(orderId, vendorId);
 	}
 
+	@Override
+	public Page<OrderItems> findAlls(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return orderItemRepository.findAll(pageable);
+	}
 }

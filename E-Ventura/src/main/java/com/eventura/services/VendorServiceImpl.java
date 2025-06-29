@@ -54,13 +54,20 @@ public class VendorServiceImpl implements VendorService {
 	@Override
 	public int countByVendorId(int id) {
 		// TODO Auto-generated method stub
-		return vendorEarningRepository.countByVendorId(id);
+		if(vendorEarningRepository.findById(id).isPresent()) {			
+			return vendorEarningRepository.countByVendorId(id);
+		}else {			
+			return 0;			
+		}
 	}
 
 	@Override
 	public double sumByVendorId(int id) {
-		// TODO Auto-generated method stub
-		return vendorEarningRepository.sumByVendorId(id);
+		if(vendorEarningRepository.findById(id).isPresent()) {			
+			return vendorEarningRepository.sumByVendorId(id);
+		}else {
+			return 0;			
+		}
 	}
 
 	@Override
@@ -116,6 +123,30 @@ public class VendorServiceImpl implements VendorService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public Page<Vendors> findAllVendorsByDeletedAtISNUL(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return vendorRepository.findVendorByDeletedAtISNULL(pageable);
+	}
+
+	@Override
+	public Page<Vendors> findAllVendorsByDeletedAtISNOTNUL(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return vendorRepository.findVendorsByDeletedAtNOTNULL(pageable);
+	}
+
+	@Override
+	public Page<Vendors> findVendorsByDeletedAtNOTNULLByKeyword(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return vendorRepository.findVendorsByDeletedAtISNULLByKeyword(keyword, pageable);
+	}
+
+	@Override
+	public Page<Vendors> findVendorsByDeletedAtISNULLByKeyword(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return vendorRepository.findVendorsByDeletedAtNOTNULLByKeyword(keyword, pageable);
 	}
 
 }

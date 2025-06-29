@@ -34,11 +34,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2UserServices;
 import com.eventura.dtos.ProductDTO;
+import com.eventura.entities.OrderItems;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.Users;
 import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
+import com.eventura.services.CommissionsService;
+import com.eventura.services.OrderItemService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
@@ -60,7 +63,10 @@ public class AdminController {
 	private UserService userService;
 	@Autowired
 	private VendorProductCategoryService vendorProductCategoryService;
-
+	@Autowired
+	private CommissionsService commissionsService;
+	@Autowired
+	private OrderItemService orderItemService;
 	AdminController(AccountOAuth2UserServices accountOAuth2UserServices) {
 	}
 
@@ -77,7 +83,12 @@ public class AdminController {
 
 	// ======= Dashboard ========
 	@GetMapping({ "dashboard" })
-	public String home(Model model) {
+	public String home(Model model, ModelMap modelMap) {
+		modelMap.put("countActivityLogPC", userService.countActivityLogPC());
+		modelMap.put("countActivityLogPhone", userService.countActivityLogPhone());
+		modelMap.put("countCommission", commissionsService.countCommission());
+		modelMap.put("sumCommission",commissionsService.sumCommission());
+		
 		model.addAttribute("currentPage", "dashboard");
 		return "admin/page/dashboard/index";
 	}
@@ -456,7 +467,17 @@ public class AdminController {
 	
 	// ======= Order ========
 	@GetMapping("order/list")
-	public String orderList(Model model) {
+	public String orderList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<OrderItems> orderPage = orderItemService.findAlls(pageable);
+
+		modelMap.put("orders", orderPage);
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", orderPage.getTotalPages());
+		model.addAttribute("lastPageIndex", orderPage.getTotalPages() - 1);
+		model.addAttribute("filter", filter);
+		model.addAttribute("pageSize", pageSize);
 		model.addAttribute("currentPage", "order");
 		return "admin/page/order/list";
 	}
@@ -566,29 +587,55 @@ public class AdminController {
 	// ======= USER_VENDOR ========
 	@GetMapping("vendor/list")
 	public String vendorList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "12") int pageSize) {
+			@RequestParam(defaultValue = "12") int pageSize, @RequestParam(defaultValue = "show_all") String filter) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Vendors> userPage = vendorService.findAlls(pageable);
+		Page<Vendors> userPage;
+		switch (filter) {
+		case "enabled":
+			userPage = vendorService.findAllVendorsByDeletedAtISNUL(pageable);
+			break;
+		case "disabled":
+			userPage = vendorService.findAllVendorsByDeletedAtISNOTNUL(pageable);
+			break;
+		case "show_all":
+		default:
+			userPage = vendorService.findAlls(pageable);
+			break;
+		}
 		modelMap.put("vendors", userPage.getContent());
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
 		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
 		model.addAttribute("pageSize", pageSize);
-
+		model.addAttribute("filter", filter);
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/list";
 	}
 
 	@GetMapping("vendor/search-by-keyword")
 	public String vendorSearchByKeyword(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "12") int pageSize, @RequestParam("keyword") String keyword) {
+			@RequestParam(defaultValue = "12") int pageSize, @RequestParam("keyword") String keyword, @RequestParam(defaultValue = "show_all") String filter) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Vendors> userPage = vendorService.findByKeywordPage(keyword, pageable);
+		Page<Vendors> userPage;
+		
+		switch (filter) {
+		case "enabled":
+			userPage = vendorService.findVendorsByDeletedAtISNULLByKeyword(keyword,pageable);
+			break;
+		case "disabled":
+			userPage = vendorService.findVendorsByDeletedAtNOTNULLByKeyword(keyword,pageable);
+			break;
+		case "show_all":
+		default:
+			userPage = vendorService.findByKeywordPage(keyword, pageable);
+			break;
+		}
 		modelMap.put("vendors", userPage.getContent());
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
 		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
 		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("filter", filter);
 		modelMap.put("keyword", keyword);
 		model.addAttribute("currentPage", "user");
 		return "admin/page/user/vendor/list";
