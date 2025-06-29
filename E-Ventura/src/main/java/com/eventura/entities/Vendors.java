@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 27, 2025, 5:59:04 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 29, 2025, 6:40:48 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -17,8 +17,6 @@ import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import jakarta.persistence.Version;
-
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -38,10 +36,6 @@ public class Vendors implements java.io.Serializable {
 	private String contactEmail;
 	private Date createdAt;
 	private Date updatedAt;
-	@Version
-	@Column(name = "version")
-	private Integer version;
-
 	private Set<Commissions> commissionses = new HashSet<Commissions>(0);
 	private Set<VendorReviews> vendorReviewses = new HashSet<VendorReviews>(0);
 	private Set<Products> productses = new HashSet<Products>(0);

@@ -16,5 +16,6 @@ public interface CartService {
 	public List<Carts> findCartByUserId(int id);
 	public List<CartItems> findAllItemsByCartId(int id);
 
-	
+	public boolean saveCartItems(CartItems cartItems);
+	public boolean saveCart(Carts carts);
 }

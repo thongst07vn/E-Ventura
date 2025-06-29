@@ -37,8 +37,11 @@
 									<div class="wishlist-product" style="width: 20%;">
 										<span class="font-md-bold color-brand-3">Photo</span>
 									</div>
-									<div class="wishlist-product" style="width: 20%">
+									<div class="wishlist-product" style="width: 10%">
 										<span class="font-md-bold color-brand-3">Product</span>
+									</div>
+									<div class="wishlist-product" style="width: 10%">
+										<span class="font-md-bold color-brand-3">attribute</span>
 									</div>
 									<div class="wishlist-price">
 										<span class="font-md-bold color-brand-3">Unit Price</span>
@@ -54,12 +57,12 @@
 									</div>
 								</div>
 							</div>
-							<th:block th:each="cart: ${carts}">
+							<th:block th:each="vendorEntry : ${cartItemsGroupedByVendor}">
 								<div class="box-orders">
 									<div class="head-orders">
 										<div class="head-left" style="width: 10%">
 											<h5 style="margin-left: 4%">
-												<a th:text=${cart.cartItemses[0].products.vendors.name}></a>
+												<a th:text="${vendorEntry.key.name}"></a>
 											</h5>
 										</div>
 										<div class="head-right">
@@ -68,7 +71,7 @@
 									</div>
 									<div class="body-orders">
 										<div class="list-orders">
-											<th:block th:each="cartItem: ${cart.cartItemses}">
+											<th:block th:each="dtoItem : ${vendorEntry.value}">
 												<div class="card mb-2">
 													<div class="card-body bg-light">
 														<article class="box mb-3 bg-light">
@@ -81,125 +84,91 @@
 																		<div class="product-wishlist">
 																			<div class="product-image">
 																				<a
-																					th:href="@{'/product/productdetails/'+${cartItem.products.id}}">
+																					th:href="@{'/product/productdetails/'+${dtoItem.cartItem.products.id}}">
 																					<th:block
-																						th:if="${cartItem.products.mediases[0].name.contains('https:')}">
+																						th:if="${dtoItem.cartItem.products.mediases[0].name.contains('https:')}">
 																						<img
-																							th:src="${cartItem.products.mediases[0].name}"
+																							th:src="${dtoItem.cartItem.products.mediases[0].name}"
 																							alt="Ecom">
 																					</th:block> <th:block
-																						th:if="${!cartItem.products.mediases[0].name.contains('https:')}">
+																						th:if="${!dtoItem.cartItem.products.mediases[0].name.contains('https:')}">
 																						<img
-																							th:src="@{'/assets/imgs/others/' + ${cartItem.products.mediases[0].name}}"
+																							th:src="@{'/assets/imgs/others/' + ${dtoItem.cartItem.products.mediases[0].name}}"
 																							alt="Ecom">
 																					</th:block>
 																				</a>
 																			</div>
-
 																		</div>
 																	</div>
-																	<div class="wishlist-product" style="width: 20%">
+																	<div class="wishlist-product" style="width: 10%">
 																		<div class="product-wishlist">
 																			<div class="product-info">
 																				<a
-																					th:href="@{'/product/productdetails/'+${cartItem.products.id}}">
+																					th:href="@{'/product/productdetails/'+${dtoItem.cartItem.products.id}}">
 																					<h6 class="color-brand-3"
-																						th:text=${cartItem.products.name}></h6>
+																						th:text="${dtoItem.cartItem.products.name}"></h6>
 																				</a>
-
+																			</div>
+																		</div>
+																	</div>
+																	<div class="wishlist-product" style="width: 10%">
+																		<div class="product-wishlist">
+																			<div class="product-info">
+																				
+																					<h6 class="color-brand-3" th:text="${dtoItem.combination}"></h6>
+																				
 																			</div>
 																		</div>
 																	</div>
 																	<div class="wishlist-price">
-																		<th:block th:with="foundDiscountItem=${false}">
-																			<th:block th:each="dtoItem : ${cartDtoItems}">
-																				<th:block
-																					th:if="${dtoItem.productId == cartItem.products.id && dtoItem.productVariantId == cartItem.productVariants.id}">
-																					<th:block th:with="foundDiscountItem=${true}"></th:block>
-																				</th:block>
-																			</th:block>
-
-																			<th:block th:if="${foundDiscountItem}">
-																				<p
-																					class="color-gray-500 price-line font-sm line-througt text-end"
-																					th:text="${cartItem.products.price}"></p>
-																				<h5 class="color-brand-3">
-																					$
-																					<th:block
-																						th:text="${foundDiscountItem.afterDiscountPrice}"></th:block>
-																				</h5>
-																			</th:block>
-																			<th:block th:unless="${foundDiscountItem}">
-																				<h5 class="color-brand-3">
-																					$
-																					<th:block th:text="${cartItem.products.price}"></th:block>
-																				</h5>
-																			</th:block>
+																		<th:block th:if="${dtoItem.hasDiscount}">
+																			<p
+																				class="color-gray-500 price-line font-sm line-througt text-end"
+																				th:text="${dtoItem.originalPrice}"></p>
+																			<h5 class="color-brand-3">
+																				$
+																				<th:block th:text="${dtoItem.afterDiscountPrice}"></th:block>
+																			</h5>
+																		</th:block>
+																		<th:block th:if="${!dtoItem.hasDiscount}">
+																			<h5 class="color-brand-3">
+																				$
+																				<th:block th:text="${dtoItem.originalPrice}"></th:block>
+																			</h5>
 																		</th:block>
 																	</div>
 																	<div class="wishlist-status">
 																		<div class="box-quantity">
 																			<div class="input-quantity">
 																				<input class="font-xl color-brand-3" type="text"
-																					th:value="${cartItem.quantity}"><span
-																					class="minus-cart"></span><span class="plus-cart"></span>
+																					th:value="${dtoItem.cartItem.quantity}"> <span
+																					class="minus-cart"></span> <span class="plus-cart"></span>
 																			</div>
-
 																		</div>
 																	</div>
 																	<div class="wishlist-action">
-
-																		<th:block
-																			th:if="${cartDtoItems!=null && !#lists.isEmpty(cartDtoItems)}">
-																			<th:block th:each="cartDtoItem : ${cartDtoItems}">
-																				<th:block
-																					th:if="${cartItem.products.id == cartDtoItem.productId && cartItem.productVariants.id == cartDtoItem.productVariantId}">
-
-																					<h5 class="color-brand-3">
-																						$
-																						<th:block
-																							th:text="${cartDtoItem.afterDiscountPrice*cartItem.quantity}"></th:block>
-
-																					</h5>
-																				</th:block>
-
-																			</th:block>
-
-																		</th:block>
-																		<th:block
-																			th:if="${cartDtoItems==null && #lists.isEmpty(cartDtoItems)}">
-																			<h5 class="color-brand-3">
-																				$
-																				<th:block
-																					th:text="${cartItem.products.price*cartItem.quantity}"></th:block>
-																			</h5>
-
-																		</th:block>
-
-
-
-
+																		<h5 class="color-brand-3">
+																		<p class="color-gray-500 price-line font-sm line-througt text-end">&nbsp;</p>
+																			$
+																			<th:block th:if="${dtoItem.hasDiscount}"
+																				th:text="${dtoItem.afterDiscountPrice * dtoItem.cartItem.quantity}"></th:block>
+																			<th:block th:if="${!dtoItem.hasDiscount}"
+																				th:text="${dtoItem.originalPrice * dtoItem.cartItem.quantity}"></th:block>
+																		</h5>
 																	</div>
 																	<div class="wishlist-remove">
 																		<a class="btn btn-delete" href="#"></a>
 																	</div>
 																</div>
 															</div>
-
 														</article>
 													</div>
 												</div>
 											</th:block>
 											<div class="form-group d-flex">
-
-												<h3 class="form-control mr-15">Apply a coupon</h3>
+												<h3 class="form-control mr-15">Apply a voucher</h3>
 												<button class="btn btn-buy w-auto">Apply</button>
 											</div>
-											<div></div>
-
-
-
-
 										</div>
 									</div>
 								</div>
