@@ -14,4 +14,5 @@ import com.eventura.entities.Vendors;
 public interface CategoryRepository extends JpaRepository<ProductCategories, Integer> {
 	@Query("from ProductCategories where name like %:keyword%")
 	public Page<ProductCategories>  findByKeywordPage(@Param("keyword") String keyword,Pageable pageable);
+	
 }

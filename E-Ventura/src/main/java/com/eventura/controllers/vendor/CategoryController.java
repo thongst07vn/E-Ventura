@@ -1,6 +1,14 @@
 package com.eventura.controllers.vendor;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -8,14 +16,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.eventura.entities.ProductCategories;
 import com.eventura.entities.VendorProductCategory;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.VendorProductCategoryService;
+import com.example.demo.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -47,6 +61,8 @@ public class CategoryController  {
 		modelMap.put("totalPage", vendorCategoriesPage.getTotalPages());
 		modelMap.put("lastPageIndex", vendorCategoriesPage.getTotalPages() - 1);
 		
+		/* ADD */
+		modelMap.put("vendorProductCategory", new VendorProductCategory());
 
 
 		return "vendor/pages/category/list";
@@ -72,12 +88,6 @@ public class CategoryController  {
 		return "vendor/pages/category/list";
 	}
 	
-	@GetMapping("add")
-	public String categoryAdd(ModelMap modelMap) {
-		modelMap.put("currentPage", "category");
-
-		return "vendor/pages/category/add";
-	}
 	
 	@GetMapping("edit/{id}")
 	public String categoryEdit(@PathVariable("id") int id, ModelMap modelMap) {
