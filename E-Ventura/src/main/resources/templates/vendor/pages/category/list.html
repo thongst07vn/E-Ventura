@@ -14,12 +14,12 @@
 			</div>
 
 			<div>
-				<!-- Button trigger modal -->
+				<!--=========================================== Button trigger modal ===========================================-->
 				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
 					<i class="material-icons md-plus"></i>Create category
 				</button>
 
-				<!-- Modal -->
+				<!--=============================== Modal ===============================-->
 				<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel"
 					aria-hidden="true">
 					<div class="modal-dialog">
@@ -59,72 +59,56 @@
 													</a>
 
 													<script type="text/javascript">
-														document
-															.addEventListener(
-																'DOMContentLoaded',
-																function () {
-																	const actualFileInput = document
-																		.getElementById('actualFileInput');
-																	const uploadButton = document
-																		.getElementById('uploadButton');
-																	const userAvatar = document
-																		.getElementById('userAvatar'); // Get the image element
+														document.addEventListener('DOMContentLoaded',
+															function () {
+																const actualFileInput = document.getElementById('actualFileInput');
+																const uploadButton = document.getElementById('uploadButton');
+																const userAvatar = document.getElementById('userAvatar'); // Ảnh Revie
 
-																	// Store the previous object URL to revoke it later for memory management
-																	let currentObjectURL = null;
 
-																	// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
-																	uploadButton
-																		.addEventListener(
-																			'click',
-																			function (
-																				event) {
-																				event
-																					.preventDefault(); // Prevent the default anchor link behavior
-																				actualFileInput
-																					.click(); // Programmatically click the hidden file input
-																			});
+																// Store the previous object URL to revoke it later for memory management
+																let currentObjectURL = null;
 
-																	// When a file is selected in the hidden input, update the display and the image src
-																	actualFileInput
-																		.addEventListener(
-																			'change',
-																			function () {
-																				if (this.files
-																					&& this.files.length > 0) {
-																					const selectedFile = this.files[0];
-
-																					// Create a URL for the selected file
-																					const fileURL = URL
-																						.createObjectURL(selectedFile);
-
-																					// If there was a previous object URL, revoke it to free up memory
-																					if (currentObjectURL) {
-																						URL
-																							.revokeObjectURL(currentObjectURL);
-																					}
-																					currentObjectURL = fileURL; // Store the new object URL
-
-																					// Set the src of the image to the new file URL
-																					userAvatar.src = fileURL;
-
-																				}
-																			});
-
-																	// Optional: Store the initial avatar URL if you ever want to revert
-																	// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
-
-																	// Clean up object URLs when the page unloads to prevent memory leaks
-																	window
-																		.addEventListener(
-																			'beforeunload',
-																			function () {
-																				if (currentObjectURL) {
-																					URL
-																						.revokeObjectURL(currentObjectURL);
-																				}
-																			});
+																// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
+																uploadButton.addEventListener('click', function (event) {
+																	event.preventDefault(); // không cho browser chuyển trang khi click vào <a>
+																	actualFileInput.click(); // mở hộp thoại chọn file
 																});
+
+																// When a file is selected in the hidden input, update the display and the image src
+																actualFileInput.addEventListener('change',
+																	function () {
+																		if (this.files && this.files.length > 0) {
+																			const selectedFile = this.files[0];
+																			// Create a URL for the selected file
+																			const fileURL = URL
+																				.createObjectURL(selectedFile);
+
+																			// If there was a previous object URL, revoke it to free up memory
+																			if (currentObjectURL) {
+																				URL.revokeObjectURL(currentObjectURL);
+
+																			}
+																			currentObjectURL = fileURL; // Store the new object URL
+
+																			// Set the src of the image to the new file URL
+																			userAvatar.src = fileURL;
+
+																		}
+																	});
+
+																// Optional: Store the initial avatar URL if you ever want to revert
+																// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
+
+																// Clean up object URLs when the page unloads to prevent memory leaks
+																window.addEventListener('beforeunload',
+																	function () {
+																		if (currentObjectURL) {
+																			URL.revokeObjectURL(currentObjectURL);
+
+																		}
+																	});
+															});
 													</script>
 												</figcaption>
 											</figure>
@@ -163,9 +147,11 @@
 					</div>
 				</div>
 			</div>
-			<!-- Modal -->
-
 		</div>
+		<!--=============================== MODAL ===============================-->
+
+		<!--=============================== SEARCH BY KEYWORD ===============================-->
+
 		<div class="card mb-4">
 			<header class="card-header">
 				<div class="row gx-3">
@@ -189,7 +175,10 @@
 
 				</div>
 			</header>
-			<!-- card-header end//-->
+
+			<!--=============================== SEARCH BY KEYWORD ===============================-->
+
+			<!--=============================== LIST CATEGORY ===============================-->
 			<th:block th:if="${vendorProductCategories!=null}">
 				<div class="card-body">
 					<div class="row gx-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 row-cols-xxl-5">
@@ -245,19 +234,22 @@
 
 											</div>
 										</div>
-										<form method="post" th:action="@{/admin/category/delete}" th:id="'formDelete_' + ${vendorProductCategory.id}" class="col-6">
+										<form method="post" th:action="@{/admin/category/delete}"
+											th:id="'formDelete_' + ${vendorProductCategory.id}" class="col-6">
 											<input type="hidden" name="id" th:value="${vendorProductCategory.id}" />
 											<button class="btn btn-light rounded delete-button" type="button"
 												th:data-product-id="${vendorProductCategory.id}">
-												<i style="transform: translateY(-1px);" class="material-icons md-delete_forever"></i> 
+												<i style="transform: translateY(-1px);"
+													class="material-icons md-delete_forever"></i>
 												Delete
 											</button>
 										</form>
 									</div>
 								</div>
 							</div>
-							<!-- card-product  end//-->
+
 						</div>
+
 						<script>
 							document.querySelectorAll('.delete-button').forEach(button => {
 								button.addEventListener('click', function (e) {
@@ -300,6 +292,9 @@
 					</div>
 				</div>
 			</th:block>
+
+			<!--=============================== LIST CATEGORY ===============================-->
+
 		</div>
 		<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog">

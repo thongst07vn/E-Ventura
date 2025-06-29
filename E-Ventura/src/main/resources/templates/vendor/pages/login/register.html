@@ -165,6 +165,9 @@
 				</form>
 			</div>
 			<a th:href="@{/vendor/account/test}">sdsdsdsd</a>
+			
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 
 			<script>
 				document.addEventListener("DOMContentLoaded", function () {
@@ -213,6 +216,23 @@
 							});
 					});
 				});
+				
+				
+				// JavaScript to display SweetAlert2 based on flash attributes
+					document.addEventListener('DOMContentLoaded', function () {
+						const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+						const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+						if (sweetAlertStatus && sweetAlertMessage) {
+							Swal.fire({
+								icon: sweetAlertStatus, // 'success' or 'error'
+								title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+								text: sweetAlertMessage,
+								showConfirmButton: false,
+								timer: 3000 // Automatically close after 3 seconds
+							});
+						}
+					});
 			</script>
 		</section>
 
