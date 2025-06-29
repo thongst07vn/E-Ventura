@@ -249,22 +249,6 @@ public class AccountController {
 	}
 
 	/* Verify */
-	@GetMapping({ "test" })
-	public String test() {
-		Vendors vendor = new Vendors();
-		vendor.setId(20);
-		vendor.setName("Bao");
-		vendor.setContactName("sdsdsd");
-		vendor.setContactEmail("sdsd@gmail.com");
-		vendor.setDescription("Your Description will be here !");
-		vendor.setVendorSettings(vendorSettingService.findById(1));
-		vendor.setCreatedAt(new Date());
-		vendor.setUpdatedAt(new Date());
-
-		return "vendor/pages/login/register";
-	}
-
-	/* Verify */
 	@GetMapping({ "verify" })
 	public String verify(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
 
