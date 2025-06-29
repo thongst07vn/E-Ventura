@@ -22,4 +22,12 @@ public interface VendorProductCategoryRepository extends JpaRepository<VendorPro
 	
 	@Query("from VendorProductCategory v where v.vendors.id = :vendor_id and v.productCategories.name like %:keyword%")
 	public Page<VendorProductCategory> findByKeyword(@Param("vendor_id") int vendor_id, @Param("keyword") String keyword, Pageable pageable);
+	
+	@Query("SELECT CASE WHEN COUNT(vpc) > 0 THEN true ELSE false END " +
+		       "FROM VendorProductCategory vpc " +
+		       "WHERE vpc.vendors.id = :vendorId AND LOWER(vpc.productCategories.name) = LOWER(:categoryName)")
+		boolean existsByVendorIdAndCategoryNameIgnoreCase(@Param("vendorId") int vendorId,
+		                                                   @Param("categoryName") String categoryName);
+
+
 }
