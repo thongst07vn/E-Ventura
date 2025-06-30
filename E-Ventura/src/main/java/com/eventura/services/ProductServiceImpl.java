@@ -140,5 +140,10 @@ public class ProductServiceImpl implements ProductService {
 		return productReviewsRepository.findProductReviewPage(id, pageable);
 	}
 
+	@Override
+	public Page<ProductReviews> findProductReviewsByKeyword(int id, String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productReviewsRepository.findByKeywordPage(id, keyword, pageable);
+	}
 
 }

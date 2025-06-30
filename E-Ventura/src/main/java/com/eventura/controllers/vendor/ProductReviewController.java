@@ -195,4 +195,25 @@ public class ProductReviewController {
 		return "vendor/pages/product/reviewDetail";
 
 	}
+	
+	@GetMapping("searchByKeywordDetails/{productId}")
+	public String searchByKeywordDetails(ModelMap modelMap, HttpSession session, 
+										@PathVariable("productId") int productId,
+										@RequestParam("keyword") String keyword,
+										@RequestParam(defaultValue = "0") int page) {
+		modelMap.put("currentPage", "review");
+		int pageSize = 5;
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<ProductReviews> productReviewPage = productService.findProductReviewsByKeyword(productId, keyword, pageable);
+
+		modelMap.put("productReviews", productReviewPage.getContent());
+		modelMap.put("currentPages", page);
+		modelMap.put("totalPage", productReviewPage.getTotalPages());
+		modelMap.put("lastPageIndex", productReviewPage.getTotalPages() - 1);
+		
+		modelMap.put("selectedKeyword", keyword);
+
+		return "vendor/pages/product/reviewDetail";
+
+	}
 }

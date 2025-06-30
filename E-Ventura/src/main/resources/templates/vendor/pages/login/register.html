@@ -86,7 +86,7 @@
 											<select class="form-select" id="provinceSelect" name="provinceCode">
 												<option selected disabled>Provinces</option>
 												<option th:each="province : ${provinces}" th:value="${province.code}"
-													th:text="${province.name}" th:selected="${province.code == selectedProvinceCode}">
+													th:text="${province.administrativeUnits.shortName + ' ' + province.name}" th:selected="${province.code == selectedProvinceCode}">
 												</option>
 											</select>
 										</div>
@@ -164,7 +164,6 @@
 					
 				</form>
 			</div>
-			<a th:href="@{/vendor/account/test}">sdsdsdsd</a>
 			
 			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
@@ -190,7 +189,7 @@
 								data.forEach(district => {
 									const option = document.createElement("option");
 									option.value = district.code;
-									option.text = district.name;
+									option.text = district.shortName + ' ' +district.name;
 									districtSelect.appendChild(option);
 								});
 								districtSelect.disabled = false;
@@ -209,7 +208,7 @@
 								data.forEach(ward => {
 									const option = document.createElement("option");
 									option.value = ward.code;
-									option.text = ward.name;
+									option.text = ward.shortName + ' ' + ward.name;
 									wardSelect.appendChild(option);
 								});
 								wardSelect.disabled = false;

@@ -3,26 +3,51 @@
 
 <head>
 	<title>Add Product</title>
+	<style>
+		.main-image-preview {
+			width: 100%;
+			max-height: 300px;
+			object-fit: contain;
+			margin-bottom: 10px;
+			border: 1px solid #ddd;
+			padding: 5px;
+		}
+		.thumbnail-container {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
+		.thumbnail-preview {
+			width: 80px;
+			height: 80px;
+			object-fit: cover;
+			border: 1px solid #ddd;
+			padding: 3px;
+			cursor: pointer;
+		}
+	</style>
+
 </head>
 
 <body>
 	<section class="content-main">
+		<form>
 		<div class="row">
 			<div class="col-9">
+
 				<div class="content-header">
-					<h2 class="content-title">Add New Product</h2>
-					<div>
-						<button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
-						<button class="btn btn-md rounded font-sm hover-up">Publich</button>
-					</div>
+					<a th:href="@{/vendor/product/list}">
+						<i class="material-icons md-arrow_back">
+
+						</i> Go back</a>
+					<br>
 				</div>
-			</div>
-			<div>
-				<a th:href="@{/vendor/product/list}" class="btn btn-primary mb-3">Product List</a>
 			</div>
 			<div class="col-lg-6">
 				<div class="card mb-4">
+
 					<div class="card-header">
+						<h2 class="content-title">Add New Product</h2>
 						<h4>Basic</h4>
 					</div>
 					<div class="card-body">
@@ -70,40 +95,79 @@
 
 
 
-						</form>
 					</div>
 				</div>
-				<div class="card mb-4">
-					<div class="card-header">
-						<h4>Product Variations</h4>
-					</div>
-					<div class="card-body" id="variation-container">
-						<!-- Các attribute group sẽ được thêm tại đây -->
-					</div>
-					<div class="card-footer">
-						<button class="btn btn-sm btn-primary" type="button" onclick="addAttributeGroup()">+ Add
-							Attribute Group</button>
-					</div>
+				<div>
+					<button class="btn btn-primary" type="submit">Add Product</button>
 				</div>
 
-				
 			</div>
+
+			
 			<div class="col-lg-3">
 				<div class="card mb-4">
 					<div class="card-header">
 						<h4>Media</h4>
 					</div>
 					<div class="card-body">
-						<div class="input-upload"><img th:src="@{/vendor/assets/imgs/theme/upload.svg}" alt="">
-							<input class="form-control" type="file" multiple>
+						<div class="input-upload">
+							<!-- Hình chính -->
+							<img id="mainPreview" src="/vendor/assets/imgs/theme/upload.svg" alt="Main Preview" class="main-image-preview">
+
+							<!-- Hình nhỏ -->
+							<div class="thumbnail-container" id="thumbnailContainer"></div>
+
+							<!-- Input file -->
+							<input class="form-control" type="file" multiple id="imageInput" accept="image/*">
 						</div>
+
+
 					</div>
 				</div>
 
 
-				
+
 			</div>
 		</div>
+		</form>
+		<script>
+			document.getElementById("imageInput").addEventListener("change", function (event) {
+				const files = event.target.files;
+				const mainPreview = document.getElementById("mainPreview");
+				const thumbnailContainer = document.getElementById("thumbnailContainer");
+
+				// Reset
+				thumbnailContainer.innerHTML = "";
+				mainPreview.src = "/vendor/assets/imgs/theme/upload.svg";
+
+				if (files.length === 0) return;
+
+				const fileArray = Array.from(files).slice(0, 8); // Giới hạn 8 ảnh
+
+				fileArray.forEach((file, index) => {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						if (index === 0) {
+							mainPreview.src = e.target.result; // Gán ảnh đầu
+						} else {
+							const img = document.createElement("img");
+							img.src = e.target.result;
+							img.classList.add("thumbnail-preview");
+
+							// Khi click thumbnail thì hiện ở preview chính
+							img.addEventListener("click", function () {
+								mainPreview.src = e.target.result;
+							});
+
+							thumbnailContainer.appendChild(img);
+						}
+					};
+					reader.readAsDataURL(file);
+				});
+			});
+		</script>
+
+
 	</section>
 
 
