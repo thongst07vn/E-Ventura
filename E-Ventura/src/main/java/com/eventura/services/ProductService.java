@@ -40,4 +40,8 @@ public interface ProductService {
 	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable);
 
 	public boolean save(Products products);
+	
+	/* PRODUCT REVIEW VENDOR */
+	public Page<ProductReviews> findProductReviewByVendorId(int vendorId, Pageable pageable);
+	
 }
