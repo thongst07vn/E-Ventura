@@ -40,9 +40,5 @@ public interface OrderItemRepository extends JpaRepository<OrderItems, Integer> 
 		""")
 		Double findTotalAmountByOrderIdAndVendorId(@Param("orderId") Integer orderId, @Param("vendorId") Integer vendorId);
 
-	
-
-
-
 }
 

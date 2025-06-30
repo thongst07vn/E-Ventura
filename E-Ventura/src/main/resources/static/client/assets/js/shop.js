@@ -45,24 +45,7 @@
         $(".image-left ul li").removeClass("active");
         $(this).addClass("active");
     });
-    $(".minus-cart").on("click", function () {
-        var _parent = $(this).parents(".input-quantity");
-        var _currentInput = _parent.find("input");
-        var _number = parseInt(_currentInput.val());
-        if (_number > 1) {
-            _number = _number - 1;
-        }
-        _currentInput.val(_number);
-    });
-    $(".plus-cart").on("click", function () {
-        var _parent = $(this).parents(".input-quantity");
-        var _currentInput = _parent.find("input");
-        var _number = parseInt(_currentInput.val());
-        if (_number >= 0) {
-            _number = _number + 1;
-        }
-        _currentInput.val(_number);
-    });
+    
 
     $("ul.list-colors li").on("click", function () {
         if (!$(this).hasClass("disabled")) {

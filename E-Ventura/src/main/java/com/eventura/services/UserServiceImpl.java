@@ -14,8 +14,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.eventura.entities.ActivityLog;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.repositories.ActivityLogRepository;
 import com.eventura.repositories.UserAddressRepository;
 import com.eventura.repositories.UserRepository;
 
@@ -25,6 +27,8 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private UserAddressRepository addressRepository;
+	@Autowired
+	private ActivityLogRepository activityLogRepository;
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Users user = findByEmail(username);
@@ -131,6 +135,29 @@ public class UserServiceImpl implements UserService {
 	public Users findByUsername(String username) {
 		// TODO Auto-generated method stub
 		return userRepository.findByUsername(username);
+	}
+
+	@Override
+	public boolean saveActivityLog(ActivityLog activityLog) {
+		// TODO Auto-generated method stub
+		try {
+			activityLogRepository.save(activityLog);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
+	public int countActivityLogPC() {
+		// TODO Auto-generated method stub
+		return activityLogRepository.countActivityLogPC();
+	}
+
+	@Override
+	public int countActivityLogPhone() {
+		// TODO Auto-generated method stub
+		return activityLogRepository.countActivityLogPhone();
 	}
 
 

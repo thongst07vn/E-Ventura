@@ -29,6 +29,17 @@
                             });
 						</script>
 					</div>
+					<div class="col-lg-2 col-6 col-md-3">
+						<form method="GET" th:action="@{/admin/vendor/list}">
+							<select class="form-select" name="filter"
+								onchange="this.form.submit()">
+								<option value="show_all" th:selected="${filter == 'show_all'}">Status
+									all</option>
+								<option value="enabled" th:selected="${filter == 'enabled'}">Enabled</option>
+								<option value="disabled" th:selected="${filter == 'disabled'}">Disabled</option>
+							</select>
+						</form>
+					</div>
 					<div class="col-lg-2 col-md-3 col-6">
 						<select id="pageSizeSelect" class="form-select"
 							onchange="changePageSize()">
@@ -87,13 +98,7 @@
 					        }
 					    });
 					</script>
-					<div class="col-lg-2 col-6 col-md-3">
-						<select class="form-select">
-							<option>Status: all</option>
-							<option>Active only</option>
-							<option>Disabled</option>
-						</select>
-					</div>
+					
 				</div>
 			</header>
 			<!-- card-header end//-->

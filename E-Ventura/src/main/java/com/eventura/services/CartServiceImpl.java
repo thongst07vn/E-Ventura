@@ -43,6 +43,28 @@ public class CartServiceImpl implements CartService {
 		return cartRepository.findCartByUserId(id);
 	}
 
+	@Override
+	public boolean saveCartItems(CartItems cartItems) {
+		try {
+			cartItemsRepository.save(cartItems);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean saveCart(Carts carts) {
+		try {
+			cartRepository.save(carts);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	
 
 }

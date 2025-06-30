@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.eventura.entities.ProductAttributes;
 import com.eventura.entities.ProductReviews;
 import com.eventura.entities.Products;
 import com.eventura.entities.Users;
@@ -44,4 +45,5 @@ public interface ProductService {
 	/* PRODUCT REVIEW VENDOR */
 	public Page<ProductReviews> findProductReviewByVendorId(int vendorId, Pageable pageable);
 	
+	public List<ProductAttributes> findProductAttributeByProductId(int id);
 }
