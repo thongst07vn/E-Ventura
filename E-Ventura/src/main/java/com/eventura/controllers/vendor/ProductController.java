@@ -187,6 +187,8 @@ public class ProductController {
 	public String productAdd(ModelMap modelMap) {
 		modelMap.put("currentPage", "product");
 		modelMap.put("categories", categoryService.findAll());
+		
+		modelMap.put("product", new Products());
 
 		return "vendor/pages/product/add";
 	}

@@ -48,6 +48,9 @@ public interface ProductService {
 	public Page<Products> findByKeywordAndVendorIdPage(String keyword, int vendorId,Pageable pageable);
 	
 	public Page<ProductReviews> findProductReviewPage(int id, Pageable pageable);
+	
+	public Page<ProductReviews> findProductReviewsByKeyword(int id, String keyword, Pageable pageable);
+ 
 
 
 }
