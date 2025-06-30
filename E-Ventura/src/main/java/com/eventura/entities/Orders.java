@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 30, 2025, 6:23:22 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 30, 2025, 6:31:20 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -30,6 +30,7 @@ public class Orders implements java.io.Serializable {
 	private double totalAmount;
 	private String userAddress;
 	private Date paymentDate;
+	private String paymentMethod;
 	private Date createdAt;
 	private Date updatedAt;
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
@@ -40,23 +41,27 @@ public class Orders implements java.io.Serializable {
 	public Orders() {
 	}
 
-	public Orders(Users users, String name, double totalAmount, String userAddress, Date createdAt, Date updatedAt) {
+	public Orders(Users users, String name, double totalAmount, String userAddress, String paymentMethod,
+			Date createdAt, Date updatedAt) {
 		this.users = users;
 		this.name = name;
 		this.totalAmount = totalAmount;
 		this.userAddress = userAddress;
+		this.paymentMethod = paymentMethod;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public Orders(Users users, String name, double totalAmount, String userAddress, Date paymentDate, Date createdAt,
-			Date updatedAt, Set<OrderItems> orderItemses, Set<OrdersCampaigns> ordersCampaignses,
-			Set<VendorEarnings> vendorEarningses, Set<Commissions> commissionses) {
+	public Orders(Users users, String name, double totalAmount, String userAddress, Date paymentDate,
+			String paymentMethod, Date createdAt, Date updatedAt, Set<OrderItems> orderItemses,
+			Set<OrdersCampaigns> ordersCampaignses, Set<VendorEarnings> vendorEarningses,
+			Set<Commissions> commissionses) {
 		this.users = users;
 		this.name = name;
 		this.totalAmount = totalAmount;
 		this.userAddress = userAddress;
 		this.paymentDate = paymentDate;
+		this.paymentMethod = paymentMethod;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.orderItemses = orderItemses;
@@ -122,6 +127,15 @@ public class Orders implements java.io.Serializable {
 
 	public void setPaymentDate(Date paymentDate) {
 		this.paymentDate = paymentDate;
+	}
+
+	@Column(name = "payment_method", nullable = false)
+	public String getPaymentMethod() {
+		return this.paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
