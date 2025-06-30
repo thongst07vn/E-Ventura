@@ -19,5 +19,5 @@ public interface OrderService {
 	
 	public Orders findOrderByOrderId(int orderId);
 	
-
+	public Page<Orders> findAlls(Pageable pageable);
 }
