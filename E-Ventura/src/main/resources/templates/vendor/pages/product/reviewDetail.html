@@ -7,17 +7,19 @@
 
 <body>
 	<section class="content-main">
+		<a th:href="@{/vendor/productReview/list}">
+			<i class="material-icons md-arrow_back">
+		
+			</i> Go back</a>
+		<br>
 		<div class="content-header">
 			<div>
-				<h2 class="content-title card-title">Reviews Detail Product</h2>
+				<h2 class="content-title card-title">Detail Reviews</h2>
 				<p>Product: T-shirt for men</p>
 			</div>
 			<div>
 				<input class="form-control bg-white" type="text" placeholder="Search by name">
 			</div>
-		</div>
-		<div>
-			<a th:href="@{/vendor/product/review}" class="btn btn-primary mb-3">Product Review List</a>
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
@@ -55,108 +57,33 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
-								<td class="align-middle fs-6">
-									<a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar1.jpg}" alt="Item"></div>
-										<div class="info">
-											<h6 class="mb-0">Levi Akerman</h6>
-										</div>
-									</a>
-								</td>
-								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 80%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
-								</td>
-								<td class="align-middle fs-6">10.03.2022</td>
-								<td class="align-middle fs-6">Chất lượng sản phẩm tốt, giao hàng nhanh.</td>
-							</tr>
-
-							<tr>
-								<td class="align-middle fs-6">
-									<a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar3.jpg}" alt="Item"></div>
-										<div class="info">
-											<h6 class="mb-0">Eren Jeager</h6>
-										</div>
-									</a>
-								</td>
-								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 100%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
-								</td>
-								<td class="align-middle fs-6">12.04.2022</td>
-								<td class="align-middle fs-6">Hài lòng với sản phẩm, đúng mô tả.</td>
-							</tr>
-
-							<tr>
-								<td class="align-middle fs-6">
-									<a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar2.jpg}" alt="Item"></div>
-										<div class="info">
-											<h6 class="mb-0">Erwin Smith</h6>
-										</div>
-									</a>
-								</td>
-								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 40%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
-								</td>
-								<td class="align-middle fs-6">18.05.2022</td>
-								<td class="align-middle fs-6">Sản phẩm chưa như mong đợi, chất vải hơi mỏng.</td>
-							</tr>
-							<tr>
-								<td class="align-middle fs-6">
-									<a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar4.jpg}" alt="Item"></div>
-										<div class="info">
-											<h6 class="mb-0">Mikasa</h6>
-										</div>
-									</a>
-								</td>
-								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 100%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
-								</td>
-								<td class="align-middle fs-6">12.04.2022</td>
-								<td class="align-middle fs-6">Hài lòng với sản phẩm, đúng mô tả.</td>
-							</tr>
+							<th:block th:each="productReview : ${productReviews}">
+								<tr>
+									<td class="align-middle fs-6">
+										<a class="itemside" href="#">
+											<div class="left"><img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/avatars/' + ${productReview.users.avatar}}"
+													alt="Item"></div>
+											<div class="info">
+												<h6 class="mb-0" th:text="${productReview.users.username}">Levi Akerman</h6>
+											</div>
+										</a>
+									</td>
+									<td class="align-middle">
+										<th:block th:with="displayRating=${productReview.rating != null ? productReview.rating : 0},
+																													             cappedRating=${displayRating > 5 ? 5 : displayRating},
+																												             width=${cappedRating * 20}">
+											<ul class="rating-stars">
+												<li class="stars-active" th:style="'width:' + ${width} + '%'"><img
+														th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars" style="height: 20px;"></li>
+												<li><img th:src="@{/assets/imgs/icons/starts-disable.svg}" alt="stars" style="height: 20px;"></li>
+											</ul>
+										</th:block>
+									</td>
+									<td class="align-middle fs-6" th:text="${productReview.createdAt}">10.03.2022</td>
+									<td class="align-middle fs-6" th:text="${productReview.comment}">Chất lượng sản phẩm tốt, giao hàng nhanh.</td>
+								</tr>
+							</th:block>
+							
 						</tbody>
 
 					</table>

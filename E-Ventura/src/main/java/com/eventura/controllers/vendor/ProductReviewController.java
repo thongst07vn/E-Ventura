@@ -27,9 +27,9 @@ import com.eventura.services.VendorProductCategoryService;
 
 import jakarta.servlet.http.HttpSession;
 
-@Controller("vendorProductController")
-@RequestMapping("vendor/product")
-public class ProductController {
+@Controller("vendorProductReviewController")
+@RequestMapping("vendor/productReview")
+public class ProductReviewController {
 
 	@Autowired
 	private ProductService productService;
@@ -38,10 +38,10 @@ public class ProductController {
 	@Autowired
 	private ProductVariantService productVariantService;
 
-	/* ===================== PRODUCT ===================== */
 	@GetMapping("list")
-	public String productList(ModelMap modelMap, HttpSession session, @RequestParam(defaultValue = "0") int page) {
-		modelMap.put("currentPage", "product");
+	public String productReview(ModelMap modelMap, HttpSession	 session, 
+								@RequestParam(defaultValue = "0") int page) {
+		modelMap.put("currentPage", "review");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
 		int pageSize = 5;
@@ -68,16 +68,19 @@ public class ProductController {
 		modelMap.put("totalPage", productPage.getTotalPages());
 		modelMap.put("lastPageIndex", productPage.getTotalPages() - 1);
 		modelMap.put("minRating", 0);
-
+		
 		modelMap.put("categories", categoryService.findAll());
-		return "vendor/pages/product/list";
-	}
 
+
+
+		return "vendor/pages/product/review";
+	}
+	
 	@GetMapping("searchByCategory")
 	public String searchByVendorCategory(ModelMap modelMap, HttpSession session,
 										@RequestParam("categoryId") int categoryId, 
 										@RequestParam(defaultValue = "0") int page) {
-		modelMap.put("currentPage", "product");
+		modelMap.put("currentPage", "review");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
 		int pageSize = 5;
@@ -132,17 +135,16 @@ public class ProductController {
 		modelMap.put("selectedCategoryId", categoryId);
 		
 		modelMap.put("categories", categoryService.findAll());
-		return "vendor/pages/product/list";
+		return "vendor/pages/product/review";
 	}
 	
 	@GetMapping("searchByKeyword")
 	public String searchByKeyword(ModelMap modelMap, HttpSession session,
 										@RequestParam("keyword") String keyword, 
 										@RequestParam(defaultValue = "0") int page) {
-		modelMap.put("currentPage", "product");
+		modelMap.put("currentPage", "review");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		System.out.println("ncc");
 		int pageSize = 5;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage = productService.findByKeywordAndVendorIdPage(keyword, vendorId, pageable);
@@ -172,89 +174,25 @@ public class ProductController {
 
 
 		
-		return "vendor/pages/product/list";
-
-	}
-
-	@GetMapping("details/{id}")
-	public String productDetail(@PathVariable("id") int id, ModelMap modelMap) {
-		modelMap.put("currentPage", "product");
-
-		return "vendor/pages/product/details";
-	}
-
-	@GetMapping("add")
-	public String productAdd(ModelMap modelMap) {
-		modelMap.put("currentPage", "product");
-		modelMap.put("categories", categoryService.findAll());
-
-		return "vendor/pages/product/add";
-	}
-
-	@GetMapping("edit/{id}")
-	public String productEdit(@PathVariable("id") int id, ModelMap modelMap) {
-		modelMap.put("currentPage", "product");
-
-		modelMap.put("productVariants", productVariantService.findByProductId(id));
-		modelMap.put("product", productService.findById(id));
-		modelMap.put("categories", categoryService.findAll());
-
-		return "vendor/pages/product/edit";
-	}
-
-	@GetMapping("delete/{id}")
-	public String productDelete(@PathVariable("id") int id, ModelMap modelMap) {
-		modelMap.put("currentPage", "product");
-
-		return "vendor/pages/product/delete";
-	}
-
-	@GetMapping("review")
-	public String productReview(ModelMap modelMap, HttpSession session, 
-								@RequestParam("categoryId") int categoryId,
-								@RequestParam(defaultValue = "0") int page) {
-		modelMap.put("currentPage", "review");
-		Integer vendorId = (Integer) session.getAttribute("vendorId");
-
-		int pageSize = 10;
-		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findByVendorIdPage(vendorId, pageable);
-		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
-
-		// Lặp qua productPage và thêm các ProductDTO vào List
-		for (Products product : productPage) {
-			if (product.getDeletedAt() == null) {
-				if (!productService.findProductReview(product.getId()).isEmpty()) {
-					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-				} else {
-					productDTOList.add(new ProductDTO(product, 0));
-				}
-			}
-
-		}
-		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
-				productPage.getTotalElements());
-
-		modelMap.put("products", productDTOPage.getContent());
-		modelMap.put("currentPages", page);
-		modelMap.put("totalPage", productPage.getTotalPages());
-		modelMap.put("lastPageIndex", productPage.getTotalPages() - 1);
-		modelMap.put("minRating", 0);
-		
-		modelMap.put("categories", categoryService.findAll());
-		modelMap.put("selectedCategoryId", categoryId);
-
-
 		return "vendor/pages/product/review";
+
 	}
 	
-	
-
-	@GetMapping("reviewDetail/{productId}")
-	public String productReviewDetail(@PathVariable("productId") int productId, ModelMap modelMap) {
+	@GetMapping("details/{productId}")
+	public String details(ModelMap modelMap, HttpSession session,
+						 @PathVariable("productId") int productId,
+						 @RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "review");
-
+		int pageSize = 5;
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<ProductReviews> productReviewPage = productService.findProductReviewPage(productId, pageable);
+		
+		modelMap.put("productReviews", productReviewPage.getContent());
+		modelMap.put("currentPages", page);
+		modelMap.put("totalPage", productReviewPage.getTotalPages());
+		modelMap.put("lastPageIndex", productReviewPage.getTotalPages() - 1);		
+		
 		return "vendor/pages/product/reviewDetail";
-	}
 
+	}
 }
