@@ -42,6 +42,12 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findByKeyword(vendorId, keyword, pageable);
 	}
 
+	@Override
+	public Page<Orders> findAlls(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return orderRepository.findAll(pageable);
+	}
+
 	
 	
 	

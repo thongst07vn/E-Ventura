@@ -46,4 +46,10 @@ public class OrderItemServiceImpl implements OrderItemService{
 		// TODO Auto-generated method stub
 		return orderItemRepository.findAll(pageable);
 	}
+
+	@Override
+	public Page<OrderItems> findAllOrderItemsByOrderIdPage(int orderId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return orderItemRepository.findOrderItemsByOrderIdPage(orderId,pageable);
+	}
 }

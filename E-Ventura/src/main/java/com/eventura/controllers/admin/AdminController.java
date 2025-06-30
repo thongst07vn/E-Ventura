@@ -8,7 +8,10 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.eventura.configurations.AccountOAuth2UserServices;
 import com.eventura.dtos.ProductDTO;
 import com.eventura.entities.OrderItems;
+import com.eventura.entities.OrderItemsOrderStatus;
+import com.eventura.entities.OrderItemsOrderStatusId;
+import com.eventura.entities.Orders;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.Users;
@@ -42,6 +48,8 @@ import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
 import com.eventura.services.CommissionsService;
 import com.eventura.services.OrderItemService;
+import com.eventura.services.OrderService;
+import com.eventura.services.OrderStatusService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
@@ -67,6 +75,10 @@ public class AdminController {
 	private CommissionsService commissionsService;
 	@Autowired
 	private OrderItemService orderItemService;
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	private OrderStatusService orderStatusService;
 	AdminController(AccountOAuth2UserServices accountOAuth2UserServices) {
 	}
 
@@ -470,8 +482,8 @@ public class AdminController {
 	public String orderList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<OrderItems> orderPage = orderItemService.findAlls(pageable);
-
+		Page<Orders> orderPage = orderService.findAlls(pageable);
+		
 		modelMap.put("orders", orderPage);
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", orderPage.getTotalPages());
@@ -482,8 +494,37 @@ public class AdminController {
 		return "admin/page/order/list";
 	}
 
-	@GetMapping("order/detail")
-	public String orderDetail(Model model) {
+	@GetMapping("order/detail/{id}")
+	public String orderDetail(Model model,ModelMap modelMap,@PathVariable("id")int id, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<OrderItems> orderPage = orderItemService.findAllOrderItemsByOrderIdPage(id, pageable);
+		Orders order = orderService.findOrderByOrderId(id);
+
+		List<Map<String, Object>> orderItemStatuses = orderPage.getContent().stream()
+			    .map(item -> {
+			        // Assuming findStatusByOrderItemId returns a list of statuses,
+			        // and you want the one with the latest timestamp (e.g., 'updatedAt' or 'createdAt')
+			        List<OrderItemsOrderStatus> statuses = orderStatusService.findStatusByOrderItemId(item.getId());
+
+			        // Find the latest status for the current order item
+			        OrderItemsOrderStatus latestStatus = statuses.stream()
+			            .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt)) // Or getCreatedAt() if that's your timestamp
+			            .orElse(null); // Handle case where no status is found
+
+			        Map<String, Object> statusMap = new HashMap<>();
+			        if (latestStatus != null) {
+			            statusMap.put("statusName", latestStatus.getOrderStatus().getName());
+			            statusMap.put("orderItemId", latestStatus.getOrderItems().getId());
+			        }
+			        return statusMap;
+			    })
+			    .filter(map -> map.containsKey("statusName")) // Filter out items that didn't have a status
+			    .collect(Collectors.toList());
+
+		modelMap.put("orderItemStatuses", orderItemStatuses);
+		modelMap.put("order", order);
+		modelMap.put("orderItems", orderPage);
 		model.addAttribute("currentPage", "order");
 		return "admin/page/order/detail";
 	}
@@ -713,7 +754,7 @@ public class AdminController {
 		}
 	}
 
-	// ======= CATEGORY ========
+	// ======= Promotion ========
 	@GetMapping("coupon/list")
 	public String couponList(Model model) {
 		model.addAttribute("currentPage", "coupon");
