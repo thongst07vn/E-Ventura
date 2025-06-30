@@ -2,6 +2,7 @@ package com.eventura.controllers.vendor;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,17 +14,25 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.dtos.ProductDTO;
+import com.eventura.entities.ProductCategories;
 import com.eventura.entities.ProductReviews;
 import com.eventura.entities.Products;
+import com.eventura.entities.Roles;
+import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.ProductVariantService;
 import com.eventura.services.VendorProductCategoryService;
+import com.eventura.services.VendorService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -37,6 +46,8 @@ public class ProductController {
 	private CategoryService categoryService;
 	@Autowired
 	private ProductVariantService productVariantService;
+	@Autowired
+	private VendorService vendorService;
 
 	/* ===================== PRODUCT ===================== */
 	@GetMapping("list")
@@ -191,6 +202,37 @@ public class ProductController {
 		modelMap.put("product", new Products());
 
 		return "vendor/pages/product/add";
+	}
+	
+	@PostMapping("add")
+	public String productAdd(@ModelAttribute("product") Products product,
+							 @RequestParam("categoryId") int categoryId,
+							 @RequestParam("files") List<MultipartFile> files,
+							 HttpSession session, RedirectAttributes redirectAttributes) {
+		
+		/* VENDOR */
+		Integer vendorId = (Integer) session.getAttribute("vendorId");
+		Vendors vendor = vendorService.findById(vendorId);
+		product.setVendors(vendor);
+		
+		/* CATEGORY */
+		ProductCategories category = categoryService.findById(categoryId);
+		product.setProductCategories(category);
+		
+		product.setCreatedAt(new Date());
+		product.setUpdatedAt(new Date());
+		product.setDeletedAt(null);
+	
+		
+		if(productService.save(product)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Add Product Sucessfully");
+		}else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Register Failed");
+		}
+
+		return "redirect:/vendor/product/add";
 	}
 
 	@GetMapping("edit/{id}")

@@ -201,7 +201,7 @@ public class AccountController {
 			String url = baseUrl + "vendor/account/verify?email=" + user.getEmail();
 
 			String from = environment.getProperty("spring.mail.username");
-			String to = user.getEmail();
+			String to = "trananhkietzxz@gmail.com";
 			String subject = "Verify Vendor";
 			String body = "<div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;'>"
 					+ "<h2 style='color: #4CAF50;'>VENDOR INFORMATION:</h2>"
@@ -257,16 +257,15 @@ public class AccountController {
 			redirectAttributes.addFlashAttribute("msgActive", "Tài khoản không hợp lệ1");
 			return "redirect:/vendor/account/login";
 		} else {
-			user.setDeletedAt(null);
 			if (userService.save(user)) {
-				redirectAttributes.addFlashAttribute("sweetAlert", "success");
-				redirectAttributes.addFlashAttribute("message", "Activate Successfully");
+				redirectAttributes.addFlashAttribute("sweetAlert", "warning");
+				redirectAttributes.addFlashAttribute("message", "There is new Vendor");
 			} else {
 				redirectAttributes.addFlashAttribute("sweetAlert", "error");
-				redirectAttributes.addFlashAttribute("message", "Activate Failed");
+				redirectAttributes.addFlashAttribute("message", "Failed");
 				
 			}
 		}
-		return "redirect:/vendor/account/login";
+		return "redirect:/admin/login";
 	}
 }
