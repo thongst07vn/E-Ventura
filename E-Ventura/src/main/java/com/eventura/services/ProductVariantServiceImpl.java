@@ -27,5 +27,16 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 		// TODO Auto-generated method stub
 		return productVariantRepository.findById(id).get();
 	}
+
+	@Override
+	public boolean saveProductVariants(ProductVariants productVariants) {
+		try {
+			productVariantRepository.save(productVariants);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 	
 }

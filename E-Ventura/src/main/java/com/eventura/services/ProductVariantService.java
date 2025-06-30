@@ -12,5 +12,7 @@ public interface ProductVariantService {
 	public List<ProductVariants> findByProductId(int productId);
 	
 	public ProductVariants findById(int id);
+	
+	public boolean saveProductVariants(ProductVariants productVariants);
 
 }

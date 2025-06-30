@@ -1,5 +1,6 @@
 package com.eventura.controllers.user;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator; // Import Comparator
 import java.util.HashMap;
@@ -8,13 +9,20 @@ import java.util.Map;
 import java.util.stream.Collectors; // Not strictly needed for this, but good to have for stream operations
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2User;
 
@@ -130,10 +138,66 @@ public class CartController {
 		
 		return "customer/pages/cart/cartlist";
 	}
+	@GetMapping({"deletecartitem/{cartItemId}"})
+	public String deleteCartItem(@PathVariable("cartItemId") int cartItemId,RedirectAttributes redirectAttributes) {
+			if(cartService.deleteCartItems(cartItemId)) {
+				redirectAttributes.addFlashAttribute("msg","update cart item success");
+			} else {
+				redirectAttributes.addFlashAttribute("msg","update cart item failed");				
+			}
+		return "redirect:/customer/cart/cartitems";
+	}
 	
 	@GetMapping({"checkout"})
 	public String checkout(Authentication authentication, ModelMap modelMap, @AuthenticationPrincipal UserDetails userDetails) {
 		return "customer/pages/cart/checkout";
 	}
+	
+	
+	@PostMapping("/updatecartitemquantity/{cartItemId}")
+    @ResponseBody // Trả về dữ liệu JSON
+    public ResponseEntity<Map<String, Object>> updateCartItemQuantity(
+            @PathVariable int cartItemId,
+            @RequestBody Map<String, Integer> payload) { // Nhận JSON payload
+        Map<String, Object> response = new HashMap<>();
+
+        if (!payload.containsKey("quantity")) {
+            response.put("success", false);
+            response.put("message", "Thiếu tham số quantity.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Integer newQuantity = payload.get("quantity");
+        if (newQuantity == null || newQuantity < 1) {
+            response.put("success", false);
+            response.put("message", "Số lượng không hợp lệ.");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        try {
+            // --- Logic cập nhật số lượng trong cơ sở dữ liệu ---
+            // Gọi service để cập nhật số lượng cho cartItemId
+            // Ví dụ: cartService.updateCartItemQuantity(cartItemId, newQuantity);
+        	CartItems cartItem = cartService.findCartItemsById(cartItemId);
+        	cartItem.setQuantity((int)newQuantity);
+        	cartService.saveCartItems(cartItem);
+            // Giả lập logic cập nhật và tính toán lại giá
+            // Trong thực tế, bạn sẽ lấy thông tin sản phẩm từ DB để tính giá
+
+            response.put("success", true);
+            response.put("newQuantity", newQuantity);
+            response.put("message", "Cập nhật số lượng thành công.");
+            // --- Hết logic cập nhật ---
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            // Log lỗi chi tiết
+            System.err.println("Lỗi khi cập nhật cart item " + cartItemId + ": " + e.getMessage());
+            response.put("success", false);
+            response.put("message", "Không thể cập nhật số lượng. Vui lòng thử lại.");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 	
 }
