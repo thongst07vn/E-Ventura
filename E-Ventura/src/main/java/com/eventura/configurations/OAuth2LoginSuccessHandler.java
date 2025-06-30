@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +43,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 			user.setEmail(email);
 			user.setUsername(name);
 			user.setBirthOfDate(new Date());
-			user.setPassword("1");	
+			user.setPassword(BCrypt.hashpw("123456789@Tt", BCrypt.gensalt()));	
 			user.setPhoneNumber("0123456789");
 			user.setRoles(roleService.findById(3));
 			if(accountOAuth2User.getAvatar() != null) {

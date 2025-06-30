@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 29, 2025, 6:40:48 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 30, 2025, 6:23:22 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -28,10 +28,11 @@ public class Orders implements java.io.Serializable {
 	private Users users;
 	private String name;
 	private double totalAmount;
+	private String userAddress;
+	private Date paymentDate;
 	private Date createdAt;
 	private Date updatedAt;
 	private Set<OrderItems> orderItemses = new HashSet<OrderItems>(0);
-	private Set<Payments> paymentses = new HashSet<Payments>(0);
 	private Set<OrdersCampaigns> ordersCampaignses = new HashSet<OrdersCampaigns>(0);
 	private Set<VendorEarnings> vendorEarningses = new HashSet<VendorEarnings>(0);
 	private Set<Commissions> commissionses = new HashSet<Commissions>(0);
@@ -39,24 +40,26 @@ public class Orders implements java.io.Serializable {
 	public Orders() {
 	}
 
-	public Orders(Users users, String name, double totalAmount, Date createdAt, Date updatedAt) {
+	public Orders(Users users, String name, double totalAmount, String userAddress, Date createdAt, Date updatedAt) {
 		this.users = users;
 		this.name = name;
 		this.totalAmount = totalAmount;
+		this.userAddress = userAddress;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
-	public Orders(Users users, String name, double totalAmount, Date createdAt, Date updatedAt,
-			Set<OrderItems> orderItemses, Set<Payments> paymentses, Set<OrdersCampaigns> ordersCampaignses,
+	public Orders(Users users, String name, double totalAmount, String userAddress, Date paymentDate, Date createdAt,
+			Date updatedAt, Set<OrderItems> orderItemses, Set<OrdersCampaigns> ordersCampaignses,
 			Set<VendorEarnings> vendorEarningses, Set<Commissions> commissionses) {
 		this.users = users;
 		this.name = name;
 		this.totalAmount = totalAmount;
+		this.userAddress = userAddress;
+		this.paymentDate = paymentDate;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.orderItemses = orderItemses;
-		this.paymentses = paymentses;
 		this.ordersCampaignses = ordersCampaignses;
 		this.vendorEarningses = vendorEarningses;
 		this.commissionses = commissionses;
@@ -102,6 +105,25 @@ public class Orders implements java.io.Serializable {
 		this.totalAmount = totalAmount;
 	}
 
+	@Column(name = "user_address", nullable = false)
+	public String getUserAddress() {
+		return this.userAddress;
+	}
+
+	public void setUserAddress(String userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "payment_date", length = 19)
+	public Date getPaymentDate() {
+		return this.paymentDate;
+	}
+
+	public void setPaymentDate(Date paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false, length = 19)
 	public Date getCreatedAt() {
@@ -129,15 +151,6 @@ public class Orders implements java.io.Serializable {
 
 	public void setOrderItemses(Set<OrderItems> orderItemses) {
 		this.orderItemses = orderItemses;
-	}
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
-	public Set<Payments> getPaymentses() {
-		return this.paymentses;
-	}
-
-	public void setPaymentses(Set<Payments> paymentses) {
-		this.paymentses = paymentses;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders")
