@@ -65,6 +65,23 @@ public class CartServiceImpl implements CartService {
 		}
 	}
 
+	@Override
+	public CartItems findCartItemsById(int id) {
+		
+		return cartItemsRepository.findById(id).get();
+	}
+
+	@Override
+	public boolean deleteCartItems(int id) {
+		try {
+			cartItemsRepository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	
 
 }

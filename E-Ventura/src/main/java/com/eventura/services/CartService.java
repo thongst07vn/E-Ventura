@@ -18,4 +18,7 @@ public interface CartService {
 
 	public boolean saveCartItems(CartItems cartItems);
 	public boolean saveCart(Carts carts);
+	
+	public boolean deleteCartItems(int id);
+	public CartItems findCartItemsById(int id);
 }
