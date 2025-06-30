@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 29, 2025, 6:40:48 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 30, 2025, 6:23:22 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -47,6 +47,7 @@ public class Users implements java.io.Serializable {
 	private Set<Orders> orderses = new HashSet<Orders>(0);
 	private Set<ActivityLog> activityLogs = new HashSet<ActivityLog>(0);
 	private Set<UserAddress> userAddresses = new HashSet<UserAddress>(0);
+	private Set<Payments> paymentses = new HashSet<Payments>(0);
 
 	public Users() {
 	}
@@ -64,7 +65,7 @@ public class Users implements java.io.Serializable {
 			String rememberToken, String password, Date birthOfDate, String phoneNumber, Date createdAt, Date deletedAt,
 			Set<VendorReviews> vendorReviewses, Vendors vendors, Set<Carts> cartses,
 			Set<ProductReviews> productReviewses, Set<Orders> orderses, Set<ActivityLog> activityLogs,
-			Set<UserAddress> userAddresses) {
+			Set<UserAddress> userAddresses, Set<Payments> paymentses) {
 		this.roles = roles;
 		this.avatar = avatar;
 		this.firstName = firstName;
@@ -84,6 +85,7 @@ public class Users implements java.io.Serializable {
 		this.orderses = orderses;
 		this.activityLogs = activityLogs;
 		this.userAddresses = userAddresses;
+		this.paymentses = paymentses;
 	}
 
 	@Id
@@ -271,6 +273,15 @@ public class Users implements java.io.Serializable {
 
 	public void setUserAddresses(Set<UserAddress> userAddresses) {
 		this.userAddresses = userAddresses;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "users")
+	public Set<Payments> getPaymentses() {
+		return this.paymentses;
+	}
+
+	public void setPaymentses(Set<Payments> paymentses) {
+		this.paymentses = paymentses;
 	}
 
 }

@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 29, 2025, 6:40:48 PM by Hibernate Tools 4.3.6.Final
+// Generated Jun 30, 2025, 6:23:22 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.Column;
@@ -22,22 +22,17 @@ import jakarta.persistence.TemporalType;
 public class Payments implements java.io.Serializable {
 
 	private Integer id;
-	private Orders orders;
 	private PaymentMethods paymentMethods;
-	private double amount;
-	private Date paymentDate;
+	private Users users;
 	private Date createdAt;
 	private Date updatedAt;
 
 	public Payments() {
 	}
 
-	public Payments(Orders orders, PaymentMethods paymentMethods, double amount, Date paymentDate, Date createdAt,
-			Date updatedAt) {
-		this.orders = orders;
+	public Payments(PaymentMethods paymentMethods, Users users, Date createdAt, Date updatedAt) {
 		this.paymentMethods = paymentMethods;
-		this.amount = amount;
-		this.paymentDate = paymentDate;
+		this.users = users;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
@@ -55,16 +50,6 @@ public class Payments implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "order_id", nullable = false)
-	public Orders getOrders() {
-		return this.orders;
-	}
-
-	public void setOrders(Orders orders) {
-		this.orders = orders;
-	}
-
-	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "payment_method_id", nullable = false)
 	public PaymentMethods getPaymentMethods() {
 		return this.paymentMethods;
@@ -74,23 +59,14 @@ public class Payments implements java.io.Serializable {
 		this.paymentMethods = paymentMethods;
 	}
 
-	@Column(name = "amount", nullable = false, precision = 22, scale = 0)
-	public double getAmount() {
-		return this.amount;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	public Users getUsers() {
+		return this.users;
 	}
 
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
-
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "payment_date", nullable = false, length = 19)
-	public Date getPaymentDate() {
-		return this.paymentDate;
-	}
-
-	public void setPaymentDate(Date paymentDate) {
-		this.paymentDate = paymentDate;
+	public void setUsers(Users users) {
+		this.users = users;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
