@@ -128,6 +128,7 @@ public class ProductServiceImpl implements ProductService {
 		return productReviewsRepository.findProductReviewByVendorId(vendorId, pageable);
 	}
 	
+
 	public List<ProductAttributes> findProductAttributeByProductId(int id) {
 		
 		return productAttributeRepository.findDistinctByProductId(id);
