@@ -73,15 +73,21 @@
 							<div class="col-lg-4 col-sm-4 col-8 flex-grow-1 col-name">
 								<a class="itemside" href="#">
 									<div class="left">
-										<th:block th:if="${product.products.mediases[0].name.contains('https:')}">
-											<img class="img-sm img-thumbnail"
-												th:src="${product.products.mediases[0].name}" alt="Item">
+										<th:block th:if="${not #lists.isEmpty(product.products.mediases)}">
+											<th:block th:if="${product.products.mediases[0].name.contains('https:')}">
+												<img class="img-sm img-thumbnail" th:src="${product.products.mediases[0].name}" alt="Item">
+											</th:block>
+											<th:block th:if="${!product.products.mediases[0].name.contains('https:')}">
+												<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/' + ${product.products.mediases[0].name}}"
+													alt="Item">
+											</th:block>
 										</th:block>
-										<th:block th:if="${!product.products.mediases[0].name.contains('https:')}">
-											<img class="img-sm img-thumbnail"
-												th:src="@{'/assets/imgs/others/' + ${product.products.mediases[0].name}}"
-												alt="Item">
+										
+										<!-- Trường hợp không có ảnh -->
+										<th:block th:if="${#lists.isEmpty(product.products.mediases)}">
+											<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}" alt="No Image">
 										</th:block>
+
 									</div>
 									<div class="info">
 										<h6 class="mb-0" th:text="${product.products.name}"></h6>
@@ -263,5 +269,24 @@
 				</nav>
 			</div>
 		</th:block>
+		
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+		<script>
+			// JavaScript to display SweetAlert2 based on flash attributes
+			document.addEventListener('DOMContentLoaded', function () {
+				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+				if (sweetAlertStatus && sweetAlertMessage) {
+					Swal.fire({
+						icon: sweetAlertStatus, // 'success' or 'error'
+						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						text: sweetAlertMessage,
+						showConfirmButton: false,
+						timer: 3000 // Automatically close after 3 seconds
+					});
+				}
+			});
+		</script>
 	</section>
 </body>
