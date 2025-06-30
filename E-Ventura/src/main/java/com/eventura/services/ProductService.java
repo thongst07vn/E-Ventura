@@ -41,10 +41,13 @@ public interface ProductService {
 	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable);
 
 	public boolean save(Products products);
-	
 
-	/* PRODUCT REVIEW VENDOR */
-	public Page<ProductReviews> findProductReviewByVendorId(int vendorId, Pageable pageable);
 	
 	public List<ProductAttributes> findProductAttributeByProductId(int id);
+	
+	public Page<Products> findByKeywordAndVendorIdPage(String keyword, int vendorId,Pageable pageable);
+	
+	public Page<ProductReviews> findProductReviewPage(int id, Pageable pageable);
+
+
 }

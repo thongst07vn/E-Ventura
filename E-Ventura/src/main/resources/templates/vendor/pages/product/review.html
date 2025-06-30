@@ -18,27 +18,45 @@
 		</div>
 		<div class="card mb-4">
 			<header class="card-header">
-				<div class="row gx-3">
-					<div class="col-lg-4 col-md-6 me-auto">
-						<input class="form-control" type="text" placeholder="Search...">
-					</div>
-					<div class="col-lg-2 col-md-3 col-6">
-						<select class="form-select">
-							<option>Status</option>
-							<option>Active</option>
-							<option>Disabled</option>
-							<option>Show all</option>
-						</select>
-					</div>
-					<div class="col-lg-2 col-md-3 col-6">
-						<select class="form-select">
-							<option>Show 20</option>
-							<option>Show 30</option>
-							<option>Show 40</option>
-						</select>
-					</div>
-				</div>
-			</header>
+							<div class="row align-items-center">
+								<div class="col-lg-4 col-md-6 me-auto">
+									<form method="GET" th:action="@{/vendor/productReview/searchByKeyword}" id="searchForm">
+										<input class="form-control" type="text" name="keyword" placeholder="Find By Keyword .... "
+											id="keywordInput" th:value="${selectedKeyword}">
+									</form>
+
+									<script>
+										const keywordInput = document.getElementById('keywordInput');
+										const searchForm = document.getElementById('searchForm');
+
+										keywordInput.addEventListener('keyup', function (event) {
+											if (event.key === 'Enter' || event.keyCode === 13) {
+												searchForm.submit();
+											}
+										});
+									</script>
+								</div>
+								<div class="col-lg-2 col-md-3 col-6">
+									<form id="venderCategorySearchForm" method="GET"
+										th:action="@{/vendor/productReview/searchByCategory}">
+										<select class="form-select" name="categoryId" id="categorySelect">
+											<option value="0" th:selected="${selectedCategoryId == 0}">All</option>
+											<option th:each="category : ${categories}" th:value="${category.id}"
+												th:text="${category.name}" th:selected="${category.id == selectedCategoryId}">
+											</option>
+										</select>
+									</form>
+									<script>
+										document.getElementById('categorySelect').addEventListener('change', function () {
+											document.getElementById('venderCategorySearchForm').submit();
+										});
+									</script>
+								</div>
+
+
+
+							</div>
+						</header>
 			<!-- card-header end//-->
 			<div class="card-body">
 				<div class="table-responsive">
@@ -81,7 +99,7 @@
 								
 									</td>
 									<td class="text-end align-middle">
-										<a class="btn btn-md rounded font-sm" th:href="@{'/vendor/product/reviewDetail/' + ${product.products.id}}">Detail</a>
+										<a class="btn btn-md rounded font-sm" th:href="@{'/vendor/productReview/details/' + ${product.products.id}}">Detail</a>
 										<!-- dropdown -->
 									</td>
 								</tr>
@@ -93,18 +111,141 @@
 				</div>
 			</div>
 		</div>
-		<div class="pagination-area mt-30 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
-				</ul>
-			</nav>
-		</div>
+		<!-- Trường hợp danh sách tất cả sản phẩm -->
+		<th:block th:if="${selectedKeyword == null && selectedCategoryId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút về đầu -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/productReview/list?page=' + ${0}}" aria-label="Next"> <i
+									class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a>
+						</li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+								th:href="@{'/vendor/productReview/list?page=' + ${currentPages-1}}" class="page-link"
+								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
+		
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+		
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
+									th:href="@{'/vendor/productReview/list?page=' + ${i}}" th:text="${i + 1}"></a></li>
+						</th:block>
+		
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+							<a class="page-link" th:href="@{'/vendor/productReview/list?page=' + ${currentPages+1}}" aria-label="Next"> <i
+									class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+		
+						<!-- Nút tới cuối -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/productReview/list?page=' + ${lastPageIndex}}" aria-label="Next">
+								<i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+		
+		<!-- Trường hợp lọc danh sách theo category -->
+		<th:block th:if="${selectedKeyword == null && selectedCategoryId != null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút về đầu -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/searchByCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${0}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a>
+						</li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+								th:href="@{'/vendor/product/searchByCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages-1}}"
+								class="page-link" aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
+		
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+		
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
+									th:href="@{'/vendor/productReview/searchByCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
+						</th:block>
+		
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/searchByCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${currentPages+1}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+		
+						<!-- Nút tới cuối -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/searchByCategory?categoryId=' + ${selectedCategoryId} + '&page=' + ${lastPageIndex}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+		
+		<!-- Trường hợp search By Keyword -->
+		<th:block th:if="${selectedKeyword != null && selectedCategoryId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút về đầu -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/searchByKeyword?keyword=' + ${selectedKeyword} + '&page=' + ${0}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a>
+						</li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+								th:href="@{'/vendor/productReview/searchByKeyword?keyword=' + ${selectedKeyword} + '&page=' + ${currentPages-1}}"
+								class="page-link" aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
+		
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+		
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
+									th:href="@{'/vendor/productReview/searchByKeyword?keyword=' + ${selectedKeyword} + '&page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
+						</th:block>
+		
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/searchByKeyword?keyword=' + ${selectedKeyword} + '&page=' + ${currentPages+1}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+		
+						<!-- Nút tới cuối -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/searchByKeyword?keyword=' + ${selectedKeyword} + '&page=' + ${lastPageIndex}}"
+								aria-label="Next">
+								<i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
 	</section>
 </body>
