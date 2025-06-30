@@ -44,7 +44,7 @@
 						<div class="card-body">
 							<form>
 								<div class="mb-4">
-									<label class="form-label" for="product_name">Product title</label>
+									<label class="form-label" for="product_name">Product title <span th:text="${msgErrorName}" class="text-danger"></span></label>
 									<input class="form-control" id="product_name" type="text" placeholder="Type here" th:field="${product.name}">
 								</div>
 
@@ -52,14 +52,14 @@
 								<div class="row">
 									<div class="col-lg-4">
 										<div class="mb-4">
-											<label class="form-label">Price</label>
+											<label class="form-label">Price <span th:text="${msgErrorPrice}" class="text-danger"></span></label>
 											<div class="row gx-2"></div>
 											<input class="form-control" placeholder="$" type="number" th:field="${product.price}">
 										</div>
 									</div>
 									<div class="col-lg-4">
 										<div class="mb-4">
-											<label class="form-label">Quantity</label>
+											<label class="form-label">Quantity <span th:text="${msgErrorQuantity}" class="text-danger"></span></label>
 											<div class="row gx-2"></div>
 											<input class="form-control" type="number" th:field="${product.quantity}">
 										</div>
@@ -71,7 +71,7 @@
 
 									</div>
 									<div class="mb-4">
-										<label class="form-label">Full description</label>
+										<label class="form-label">Full description <span th:text="${msgErrorDescription}" class="text-danger"></span></label>
 										<br>
 										<textarea class="form-control" cols="90" rows="8" th:field="${product.description}">
 											
