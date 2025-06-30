@@ -117,21 +117,36 @@
 					</div>
 
 				</div>
-				<div class="col-lg-3">
+				<div class="col-lg-4">
 					<div class="card mb-4">
 						<div class="card-header">
 							<h4>Media</h4>
 						</div>
 						<div class="card-body">
 							<div class="input-upload">
-								<th:block th:if="${product.mediases[0].name.contains('https:')}">
-									<img  th:src="${product.mediases[0].name}" alt="Item">
+								<th:block th:if="${not #lists.isEmpty(product.mediases)}">
+									<div class="thumbnail-container">
+										<th:block th:each="media : ${product.mediases}">
+											<th:block th:if="${media.name.contains('https:')}">
+												<img class="img-md img-thumbnail" th:src="${media.name}" alt="Media Image">
+											</th:block>
+											<th:block th:if="${!media.name.contains('https:')}">
+												<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/items/' + ${media.name}}"
+													alt="Media Image">
+											</th:block>
+										</th:block>
+									</div>
 								</th:block>
-								<th:block th:if="${!product.mediases[0].name.contains('https:')}">
-									<img  th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}" alt="Item">
+							
+								<!-- Nếu không có ảnh -->
+								<th:block th:if="${#lists.isEmpty(product.mediases)}">
+									<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}" alt="No Image">
 								</th:block>
-								<input class="form-control" type="file" multiple>
+							
+								<!-- Input file -->
+								<input class="form-control" type="file" multiple name="files">
 							</div>
+
 						</div>
 					</div>
 				</div>

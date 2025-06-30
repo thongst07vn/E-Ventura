@@ -1,11 +1,19 @@
 package com.eventura.controllers.vendor;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,16 +31,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.dtos.ProductDTO;
+import com.eventura.entities.Medias;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.ProductReviews;
 import com.eventura.entities.Products;
 import com.eventura.entities.Roles;
 import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
+import com.eventura.services.MediaService;
 import com.eventura.services.ProductService;
 import com.eventura.services.ProductVariantService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
+import com.example.demo.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -48,6 +59,8 @@ public class ProductController {
 	private ProductVariantService productVariantService;
 	@Autowired
 	private VendorService vendorService;
+	@Autowired
+	private MediaService mediaService;
 
 	/* ===================== PRODUCT ===================== */
 	@GetMapping("list")
@@ -210,6 +223,8 @@ public class ProductController {
 							 @RequestParam("files") List<MultipartFile> files,
 							 HttpSession session, RedirectAttributes redirectAttributes) {
 		
+		
+		
 		/* VENDOR */
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 		Vendors vendor = vendorService.findById(vendorId);
@@ -222,17 +237,56 @@ public class ProductController {
 		product.setCreatedAt(new Date());
 		product.setUpdatedAt(new Date());
 		product.setDeletedAt(null);
-	
 		
-		if(productService.save(product)) {
+		/* IMAGE */
+		// Lưu product trước để có ID
+		if (productService.save(product)) {
+
+			Set<Medias> mediasSet = new HashSet<>();
+
+			if (files != null && !files.isEmpty()) {
+				for (MultipartFile file : files) {
+					try {
+						String fileName = file.getOriginalFilename();
+
+						File imagesFolder = new ClassPathResource("static/assets/imgs/items").getFile();
+						if (!imagesFolder.exists()) {
+							imagesFolder.mkdirs();
+						}
+
+						Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
+						Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+						// Tạo media sau khi product đã có ID
+						Medias media = new Medias();
+						media.setName(fileName);
+						media.setProducts(product);
+						media.setCreatedAt(new Date()); 
+						media.setUpdatedAt(new Date()); 
+
+
+						mediaService.save(media); // Save media sau
+						mediasSet.add(media);
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			product.setMediases(mediasSet); 
+			productService.save(product); 
+
 			redirectAttributes.addFlashAttribute("sweetAlert", "success");
-			redirectAttributes.addFlashAttribute("message", "Add Product Sucessfully");
-		}else {
+			redirectAttributes.addFlashAttribute("message", "Add Product Successfully");
+
+		} else {
 			redirectAttributes.addFlashAttribute("sweetAlert", "error");
 			redirectAttributes.addFlashAttribute("message", "Register Failed");
 		}
 
-		return "redirect:/vendor/product/add";
+
+		return "redirect:/vendor/product/list";
 	}
 
 	@GetMapping("edit/{id}")
