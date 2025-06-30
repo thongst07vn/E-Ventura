@@ -12,11 +12,13 @@
 			border: 1px solid #ddd;
 			padding: 5px;
 		}
+
 		.thumbnail-container {
 			display: flex;
 			gap: 10px;
 			flex-wrap: wrap;
 		}
+
 		.thumbnail-preview {
 			width: 80px;
 			height: 80px;
@@ -31,105 +33,106 @@
 
 <body>
 	<section class="content-main">
-		<form>
-		<div class="row">
-			<div class="col-9">
+		<form method="POST"  th:action="@{/vendor/product/add}" enctype="multipart/form-data">
+			<div class="row">
+				<div class="col-9">
 
-				<div class="content-header">
-					<a th:href="@{/vendor/product/list}">
-						<i class="material-icons md-arrow_back">
-
-						</i> Go back</a>
-					<br>
-				</div>
-			</div>
-			<div class="col-lg-6">
-				<div class="card mb-4">
-
-					<div class="card-header">
-						<h2 class="content-title">Add New Product</h2>
-						<h4>Basic</h4>
-					</div>
-					<div class="card-body">
-						<form>
-							<div class="mb-4">
-								<label class="form-label" for="product_name">Product title</label>
-								<input class="form-control" id="product_name" type="text" placeholder="Type here">
-							</div>
-
-
-							<div class="row">
-								<div class="col-lg-4">
-									<div class="mb-4">
-										<label class="form-label">Regular price</label>
-										<div class="row gx-2"></div>
-										<input class="form-control" placeholder="$" type="number">
-									</div>
-								</div>
-								<div class="col-lg-4">
-									<div class="mb-4">
-										<label class="form-label">Quantity</label>
-										<div class="row gx-2"></div>
-										<input class="form-control" type="number">
-									</div>
-								</div>
-
-								<div class="col-lg-4">
-									<label class="form-label">Currency</label>
-									<input class="form-control" value="USD" type="text" readonly>
-
-								</div>
-								<div class="mb-4">
-									<label class="form-label">Full description</label>
-									<br>
-									<textarea class="form-control" cols="90" rows="8"></textarea>
-								</div>
-								<div class="mb-4">
-									<label class="form-label">Category</label>
-									<select class="form-select">
-										<option th:each="category: ${categories}" th:value="${category.id}"
-											th:text="${category.name}"> </option>
-									</select>
-								</div>
-							</div>
-
-
-
+					<div class="content-header">
+						<a th:href="@{/vendor/product/list}">
+							<i class="material-icons md-arrow_back">
+							</i> Go back</a>
+						<br>
 					</div>
 				</div>
-				<div>
-					<button class="btn btn-primary" type="submit">Add Product</button>
-				</div>
+				<div class="col-lg-6">
+					<div class="card mb-4">
 
-			</div>
-
-			
-			<div class="col-lg-3">
-				<div class="card mb-4">
-					<div class="card-header">
-						<h4>Media</h4>
-					</div>
-					<div class="card-body">
-						<div class="input-upload">
-							<!-- Hình chính -->
-							<img id="mainPreview" src="/vendor/assets/imgs/theme/upload.svg" alt="Main Preview" class="main-image-preview">
-
-							<!-- Hình nhỏ -->
-							<div class="thumbnail-container" id="thumbnailContainer"></div>
-
-							<!-- Input file -->
-							<input class="form-control" type="file" multiple id="imageInput" accept="image/*">
+						<div class="card-header">
+							<h2 class="content-title">Add New Product</h2>
+							<h4>Basic</h4>
 						</div>
+						<div class="card-body">
+							<form>
+								<div class="mb-4">
+									<label class="form-label" for="product_name">Product title</label>
+									<input class="form-control" id="product_name" type="text" placeholder="Type here" th:field="${product.name}">
+								</div>
 
 
+								<div class="row">
+									<div class="col-lg-4">
+										<div class="mb-4">
+											<label class="form-label">Price</label>
+											<div class="row gx-2"></div>
+											<input class="form-control" placeholder="$" type="number" th:field="${product.price}">
+										</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-4">
+											<label class="form-label">Quantity</label>
+											<div class="row gx-2"></div>
+											<input class="form-control" type="number" th:field="${product.quantity}">
+										</div>
+									</div>
+
+									<div class="col-lg-4">
+										<label class="form-label">Currency</label>
+										<input class="form-control" value="USD" type="text" readonly>
+
+									</div>
+									<div class="mb-4">
+										<label class="form-label">Full description</label>
+										<br>
+										<textarea class="form-control" cols="90" rows="8" th:field="${product.description}">
+											
+										</textarea>
+									</div>
+									<div class="mb-4">
+										<label class="form-label">Category</label>
+										<select class="form-select" name="categoryId">
+											<option th:each="category: ${categories}" th:value="${category.id}"
+												th:text="${category.name}"> </option>
+										</select>
+									</div>
+								</div>
+
+
+
+						</div>
 					</div>
+					<div>
+						<button class="btn btn-primary" type="submit">Add Product</button>
+					</div>
+
 				</div>
 
 
+				<div class="col-lg-3">
+					<div class="card mb-4">
+						<div class="card-header">
+							<h4>Media</h4>
+						</div>
+						<div class="card-body">
+							<div class="input-upload">
+								<!-- Hình chính -->
+								<img id="mainPreview" src="/vendor/assets/imgs/theme/upload.svg" alt="Main Preview"
+									class="main-image-preview">
 
+								<!-- Hình nhỏ -->
+								<div class="thumbnail-container" id="thumbnailContainer"></div>
+
+								<!-- Input file -->
+								<input class="form-control" type="file" multiple id="imageInput" accept="image/*" name="files">
+							</div>
+
+
+						</div>
+					</div>
+
+				</div>
 			</div>
-		</div>
 		</form>
+		
 		<script>
 			document.getElementById("imageInput").addEventListener("change", function (event) {
 				const files = event.target.files;
@@ -165,6 +168,24 @@
 					reader.readAsDataURL(file);
 				});
 			});
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+		<script>
+			// JavaScript to display SweetAlert2 based on flash attributes
+				document.addEventListener('DOMContentLoaded', function () {
+					const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+					const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+					if (sweetAlertStatus && sweetAlertMessage) {
+						Swal.fire({
+							icon: sweetAlertStatus, // 'success' or 'error'
+							title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+							text: sweetAlertMessage,
+							showConfirmButton: false,
+							timer: 3000 // Automatically close after 3 seconds
+						});
+					}
+				});
 		</script>
 
 
