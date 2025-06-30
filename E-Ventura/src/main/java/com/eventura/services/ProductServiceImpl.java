@@ -123,6 +123,12 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
+	public Page<ProductReviews> findProductReviewByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productReviewsRepository.findProductReviewByVendorId(vendorId, pageable);
+	}
+	
+
 	public List<ProductAttributes> findProductAttributeByProductId(int id) {
 		
 		return productAttributeRepository.findDistinctByProductId(id);

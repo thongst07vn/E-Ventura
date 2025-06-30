@@ -23,4 +23,8 @@ public interface ProductReviewsRepository extends JpaRepository<ProductReviews, 
 	
 	@Query("select avg(pr.rating) from ProductReviews pr where pr.products.id = :id")
 	public double avgProductReview(@Param("id") int id);
+	
+	@Query("FROM ProductReviews pr WHERE pr.products.vendors.id = :vendorId")
+	Page<ProductReviews> findProductReviewByVendorId(@Param("vendorId") int vendorId, Pageable pageable);
+
 }
