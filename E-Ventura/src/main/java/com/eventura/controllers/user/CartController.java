@@ -32,6 +32,7 @@ import com.eventura.entities.Coupons;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
 import com.eventura.entities.Vendors;
+import com.eventura.entities.Vouchers;
 import com.eventura.services.AddressService;
 import com.eventura.services.CartService;
 import com.eventura.services.CategoryService;
@@ -41,6 +42,7 @@ import com.eventura.services.ProductVariantService;
 import com.eventura.services.UserAddressService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorService;
+import com.eventura.services.VouchersService;
 
 @Controller
 @RequestMapping({"customer/cart"})
@@ -63,8 +65,9 @@ public class CartController {
 	@Autowired
 	private UserAddressService userAddressService;
 	@Autowired
-	private AddressService addressService;
-	
+	private AddressService addressService;	
+	@Autowired
+	private VouchersService vouchersService;
 	// User Cart
 	@GetMapping({"cartitems"})
 	public String cartList(Authentication authentication, ModelMap modelMap, @AuthenticationPrincipal UserDetails userDetails) {
@@ -160,6 +163,9 @@ public class CartController {
 		UserAddress addAddressVariable = new UserAddress();
 		List<CartItems> checkoutList = new ArrayList();
 		Map<Vendors, List<CartItemsDTO>> groupedCheckoutList = new HashMap<>();
+		Map<Integer, List<Vouchers>> voucherByVendorList = new HashMap<>();
+		List<Vouchers> voucherByEventura = new ArrayList<>();
+
 		List<Coupons> allCoupons = couponsService.findAllCoupons();	
 		double subTotal = 0;
 		if (userDetails != null) {
@@ -215,11 +221,26 @@ public class CartController {
 			    .computeIfAbsent(vendor, k -> new ArrayList<>())
 			    .add(dto);
 			if(dto.isHasDiscount()) {
-				subTotal += (afterDiscountPrice*item.getQuantity());
+				subTotal += (afterDiscountPrice*item.getQuantity());   
 			} else {
 				subTotal += (originalPrice*item.getQuantity());				
 			}
 	    }
+		for(Vendors vendor : groupedCheckoutList.keySet()) {
+			double totalVendor = 0;
+			if(groupedCheckoutList.containsKey(vendor)) {
+				for (CartItemsDTO dto : groupedCheckoutList.get(vendor)) {
+					if(dto.isHasDiscount()) {
+						totalVendor += (dto.getAfterDiscountPrice()*dto.getCartItem().getQuantity());   
+					} else {
+						totalVendor += (dto.getOriginalPrice()*dto.getCartItem().getQuantity());				
+					}
+				}
+								
+			}
+			double finalCurrentVendorTotal = totalVendor;
+			voucherByVendorList.computeIfAbsent(vendor.getId(), k -> vouchersService.findAllVoucherByVendorId(vendor.getId(), finalCurrentVendorTotal));
+		}
 		modelMap.put("checkoutItems", checkoutItems);
 		modelMap.put("provinces", addressService.findAllProvinces());
 		modelMap.put("user", user);

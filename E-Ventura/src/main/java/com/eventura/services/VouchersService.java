@@ -16,4 +16,6 @@ public interface VouchersService{
 	
 	public Page<Vouchers> findAll(Pageable pageable);
 	
+	public List<Vouchers> findAllVoucherByVendorId(int id, double value);
+	public List<Vouchers> findAllVoucherByEventura(double value);
 }
