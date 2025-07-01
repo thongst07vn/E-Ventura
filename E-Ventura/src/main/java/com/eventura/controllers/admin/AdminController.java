@@ -37,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2UserServices;
 import com.eventura.dtos.ProductDTO;
+import com.eventura.entities.Coupons;
 import com.eventura.entities.OrderItems;
 import com.eventura.entities.OrderItemsOrderStatus;
 import com.eventura.entities.OrderItemsOrderStatusId;
@@ -47,8 +48,10 @@ import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
 import com.eventura.entities.VendorSettings;
 import com.eventura.entities.Vendors;
+import com.eventura.entities.Vouchers;
 import com.eventura.services.CategoryService;
 import com.eventura.services.CommissionsService;
+import com.eventura.services.CouponsService;
 import com.eventura.services.OrderItemService;
 import com.eventura.services.OrderService;
 import com.eventura.services.OrderStatusService;
@@ -57,8 +60,8 @@ import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
 import com.eventura.services.VendorSettingService;
+import com.eventura.services.VouchersService;
 import com.example.demo.helpers.FileHelper;
-
 
 @Controller
 @RequestMapping("admin")
@@ -84,6 +87,11 @@ public class AdminController {
 	private OrderStatusService orderStatusService;
 	@Autowired
 	private VendorSettingService vendorSettingService;
+	@Autowired
+	private CouponsService couponsService;
+	@Autowired
+	private VouchersService vouchersService;
+
 	AdminController(AccountOAuth2UserServices accountOAuth2UserServices) {
 	}
 
@@ -104,8 +112,8 @@ public class AdminController {
 		modelMap.put("countActivityLogPC", userService.countActivityLogPC());
 		modelMap.put("countActivityLogPhone", userService.countActivityLogPhone());
 		modelMap.put("countCommission", commissionsService.countCommission());
-		modelMap.put("sumCommission",commissionsService.sumCommission());
-		
+		modelMap.put("sumCommission", commissionsService.sumCommission());
+
 		model.addAttribute("currentPage", "dashboard");
 		return "admin/page/dashboard/index";
 	}
@@ -117,31 +125,34 @@ public class AdminController {
 //		map.put("categories", categoryService.findAll());
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<ProductCategories> catePage = categoryService.findAlls(pageable);
-		map.put("categories", catePage.getContent().stream()
-	            .filter(category -> category.getDeletedAt() == null && category.getId() != 1)
-	            .collect(Collectors.toList()));
+		map.put("categories",
+				catePage.getContent().stream()
+						.filter(category -> category.getDeletedAt() == null && category.getId() != 1)
+						.collect(Collectors.toList()));
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", catePage.getTotalPages());
 		model.addAttribute("lastPageIndex", catePage.getTotalPages() - 1);
 		model.addAttribute("pageSize", pageSize);
-		map.put("category",new ProductCategories());
+		map.put("category", new ProductCategories());
 		model.addAttribute("currentPage", "category");
 		return "admin/page/category/list";
 	}
+
 	@GetMapping("category/search-by-keyword")
 	public String categorySearchByKeyword(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "20") int pageSize, @RequestParam("keyword") String keyword) {
 //		map.put("categories", categoryService.findAll());
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<ProductCategories> catePage = categoryService.findByKeywordPage(keyword,pageable);
-		map.put("categories", catePage.getContent().stream()
-	            .filter(category -> category.getDeletedAt() == null && category.getId() != 1)
-	            .collect(Collectors.toList()));
+		Page<ProductCategories> catePage = categoryService.findByKeywordPage(keyword, pageable);
+		map.put("categories",
+				catePage.getContent().stream()
+						.filter(category -> category.getDeletedAt() == null && category.getId() != 1)
+						.collect(Collectors.toList()));
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", catePage.getTotalPages());
 		model.addAttribute("lastPageIndex", catePage.getTotalPages() - 1);
 		model.addAttribute("pageSize", pageSize);
-		map.put("category",new ProductCategories());
+		map.put("category", new ProductCategories());
 		map.put("keyword", keyword);
 		model.addAttribute("currentPage", "category");
 		return "admin/page/category/list";
@@ -152,62 +163,69 @@ public class AdminController {
 		ProductCategories productCategories = categoryService.findById(id);
 		ProductCategories productCategories1 = categoryService.findById(1);
 		productCategories.setDeletedAt(new Date());
-	    for(Products product : productService.findByCategoryId(productCategories.getId())) {
-	    	product.setProductCategories(productCategories1);
-	    }
+		for (Products product : productService.findByCategoryId(productCategories.getId())) {
+			product.setProductCategories(productCategories1);
+		}
 		if (categoryService.save(productCategories)) {
 			redirectAttributes.addFlashAttribute("sweetAlert", "success");
-			redirectAttributes.addFlashAttribute("message", "Category "+productCategories.getName()+" deleted successfully!");
+			redirectAttributes.addFlashAttribute("message",
+					"Category " + productCategories.getName() + " deleted successfully!");
 			return "redirect:/admin/category/list";
 		} else {
 			redirectAttributes.addFlashAttribute("sweetAlert", "error");
-			redirectAttributes.addFlashAttribute("message", "Failed to delete "+productCategories.getName()+"!");
+			redirectAttributes.addFlashAttribute("message", "Failed to delete " + productCategories.getName() + "!");
 			return "redirect:/admin/category/list";
 		}
 	}
+
 	@PostMapping("category/add")
-	public String categoryAdd(@ModelAttribute("category") ProductCategories category, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-		category.setCreatedAt(new Date());
-		category.setUpdatedAt(new Date());
-		 // 2. Handle file upload for avatar
-	    if (file != null && !file.isEmpty()) {
-	        try {
-	            String fileName = FileHelper.generateFileName(file.getOriginalFilename());
-	            // Using getFile() might fail if running from a JAR; consider using getResourceAsStream() and Files.copy()
-	            // Or get a path outside of the JAR for persistent storage
-	            File imagesFolder = new ClassPathResource("static/assets/imgs/others/").getFile();
-	            Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
-	            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-	            category.setPhoto(fileName);
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            // If file upload fails, fall back to existing avatar if available
-	            category.setPhoto("noimg.jpg");	
-	            // Optionally, rethrow a custom exception or add a logging message
-	        }
-	    }else {
-	    	 category.setPhoto("noimg.jpg");
-		}
-		if (categoryService.save(category)) {
-			redirectAttributes.addFlashAttribute("sweetAlert", "success");
-			redirectAttributes.addFlashAttribute("message", "Category "+category.getName()+" add successfully!");
-			return "redirect:/admin/category/list";
-		} else {
-			redirectAttributes.addFlashAttribute("sweetAlert", "error");
-			redirectAttributes.addFlashAttribute("message", "Failed to add "+category.getName()+"!");
-			return "redirect:/admin/category/list";
-		}
-	}
-	@PostMapping("category/edit")
-	public String categoryEdit(@ModelAttribute("category") ProductCategories category, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	public String categoryAdd(@ModelAttribute("category") ProductCategories category,
+			@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 		category.setCreatedAt(new Date());
 		category.setUpdatedAt(new Date());
 		// 2. Handle file upload for avatar
 		if (file != null && !file.isEmpty()) {
 			try {
 				String fileName = FileHelper.generateFileName(file.getOriginalFilename());
-				if(category.getPhoto() != fileName) {					
-					// Using getFile() might fail if running from a JAR; consider using getResourceAsStream() and Files.copy()
+				// Using getFile() might fail if running from a JAR; consider using
+				// getResourceAsStream() and Files.copy()
+				// Or get a path outside of the JAR for persistent storage
+				File imagesFolder = new ClassPathResource("static/assets/imgs/others/").getFile();
+				Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
+				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				category.setPhoto(fileName);
+			} catch (Exception e) {
+				e.printStackTrace();
+				// If file upload fails, fall back to existing avatar if available
+				category.setPhoto("noimg.jpg");
+				// Optionally, rethrow a custom exception or add a logging message
+			}
+		} else {
+			category.setPhoto("noimg.jpg");
+		}
+		if (categoryService.save(category)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Category " + category.getName() + " add successfully!");
+			return "redirect:/admin/category/list";
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Failed to add " + category.getName() + "!");
+			return "redirect:/admin/category/list";
+		}
+	}
+
+	@PostMapping("category/edit")
+	public String categoryEdit(@ModelAttribute("category") ProductCategories category,
+			@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+		category.setCreatedAt(new Date());
+		category.setUpdatedAt(new Date());
+		// 2. Handle file upload for avatar
+		if (file != null && !file.isEmpty()) {
+			try {
+				String fileName = FileHelper.generateFileName(file.getOriginalFilename());
+				if (category.getPhoto() != fileName) {
+					// Using getFile() might fail if running from a JAR; consider using
+					// getResourceAsStream() and Files.copy()
 					// Or get a path outside of the JAR for persistent storage
 					File imagesFolder = new ClassPathResource("static/assets/imgs/others/").getFile();
 					Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
@@ -227,7 +245,7 @@ public class AdminController {
 			redirectAttributes.addFlashAttribute("message", "Failed to edit!");
 			return "redirect:/admin/category/list";
 		}
-		
+
 	}
 
 	// ======= PRODUCT ========
@@ -250,8 +268,7 @@ public class AdminController {
 
 		}
 		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
-				productPage.getTotalElements()
-		);
+				productPage.getTotalElements());
 		map.put("products", productDTOPage.getContent());
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", productPage.getTotalPages());
@@ -307,7 +324,8 @@ public class AdminController {
 			modelMap.put("avgVendorReview", 0);
 			modelMap.put("widthVendor", Math.min(0, 5) * 20);
 		}
-		modelMap.put("productAttributes", productService.findProductAttributeByProductId(productService.findById(id).getId()));
+		modelMap.put("productAttributes",
+				productService.findProductAttributeByProductId(productService.findById(id).getId()));
 		modelMap.put("currentPage", "product");
 		return "admin/page/product/detail";
 	}
@@ -416,13 +434,13 @@ public class AdminController {
 
 			// Lặp qua productPage và thêm các ProductDTO vào List
 			for (Products product : productPage) {
-				 if (product.getDeletedAt() == null) {					 
-					 if (!productService.findProductReview(product.getId()).isEmpty()) {
-						 productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-					 } else {
-						 productDTOList.add(new ProductDTO(product, 0));
-					 }
-				 }
+				if (product.getDeletedAt() == null) {
+					if (!productService.findProductReview(product.getId()).isEmpty()) {
+						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+					} else {
+						productDTOList.add(new ProductDTO(product, 0));
+					}
+				}
 			}
 			productDTOList.sort(Comparator.comparing(ProductDTO::getRating, Comparator.reverseOrder()));
 			// Tạo một PageImpl mới từ List các ProductDTO, Pageable và tổng số phần tử
@@ -448,12 +466,13 @@ public class AdminController {
 		map.put("currentPage", "product");
 		return "admin/page/product/list";
 	}
+
 	@GetMapping("product/search-by-keyword")
 	public String productBykeyword(Model model, ModelMap map, @RequestParam(defaultValue = "0") int page,
 			@RequestParam("keyword") String keyword) {
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findByKeywordPage(keyword,pageable);
+		Page<Products> productPage = productService.findByKeywordPage(keyword, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		for (Products product : productPage) {
@@ -467,8 +486,7 @@ public class AdminController {
 
 		}
 		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
-				productPage.getTotalElements()
-		);
+				productPage.getTotalElements());
 		map.put("products", productDTOPage.getContent());
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", productPage.getTotalPages());
@@ -481,14 +499,14 @@ public class AdminController {
 		model.addAttribute("currentPage", "product");
 		return "admin/page/product/list";
 	}
-	
+
 	// ======= Order ========
 	@GetMapping("order/list")
 	public String orderList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Orders> orderPage = orderService.findAlls(pageable);
-		
+
 		modelMap.put("orders", orderPage);
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", orderPage.getTotalPages());
@@ -500,32 +518,32 @@ public class AdminController {
 	}
 
 	@GetMapping("order/detail/{id}")
-	public String orderDetail(Model model,ModelMap modelMap,@PathVariable("id")int id, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int pageSize) {
+	public String orderDetail(Model model, ModelMap modelMap, @PathVariable("id") int id,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int pageSize) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<OrderItems> orderPage = orderItemService.findAllOrderItemsByOrderIdPage(id, pageable);
 		Orders order = orderService.findOrderByOrderId(id);
 
-		List<Map<String, Object>> orderItemStatuses = orderPage.getContent().stream()
-			    .map(item -> {
-			        // Assuming findStatusByOrderItemId returns a list of statuses,
-			        // and you want the one with the latest timestamp (e.g., 'updatedAt' or 'createdAt')
-			        List<OrderItemsOrderStatus> statuses = orderStatusService.findStatusByOrderItemId(item.getId());
+		List<Map<String, Object>> orderItemStatuses = orderPage.getContent().stream().map(item -> {
+			// Assuming findStatusByOrderItemId returns a list of statuses,
+			// and you want the one with the latest timestamp (e.g., 'updatedAt' or
+			// 'createdAt')
+			List<OrderItemsOrderStatus> statuses = orderStatusService.findStatusByOrderItemId(item.getId());
 
-			        // Find the latest status for the current order item
-			        OrderItemsOrderStatus latestStatus = statuses.stream()
-			            .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt)) // Or getCreatedAt() if that's your timestamp
-			            .orElse(null); // Handle case where no status is found
+			// Find the latest status for the current order item
+			OrderItemsOrderStatus latestStatus = statuses.stream()
+					.max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt)) // Or getCreatedAt() if that's your
+																					// timestamp
+					.orElse(null); // Handle case where no status is found
 
-			        Map<String, Object> statusMap = new HashMap<>();
-			        if (latestStatus != null) {
-			            statusMap.put("statusName", latestStatus.getOrderStatus().getName());
-			            statusMap.put("orderItemId", latestStatus.getOrderItems().getId());
-			        }
-			        return statusMap;
-			    })
-			    .filter(map -> map.containsKey("statusName")) // Filter out items that didn't have a status
-			    .collect(Collectors.toList());
+			Map<String, Object> statusMap = new HashMap<>();
+			if (latestStatus != null) {
+				statusMap.put("statusName", latestStatus.getOrderStatus().getName());
+				statusMap.put("orderItemId", latestStatus.getOrderItems().getId());
+			}
+			return statusMap;
+		}).filter(map -> map.containsKey("statusName")) // Filter out items that didn't have a status
+				.collect(Collectors.toList());
 
 		modelMap.put("orderItemStatuses", orderItemStatuses);
 		modelMap.put("order", order);
@@ -553,7 +571,7 @@ public class AdminController {
 			userPage = userService.findAlls(pageable);
 			break;
 		}
-		
+
 		modelMap.put("users", userPage);
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
@@ -584,7 +602,7 @@ public class AdminController {
 			break;
 		}
 		modelMap.put("users", userPage);
-		
+
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
 		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
@@ -664,16 +682,17 @@ public class AdminController {
 
 	@GetMapping("vendor/search-by-keyword")
 	public String vendorSearchByKeyword(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "12") int pageSize, @RequestParam("keyword") String keyword, @RequestParam(defaultValue = "show_all") String filter) {
+			@RequestParam(defaultValue = "12") int pageSize, @RequestParam("keyword") String keyword,
+			@RequestParam(defaultValue = "show_all") String filter) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Vendors> userPage;
-		
+
 		switch (filter) {
 		case "enabled":
-			userPage = vendorService.findVendorsByDeletedAtISNULLByKeyword(keyword,pageable);
+			userPage = vendorService.findVendorsByDeletedAtISNULLByKeyword(keyword, pageable);
 			break;
 		case "disabled":
-			userPage = vendorService.findVendorsByDeletedAtNOTNULLByKeyword(keyword,pageable);
+			userPage = vendorService.findVendorsByDeletedAtNOTNULLByKeyword(keyword, pageable);
 			break;
 		case "show_all":
 		default:
@@ -763,24 +782,6 @@ public class AdminController {
 		}
 	}
 
-	// ======= Promotion ========
-	@GetMapping("coupon/list")
-	public String couponList(Model model) {
-		model.addAttribute("currentPage", "coupon");
-		return "admin/page/coupon/list";
-	}
-
-	@GetMapping("coupon/add")
-	public String addCoupon(Model model) {
-		model.addAttribute("currentPage", "coupon");
-		return "admin/page/coupon/add";
-	}
-
-	@GetMapping("coupon/edit")
-	public String editCoupon(Model model) {
-		model.addAttribute("currentPage", "coupon");
-		return "admin/page/coupon/edit";
-	}
 	// ======= Commission_Setting ========
 	@GetMapping("commission-setting/list")
 	public String commissionSettingList(Model model, ModelMap modelMap) {
@@ -789,14 +790,16 @@ public class AdminController {
 		model.addAttribute("currentPage", "setting");
 		return "admin/page/setting/list";
 	}
+
 	@PostMapping("commission-setting/add")
-	public String commissionSettingAdd(@ModelAttribute("vendorSetting") VendorSettings vendorSetting,  RedirectAttributes redirectAttributes) {
+	public String commissionSettingAdd(@ModelAttribute("vendorSetting") VendorSettings vendorSetting,
+			RedirectAttributes redirectAttributes) {
 		vendorSetting.setCreatedAt(new Date());
 		vendorSetting.setUpdatedAt(new Date());
 		vendorSetting.setDeletedAt(new Date());
 		vendorSetting.setCommissionValue(vendorSetting.getCommissionValue() / 100.0);
-		
-		 // 2. Handle file upload for avatar
+
+		// 2. Handle file upload for avatar
 		if (vendorSettingService.save(vendorSetting)) {
 			redirectAttributes.addFlashAttribute("sweetAlert", "success");
 			redirectAttributes.addFlashAttribute("message", "Vendor type  add successfully!");
@@ -806,5 +809,41 @@ public class AdminController {
 			redirectAttributes.addFlashAttribute("message", "Failed to add Vendor type!");
 			return "redirect:/admin/commission-setting/list";
 		}
+	}
+
+	// ======= Promotion_coupon ========
+	@GetMapping("coupon/list")
+	public String couponList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Coupons> couponPage;
+		switch (filter) {
+		case "enabled":
+			couponPage = couponsService.findAllByDeletedAtISNUL(pageable);
+			break;
+		case "disabled":
+			couponPage = couponsService.findAllByDeletedAtISNOTNUL(pageable);
+			break;
+		case "show_all":
+		default:
+			couponPage = couponsService.findAll(pageable);
+			break;
+		}
+		modelMap.put("coupons", couponPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", couponPage.getTotalPages());
+		model.addAttribute("lastPageIndex", couponPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("filter", filter);
+		model.addAttribute("currentPage", "coupon");
+		return "admin/page/coupon/list";
+	}
+	
+	
+	// ======= Promotion_coupon ========
+	@GetMapping("voucher/list")
+	public String addCoupon(Model model) {
+		model.addAttribute("currentPage", "coupon");
+		return "admin/page/voucher/list";
 	}
 }
