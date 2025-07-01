@@ -3661,7 +3661,25 @@ a.text-brand-3:hover {
   height: 24px;
   max-width: none;
 }
+.card-clickable {
+    cursor: pointer; /* Thay đổi con trỏ chuột thành hình bàn tay */
+    transition: background-color 0.3s ease; /* Thêm hiệu ứng chuyển đổi mượt mà */
+}
 
+.card-clickable:hover {
+    background-color: #f0f0f0; /* Thay đổi màu nền khi di chuột qua */
+    /* Hoặc các hiệu ứng khác như box-shadow, transform, v.v. */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ví dụ: thêm đổ bóng */
+}
+.payment-clickable {
+    cursor: pointer; /* Thay đổi con trỏ chuột thành hình bàn tay */
+    transition: background-color 0.3s ease; /* Thêm hiệu ứng chuyển đổi mượt mà */
+}
+
+.payment-clickable:hover {
+    /* Hoặc các hiệu ứng khác như box-shadow, transform, v.v. */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ví dụ: thêm đổ bóng */
+}
 
 @media (min-width: 1400px) {
   .header-container .container {

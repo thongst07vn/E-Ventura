@@ -28,5 +28,5 @@ public interface VendorRepository extends JpaRepository<Vendors, Integer> {
 	
 	@Query("FROM Vendors where  users.deletedAt IS NULL and name like %:keyword%")
 	Page<Vendors> findVendorsByDeletedAtISNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
-
+	
 }

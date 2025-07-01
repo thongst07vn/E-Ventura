@@ -60,7 +60,7 @@ public class UserController {
 
 	@GetMapping({ "home", "/" })
 	public String home(ModelMap modelMap,HttpSession session) {
-		List<ProductCategories> categories = categoryService.findAll();
+		List<ProductCategories> categories = categoryService.findAll().subList(1, categoryService.findAll().size());
 		List<Products> top10products = productService.findTopNewProduct();
 
 		modelMap.put("categories", categories);
@@ -212,6 +212,7 @@ public class UserController {
 			return "redirect:/customer/profile";    	    	
 		} 		    	
 	}
+
 	
 	@PostMapping({"editaddress"})
 	public String EditAddress(@RequestParam("userId") int userId,@RequestParam("editProvince") String editProvince,@RequestParam("editDistrict") String editDistrict,@RequestParam("editWard") String editWard, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
@@ -253,6 +254,74 @@ public class UserController {
 //		return "redirect:/customer/profile";    	    	
 		
 	}
+	//Check out Address
+	@PostMapping({"addaddressincheckout"})
+	public String AddAddressIncheckout(@RequestParam("userId") int userId, 
+			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable, 
+			RedirectAttributes redirectAttributes,
+			@RequestParam("checkoutItems") String checkoutItems) {
+		Users user = userService.findById(userId);
+		addAddressVariable.setUsers(user);
+		addAddressVariable.setCreatedAt(new Date());
+		if(addAddressVariable.getName()==null || addAddressVariable.getName().trim().isEmpty()) {
+			addAddressVariable.setName(user.getUsername());			
+		}
+		if(addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg","Add address success");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	
+		} else {
+			redirectAttributes.addFlashAttribute("msg","Add address failed");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	    	
+		} 		    	
+	}
+	
+	@PostMapping({"editaddressincheckout"})
+	public String EditAddressIncheckout(@RequestParam("userId") int userId,
+			@RequestParam("editProvince") String editProvince,
+			@RequestParam("editDistrict") String editDistrict,
+			@RequestParam("editWard") String editWard, 
+			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable, 
+			RedirectAttributes redirectAttributes,
+			@RequestParam("checkoutItems") String checkoutItems) {
+		Users user = userService.findById(userId);
+		addAddressVariable.setUsers(user);
+		addAddressVariable.setCreatedAt(new Date());
+		addAddressVariable.setProvinces(addressService.findProvinceById(editProvince));
+		addAddressVariable.setDistricts(addressService.findDistrictById(editDistrict));
+		addAddressVariable.setWards(addressService.findWardById(editWard));
 
 
+		if(addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg","Edit address success");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	
+		} else {
+			redirectAttributes.addFlashAttribute("msg","Edit address failed");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;     	    	
+		} 	
+//		return "redirect:/customer/profile";    	    			
+	}
+	
+	@PostMapping({"deleteaddressincheckout"})
+	public String DeleteAddressIncheckout(@RequestParam("addressId") int addressId,
+			RedirectAttributes redirectAttributes,
+			@RequestParam("checkoutItems") String checkoutItems) {
+		UserAddress address = addressService.findById(addressId);
+		address.setDeletedAt(new Date());
+		System.out.println(address.getName());
+		if(addressService.save(address)) {
+			redirectAttributes.addFlashAttribute("msg","Delete address success");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
+			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	
+		} else {
+			redirectAttributes.addFlashAttribute("msg","Delete address failed");
+			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
+			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;     	    	
+		} 	
+//		return "redirect:/customer/profile";    	    	
+		
+	}
 }

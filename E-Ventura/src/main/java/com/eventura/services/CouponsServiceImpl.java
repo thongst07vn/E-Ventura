@@ -34,6 +34,11 @@ public class CouponsServiceImpl implements CouponsService {
 	}
 
 	@Override
+	public List<Coupons> findAllCouponsByVendorId(int id) {
+		
+		return couponRepository.findAllCouponsByVendorId(id);
+	}
+  @Override
 	public Page<Coupons> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return couponRepository.findAll(pageable);
@@ -67,7 +72,5 @@ public class CouponsServiceImpl implements CouponsService {
 //	public Page<Coupons> findByKeyword(String keyword, Pageable pageable) {
 //		// TODO Auto-generated method stub
 //		return null;
-//	}
-	
-	
+//	}	
 }
