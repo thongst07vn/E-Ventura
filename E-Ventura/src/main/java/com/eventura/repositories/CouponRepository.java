@@ -2,6 +2,8 @@ package com.eventura.repositories;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,12 +12,29 @@ import org.springframework.stereotype.Repository;
 import com.eventura.entities.Coupons;
 import com.eventura.entities.Districts;
 import com.eventura.entities.Provinces;
+import com.eventura.entities.Users;
 import com.eventura.entities.Wards;
 
 @Repository
 public interface CouponRepository extends JpaRepository<Coupons, Integer> {
 	@Query("from Coupons where redeemAllowed = true and deletedAt is null and startTime <= current_timestamp() and endTime >= current_timestamp()")
 	public List<Coupons> findAllCoupons();
+
 	@Query("from Coupons where redeemAllowed = true and deletedAt is null and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id = :id")
 	public List<Coupons> findAllCouponsByVendorId(@Param("id") int id);
+
+	@Query("FROM Coupons WHERE deletedAt IS NULL ORDER BY createdAt DESC")
+	Page<Coupons> findAllByDeletedAtISNUL(Pageable pageable);
+
+	@Query("FROM Coupons WHERE deletedAt IS NOT NULL ORDER BY createdAt DESC")
+	Page<Coupons> findAllByDeletedAtISNOTNUL(Pageable pageable);
+	
+//	@Query("FROM Coupons WHERE deletedAt IS NOT NULL and username like %:keyword% ORDER BY u.createdAt DESC")
+//	public Page<Users> findUsersWithRoleId3ByDeletedAtNOTNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
+//	
+//	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and u.deletedAt IS NULL and username like %:keyword% ORDER BY u.createdAt DESC")
+//	Page<Users> findUsersWithRoleId3ByDeletedAtISNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
+//	
+//	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and username like %:keyword% ORDER BY u.createdAt DESC")
+//	Page<Users> findUsersWithRoleId3ByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

@@ -16,5 +16,12 @@ public interface CouponsService{
 	public List<Coupons> findAllCoupons();
 	
 	public List<Coupons> findAllCouponsByVendorId(int id);
-	
+
+	public Page<Coupons> findAll(Pageable pageable);
+	public Page<Coupons> findAllByDeletedAtISNUL(Pageable pageable);
+	public Page<Coupons> findAllByDeletedAtISNOTNUL(Pageable pageable);
+//	public Page<Coupons> findByDeletedAtNOTNULLByKeyword(String keyword, Pageable pageable);
+//	public Page<Coupons> findByDeletedAtISNULLByKeyword(String keyword, Pageable pageable);
+//	public Page<Coupons> findByKeyword(String keyword, Pageable pageable);
+
 }

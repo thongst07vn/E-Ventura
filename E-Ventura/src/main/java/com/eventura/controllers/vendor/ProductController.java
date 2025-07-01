@@ -223,7 +223,25 @@ public class ProductController {
 							 @RequestParam("files") List<MultipartFile> files,
 							 HttpSession session, RedirectAttributes redirectAttributes) {
 		
-		
+		if (product.getName() == null || product.getName().trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("msgErrorName", "* Product's Name cannot be empty.");
+			return "redirect:/vendor/product/add";
+		}
+
+		if (product.getPrice() <= 0) {
+			redirectAttributes.addFlashAttribute("msgErrorPrice", "* Price must be greater than 0.");
+			return "redirect:/vendor/product/add";
+		}
+
+		if (product.getQuantity() <= 0) {
+			redirectAttributes.addFlashAttribute("msgErrorQuantity", "* Quantity must be greater than 0.");
+			return "redirect:/vendor/product/add";
+		}
+
+		if (product.getDescription() == null || product.getDescription().trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("msgErrorDescription", "* Description cannot be empty.");
+			return "redirect:/vendor/product/add";
+		}
 		
 		/* VENDOR */
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
@@ -263,9 +281,8 @@ public class ProductController {
 						media.setProducts(product);
 						media.setCreatedAt(new Date()); 
 						media.setUpdatedAt(new Date()); 
-
-
 						mediaService.save(media); // Save media sau
+						
 						mediasSet.add(media);
 
 					} catch (Exception e) {
@@ -292,9 +309,9 @@ public class ProductController {
 	@GetMapping("edit/{id}")
 	public String productEdit(@PathVariable("id") int id, ModelMap modelMap) {
 		modelMap.put("currentPage", "product");
-
-		modelMap.put("productVariants", productVariantService.findByProductId(id));
+		
 		modelMap.put("product", productService.findById(id));
+		modelMap.put("productVariants", productVariantService.findByProductId(id));
 		modelMap.put("categories", categoryService.findAll());
 
 		return "vendor/pages/product/edit";
