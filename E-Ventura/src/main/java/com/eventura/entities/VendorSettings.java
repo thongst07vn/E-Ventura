@@ -27,6 +27,7 @@ public class VendorSettings implements java.io.Serializable {
 	private double commissionValue;
 	private Date createdAt;
 	private Date updatedAt;
+	private Date deletedAt;
 	private Set<Vendors> vendorses = new HashSet<Vendors>(0);
 
 	public VendorSettings() {
@@ -39,12 +40,13 @@ public class VendorSettings implements java.io.Serializable {
 		this.updatedAt = updatedAt;
 	}
 
-	public VendorSettings(String vendorType, double commissionValue, Date createdAt, Date updatedAt,
+	public VendorSettings(String vendorType, double commissionValue, Date createdAt, Date updatedAt, Date deletedAt,
 			Set<Vendors> vendorses) {
 		this.vendorType = vendorType;
 		this.commissionValue = commissionValue;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.deletedAt = deletedAt;
 		this.vendorses = vendorses;
 	}
 
@@ -97,7 +99,15 @@ public class VendorSettings implements java.io.Serializable {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "deleted_at", length = 19)
+	public Date getDeletedAt() {
+		return this.deletedAt;
+	}
 
+	public void setDeletedAt(Date deletedAt) {
+		this.deletedAt = deletedAt;
+	}
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendorSettings")
 	public Set<Vendors> getVendorses() {
 		return this.vendorses;

@@ -72,13 +72,13 @@
 									<div class="body-orders">
 										<div class="list-orders">
 											<th:block th:each="dtoItem : ${vendorEntry.value}">
-												<div class="card mb-2">
+												<div class="selectedToCheckoutCartItems card mb-2">
 													<div class="card-body bg-light">
 														<article class="box mb-3 bg-light">
 															<div class="item-orders">
 																<div class="item-wishlist">
 																	<div class="wishlist-cb">
-																		<input class="cb-layout cb-select" type="checkbox">
+																		<input class="cb-layout cb-select" type="checkbox" th:id="'selectedCheckBox_'+${dtoItem.cartItem.id}">
 																	</div>
 																	<div class="wishlist-product" style="width: 20%">
 																		<div class="product-wishlist">
@@ -140,24 +140,115 @@
 																	<div class="wishlist-status">
 																		<div class="box-quantity">
 																			<div class="input-quantity">
-																				<input class="font-xl color-brand-3" type="text"
-																					th:value="${dtoItem.cartItem.quantity}"> <span
-																					class="minus-cart"></span> <span class="plus-cart"></span>
+																			<form method="post" th:action="@{'/customer/cart/updatecartitemquantity/'+${dtoItem.cartItem.id}}">
+																			
+																				<input class="font-xl color-brand-3" type="text" readonly="readonly"
+																					th:value="${dtoItem.cartItem.quantity}" th:id="'updateCartItemQuantity_'+${dtoItem.cartItem.id}"> <span
+																					class="minus-cart" th:id="'minus_'+${dtoItem.cartItem.id}"></span> <span class="plus-cart" th:id="'plus_'+${dtoItem.cartItem.id}"></span>
+																			</form>
+																			<script
+																				th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+																			<script>
+																			$(document).ready(function() {
+																				$(document).on('click','#selectedCheckBox_[[${dtoItem.cartItem.id}]]', function() {
+																					
+																				});
+																			    // Xử lý sự kiện click cho nút "plus-cart"
+																			    $(document).on('click', '#plus_[[${dtoItem.cartItem.id}]]', function() {
+																			        updateQuantity($(this), 1); // Tăng số lượng lên 1
+																			    });
+
+																			    // Xử lý sự kiện click cho nút "minus-cart"
+																			    $(document).on('click', '#minus_[[${dtoItem.cartItem.id}]]', function() {
+																			        updateQuantity($(this), -1); // Giảm số lượng đi 1
+																			    });
+																			 // --- NEW: Handle input changes and Enter key press ---
+																			    
+																			    function updateQuantity(buttonElement, change) {
+																			        // Lấy ID của cartItem từ ID của nút (ví dụ: 'plus_123' -> 123)
+																			        const cartItemId = buttonElement.attr('id').split('_')[1];
+																			        const quantityInput = $('#updateCartItemQuantity_' + cartItemId);
+																			        let currentQuantity = parseInt(quantityInput.val());
+																			        let newQuantity = currentQuantity + change;
+
+																			        // Đảm bảo số lượng không nhỏ hơn 1
+																			        if (newQuantity < 1) {
+																			            newQuantity = 1;
+																			        }
+
+																			        // Cập nhật giá trị hiển thị ngay lập tức
+																			        quantityInput.val(newQuantity);
+
+																			        // Chuẩn bị dữ liệu để gửi
+																			        const requestData = {
+																			            quantity: newQuantity
+																			        };
+
+																			        // Gửi yêu cầu AJAX bằng jQuery
+																			        $.ajax({
+																			            url: '/customer/cart/updatecartitemquantity/' + cartItemId,
+																			            type: 'POST', // Hoặc 'PUT' nếu bạn muốn tuân thủ RESTful hơn
+																			            contentType: 'application/json',
+																			            // Nếu bạn sử dụng Spring Security và cần CSRF token:
+																			            // headers: {
+																			            //     'X-CSRF-TOKEN': $('meta[name="_csrf"]').attr('content') // Đảm bảo bạn có meta tag này
+																			            // },
+																			            data: JSON.stringify(requestData),
+																			            success: function(response) {
+																			                if (response.success) {
+																			                    console.log('Cập nhật số lượng thành công:', response.newQuantity);
+																			                    // Cập nhật tổng giá của sản phẩm và tổng giá giỏ hàng
+																									$('#updateCartItemQuantity_'+cartItemId).val(response.newQuantity);
+																			                    if('[[${dtoItem.hasDiscount}]]'){
+																			                    	console.log("hasdiscount, update value");
+																			                    	$('#selectedSubTotal_[[${dtoItem.cartItem.id}]]').val('[[${dtoItem.afterDiscountPrice}]]' * response.newQuantity);
+																			                    	$('#selectedSubTotalText_[[${dtoItem.cartItem.id}]]').text('[[${dtoItem.afterDiscountPrice}]]' * response.newQuantity);
+																			                    } else {
+																			                    	console.log("hasdiscount, update value");
+																			                    	$('#selectedSubTotal_[[${dtoItem.cartItem.id}]]').val('[[${dtoItem.originalPrice}]]' * response.newQuantity);
+																			                    	$('#selectedSubTotalText_[[${dtoItem.cartItem.id}]]').text('[[${dtoItem.originalPrice}]]' * response.newQuantity);
+																			                    	
+																			                    }
+																			                } else {
+																			                    alert('Có lỗi xảy ra khi cập nhật số lượng: ' + response.message);
+																			                    // Khôi phục lại giá trị cũ nếu cập nhật thất bại
+																			                    quantityInput.val(currentQuantity);
+																			                }
+																			            },
+																			            error: function(jqXHR, textStatus, errorThrown) {
+																			                console.error('Lỗi AJAX:', textStatus, errorThrown, jqXHR.responseText);
+																			                alert('Đã xảy ra lỗi khi kết nối đến máy chủ.');
+																			                // Khôi phục lại giá trị cũ nếu có lỗi
+																			                quantityInput.val(currentQuantity);
+																			            }
+																			        });
+																			    }
+																			});
+																			</script>
 																			</div>
 																		</div>
 																	</div>
-																	<div class="wishlist-action">
-																		<h5 class="color-brand-3">
-																		<p class="color-gray-500 price-line font-sm line-througt text-end">&nbsp;</p>
-																			$
-																			<th:block th:if="${dtoItem.hasDiscount}"
-																				th:text="${dtoItem.afterDiscountPrice * dtoItem.cartItem.quantity}"></th:block>
-																			<th:block th:if="${!dtoItem.hasDiscount}"
-																				th:text="${dtoItem.originalPrice * dtoItem.cartItem.quantity}"></th:block>
+																	<div class="wishlist-action" style="display: flex;">
+																		<h5 class="color-brand-3">$</h5>
+																		
+																		<h5 class="color-brand-3" th:if="${dtoItem.hasDiscount}" th:id="'selectedSubTotalText_'+${dtoItem.cartItem.id}"
+																				th:text="${dtoItem.afterDiscountPrice * dtoItem.cartItem.quantity}">																		
+																			<th:block >
+																					<input type="hidden" th:value="${dtoItem.afterDiscountPrice * dtoItem.cartItem.quantity}" th:id="'selectedSubTotal_'+${dtoItem.cartItem.id}">
+																				</th:block>
+																			
+																		</h5>
+																		<h5 class="color-brand-3" th:if="${!dtoItem.hasDiscount}" th:id="'selectedSubTotalText_'+${dtoItem.cartItem.id}"
+																				th:text="${dtoItem.originalPrice * dtoItem.cartItem.quantity}">																		
+																			
+																			<th:block >
+																				<input type="hidden" th:value="${dtoItem.originalPrice * dtoItem.cartItem.quantity}" th:id="'selectedSubTotal_'+${dtoItem.cartItem.id}">
+																				</th:block>
 																		</h5>
 																	</div>
 																	<div class="wishlist-remove">
-																		<a class="btn btn-delete" href="#"></a>
+																	
+																		<a class="btn btn-delete" th:href="@{'/customer/cart/deletecartitem/'+${dtoItem.cartItem.id}}"></a>
 																	</div>
 																</div>
 															</div>
@@ -165,10 +256,6 @@
 													</div>
 												</div>
 											</th:block>
-											<div class="form-group d-flex">
-												<h3 class="form-control mr-15">Apply a voucher</h3>
-												<button class="btn btn-buy w-auto">Apply</button>
-											</div>
 										</div>
 									</div>
 								</div>
@@ -186,7 +273,7 @@
 										<span class="font-md-bold color-gray-500">Subtotal</span>
 									</div>
 									<div class="col-6 text-end">
-										<h4>$2.51</h4>
+										<h4>$0</h4>
 									</div>
 								</div>
 							</div>
@@ -197,16 +284,6 @@
 									</div>
 									<div class="col-6 text-end">
 										<h4>Free</h4>
-									</div>
-								</div>
-							</div>
-							<div class="border-bottom mb-10">
-								<div class="row">
-									<div class="col-6">
-										<span class="font-md-bold color-gray-500">Estimate for</span>
-									</div>
-									<div class="col-6 text-end">
-										<h6>United Kingdom</h6>
 									</div>
 								</div>
 							</div>

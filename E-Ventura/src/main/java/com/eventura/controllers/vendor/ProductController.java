@@ -309,9 +309,9 @@ public class ProductController {
 	@GetMapping("edit/{id}")
 	public String productEdit(@PathVariable("id") int id, ModelMap modelMap) {
 		modelMap.put("currentPage", "product");
-
-		modelMap.put("productVariants", productVariantService.findByProductId(id));
+		
 		modelMap.put("product", productService.findById(id));
+		modelMap.put("productVariants", productVariantService.findByProductId(id));
 		modelMap.put("categories", categoryService.findAll());
 
 		return "vendor/pages/product/edit";

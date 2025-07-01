@@ -27,5 +27,18 @@ public class VendorSettingServiceImpl implements VendorSettingService {
 		return vendorSettingRepository.findById(id).get();
 	}
 
+	@Override
+	public boolean save(VendorSettings vendorSettings) {
+		// TODO Auto-generated method stub
+		try {
+			vendorSettingRepository.save(vendorSettings);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 
 }

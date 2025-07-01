@@ -54,6 +54,13 @@
 					<a th:href="@{/admin/voucher/list}">Coupon List</a>
 				</div>
 			</li>
+			<hr>
+			<li class="menu-item" th:classappend="${currentPage == 'setting' ? 'active' : ''}">
+				<a class="menu-link" th:href="@{/admin/commission-setting/list}">
+					<i class="icon material-icons md-settings"></i>
+					<span class="text">Setting Vendor Type</span>
+				</a>
+			</li>
 		</ul>
 	</nav>
 </aside>

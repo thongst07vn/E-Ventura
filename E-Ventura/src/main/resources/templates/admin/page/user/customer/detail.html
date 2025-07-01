@@ -33,7 +33,7 @@
 											<!-- col .//-->
 											<div class="col-6 mb-3">
 												<label class="form-label">Last name</label>
-												<p class="form-control">												
+												<p class="form-control">
 													<th:block th:text="${user.lastName}">
 													</th:block>
 												</p>
@@ -41,7 +41,7 @@
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Email</label>
-												<p class="form-control">												
+												<p class="form-control">
 													<th:block th:text="${user.email}">
 													</th:block>
 												</p>
@@ -49,22 +49,23 @@
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Username</label>
-												<p class="form-control">												
+												<p class="form-control">
 													<th:block th:text="${user.username}">
 													</th:block>
 												</p>
 											</div>
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Phonenumber</label>
-												<p class="form-control">												
+												<p class="form-control">
 													<th:block th:text="${user.phoneNumber}">
 													</th:block>
 												</p>
 											</div>
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Birthday</label>
-												<p class="form-control">												
-													<th:block th:text="${#dates.format(user.birthOfDate, 'dd/MM/yyyy')}">
+												<p class="form-control">
+													<th:block
+														th:text="${#dates.format(user.birthOfDate, 'dd/MM/yyyy')}">
 													</th:block>
 												</p>
 											</div>
@@ -89,8 +90,31 @@
 								<br>
 							</form>
 							<hr class="my-5">
+							<div class="card mb-2">
+								<div class="card-body">
+									<h3>
+										Shipping Address
+									</h3>
+									<br/>
+									<th:block th:each="userAdress, i : ${userAdresses}">
+										<div th:if="${userAdress.deletedAt == null}" class="mb-2">
+											<div class="bg-light">
+												<article class="box mb-3 bg-light">
+													<h6 th:text="${userAdress.name}"></h6>
+													<small class="text-muted d-block" style="width: 70%">
+														<th:block
+															th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}"></th:block>
+													</small>
+												</article>
+											</div>
+										</div>
+									</th:block>
+								</div>
+							</div>
+
 							<div class="row" style="max-width: 920px">
 								<!-- col.//-->
+
 								<div class="col-md">
 									<article class="box mb-3 bg-light">
 										<form class="w-auto d-inline-block float-end" method="post"
@@ -103,9 +127,9 @@
 													<input type="checkbox" checked id="mySwitch">
 													<span class="slider round"></span>
 												</th:block>
-											</label>
-											<input type="hidden" name="id" th:value="${id}"/>
-											<input type="hidden" name="actionType" id="actionType" th:value="${actionType}" />
+											</label> <input type="hidden" name="id" th:value="${id}" /> <input
+												type="hidden" name="actionType" id="actionType"
+												th:value="${actionType}" />
 										</form>
 										<h6>Remove account</h6>
 										<small class="text-muted d-block" style="width: 70%">Once
@@ -143,12 +167,7 @@
 									  });
 									</script>
 								</div>
-								<!-- col.//-->
-								<!-- row.//-->
-								<!-- content-body .//-->
-								<!-- col.//-->
-								<!-- row.//-->
-								<!-- card body end//-->
+
 							</div>
 						</section>
 					</div>

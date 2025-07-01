@@ -26,7 +26,7 @@
 														<img th:src="${media.name}" alt="User pic">
 													</th:block>
 													<th:block th:if="${!media.name.contains('https:')}">
-														<img th:src="@{'/assets/imgs/others/' + ${media.name}}"
+														<img th:src="@{'/assets/imgs/items/' + ${media.name}}"
 															alt="User pic">
 													</th:block>
 												</figure>
@@ -41,7 +41,7 @@
 														<img th:src="${media.name}" alt="User pic">
 													</th:block>
 													<th:block th:if="${!media.name.contains('https:')}">
-														<img th:src="@{'/assets/imgs/others/' + ${media.name}}"
+														<img th:src="@{'/assets/imgs/items/' + ${media.name}}"
 															alt="User pic">
 													</th:block>
 												</div>
@@ -84,63 +84,32 @@
 									<th:block th:text="${product.price}"></th:block>
 								</h3>
 							</div>
-							<div class="box-product-color mt-20">
-								<p class="font-sm color-gray-900">
-									Color:<span class="color-brand-2 nameColor">Pink Gold</span>
-								</p>
-								<ul class="list-colors">
-									<li class="disabled"><img
-										th:src="@{/assets/imgs/page/product/img-gallery-1.jpg}"
-										alt="Ecom" title="Pink"></li>
-									<li><img
-										th:src="@{/assets/imgs/page/product/img-gallery-2.jpg}"
-										alt="Ecom" title="Gold"></li>
-									<li><img
-										th:src="@{/assets/imgs/page/product/img-gallery-3.jpg}"
-										alt="Ecom" title="Pink Gold"></li>
-									<li><img
-										th:src="@{/assets/imgs/page/product/img-gallery-4.jpg}"
-										alt="Ecom" title="Silver"></li>
-									<li class="active"><img
-										th:src="@{/assets/imgs/page/product/img-gallery-5.jpg}"
-										alt="Ecom" title="Pink Gold"></li>
-									<li class="disabled"><img
-										th:src="@{/assets/imgs/page/product/img-gallery-6.jpg}"
-										alt="Ecom" title="Black"></li>
-									<li class="disabled"><img
-										th:src="@{/assets/imgs/page/product/img-gallery-7.jpg}"
-										alt="Ecom" title="Red"></li>
-								</ul>
-							</div>
 							<div class="box-product-style-size mt-20">
-								<div class="row">
-									<div class="col-lg-6 col-md-6 mb-20">
-										<p class="font-sm color-gray-900">
-											Style:<span class="color-brand-2 nameStyle">S22</span>
-										</p>
-										<ul class="list-styles">
-											<li class="disabled" title="S22 Ultra">S22 Ultra</li>
-											<li class="active" title="S22">S22</li>
-											<li title="S22 + Standing Cover">S22 + Standing Cover</li>
-										</ul>
+								<th:block th:each="productAttribute : ${productAttributes}">
+									<div class="box-product-style-size mt-20">
+										<div class="row">
+											<div class="col-lg-12 col-md-12 mb-20">
+												<p class="font-sm color-gray-900"
+													th:text="${productAttribute.name}"></p>
+												<ul class="list-styles">
+													<th:block
+														th:each="productVariant : ${productAttribute.productVariantses}">
+														<li class="productVariantSelect"
+															th:data-product-variant-id="${productVariant.id}"
+															th:if="${productVariant.products.id == product.id}"
+															th:classappend="${productVariant.quantity <= 0 ? 'disabled' : ''}"
+															th:text="${productVariant.value}"></li>
+													</th:block>
+												</ul>
+											</div>
+										</div>
 									</div>
-									<div class="col-lg-6 col-md-6 mb-20">
-										<p class="font-sm color-gray-900">
-											Size:<span class="color-brand-2 nameSize">512GB</span>
-										</p>
-										<ul class="list-sizes">
-											<li class="disabled" title="1GB">1GB</li>
-											<li class="active" title="512 GB">512 GB</li>
-											<li title="256 GB">256 GB</li>
-											<li title="128 GB">128 GB</li>
-											<li class="disabled" title="64GB">64GB</li>
-										</ul>
-									</div>
-								</div>
+								</th:block>
+
 							</div>
 							<div class="buy-product mt-30">
 								<p class="font-sm mb-20">Quantity</p>
-								<div class="box-quantity">
+								<div>
 									<div class="input-quantity">
 										<span class="font-xl color-brand-3"><th:block
 												th:text="${product.quantity}"></th:block></span>
@@ -262,13 +231,13 @@
 							</div>
 							<div class="tab-pane fade" id="tab-vendor" role="tabpanel"
 								aria-labelledby="tab-vendor">
-								<a class="vendor-logo d-flex mb-30" th:href="@{'/admin/vendor/detail/'+${product.vendors.users.id}}">
+								<a class="vendor-logo d-flex mb-30"
+									th:href="@{'/admin/vendor/detail/'+${product.vendors.users.id}}">
 									<th:block
 										th:if="${product.vendors.users.avatar.contains('https:')}">
 										<img class="img-md img-avatar"
 											th:src="${product.vendors.users.avatar}" alt="User pic">
-									</th:block>
-									<th:block
+									</th:block> <th:block
 										th:if="${!product.vendors.users.avatar.contains('https:')}">
 										<img class="img-md img-avatar"
 											th:src="@{'/assets/imgs/avatars/' + ${product.vendors.users.avatar}}"
