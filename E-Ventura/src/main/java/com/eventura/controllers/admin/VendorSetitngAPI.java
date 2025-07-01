@@ -25,7 +25,7 @@ import com.eventura.services.VendorSettingService;
 
 @RestController
 @RequestMapping("/vendor-settings")
-public class VendoirSetitngAPI {
+public class VendorSetitngAPI {
 
     @Autowired
     private VendorSettingService vendorSettingService;
