@@ -16,4 +16,6 @@ import com.eventura.entities.Wards;
 public interface CouponRepository extends JpaRepository<Coupons, Integer> {
 	@Query("from Coupons where redeemAllowed = true and deletedAt is null and startTime <= current_timestamp() and endTime >= current_timestamp()")
 	public List<Coupons> findAllCoupons();
+	@Query("from Coupons where redeemAllowed = true and deletedAt is null and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id = :id")
+	public List<Coupons> findAllCouponsByVendorId(@Param("id") int id);
 }

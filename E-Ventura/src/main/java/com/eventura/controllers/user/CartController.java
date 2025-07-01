@@ -1,6 +1,5 @@
 package com.eventura.controllers.user;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator; // Import Comparator
 import java.util.HashMap;
@@ -30,13 +29,16 @@ import com.eventura.dtos.CartItemsDTO;
 import com.eventura.entities.CartItems;
 import com.eventura.entities.Carts;
 import com.eventura.entities.Coupons;
+import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
-import com.eventura.entities.Vendors; 
+import com.eventura.entities.Vendors;
+import com.eventura.services.AddressService;
 import com.eventura.services.CartService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.CouponsService;
 import com.eventura.services.ProductService;
 import com.eventura.services.ProductVariantService;
+import com.eventura.services.UserAddressService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorService;
 
@@ -58,6 +60,10 @@ public class CartController {
 	private CouponsService couponsService;
 	@Autowired
 	private ProductVariantService productVariantService;
+	@Autowired
+	private UserAddressService userAddressService;
+	@Autowired
+	private AddressService addressService;
 	
 	// User Cart
 	@GetMapping({"cartitems"})
@@ -149,7 +155,78 @@ public class CartController {
 	}
 	
 	@GetMapping({"checkout"})
-	public String checkout(Authentication authentication, ModelMap modelMap, @AuthenticationPrincipal UserDetails userDetails) {
+	public String checkout(Authentication authentication, ModelMap modelMap, @AuthenticationPrincipal UserDetails userDetails, @RequestParam("checkoutItems") String checkoutItems) {
+		Users user = null;			
+		UserAddress addAddressVariable = new UserAddress();
+		List<CartItems> checkoutList = new ArrayList();
+		Map<Vendors, List<CartItemsDTO>> groupedCheckoutList = new HashMap<>();
+		List<Coupons> allCoupons = couponsService.findAllCoupons();	
+		double subTotal = 0;
+		if (userDetails != null) {
+			user = userService.findByEmail(userDetails.getUsername());
+		} else if (authentication != null) {
+			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+			user = userService.findByEmail(accountOAuth2User.getEmail());
+		}
+		String[] splitedIds = checkoutItems.split(",");
+		for(int i=0; i <splitedIds.length; i++) {
+			checkoutList.add(cartService.findCartItemsById(Integer.parseInt(splitedIds[i])));			
+		}
+		for (CartItems item : checkoutList) {
+			double originalPrice = item.getProducts().getPrice();
+			double afterDiscountPrice = originalPrice; 
+			boolean hasDiscount = false;
+			
+			for(Coupons coupon: allCoupons) {
+				if(coupon.getProducts() != null && coupon.getProducts().getId() == item.getProducts().getId()) {
+					if(coupon.getDiscountUnit().equals("percent")) {
+						afterDiscountPrice = originalPrice - (originalPrice * coupon.getDiscountValue());							
+					} else if(coupon.getDiscountUnit().equals("money")) {
+						afterDiscountPrice = originalPrice - coupon.getDiscountValue();
+					}
+					hasDiscount = true; 
+					break; 
+				}
+			}
+			String[] combinationArray = item.getCombination().split("-");
+			StringBuilder combinationStringBuilder = new StringBuilder(); // Use StringBuilder for efficiency
+
+		    // Loop with an index to check for the last element
+		    for (int i = 0; i < combinationArray.length; i++) {
+		        String variantId = combinationArray[i];
+		        
+		        // Find the ProductVariant by ID and append its value
+		        String value = productVariantService.findById(Integer.parseInt(variantId)).getValue();
+
+		        combinationStringBuilder.append(value);
+
+		        // Append a hyphen if it's not the last element
+		        if (i < combinationArray.length - 1) {
+		            combinationStringBuilder.append("-");
+		        }
+		    }
+		    String combinationString = combinationStringBuilder.toString();
+		    
+		    
+			CartItemsDTO dto = new CartItemsDTO(item, afterDiscountPrice, originalPrice, hasDiscount, combinationString);
+			
+			Vendors vendor = item.getProducts().getVendors();
+			groupedCheckoutList
+			    .computeIfAbsent(vendor, k -> new ArrayList<>())
+			    .add(dto);
+			if(dto.isHasDiscount()) {
+				subTotal += (afterDiscountPrice*item.getQuantity());
+			} else {
+				subTotal += (originalPrice*item.getQuantity());				
+			}
+	    }
+		modelMap.put("checkoutItems", checkoutItems);
+		modelMap.put("provinces", addressService.findAllProvinces());
+		modelMap.put("user", user);
+		modelMap.put("addAddressVariable", addAddressVariable);
+		modelMap.put("subTotal", subTotal);
+		modelMap.put("groupedCheckoutList", groupedCheckoutList);
+		modelMap.put("userAdresses", userService.findAddressUser(user.getId()));
 		return "customer/pages/cart/checkout";
 	}
 	

@@ -32,6 +32,12 @@ public class CouponsServiceImpl implements CouponsService {
 
 		return couponRepository.findAllCoupons();
 	}
+
+	@Override
+	public List<Coupons> findAllCouponsByVendorId(int id) {
+		
+		return couponRepository.findAllCouponsByVendorId(id);
+	}
 	
 	
 }

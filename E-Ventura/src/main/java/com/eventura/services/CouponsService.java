@@ -15,4 +15,6 @@ public interface CouponsService{
 	
 	public List<Coupons> findAllCoupons();
 	
+	public List<Coupons> findAllCouponsByVendorId(int id);
+	
 }

@@ -93,7 +93,7 @@
 																					</th:block> <th:block
 																						th:if="${!dtoItem.cartItem.products.mediases[0].name.contains('https:')}">
 																						<img
-																							th:src="@{'/assets/imgs/others/' + ${dtoItem.cartItem.products.mediases[0].name}}"
+																							th:src="@{'/assets/imgs/items/' + ${dtoItem.cartItem.products.mediases[0].name}}"
 																							alt="Ecom">
 																					</th:block>
 																				</a>
@@ -150,17 +150,58 @@
 																				th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
 																			<script>
 																			$(document).ready(function() {
-																				$(document).on('click','#selectedCheckBox_[[${dtoItem.cartItem.id}]]', function() {
-																					
-																				});
+																				$(document).on('click','#toCheckoutButton',function(){
+																					let allItemsCheckoutId = [];
+																					$('[id^="selectedCheckBox_"]:checked').each(function() {
+																			            const cartItemId = $(this).attr('id').split('_')[1];
+																			            // Retrieve the individual item's subtotal from its hidden input
+																			            if(cartItemId != null){
+																			            	allItemsCheckoutId.push(cartItemId);
+																			            }
+																			        });
+																			            itemsString = allItemsCheckoutId.join(',');
+																			            $('#checkoutItems').val(itemsString);
+																			            if(itemsString != ''){																			            	
+																				            $('#checkoutItemsForm').submit();
+																			            } else {
+																			            	Swal.fire({ // Using SweetAlert2 for success message (if still included)
+																					            icon: 'error',
+																					            title: 'Error!',
+																					            text: 'No selected item.',
+																					            confirmButtonText: 'OK'
+																					        })
+																			            }
+																				})
+																				//update cart sub total
+																				function updateOverallCartTotal() {
+																			        let totalSum = 0;
+																			        // Loop through all checkboxes that are currently CHECKED
+																			        $('[id^="selectedCheckBox_"]:checked').each(function() {
+																			            const cartItemId = $(this).attr('id').split('_')[1];
+																			            // Retrieve the individual item's subtotal from its hidden input
+																			            const itemSubTotal = parseFloat($('#selectedSubTotal_' + cartItemId).val());
+																			            
+																			            if (!isNaN(itemSubTotal)) {
+																			                totalSum += itemSubTotal;
+																			            }
+																			        });
+																			        // Update the main checkout subtotal display
+																			        $('#checkoutSubTotal').text(totalSum.toFixed(2));
+																			    }
+																				// xử lý sự kiện checkbox
+																					$(document).on('click','#selectedCheckBox_[[${dtoItem.cartItem.id}]]', function() {
+																						updateOverallCartTotal();
+																					});																					
 																			    // Xử lý sự kiện click cho nút "plus-cart"
 																			    $(document).on('click', '#plus_[[${dtoItem.cartItem.id}]]', function() {
 																			        updateQuantity($(this), 1); // Tăng số lượng lên 1
+																			        
 																			    });
 
 																			    // Xử lý sự kiện click cho nút "minus-cart"
 																			    $(document).on('click', '#minus_[[${dtoItem.cartItem.id}]]', function() {
 																			        updateQuantity($(this), -1); // Giảm số lượng đi 1
+																			        
 																			    });
 																			 // --- NEW: Handle input changes and Enter key press ---
 																			    
@@ -209,6 +250,7 @@
 																			                    	$('#selectedSubTotalText_[[${dtoItem.cartItem.id}]]').text('[[${dtoItem.originalPrice}]]' * response.newQuantity);
 																			                    	
 																			                    }
+																			                    updateOverallCartTotal();
 																			                } else {
 																			                    alert('Có lỗi xảy ra khi cập nhật số lượng: ' + response.message);
 																			                    // Khôi phục lại giá trị cũ nếu cập nhật thất bại
@@ -228,23 +270,15 @@
 																			</div>
 																		</div>
 																	</div>
-																	<div class="wishlist-action" style="display: flex;">
-																		<h5 class="color-brand-3">$</h5>
-																		
-																		<h5 class="color-brand-3" th:if="${dtoItem.hasDiscount}" th:id="'selectedSubTotalText_'+${dtoItem.cartItem.id}"
-																				th:text="${dtoItem.afterDiscountPrice * dtoItem.cartItem.quantity}">																		
-																			<th:block >
-																					<input type="hidden" th:value="${dtoItem.afterDiscountPrice * dtoItem.cartItem.quantity}" th:id="'selectedSubTotal_'+${dtoItem.cartItem.id}">
-																				</th:block>
-																			
-																		</h5>
-																		<h5 class="color-brand-3" th:if="${!dtoItem.hasDiscount}" th:id="'selectedSubTotalText_'+${dtoItem.cartItem.id}"
-																				th:text="${dtoItem.originalPrice * dtoItem.cartItem.quantity}">																		
-																			
-																			<th:block >
-																				<input type="hidden" th:value="${dtoItem.originalPrice * dtoItem.cartItem.quantity}" th:id="'selectedSubTotal_'+${dtoItem.cartItem.id}">
-																				</th:block>
-																		</h5>
+																	<div class="wishlist-action" style="display: flex; justify-content: center;">
+																	    <h5 class="color-brand-3">$</h5>
+																	    
+																	    <h5 class="color-brand-3" th:id="'selectedSubTotalText_'+${dtoItem.cartItem.id}"
+																	        th:text="${(dtoItem.hasDiscount ? dtoItem.afterDiscountPrice : dtoItem.originalPrice) * dtoItem.cartItem.quantity}">
+																	    </h5>
+																	    
+																	    <input type="hidden" th:id="'selectedSubTotal_'+${dtoItem.cartItem.id}"
+																	           th:value="${(dtoItem.hasDiscount ? dtoItem.afterDiscountPrice : dtoItem.originalPrice) * dtoItem.cartItem.quantity}">
 																	</div>
 																	<div class="wishlist-remove">
 																	
@@ -273,34 +307,18 @@
 										<span class="font-md-bold color-gray-500">Subtotal</span>
 									</div>
 									<div class="col-6 text-end">
-										<h4>$0</h4>
-									</div>
-								</div>
-							</div>
-							<div class="border-bottom mb-10">
-								<div class="row">
-									<div class="col-6">
-										<span class="font-md-bold color-gray-500">Shipping</span>
-									</div>
-									<div class="col-6 text-end">
-										<h4>Free</h4>
-									</div>
-								</div>
-							</div>
-							<div class="mb-10">
-								<div class="row">
-									<div class="col-6">
-										<span class="font-md-bold color-gray-500">Total</span>
-									</div>
-									<div class="col-6 text-end">
-										<h4>$2.51</h4>
+										<h4 style="display: inline-block; margin-right: 1px;">$</h4>
+										<h4 style="display: inline-block;" id="checkoutSubTotal"></h4>
 									</div>
 								</div>
 							</div>
 							<div class="box-button">
-								<a class="btn btn-buy" th:href="@{/invoice/checkout}">Proceed
+								<a class="btn btn-buy"  id="toCheckoutButton">Proceed
 									To CheckOut</a>
 							</div>
+							<form method="get" th:action="@{/customer/cart/checkout}" id="checkoutItemsForm">
+								<input type="text" name="checkoutItems" id="checkoutItems" hidden="hidden"/>
+							</form>
 						</div>
 					</div>
 				</div>
