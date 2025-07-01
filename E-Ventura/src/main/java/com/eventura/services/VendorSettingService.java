@@ -18,4 +18,5 @@ public interface VendorSettingService {
 	
 	public VendorSettings findById(int id);
 	
+	public boolean save(VendorSettings vendorSettings);
 }
