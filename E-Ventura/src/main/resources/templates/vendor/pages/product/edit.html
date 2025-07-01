@@ -3,11 +3,38 @@
 
 <head>
 	<title></title>
+	<style>
+		.thumbnail-container {
+			display: flex;
+			flex-wrap: nowrap; /* ❗ Không cho xuống dòng */
+			overflow-x: auto;  /* ❗ Cho phép cuộn ngang nếu ảnh nhiều */
+			gap: 10px;
+			margin-top: 10px;
+		}
+
+		.img-wrapper {
+			flex: 0 0 auto; /* ❗ Giữ kích thước cố định theo chiều ngang */
+			position: relative;
+		}
+
+		.img-wrapper img {
+			width: 80px;
+			height: 80px;
+			object-fit: cover;
+			border: 1px solid #ddd;
+			padding: 3px;
+			border-radius: 4px;
+		}
+	</style>
+
+
+
+
 </head>
 
 <body>
 	<section class="content-main">
-		<form>
+		<form method="POST" th:action="@{/vendor/product/edit}" enctype="multipart/form-data">
 			<div class="row">
 
 				<div class="col-9">
@@ -125,17 +152,20 @@
 						<div class="card-body">
 							<div class="input-upload">
 								<th:block th:if="${not #lists.isEmpty(product.mediases)}">
-									<div class="thumbnail-container">
+									<!-- Ảnh cũ -->
+									<div class="thumbnail-container" id="existingImagesContainer">
 										<th:block th:each="media : ${product.mediases}">
-											<th:block th:if="${media.name.contains('https:')}">
-												<img class="img-md img-thumbnail" th:src="${media.name}" alt="Media Image">
-											</th:block>
-											<th:block th:if="${!media.name.contains('https:')}">
-												<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/items/' + ${media.name}}"
-													alt="Media Image">
-											</th:block>
+											<div class="img-wrapper" th:attr="data-id=${media.id}">
+												<img class="img-md img-thumbnail"
+												     th:src="@{${media.name.contains('https:') ? media.name : '/assets/imgs/items/' + media.name}}"
+												     alt="Media">
+											</div>
 										</th:block>
 									</div>
+
+									<!-- Hidden inputs chứa ID ảnh bị xóa -->
+									<div id="deletedImageIdsContainer"></div>
+
 								</th:block>
 							
 								<!-- Nếu không có ảnh -->
@@ -143,10 +173,12 @@
 									<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}" alt="No Image">
 								</th:block>
 							
-								<!-- Input file -->
-								<input class="form-control" type="file" multiple name="files">
-							</div>
+								<!-- Hidden inputs để gửi ID ảnh cũ bị xoá -->
+								<div id="deletedImageIdsContainer"></div>
 
+								<!-- Ảnh mới -->
+								<div class="thumbnail-container" id="newImagesContainer"></div>
+								<input class="form-control mt-3" type="file" multiple id="imageInput" accept="image/*" name="files">
 						</div>
 					</div>
 				</div>
@@ -178,6 +210,49 @@
 			</div>
 		</div>
 		<!-- Modal -->
+		
+		<script>
+			document.getElementById("imageInput").addEventListener("change", function (event) {
+				const files = Array.from(event.target.files);
+				const newContainer = document.getElementById("newImagesContainer");
+				const existingContainer = document.getElementById("existingImagesContainer");
+				const deletedContainer = document.getElementById("deletedImageIdsContainer");
+
+				// Xoá tất cả ảnh cũ khỏi giao diện và tạo input hidden để gửi deleteMediaIds[]
+				const oldImages = existingContainer.querySelectorAll(".img-wrapper");
+				oldImages.forEach(wrapper => {
+					const id = wrapper.getAttribute("data-id");
+					if (id) {
+						const hiddenInput = document.createElement("input");
+						hiddenInput.type = "hidden";
+						hiddenInput.name = "deleteMediaIds";
+						hiddenInput.value = id;
+						deletedContainer.appendChild(hiddenInput);
+					}
+					wrapper.remove(); // Xoá ảnh khỏi giao diện
+				});
+
+				// Preview ảnh mới
+				newContainer.innerHTML = "";
+				files.forEach(file => {
+					const reader = new FileReader();
+					reader.onload = function (e) {
+						const wrapper = document.createElement("div");
+						wrapper.classList.add("img-wrapper");
+
+						const img = document.createElement("img");
+						img.src = e.target.result;
+
+						wrapper.appendChild(img);
+						newContainer.appendChild(wrapper);
+					};
+					reader.readAsDataURL(file);
+				});
+			});
+		</script>
+
+
+
 	</section>
 
 
