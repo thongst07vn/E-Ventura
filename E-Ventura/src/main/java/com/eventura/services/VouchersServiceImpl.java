@@ -35,6 +35,20 @@ public class VouchersServiceImpl implements VouchersService {
 		// TODO Auto-generated method stub
 		return voucherRepository.findAll(pageable);
 	}
+
+
+	@Override
+	public List<Vouchers> findAllVoucherByVendorId(int id, double value) {
+		
+		return voucherRepository.findAllVouchersByVendorId(id, value);
+	}
+
+
+	@Override
+	public List<Vouchers> findAllVoucherByEventura(double value) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVouchers(value);
+	}
 	
 	
 }
