@@ -43,7 +43,9 @@ import com.eventura.entities.OrderItemsOrderStatusId;
 import com.eventura.entities.Orders;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
+import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.entities.VendorSettings;
 import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
 import com.eventura.services.CommissionsService;
@@ -54,6 +56,7 @@ import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
+import com.eventura.services.VendorSettingService;
 import com.example.demo.helpers.FileHelper;
 
 
@@ -79,6 +82,8 @@ public class AdminController {
 	private OrderService orderService;
 	@Autowired
 	private OrderStatusService orderStatusService;
+	@Autowired
+	private VendorSettingService vendorSettingService;
 	AdminController(AccountOAuth2UserServices accountOAuth2UserServices) {
 	}
 
@@ -302,6 +307,7 @@ public class AdminController {
 			modelMap.put("avgVendorReview", 0);
 			modelMap.put("widthVendor", Math.min(0, 5) * 20);
 		}
+		modelMap.put("productAttributes", productService.findProductAttributeByProductId(productService.findById(id).getId()));
 		modelMap.put("currentPage", "product");
 		return "admin/page/product/detail";
 	}
@@ -322,7 +328,6 @@ public class AdminController {
 			// Lặp qua productPage và thêm các ProductDTO vào List
 			for (Products product : productPage) {
 				if (product.getDeletedAt() == null) {
-
 					if (!productService.findProductReview(product.getId()).isEmpty()) {
 						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
 					} else {
@@ -548,6 +553,7 @@ public class AdminController {
 			userPage = userService.findAlls(pageable);
 			break;
 		}
+		
 		modelMap.put("users", userPage);
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
@@ -578,6 +584,7 @@ public class AdminController {
 			break;
 		}
 		modelMap.put("users", userPage);
+		
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
 		model.addAttribute("lastPageIndex", userPage.getTotalPages() - 1);
@@ -592,6 +599,8 @@ public class AdminController {
 	public String customerDetail(Model model, @PathVariable("id") int id, ModelMap modelMap) {
 		modelMap.put("user", userService.findById(id));
 		modelMap.put("id", id);
+		List<UserAddress> userAdresses = userService.findAddressUser(id);
+		modelMap.put("userAdresses", userAdresses);
 		if (userService.findById(id).getDeletedAt() != null) {
 			modelMap.put("actionType", "enable");
 		} else {
@@ -771,5 +780,31 @@ public class AdminController {
 	public String editCoupon(Model model) {
 		model.addAttribute("currentPage", "coupon");
 		return "admin/page/coupon/edit";
+	}
+	// ======= Commission_Setting ========
+	@GetMapping("commission-setting/list")
+	public String commissionSettingList(Model model, ModelMap modelMap) {
+		modelMap.put("vendorSettings", vendorSettingService.findAll());
+		modelMap.put("vendorSetting", new VendorSettings());
+		model.addAttribute("currentPage", "setting");
+		return "admin/page/setting/list";
+	}
+	@PostMapping("commission-setting/add")
+	public String commissionSettingAdd(@ModelAttribute("vendorSetting") VendorSettings vendorSetting,  RedirectAttributes redirectAttributes) {
+		vendorSetting.setCreatedAt(new Date());
+		vendorSetting.setUpdatedAt(new Date());
+		vendorSetting.setDeletedAt(new Date());
+		vendorSetting.setCommissionValue(vendorSetting.getCommissionValue() / 100.0);
+		
+		 // 2. Handle file upload for avatar
+		if (vendorSettingService.save(vendorSetting)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Vendor type  add successfully!");
+			return "redirect:/admin/commission-setting/list";
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Failed to add Vendor type!");
+			return "redirect:/admin/commission-setting/list";
+		}
 	}
 }

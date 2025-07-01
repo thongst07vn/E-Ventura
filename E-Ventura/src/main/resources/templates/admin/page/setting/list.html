@@ -1,0 +1,396 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{admin/layouts/layout :: layout('Commission List', ~{this :: .content-main})}">
+
+<head>
+<title>Commission List</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title">Commission Setting</h2>
+				<p>Vendor Type List</p>
+			</div>
+			<div>
+				<!-- Button trigger modal -->
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+					data-bs-target="#createModal">
+					<i class="material-icons md-plus"></i>Create category
+				</button>
+
+				<!-- Modal -->
+				<div class="modal fade" id="createModal" tabindex="-1"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5" id="exampleModalLabel">Modal
+									title</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<form method="post" th:action="@{/admin/commission-setting/add}"
+								enctype="multipart/form-data" id="formAdd">
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-lg-12">
+											<div class="row gx-3">
+												<div class="col-lg-12 mb-3">
+													<label class="form-label">Vendor Type</label> <input
+														class="form-control" type="text" id="vendorType"
+														th:field="${vendorSetting.vendorType}"
+														placeholder="Vendor Type" required="required">
+													<div id="vendorTypeError" class="mt-3" style="color: red;"></div>
+												</div>
+												<div class="col-lg-12 mb-3">
+													<label class="form-label">Vendor Commission</label> <input
+														class="form-control" type="number" id="vendorCommission"
+														th:field="${vendorSetting.commissionValue}"
+														placeholder="Vendor Commission (0-100)"
+														required="required" min="0" max="100" step="1">
+													<div id="vendorCommissionError" class="mt-3"
+														style="color: red;"></div>
+												</div>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary" id="formButtonAdd">Save
+									changes</button>
+							</div>
+							<script>
+								document.getElementById('formButtonAdd').addEventListener('click', function(event) {
+									const vendorType = document.getElementById('vendorType');
+									const vendorTypeError = document.getElementById('vendorTypeError');
+									const vendorCommission = document.getElementById('vendorCommission');
+									const vendorCommissionError = document.getElementById('vendorCommissionError'); // Corrected ID
+
+									vendorTypeError.textContent = '';
+									vendorCommissionError.textContent = ''; // Corrected ID
+
+									let isValid = true;
+
+									if (vendorType.value.trim() === '') {
+										vendorTypeError.textContent = 'Vendor type is required.';
+										isValid = false;
+									}
+									
+									const commissionValue = parseFloat(vendorCommission.value.trim());
+
+									if (isNaN(commissionValue) || commissionValue < 0 || commissionValue > 100) {
+										vendorCommissionError.textContent = 'Vendor commission must be a number between 0 and 100.';
+										isValid = false;
+									}
+
+									if (!isValid) {
+										event.preventDefault(); // Prevent form submission if validation fails
+									} else {
+										// If validation passes, you can submit the form.
+										// The server-side will receive the value as a number between 0-100.
+										// If you need to send it as a proportion (e.g., 0.5 for 50%),
+										// you would divide it by 100 on the client-side before submission
+										// or handle that conversion on the server-side.
+										document.getElementById('formAdd').submit();
+									}
+								});
+
+								createModal.addEventListener('hidden.bs.modal', function() {
+									const vendorType = document.getElementById('vendorType');
+									const vendorTypeError = document.getElementById('vendorTypeError');
+									const vendorCommission = document.getElementById('vendorCommission');
+									const vendorCommissionError = document.getElementById('vendorCommissionError');
+
+									vendorType.value = '';
+									vendorTypeError.textContent = '';
+									vendorCommission.value = '';
+									vendorCommissionError.textContent = '';
+								});
+							</script>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+
+					<div class="col-md-12">
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th class="text-center">Vendor Type</th>
+										<th class="text-center">Commission Value</th>
+										<th class="text-center">Status</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="setting : ${vendorSettings}"
+										th:data-id="${setting.id}">
+										<td class="text-center editable-vendor-type"><b><th:block
+													th:text="${setting.vendorType}"></th:block></b></td>
+										<td class="text-center editable-commission-value"><th:block
+												th:text="${#numbers.formatDecimal(setting.commissionValue * 100, 0, 0)}"></th:block>%
+										</td>
+										<td style="width: 0;" class="text-center">
+											 <label class="switch">
+						                        <input type="checkbox" class="status-toggle"
+						                               th:checked="${setting.deletedAt == null}"
+						                               th:data-setting-id="${setting.id}">
+						                        <span class="slider round"></span>
+						                    </label>
+										</td>
+										<td></td>
+									</tr>
+								</tbody>
+							</table>
+							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+							<script type="text/javascript" th:inline="javascript">
+							    /*<![CDATA[*/
+							
+							    $(document).ready(function() {
+							        // --- SweetAlert2 message display & page reload (from previous answer) ---
+							        let successMessage = /*[[${successMessage}]]*/ null;
+							        if (successMessage) {
+							            Swal.fire({
+							                icon: 'success',
+							                title: 'Success!',
+							                text: successMessage,
+							                timer: 3000,
+							                showConfirmButton: false
+							            }).then(() => {
+							                location.reload();
+							            });
+							        }
+							
+							        let errorMessage = /*[[${errorMessage}]]*/ null;
+							        if (errorMessage) {
+							            Swal.fire({
+							                icon: 'error',
+							                title: 'Error!',
+							                text: errorMessage,
+							                showConfirmButton: true
+							            }).then(() => {
+							                location.reload();
+							            });
+							        }
+							
+							        // --- Function to handle generic AJAX updates (used for vendorType, commissionValue) ---
+							        function saveSetting(id, fieldName, value, tdElement) {
+							            $.ajax({
+							                url: '/vendor-settings/update',
+							                type: 'POST',
+							                contentType: 'application/json',
+							                data: JSON.stringify({ id: id, fieldName: fieldName, value: value }),
+							                success: function(response) {
+							                    console.log("Update successful:", response);
+							                    if (fieldName === 'commissionValue') {
+							                        tdElement.html(parseFloat(value * 100).toFixed(0) + '%');
+							                    } else {
+							                        tdElement.html('<b>' + value + '</b>');
+							                    }
+							                    Swal.fire({
+							                        icon: 'success',
+							                        title: 'Updated!',
+							                        text: response.message || 'Setting updated successfully!',
+							                        timer: 2000,
+							                        showConfirmButton: false
+							                    }).then(() => {
+							                        location.reload();
+							                    });
+							                },
+							                error: function(xhr, status, error) {
+							                    console.error("Update failed:", error);
+							                    let errorMessage = 'Failed to update. Please try again.';
+							                    if (xhr.responseJSON && xhr.responseJSON.message) {
+							                        errorMessage = xhr.responseJSON.message;
+							                    } else if (xhr.responseText) {
+							                        try {
+							                            const errorObj = JSON.parse(xhr.responseText);
+							                            errorMessage = errorObj.message || errorMessage;
+							                        } catch (e) {
+							                            errorMessage = xhr.responseText;
+							                        }
+							                    }
+							
+							                    Swal.fire({
+							                        icon: 'error',
+							                        title: 'Oops...',
+							                        text: errorMessage,
+							                        showConfirmButton: true
+							                    }).then(() => {
+							                        location.reload();
+							                    });
+							                }
+							            });
+							        }
+							
+							        // --- NEW Function to handle status update via AJAX ---
+							        function saveStatus(id, isChecked) {
+							            let deletedAtValue = isChecked ? "null" : new Date().toISOString(); // Send "null" or current timestamp
+							            $.ajax({
+							                url: '/vendor-settings/update-status', // New endpoint for status
+							                type: 'POST',
+							                contentType: 'application/json',
+							                data: JSON.stringify({ id: id, deletedAt: deletedAtValue }),
+							                success: function(response) {
+							                    console.log("Status update successful:", response);
+							                    Swal.fire({
+							                        icon: 'success',
+							                        title: 'Status Updated!',
+							                        text: response.message || 'Vendor status changed.',
+							                        timer: 2000,
+							                        showConfirmButton: false
+							                    }).then(() => {
+							                        location.reload();
+							                    });
+							                },
+							                error: function(xhr, status, error) {
+							                    console.error("Status update failed:", error);
+							                    let errorMessage = 'Failed to update status. Please try again.';
+							                    if (xhr.responseJSON && xhr.responseJSON.message) {
+							                        errorMessage = xhr.responseJSON.message;
+							                    } else if (xhr.responseText) {
+							                        try {
+							                            const errorObj = JSON.parse(xhr.responseText);
+							                            errorMessage = errorObj.message || errorMessage;
+							                        } catch (e) {
+							                            errorMessage = xhr.responseText;
+							                        }
+							                    }
+							
+							                    Swal.fire({
+							                        icon: 'error',
+							                        title: 'Oops...',
+							                        text: errorMessage,
+							                        showConfirmButton: true
+							                    }).then(() => {
+							                        location.reload();
+							                    });
+							                }
+							            });
+							        }
+							
+							
+							        // --- Editable Vendor Type (no changes) ---
+							        $('.editable-vendor-type').on('dblclick', function() {
+							            let $this = $(this);
+							            let originalText = $this.text().trim();
+							            let vendorSettingId = $this.closest('tr').data('id');
+							
+							            let $input = $('<input type="text" class="form-control text-center" />').val(originalText);
+							            $this.html($input);
+							            $input.focus();
+							            $input.data('original-text', originalText);
+							
+							            $input.on('blur', function() {
+							                let currentInput = $(this);
+							                let newValue = currentInput.val().trim();
+							                let storedOriginalText = currentInput.data('original-text');
+							
+							                if (newValue !== storedOriginalText && newValue !== '') {
+							                    saveSetting(vendorSettingId, 'vendorType', newValue, $this);
+							                } else {
+							                    $this.html('<b>' + storedOriginalText + '</b>');
+							                }
+							            });
+							
+							            $input.on('keypress', function(e) {
+							                if (e.which === 13) {
+							                    $(this).blur();
+							                }
+							            });
+							        });
+							
+							        // --- Editable Commission Value (no changes) ---
+							        $('.editable-commission-value').on('dblclick', function() {
+							            let $this = $(this);
+							            let originalDisplay = $this.text().trim();
+							            let originalCommissionDecimal = parseFloat(originalDisplay) / 100;
+							            let originalInputDisplayValue = parseFloat(originalDisplay);
+							
+							            let vendorSettingId = $this.closest('tr').data('id');
+							
+							            let $input = $('<input type="number" class="form-control text-center" />').val(originalInputDisplayValue);
+							            $this.html($input);
+							            $input.focus();
+							
+							            $input.data('original-decimal-value', originalCommissionDecimal);
+							            $input.data('original-display', originalDisplay);
+							
+							            $input.on('blur', function() {
+							                let currentInput = $(this);
+							                let rawValue = currentInput.val().trim();
+							                let storedOriginalDecimalValue = currentInput.data('original-decimal-value');
+							                let storedOriginalDisplay = currentInput.data('original-display');
+							
+							                if (rawValue === '' || isNaN(rawValue)) {
+							                    $this.html(storedOriginalDisplay);
+							                    return;
+							                }
+							
+							                let parsedValue = parseFloat(rawValue);
+							
+							                let valueToSendToBackend;
+							                let isChanged = false;
+							
+							                if (parsedValue >= 0 && parsedValue <= 1) {
+							                    valueToSendToBackend = parsedValue;
+							                    isChanged = (valueToSendToBackend !== storedOriginalDecimalValue);
+							                } else if (parsedValue >= 0 && parsedValue <= 100) {
+							                    valueToSendToBackend = parsedValue / 100;
+							                    isChanged = (valueToSendToBackend !== storedOriginalDecimalValue);
+							                } else {
+							                    Swal.fire({
+							                        icon: 'warning',
+							                        title: 'Invalid Input',
+							                        text: 'Commission value must be between 0 and 100 (for percentage) or 0 and 1 (for decimal).',
+							                        showConfirmButton: true
+							                    });
+							                    $this.html(storedOriginalDisplay);
+							                    return;
+							                }
+							
+							                if (isChanged) {
+							                    saveSetting(vendorSettingId, 'commissionValue', valueToSendToBackend, $this);
+							                } else {
+							                    $this.html(storedOriginalDisplay);
+							                }
+							            });
+							
+							            $input.on('keypress', function(e) {
+							                if (e.which === 13) {
+							                    $(this).blur();
+							                }
+							            });
+							        });
+							
+							        // --- Event Listener for Status Switch ---
+							        $('.status-toggle').on('change', function() {
+							            let $this = $(this);
+							            let vendorSettingId = $this.data('setting-id'); // Get ID from data attribute
+							            let isChecked = $this.is(':checked'); // true if switch is ON, false if OFF
+							
+							            saveStatus(vendorSettingId, isChecked);
+							        });
+							
+							    });
+							    /*]]>*/
+							</script>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</section>
+</body>

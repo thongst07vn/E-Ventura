@@ -22,7 +22,7 @@
 					<div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
 						<span style="display: flex; align-items: center; gap: 5px;"><i
 							class="material-icons md-calendar_today"></i><b>&nbsp;<th:block
-									th:text="${#dates.format(order.createdAt, 'EEE, MMM dd, yyyy, hh:mm a')}"></th:block></b></span>
+									th:text="${#dates.format(order.createdAt, 'EEE, dd MMM, yyyy, hh:mm a')}"></th:block></b></span>
 
 					</div>
 					<div class="col-lg-6 col-md-6 ms-auto text-md-end">
@@ -64,50 +64,52 @@
 			</header>
 			<div class="card-body">
 				<div class="row mb-50 mt-20">
-					<div class="col-4">
+					<div class="col-4  text-center">
 						<article class="icontext align-items-start">
 							<span class="icon icon-sm rounded-circle bg-primary-light"><i
 								class="text-primary material-icons md-person"></i></span>
-							<div class="text">
-								<h6 class="mb-1">Customer</h6>
-								<p class="mb-1">
-									<th:block
-										th:text="${order.users.firstName}+' '+${order.users.lastName}"></th:block>
-									<br>
-									<th:block th:text="${order.users.email}"></th:block>
-									<br>
-									<th:block th:text="${order.users.phoneNumber}"></th:block>
-								</p>
-								<a th:href="@{'/admin/customer/detail/'+${order.users.id}}">View
-									profile</a>
+							<div class="text  text-start">
+								<a th:href="@{'/admin/customer/detail/'+${order.users.id}}">
+									<h6 class="mb-1">Customer</h6>
+									<p class="mb-1">
+										<th:block th:text="${order.users.username}"></th:block>
+										<br>
+										<th:block th:text="${order.users.email}"></th:block>
+									</p>
+								</a>
 							</div>
 						</article>
 					</div>
-					<div class="col-4 text-center">
+					<div class="col-4">
 						<article class="icontext align-items-start">
 							<span class="icon icon-sm rounded-circle bg-primary-light"><i
 								class="text-primary material-icons md-local_shipping"></i></span>
 							<div class="text text-start">
 								<h6 class="mb-1">Order info</h6>
 								<p class="mb-1">
-									Shipping: Fargo express<br> Pay method: card<br>
-									Status: new
+									Pay method:
+									<th:block th:text="${order.paymentMethod}"></th:block>
+									<br>
 								</p>
-								<a href="#">Download info</a>
+								<p class="mb-1">
+									Pay date:
+									<th:block
+										th:text="${#dates.format(order.paymentDate, 'EEE, dd MMM, yyyy, hh:mm a')}"></th:block>
+									<br>
+								</p>
 							</div>
 						</article>
 					</div>
-					<div class="col-4 text-end">
+					<div class="col-4">
 						<article class="icontext align-items-start">
 							<span class="icon icon-sm rounded-circle bg-primary-light"><i
 								class="text-primary material-icons md-place"></i></span>
-							<div class="text text-start">
+							<div class="text text-start" style="width: 65%">
 								<h6 class="mb-1">Deliver to</h6>
 								<p class="mb-1">
-									City: Tashkent, Uzbekistan<br>Block A, House 123, Floor 2<br>
-									Po Box 10000
+									Address:
+									<th:block th:text="${order.userAddress}"></th:block>
 								</p>
-								<a href="#">View profile</a>
 							</div>
 						</article>
 					</div>
@@ -140,7 +142,7 @@
 														<th:block
 															th:if="${!orderItem.products.mediases[0].name.contains('https:')}">
 															<img class="img-sm img-thumbnail"
-																th:src="@{'/assets/imgs/others/' + ${orderItem.products.mediases[0].name}}"
+																th:src="@{'/assets/imgs/items/' + ${orderItem.products.mediases[0].name}}"
 																width="40" height="40" alt="Item">
 														</th:block>
 													</div>
