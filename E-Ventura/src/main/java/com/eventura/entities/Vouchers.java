@@ -4,6 +4,9 @@ package com.eventura.entities;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,7 +31,9 @@ public class Vouchers implements java.io.Serializable {
 	private Vendors vendors;
 	private double discountValue;
 	private String discountUnit;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date startTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date endTime;
 	private double minOrderValue;
 	private double maxDiscountAmount;
