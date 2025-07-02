@@ -241,6 +241,9 @@ public class CartController {
 			double finalCurrentVendorTotal = totalVendor;
 			voucherByVendorList.computeIfAbsent(vendor.getId(), k -> vouchersService.findAllVoucherByVendorId(vendor.getId(), finalCurrentVendorTotal));
 		}
+		voucherByEventura = vouchersService.findAllVoucherByEventura(subTotal);
+		modelMap.put("voucherByEventura", voucherByEventura);
+		modelMap.put("voucherByVendorList", voucherByVendorList);
 		modelMap.put("checkoutItems", checkoutItems);
 		modelMap.put("provinces", addressService.findAllProvinces());
 		modelMap.put("user", user);
@@ -250,6 +253,7 @@ public class CartController {
 		modelMap.put("userAdresses", userService.findAddressUser(user.getId()));
 		return "customer/pages/cart/checkout";
 	}
+	
 	
 	
 	@PostMapping("/updatecartitemquantity/{cartItemId}")

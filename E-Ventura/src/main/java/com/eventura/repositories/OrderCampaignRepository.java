@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.eventura.entities.Coupons;
 import com.eventura.entities.CouponsCampaigns;
-import com.eventura.entities.CouponsCampaignsId;
+
 import com.eventura.entities.Districts;
 import com.eventura.entities.OrdersCampaigns;
 import com.eventura.entities.OrdersCampaignsId;
