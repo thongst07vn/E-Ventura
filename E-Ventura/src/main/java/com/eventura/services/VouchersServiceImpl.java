@@ -49,6 +49,77 @@ public class VouchersServiceImpl implements VouchersService {
 		// TODO Auto-generated method stub
 		return voucherRepository.findAllVouchers(value);
 	}
+
+
+	@Override
+	public Page<Vouchers> findAllByDeletedAtISNUL(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllByDeletedAtISNUL(pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllByDeletedAtISNOTNUL(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllByDeletedAtISNOTNUL(pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllVoucherExpired(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherExpired(pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllVoucherInValid(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherInvalid(pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllVoucherValid(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherValid(pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findByVendorId(int id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findByVendorId(id, pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findByVendorIdISNULL(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findByVendorIdISNULL(pageable);
+	}
+
+
+	@Override
+	public boolean save(Vouchers vouchers) {
+		// TODO Auto-generated method stub
+		try {
+			voucherRepository.save(vouchers);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+	@Override
+	public Vouchers findById(int id) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findById(id).get();
+	}
+
+
 	
 	
 }

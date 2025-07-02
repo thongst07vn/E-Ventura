@@ -2,7 +2,7 @@
 	th:replace="~{admin/layouts/layout :: layout('Voucher List', ~{this :: .content-main})}">
 
 <head>
-	<title>Voucher List</title>
+<title>Voucher List</title>
 </head>
 
 <body>
@@ -13,11 +13,316 @@
 				<p>Voucher List</p>
 			</div>
 			<div>
-				<a th:href="@{/admin/Voucher/add}" class="btn btn-primary"><i class="material-icons md-plus"></i>Create
-					Voucher</a>
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+					data-bs-target="#createModal">
+					<i class="material-icons md-plus"></i>Create voucher
+				</button>
+				<div class="modal fade" id="createModal" tabindex="-1"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5" id="exampleModalLabel">Add New
+									Voucher</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<form id="addVoucherForm" th:action="@{/admin/voucher/add}"
+								method="post">
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-lg-12">
+											<div class="row gx-3">
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="discountValue">Discount
+														Value:</label> <input class="form-control mb-2" type="number"
+														step="1" id="discountValue" name="discountValue"
+														th:field="${voucher.discountValue}" required>
+													<div class="invalid-feedback">Please enter a discount
+														value.</div>
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="discountUnit">Discount
+														Unit:</label> <select class="form-control mb-2" id="discountUnit"
+														th:field="${voucher.discountUnit}" name="discountUnit"
+														required>
+														<option th:value="percent">Percentage (%)</option>
+														<option th:value="money">Fixed Amount</option>
+													</select>
+													<div class="invalid-feedback">Please select a
+														discount unit.</div>
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="minOrderValue">Minimum
+														Order Value:</label> <input class="form-control mb-2"
+														type="number" step="1" id="minOrderValue"
+														th:field="${voucher.minOrderValue}" name="minOrderValue">
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="maxDiscountAmount">Maximum
+														Discount Amount:</label> <input class="form-control mb-2"
+														type="number" step="1" id="maxDiscountAmount"
+														th:field="${voucher.maxDiscountAmount}"
+														name="maxDiscountAmount">
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="quantity">Quantity:</label>
+													<input class="form-control mb-2" type="number" step="1"
+														id="quantity" th:field="${voucher.quantity}"
+														name="quantity">
+												</div>
+
+												<input class="form-control mb-2" type="hidden"
+													id="redeemAllowed" name="redeemAllowed" value="true"
+													th:field="${voucher.redeemAllowed}" required>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="startTime">Start
+														Time:</label> <input class="form-control mb-2"
+														type="datetime-local" th:field="${voucher.startTime}"
+														id="startTime" name="startTime" th:value="${startTime}"
+														required>
+													<div class="invalid-feedback" id="startTimeFeedback">
+														Please enter a start time.</div>
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="endTime">End Time:</label> <input
+														class="form-control mb-2" type="datetime-local"
+														th:field="${voucher.endTime}" id="" name=""
+														th:value="${endTime}" required>
+													<div class="invalid-feedback" id="endTimeFeedback">
+														Please enter an end time.</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary"
+										id="formButtonAdd">Add</button>
+								</div>
+							</form>
+							<script
+								src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+							<script
+								src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+							<script>
+							    $(document).ready(function() {
+							        const $addVoucherForm = $('#addVoucherForm');
+							        const $formButtonAdd = $('#formButtonAdd');
+							
+							        // Hàm để chỉ cho phép nhập số nguyên
+							        function allowOnlyIntegers(event) {
+							            const charCode = (event.which) ? event.which : event.keyCode;
+							            // Chấp nhận số (0-9) và các phím điều khiển như Backspace, Tab, Enter
+							            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+							                event.preventDefault(); // Ngăn chặn nhập ký tự không phải số
+							            }
+							        }
+							
+							        // Áp dụng hàm allowOnlyIntegers cho các trường input
+							        $('#discountValue, #minOrderValue, #maxDiscountAmount, #quantity').on('keypress', allowOnlyIntegers);
+							
+							        // Event listener for the "Add" button click
+							        $formButtonAdd.on('click', function(event) {
+							            // Ngăn chặn việc submit form mặc định trước để thực hiện validation bằng JavaScript
+							            event.preventDefault();
+							
+							            // Reset previous validation states
+							            $addVoucherForm.find('.form-control').removeClass('is-invalid');
+							            $addVoucherForm.find('.invalid-feedback').text(''); // Clear custom messages
+							
+							            let isValid = true; // Flag to track overall form validity
+							
+							            // Validate required fields
+							            $addVoucherForm.find('[required]').each(function() {
+							                const $input = $(this);
+							                if (!$input.val().trim()) { // Check if the input value is empty or just whitespace
+							                    $input.addClass('is-invalid'); // Add Bootstrap's invalid class
+							                    // Set specific feedback message based on input ID
+							                    if ($input.attr('id') === 'discountValue') {
+							                        $input.next('.invalid-feedback').text('Please enter a discount value.');
+							                    } else if ($input.attr('id') === 'discountUnit') {
+							                        $input.next('.invalid-feedback').text('Please select a discount unit.');
+							                    } else if ($input.attr('id') === 'startTime') {
+							                        $('#startTimeFeedback').text('Please enter a start time.');
+							                    } else if ($input.attr('id') === 'endTime') {
+							                        $('#endTimeFeedback').text('Please enter an end time.');
+							                    }
+							                    isValid = false; // Mark form as invalid
+							                }
+							            });
+							
+							            // Validate start time vs. end time
+							            const $startTimeInput = $('#startTime');
+							            const $endTimeInput = $('#endTime');
+							            const $startTimeFeedback = $('#startTimeFeedback');
+							            const $endTimeFeedback = $('#endTimeFeedback');
+							
+							            if ($startTimeInput.val() && $endTimeInput.val()) { // Only compare if both are filled
+							                const startTime = new Date($startTimeInput.val());
+							                const endTime = new Date($endTimeInput.val());
+							
+							                if (startTime >= endTime) { // Check if start time is not less than end time
+							                    $startTimeInput.addClass('is-invalid');
+							                    $endTimeInput.addClass('is-invalid');
+							                    $startTimeFeedback.text('Start time must be before end time.');
+							                    $endTimeFeedback.text('End time must be after start time.');
+							                    isValid = false; // Mark form as invalid
+							                }
+							            } else if ($startTimeInput.val() && !$endTimeInput.val()) {
+							                // If start time is filled but end time is not, ensure end time shows required error
+							                $endTimeInput.addClass('is-invalid');
+							                $endTimeFeedback.text('Please enter an end time.');
+							                isValid = false;
+							            } else if (!$startTimeInput.val() && $endTimeInput.val()) {
+							                // If end time is filled but start time is not, ensure start time shows required error
+							                $startTimeInput.addClass('is-invalid');
+							                $startTimeFeedback.text('Please enter a start time.');
+							                isValid = false;
+							            }
+							
+							            // If all validations pass, submit the form
+							            if (isValid) {
+							                // Remove the event.preventDefault() for the button click
+							                // and let the form submit naturally
+							                $addVoucherForm.off('submit').submit(); // Remove previous submit handlers and then submit
+							                // Optionally, you might still want to hide the modal and clear the form
+							                // if the submission is handled via AJAX later or if you need immediate UI feedback.
+							                // For a standard form submission, the page will reload/redirect.
+							                const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
+							                if (modal) {
+							                    modal.hide();
+							                }
+							                $addVoucherForm[0].reset(); // Clear the form after submission (if not redirecting)
+							            }
+							        });
+							
+							        // Optional: Clear validation feedback when user starts typing/selecting
+							        $addVoucherForm.find('.form-control').on('input change', function() { // Use 'change' for select elements
+							            const $input = $(this);
+							            if ($input.hasClass('is-invalid')) {
+							                $input.removeClass('is-invalid');
+							                const $feedbackElement = $input.next('.invalid-feedback');
+							                if ($feedbackElement.length) { // Check if the next sibling is the feedback element
+							                    $feedbackElement.text('');
+							                } else { // Fallback for specific IDs like startTimeFeedback, endTimeFeedback
+							                    const feedbackId = $input.attr('id') + 'Feedback';
+							                    $('#' + feedbackId).text('');
+							                }
+							            }
+							        });
+							    });
+							</script>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
+		<header class="card-header">
+			<div class="row gx-3">
+				<div class="col-lg-6 col-md-6 me-auto"></div>
+				<div class="col-lg-2 col-6 col-md-3">
+					<form id="vendorSearchForm" method="get"
+						th:action="@{/admin/voucher/search-by-vendor}">
+						<select class="form-select" name="vendorId" id="vendorSelect">
+							<option th:value="-1" th:selected="${selectedVendorId == -1}">All
+								Vendor</option>
+							<option th:value="0" th:selected="${selectedVendorId == 0}">E-ventura</option>
+							<option th:each="vendor : ${vendors}"
+								th:if="${vendor.users.deletedAt==null}" th:value="${vendor.id}"
+								th:text="${vendor.name}"
+								th:selected="${vendor.id == selectedVendorId}"></option>
+						</select>
+					</form>
+					<script>
+						    document.getElementById('vendorSelect').addEventListener('change', function() {
+						        document.getElementById('vendorSearchForm').submit();
+						    });
+						</script>
+				</div>
+				<div class="col-lg-2 col-6 col-md-3">
+					<form method="GET" th:action="@{/admin/voucher/list}">
+						<select class="form-select" name="filter"
+							onchange="this.form.submit()">
+							<option value="show_all" th:selected="${filter == 'show_all'}">Status
+								all</option>
+							<option value="valid" th:selected="${filter == 'valid'}">Valid</option>
+							<option value="invalid" th:selected="${filter == 'invalid'}">Invalid</option>
+							<option value="expired" th:selected="${filter == 'expired'}">Expired</option>
+						</select>
+					</form>
+				</div>
+				<div class="col-lg-2 col-md-3 col-6">
+					<select id="pageSizeSelect" class="form-select"
+						onchange="changePageSize()">
+						<option th:value="5" th:text="'Show 5'"
+							th:selected="${pageSize == 5}"></option>
+						<option th:value="20" th:text="'Show 20'"
+							th:selected="${pageSize == 20}"></option>
+						<option th:value="30" th:text="'Show 30'"
+							th:selected="${pageSize == 30}"></option>
+					</select>
+				</div>
 
+				<script>
+						document.addEventListener('DOMContentLoaded', () => {
+					        const select = document.getElementById('pageSizeSelect');
+					        const urlParams = new URLSearchParams(window.location.search);
+					        const pageSize = urlParams.get('pageSize') || '5'; // default là 5
+					        select.value = pageSize;
+					    });
+						function changePageSize() {
+						    // Lấy giá trị của option đã chọn
+						    const select = document.getElementById('pageSizeSelect');
+						    const pageSize = select.value;
+						    
+						    // Lấy giá trị của trang hiện tại, nếu có
+						    const urlParams = new URLSearchParams(window.location.search);
+						    const currentPage = urlParams.get('page') || 0; // hoặc giá trị khác tùy ý
+						    
+						    // Tạo URL mới với tham số page và pageSize
+						    const newUrl = new URL(window.location.origin + window.location.pathname);
+						    newUrl.searchParams.set('page', currentPage);
+						    newUrl.searchParams.set('pageSize', pageSize);
+							if (window.location.pathname === '/admin/voucher/search-by-vendor') {
+					        	const vendorId = urlParams.get('vendorId');
+					          	if (vendorId !== null) { 
+					                newUrl.searchParams.set('vendorId', vendorId);
+					          	}
+					       	}
+											
+						    // Tải lại trang với URL mới
+						    window.location.href = newUrl.toString();
+						}
+						// JavaScript to display SweetAlert2 based on flash attributes
+					    document.addEventListener('DOMContentLoaded', function() {
+					        const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+					        const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+					
+					        if (sweetAlertStatus && sweetAlertMessage) {
+					            Swal.fire({
+					                icon: sweetAlertStatus, // 'success' or 'error'
+					                title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+					                text: sweetAlertMessage,
+					                showConfirmButton: false,
+					                timer: 3000 // Automatically close after 3 seconds
+					            });
+					        }
+					    });
+					</script>
+
+			</div>
+		</header>
 		<div class="card">
 			<div class="card-body">
 				<div class="row">
@@ -27,52 +332,235 @@
 							<table class="table table-hover">
 								<thead>
 									<tr>
-										<th class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
-										</th>
-										<th>ID</th>
-										<th>Name</th>
-										<th>Description</th>
-										<th>Slug</th>
+										<th>Vendor</th>
+										<th class="text-center">Discount Value</th>
+										<th class="text-center">Start Time</th>
+										<th class="text-center">End Time</th>
+										<th class="text-center">Min Total Amount</th>
+										<th class="text-center">Max Discount</th>
+										<th class="text-center">Quantity</th>
 										<th class="text-center">Status</th>
-										<th class="text-center">Action</th>
+										<th class="text-center">Enable</th>
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td class="text-center">
-											<div class="form-check">
-												<input class="form-check-input" type="checkbox" value="">
-											</div>
+									<tr th:each="voucher : ${vouchers}">
+										<td th:if="voucher.vendors != null"><a class="itemside"
+											th:if="${voucher.vendors?.id != null}"
+											th:href="@{'/admin/vendor/detail/'+${voucher.vendors?.id}}">
+												<th:block th:text="${voucher.vendors?.name}"></th:block>
+										</a> <a class="itemside" th:if="${voucher.vendors?.id == null}"
+											th:href="@{/admin/dashboard}"> <th:block
+													th:text="${'E-ventura'}"></th:block>
+										</a></td>
+										<td th:if="${voucher.discountUnit == 'percent'}"
+											class="text-center"><th:block
+												th:text="${#numbers.formatDecimal(voucher.discountValue * 100, 0, 0)}"></th:block>%
 										</td>
-										<td>21</td>
-										<td><b>Men clothes</b></td>
-										<td>Men clothes</td>
-										<td>/men</td>
+										<td th:if="${voucher.discountUnit == 'money'}"
+											class="text-center">$ <th:block
+												th:text="${#numbers.formatDecimal(voucher.discountValue, 0, 'COMMA', 2, 'POINT')}"></th:block>
+										</td>
+										<td class="text-center"><th:block
+												th:text="${#dates.format(voucher.startTime, 'dd/MM/yyyy HH:mm:ss')}"></th:block>
+										</td>
+										<td class="text-center"><th:block
+												th:text="${#dates.format(voucher.endTime, 'dd/MM/yyyy HH:mm:ss')}"></th:block>
+										</td>
+										<td class="text-center">$ <th:block
+												th:text="${#numbers.formatDecimal(voucher.minOrderValue, 0, 'COMMA', 2, 'POINT')}"></th:block>
+										</td>
+										<td class="text-center">$ <th:block
+												th:text="${#numbers.formatDecimal(voucher.maxDiscountAmount, 0, 'COMMA', 2, 'POINT')}"></th:block>
+										</td>
+										<td class="text-center"><th:block
+												th:text="${voucher.quantity}"></th:block></td>
+										<td class="text-center"
+											th:if="${#dates.format(voucher.startTime, 'yyyyMMdd') >= #dates.format(#dates.createNow(), 'yyyyMMdd')}">
+											<span class="badge rounded-pill alert-warning"> <th:block
+													th:text="${'Invalid'}"></th:block>
+										</span>
+										</td>
+										<td class="text-center"
+											th:if="${#dates.format(voucher.startTime, 'yyyyMMdd') <= #dates.format(#dates.createNow(), 'yyyyMMdd') && #dates.format(voucher.endTime, 'yyyyMMdd') >= #dates.format(#dates.createNow(), 'yyyyMMdd')}">
+											<span class="badge rounded-pill alert-success"> <th:block
+													th:text="${'Valid'}"></th:block>
+										</span>
+										</td>
+										<td class="text-center"
+											th:if="${#dates.format(voucher.endTime, 'yyyyMMdd') <= #dates.format(#dates.createNow(), 'yyyyMMdd')}">
+											<span class="badge rounded-pill alert-danger"> <th:block
+													th:text="${'Expired'}"></th:block>
+										</span>
+										</td>
 										<td style="width: 0;">
 											<form>
-												<label class="switch">
-													<input type="checkbox" checked>
-													<span class="slider round"></span>
+												<label class="switch"> <input type="checkbox"
+													th:checked="${voucher.redeemAllowed}"
+													th:data-voucher-id="${voucher.id}"
+													onchange="toggleRedeemAllowed(this)"> <span
+													class="slider round"></span>
 												</label>
-											</form>
-
-										</td>
-										<td class="text-center">
-											<div class="dropdown"><a class="btn btn-light rounded btn-sm font-sm"
-													href="#" data-bs-toggle="dropdown"><i
-														class="material-icons md-more_horiz"></i></a>
-												<div class="dropdown-menu">
-													<a class="dropdown-item" th:href="@{/admin/Voucher/edit}">Edit</a>
-													<a class="dropdown-item text-danger" href="#">Delete</a>
-												</div>
-											</div>
+											</form> <script>
+												function toggleRedeemAllowed(checkbox) {
+													const voucherId = checkbox.dataset.voucherId;
+													const redeemAllowed = checkbox.checked;
+											
+													fetch(`/admin/voucher/updateRedeemAllowed/${voucherId}`, {
+														method: 'POST', // or 'PUT' depending on your API design
+														headers: {
+															'Content-Type': 'application/json',
+														},
+														body: JSON.stringify({ redeemAllowed: redeemAllowed }),
+													})
+													.then(response => {
+														if (!response.ok) {
+															// If the response is not OK, throw an error to be caught by .catch()
+															return response.json().then(errorData => {
+																throw new Error(errorData.message || 'Failed to update voucher status.');
+															});
+														}
+														return response.json(); // Or response.text() if your controller returns a string
+													})
+													.then(data => {
+														Swal.fire({
+															icon: 'success',
+															title: 'Success!',
+															text: 'voucher status updated successfully.',
+															showConfirmButton: false,
+															timer: 3000
+														});
+														console.log('Success:', data);
+													})
+													.catch((error) => {
+														Swal.fire({
+															icon: 'error',
+															title: 'Oops...',
+															text: error.message || 'There was an error updating the voucher status.',
+															showConfirmButton: false,
+															timer: 3000
+														});
+														console.error('Error:', error);
+														// Revert the checkbox state if the update failed
+														checkbox.checked = !redeemAllowed;
+													});
+												}
+											</script>
 										</td>
 									</tr>
 								</tbody>
+
 							</table>
+							<!-- voucher by vendor id-->
+							<th:block
+								th:if="${selectedVendorId != null && !#lists.isEmpty(vouchers)}">
+								<div class="pagination-area mt-15 mb-50">
+									<nav aria-label="Page navigation example">
+										<ul class="pagination justify-content-start">
+											<li class="page-item"
+												th:classappend="${currentPages == 0} ? 'hidden'"><a
+												class="page-link"
+												th:href="@{'/admin/voucher/search-by-vendor?vendorId='+ ${selectedVendorId} +'&page=' + ${0}+'&pageSize='+${pageSize}}"
+												aria-label="Next"> <i
+													class="material-icons md-double_arrow"
+													style="transform: rotate(180deg) translate(15%, -30%);"></i>
+											</a></li>
+											<!-- Nút trước -->
+											<li class="page-item"
+												th:classappend="${currentPages == 0} ? 'disabled'"><a
+												class="page-link"
+												th:href="@{'/admin/voucher/search-by-vendor?vendorId='+ ${selectedVendorId} +'&page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+												aria-label="Previous"> <i
+													class="material-icons md-chevron_left"></i>
+											</a></li>
+
+											<!-- Các trang -->
+											<th:block
+												th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+												<li class="page-item"
+													th:classappend="${i} == ${currentPages} ? 'active'"><a
+													class="page-link"
+													th:href="@{'/admin/voucher/search-by-vendor?vendorId='+ ${selectedVendorId} +'&page=' + ${i}+'&pageSize='+${pageSize}}"
+													th:text="${i + 1}"></a></li>
+											</th:block>
+
+											<!-- Nút tiếp -->
+											<li class="page-item"
+												th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+												<a class="page-link"
+												th:href="@{'/admin/voucher/search-by-vendor?vendorId='+ ${selectedVendorId} +'&page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+												aria-label="Next"> <i
+													class="material-icons md-chevron_right"></i>
+											</a>
+											</li>
+
+											<li class="page-item"
+												th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+												<a class="page-link"
+												th:href="@{'/admin/voucher/search-by-vendor?vendorId='+ ${selectedVendorId} +'&page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
+												aria-label="Next"><i
+													class="material-icons md-double_arrow"></i> </a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</th:block>
+							<!-- all voucher -->
+							<th:block
+								th:if="${selectedVendorId == null && !#lists.isEmpty(vouchers)}">
+								<div class="pagination-area mt-15 mb-50">
+									<nav aria-label="Page navigation example">
+										<ul class="pagination justify-content-start">
+											<li class="page-item"
+												th:classappend="${currentPages == 0} ? 'hidden'"><a
+												class="page-link"
+												th:href="@{'/admin/voucher/list?page=' + ${0}+'&pageSize='+${pageSize}}"
+												aria-label="Next"> <i
+													class="material-icons md-double_arrow"
+													style="transform: rotate(180deg) translate(15%, -30%);"></i>
+											</a></li>
+											<!-- Nút trước -->
+											<li class="page-item"
+												th:classappend="${currentPages == 0} ? 'disabled'"><a
+												class="page-link"
+												th:href="@{'/admin/voucher/list?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+												aria-label="Previous"> <i
+													class="material-icons md-chevron_left"></i>
+											</a></li>
+
+											<!-- Các trang -->
+											<th:block
+												th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+												<li class="page-item"
+													th:classappend="${i} == ${currentPages} ? 'active'"><a
+													class="page-link"
+													th:href="@{'/admin/voucher/list?page=' + ${i}+'&pageSize='+${pageSize}}"
+													th:text="${i + 1}"></a></li>
+											</th:block>
+
+											<!-- Nút tiếp -->
+											<li class="page-item"
+												th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+												<a class="page-link"
+												th:href="@{'/admin/voucher/list?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+												aria-label="Next"> <i
+													class="material-icons md-chevron_right"></i>
+											</a>
+											</li>
+
+											<li class="page-item"
+												th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+												<a class="page-link"
+												th:href="@{'/admin/voucher/list?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
+												aria-label="Next"><i
+													class="material-icons md-double_arrow"></i> </a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</th:block>
 						</div>
 					</div>
 				</div>

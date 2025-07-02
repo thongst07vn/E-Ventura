@@ -6,11 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.eventura.entities.Vouchers;
+
+
 import com.eventura.entities.Coupons;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
 import com.eventura.entities.Vendors;
-import com.eventura.entities.Vouchers;
 
 public interface VouchersService{
 	
@@ -18,4 +20,15 @@ public interface VouchersService{
 	
 	public List<Vouchers> findAllVoucherByVendorId(int id, double value);
 	public List<Vouchers> findAllVoucherByEventura(double value);
+	
+	public Page<Vouchers> findAllByDeletedAtISNUL(Pageable pageable);
+	public Page<Vouchers> findAllByDeletedAtISNOTNUL(Pageable pageable);
+	public Page<Vouchers> findAllVoucherExpired(Pageable pageable);
+	public Page<Vouchers> findAllVoucherInValid(Pageable pageable);
+	public Page<Vouchers> findAllVoucherValid(Pageable pageable);
+	public Page<Vouchers> findByVendorId(int id,Pageable pageable);
+	public Page<Vouchers> findByVendorIdISNULL(Pageable pageable);
+	public Vouchers findById(int id);
+	public boolean save(Vouchers vouchers);
+
 }

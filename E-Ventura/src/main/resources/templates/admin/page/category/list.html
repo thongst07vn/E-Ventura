@@ -202,7 +202,7 @@
 						document.addEventListener('DOMContentLoaded', () => {
 					        const select = document.getElementById('pageSizeSelect');
 					        const urlParams = new URLSearchParams(window.location.search);
-					        const pageSize = urlParams.get('pageSize') || '5'; // default là 5
+					        const pageSize = urlParams.get('pageSize') || '20'; // default là 5
 					        select.value = pageSize;
 					    });
 						function changePageSize() {
