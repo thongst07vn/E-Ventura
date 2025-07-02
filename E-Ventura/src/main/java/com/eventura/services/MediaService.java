@@ -13,4 +13,6 @@ import com.eventura.entities.Vendors;
 public interface MediaService {
 
 	public boolean save(Medias media);
+	
+	public boolean delete(int id);
 }

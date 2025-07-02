@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
+import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
@@ -30,7 +32,7 @@ public class StoreController  {
 	@Autowired
 	private ProductService productService;
 	@Autowired
-	private VendorProductCategoryService vendorProductCategoryService;
+	private CategoryService categoryService;
 
 	
 	/*===================== STORE =====================*/
@@ -55,7 +57,7 @@ public class StoreController  {
 		modelMap.put("vendor", vendorService.findById(vendorId));
 		modelMap.put("revenue", vendorService.sumByVendorId(vendorId));
 		
-		int pageSize = 5;
+		int pageSize = 6;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPages = productService.findByVendorIdPage(vendorId, pageable);
 		
@@ -64,7 +66,7 @@ public class StoreController  {
 		modelMap.put("totalPage", productPages.getTotalPages());
 		modelMap.put("lastPageIndex", productPages.getTotalPages() - 1);
 		
-		modelMap.put("vendorCategories", vendorProductCategoryService.findByVendorId(vendorId));
+		modelMap.put("categories", categoryService.findAll());
 
 
 
@@ -84,7 +86,7 @@ public class StoreController  {
 		modelMap.put("revenue", vendorService.sumByVendorId(vendorId));
 		
 
-		int pageSize = 3;
+		int pageSize = 6;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage;
 		
@@ -102,7 +104,7 @@ public class StoreController  {
 		
 		modelMap.put("selectedCategoryId", categoryId);
 		
-		modelMap.put("vendorCategories", vendorProductCategoryService.findByVendorId(vendorId));
+		modelMap.put("categories", categoryService.findAll());
 		return "vendor/pages/store/view";
 	}
 	

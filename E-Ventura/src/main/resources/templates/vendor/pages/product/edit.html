@@ -6,29 +6,19 @@
 	<style>
 		.thumbnail-container {
 			display: flex;
-			flex-wrap: nowrap; /* ❗ Không cho xuống dòng */
-			overflow-x: auto;  /* ❗ Cho phép cuộn ngang nếu ảnh nhiều */
 			gap: 10px;
-			margin-top: 10px;
+			flex-wrap: wrap;
 		}
-
-		.img-wrapper {
-			flex: 0 0 auto; /* ❗ Giữ kích thước cố định theo chiều ngang */
-			position: relative;
-		}
-
-		.img-wrapper img {
-			width: 80px;
-			height: 80px;
+	
+		.thumbnail-preview {
+			width: 100px;
+			height: 100px;
 			object-fit: cover;
-			border: 1px solid #ddd;
-			padding: 3px;
+			border: 1px solid #ccc;
 			border-radius: 4px;
+			padding: 3px;
 		}
 	</style>
-
-
-
 
 </head>
 
@@ -58,6 +48,9 @@
 							<div class="mb-4">
 								<label class="form-label" for="product_name">Product title</label>
 								<input class="form-control" id="product_name" type="text" th:field="${product.name}">
+								<input class="form-control"  type="hidden" th:field="${product.id}">
+								<input class="form-control"  type="hidden" name="proId" th:value=${product.id}>
+
 							</div>
 
 
@@ -168,6 +161,7 @@
 
 								</th:block>
 							
+							
 								<!-- Nếu không có ảnh -->
 								<th:block th:if="${#lists.isEmpty(product.mediases)}">
 									<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}" alt="No Image">
@@ -189,27 +183,45 @@
 			</div>
 		</form>
 		
-		<!-- Modal -->
-		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="exampleModalLabel">Modal
-							title</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-		
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Save
-							changes</button>
+		<form>
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h1 class="modal-title fs-5" id="exampleModalLabel">Add Variant</h1>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<form method="POST" th:action="@{/vendor/productVariant/add}">
+								<input type="hidden" th:field="${product.id}" />
+			
+								<div>
+									<div class="mb-4">
+										<label class="form-label">Attribute</label>
+										<input class="form-control" type="text" th:field="${productVariant.productAttributes.name}"
+											/>
+									</div>
+									<div class="mb-4">
+										<label class="form-label">Value</label>
+										<input class="form-control" th:field="${productVariant.value}" />
+									</div>
+								</div>
+			
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary">Save changes</button>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		<!-- Modal -->
+			<!-- Modal -->
+>
+			</div>
+			<!-- Modal -->
+		</form>
 		
 		<script>
 			document.getElementById("imageInput").addEventListener("change", function (event) {

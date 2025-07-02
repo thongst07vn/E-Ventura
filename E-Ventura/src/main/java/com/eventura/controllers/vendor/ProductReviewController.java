@@ -187,10 +187,17 @@ public class ProductReviewController {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<ProductReviews> productReviewPage = productService.findProductReviewPage(productId, pageable);
 		
+	    // Kiểm tra nếu không có dữ liệu và trả về một trang rỗng nếu cần
+	    if (productReviewPage == null || productReviewPage.isEmpty()) {
+	        productReviewPage = Page.empty();  // Trả về một Page rỗng nếu không có dữ liệu
+	    }
+
+		
 		modelMap.put("productReviews", productReviewPage.getContent());
 		modelMap.put("currentPages", page);
 		modelMap.put("totalPage", productReviewPage.getTotalPages());
 		modelMap.put("lastPageIndex", productReviewPage.getTotalPages() - 1);		
+		modelMap.put("product", productService.findById(productId));
 		
 		return "vendor/pages/product/reviewDetail";
 

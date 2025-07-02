@@ -30,4 +30,15 @@ public class MediaServiceImpl implements MediaService{
 		}
 	}
 
+	@Override
+	public boolean delete(int id) {
+		try {
+			mediaRepository.deleteById(id);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }
