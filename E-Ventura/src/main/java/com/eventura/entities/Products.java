@@ -31,6 +31,7 @@ public class Products implements java.io.Serializable {
 	private String description;
 	private double price;
 	private int quantity;
+	private boolean deleted;
 	private Date createdAt;
 	private Date updatedAt;
 	private Date deletedAt;
@@ -146,6 +147,15 @@ public class Products implements java.io.Serializable {
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
+	
+	@Column(name = "deleted", nullable = false)
+	public boolean isDeleted() {
+		return deleted;
+	}
+	
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false, length = 19)
@@ -240,4 +250,7 @@ public class Products implements java.io.Serializable {
 		this.couponses = couponses;
 	}
 
+
+
+	
 }

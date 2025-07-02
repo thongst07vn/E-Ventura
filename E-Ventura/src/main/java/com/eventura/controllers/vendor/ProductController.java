@@ -32,6 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.dtos.ProductDTO;
 import com.eventura.entities.Medias;
+import com.eventura.entities.ProductAttributes;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.ProductReviews;
 import com.eventura.entities.ProductVariants;
@@ -71,15 +72,18 @@ public class ProductController {
 
 		int pageSize = 6;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findByVendorIdPage(vendorId, pageable);
+		Page<Products> productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		// Lặp qua productPage và thêm các ProductDTO vào List
 		for (Products product : productPage) {
-			if (!productService.findProductReview(product.getId()).isEmpty()) {
-				productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
-			} else {
-				productDTOList.add(new ProductDTO(product, 0));
+			if (product.getDeletedAt() == null && !product.isDeleted()) {
+
+				if (!productService.findProductReview(product.getId()).isEmpty()) {
+					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+				} else {
+					productDTOList.add(new ProductDTO(product, 0));
+				}
 			}
 		}
 		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
@@ -102,16 +106,16 @@ public class ProductController {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 5;
+		int pageSize = 6;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage;
 
 		if (categoryId == 0) {
-			productPage = productService.findByVendorIdPage(vendorId, pageable);
+			productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 			List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 			for (Products product : productPage) {
-				if (product.getDeletedAt() == null) {
+				if (product.getDeletedAt() == null && !product.isDeleted()) {
 
 					if (!productService.findProductReview(product.getId()).isEmpty()) {
 						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
@@ -127,11 +131,11 @@ public class ProductController {
 			modelMap.put("products", productDTOPage.getContent());
 //			map.put("products", productPage.getContent());
 		} else {
-			productPage = productService.findByVendorCategoryPage(vendorId, categoryId, pageable);
+			productPage = productService.findProductByVendorAndDeleteAndCategoryPage(vendorId, categoryId, pageable);
 			List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 			for (Products product : productPage) {
-				if (product.getDeletedAt() == null) {
+				if (product.getDeletedAt() == null && !product.isDeleted()) {
 					if (!productService.findProductReview(product.getId()).isEmpty()) {
 						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
 					} else {
@@ -164,9 +168,9 @@ public class ProductController {
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
 		System.out.println("ncc");
-		int pageSize = 5;
+		int pageSize = 6;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findByKeywordAndVendorIdPage(keyword, vendorId, pageable);
+		Page<Products> productPage = productService.findProductByVendorAndDeleteAndKeywordPage(vendorId, keyword, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		for (Products product : productPage) {
@@ -235,6 +239,11 @@ public class ProductController {
 			redirectAttributes.addFlashAttribute("msgErrorDescription", "* Description cannot be empty.");
 			return "redirect:/vendor/product/add";
 		}
+		if (files == null || files.isEmpty() || files.stream().anyMatch(file -> file.isEmpty())) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "warning");
+			redirectAttributes.addFlashAttribute("message", "You must Upload Image");
+			return "redirect:/vendor/product/add";
+		}
 
 		/* VENDOR */
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
@@ -289,13 +298,14 @@ public class ProductController {
 
 			redirectAttributes.addFlashAttribute("sweetAlert", "success");
 			redirectAttributes.addFlashAttribute("message", "Add Product Successfully");
+			return "redirect:/vendor/product/list";
 
 		} else {
 			redirectAttributes.addFlashAttribute("sweetAlert", "error");
 			redirectAttributes.addFlashAttribute("message", "Add Product Failed");
+			return "redirect:/vendor/product/add";
 		}
 
-		return "redirect:/vendor/product/list";
 	}
 
 	@GetMapping("edit/{id}")
@@ -308,6 +318,8 @@ public class ProductController {
 		modelMap.put("categories", categoryService.findAll());
 		
 		modelMap.put("productVariant", new ProductVariants());
+		modelMap.put("productAttribute", new ProductAttributes());
+
 
 
 		return "vendor/pages/product/edit";
@@ -320,22 +332,22 @@ public class ProductController {
 			RedirectAttributes redirectAttributes) {
 		if (product.getName() == null || product.getName().trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("msgErrorName", "* Product's Name cannot be empty.");
-			return "redirect:/vendor/product/add";
+			return "redirect:/vendor/product/edit/" + proId;
 		}
 
 		if (product.getPrice() <= 0) {
 			redirectAttributes.addFlashAttribute("msgErrorPrice", "* Price must be greater than 0.");
-			return "redirect:/vendor/product/add";
+			return "redirect:/vendor/product/edit/" + proId;
 		}
 
 		if (product.getQuantity() <= 0) {
 			redirectAttributes.addFlashAttribute("msgErrorQuantity", "* Quantity must be greater than 0.");
-			return "redirect:/vendor/product/add";
+			return "redirect:/vendor/product/edit/" + proId;
 		}
 
 		if (product.getDescription() == null || product.getDescription().trim().isEmpty()) {
 			redirectAttributes.addFlashAttribute("msgErrorDescription", "* Description cannot be empty.");
-			return "redirect:/vendor/product/add";
+			return "redirect:/vendor/product/edit/" + proId;
 		}
 		/* VENDOR */
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
@@ -344,7 +356,7 @@ public class ProductController {
 
 		product.setCreatedAt(new Date());
 		product.setUpdatedAt(new Date());
-		product.setDeletedAt(new Date());
+		product.setDeletedAt(product.getDeletedAt());
 
 		System.out.println(product.getMediases().size());
 		System.out.println(files.size());
@@ -419,10 +431,22 @@ public class ProductController {
 	}
 
 	@GetMapping("delete/{id}")
-	public String productDelete(@PathVariable("id") int id, ModelMap modelMap) {
+	public String productDelete(@PathVariable("id") int id, 
+						         ModelMap modelMap, RedirectAttributes redirectAttributes) {
 		modelMap.put("currentPage", "product");
+		
+		Products productDelete = productService.findById(id);
+		productDelete.setDeleted(true);
+		
+		if (productService.save(productDelete)) {
 
-		return "vendor/pages/product/delete";
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Delete Product Successfully");
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Delete Product Failed");
+		}
+		return "redirect:/vendor/product/list";
 	}
 
 	@GetMapping("review")

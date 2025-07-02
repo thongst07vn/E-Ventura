@@ -50,6 +50,13 @@ public interface ProductService {
 	public Page<ProductReviews> findProductReviewPage(int id, Pageable pageable);
 	
 	public Page<ProductReviews> findProductReviewsByKeyword(int id, String keyword, Pageable pageable);
+	
+	public Page<Products> findProductByVendorAndDeletePage(int id, Pageable pageable);
+	
+	public Page<Products> findProductByVendorAndDeleteAndCategoryPage(int vendorId, int categoryId ,Pageable pageable);
+
+	public Page<Products> findProductByVendorAndDeleteAndKeywordPage(int vendorId, String keyword ,Pageable pageable);
+
  
 
 
