@@ -4,6 +4,9 @@ package com.eventura.entities;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,11 +31,14 @@ public class Vouchers implements java.io.Serializable {
 	private Vendors vendors;
 	private double discountValue;
 	private String discountUnit;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date startTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date endTime;
 	private double minOrderValue;
 	private double maxDiscountAmount;
 	private boolean redeemAllowed;
+	private int quantity;
 	private Date createdAt;
 	private Date upadetedAt;
 	private Date deletedAt;
@@ -42,7 +48,7 @@ public class Vouchers implements java.io.Serializable {
 	}
 
 	public Vouchers(double discountValue, String discountUnit, Date startTime, Date endTime, double minOrderValue,
-			double maxDiscountAmount, boolean redeemAllowed, Date createdAt, Date upadetedAt) {
+			double maxDiscountAmount, boolean redeemAllowed, Date createdAt, Date upadetedAt, int quantity) {
 		this.discountValue = discountValue;
 		this.discountUnit = discountUnit;
 		this.startTime = startTime;
@@ -50,12 +56,13 @@ public class Vouchers implements java.io.Serializable {
 		this.minOrderValue = minOrderValue;
 		this.maxDiscountAmount = maxDiscountAmount;
 		this.redeemAllowed = redeemAllowed;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.upadetedAt = upadetedAt;
 	}
 
 	public Vouchers(Vendors vendors, double discountValue, String discountUnit, Date startTime, Date endTime,
-			double minOrderValue, double maxDiscountAmount, boolean redeemAllowed, Date createdAt, Date upadetedAt,
+			double minOrderValue, double maxDiscountAmount, boolean redeemAllowed, int quantity, Date createdAt, Date upadetedAt,
 			Date deletedAt, Set<VouchersCampaigns> vouchersCampaignses) {
 		this.vendors = vendors;
 		this.discountValue = discountValue;
@@ -65,6 +72,7 @@ public class Vouchers implements java.io.Serializable {
 		this.minOrderValue = minOrderValue;
 		this.maxDiscountAmount = maxDiscountAmount;
 		this.redeemAllowed = redeemAllowed;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.upadetedAt = upadetedAt;
 		this.deletedAt = deletedAt;
@@ -157,7 +165,16 @@ public class Vouchers implements java.io.Serializable {
 	public void setRedeemAllowed(boolean redeemAllowed) {
 		this.redeemAllowed = redeemAllowed;
 	}
+	
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
+		return this.quantity;
+	}
 
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false, length = 19)
 	public Date getCreatedAt() {

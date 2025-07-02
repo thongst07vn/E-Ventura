@@ -26,15 +26,22 @@ public interface CouponRepository extends JpaRepository<Coupons, Integer> {
 	@Query("FROM Coupons WHERE deletedAt IS NULL ORDER BY createdAt DESC")
 	Page<Coupons> findAllByDeletedAtISNUL(Pageable pageable);
 
-	@Query("FROM Coupons WHERE deletedAt IS NOT NULL ORDER BY createdAt DESC")
+	@Query("FROM Coupons WHERE deletedAt IS  NULL ORDER BY createdAt DESC")
 	Page<Coupons> findAllByDeletedAtISNOTNUL(Pageable pageable);
 	
-//	@Query("FROM Coupons WHERE deletedAt IS NOT NULL and username like %:keyword% ORDER BY u.createdAt DESC")
-//	public Page<Users> findUsersWithRoleId3ByDeletedAtNOTNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
-//	
-//	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and u.deletedAt IS NULL and username like %:keyword% ORDER BY u.createdAt DESC")
-//	Page<Users> findUsersWithRoleId3ByDeletedAtISNULLByKeyword(@Param("keyword") String keyword,Pageable pageable);
-//	
-//	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and username like %:keyword% ORDER BY u.createdAt DESC")
-//	Page<Users> findUsersWithRoleId3ByKeyword(@Param("keyword") String keyword, Pageable pageable);
+	@Query("FROM Coupons WHERE deletedAt IS NULL and endTime <= current_timestamp()")
+	public Page<Coupons> findAllCouponExpired(Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and startTime >= current_timestamp()")
+	public Page<Coupons> findAllCouponInvalid(Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and startTime <= current_timestamp() and endTime >= current_timestamp()")
+	public Page<Coupons> findAllCouponValid(Pageable pageable);
+
+	@Query("FROM Coupons WHERE deletedAt IS NULL and vendors.id = :id")
+	public Page<Coupons> findByVendorId(@Param("id") int  id,Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and products.name like %:keyword%")
+	Page<Coupons> findByKeyword(@Param("keyword") String keyword,Pageable pageable);
+
 }
