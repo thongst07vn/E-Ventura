@@ -23,9 +23,8 @@
 				<div class="row align-items-center">
 					<div class="col-lg-6 col-md-6 mb-lg-0 mb-15"><span><i
 								class="material-icons md-calendar_today"></i><b
-								th:text="${#dates.format(orderItems[0].createdAt, 'dd/MM/yyyy HH:mm:ss')}">
-								4:34PM</b></span><br><small class="text-muted">Order ID: <span
-								th:text="${order.id}"></span></small></div>
+								th:text="${#dates.format(order.createdAt, 'EEE, dd MMM, yyyy, hh:mm a')}">
+								4:34PM</b></small></div>
 					<div class="col-lg-6 col-md-6 ms-auto text-md-end">
 						<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200">
 							<option>Change status</option>
@@ -33,41 +32,77 @@
 							<option>Confirmed</option>
 							<option>Shipped</option>
 							<option>Delivered</option>
-						</select><a class="btn btn-primary" href="#">Save</a><a class="btn btn-secondary print ms-2"
-							href="#"><i class="icon material-icons md-print"></i></a>
+						</select>
+						<button onclick="printSection()" class="btn btn-secondary print ms-2 no-print">
+							<i class="icon material-icons md-print"></i>
+						</button>
+						<script>
+							function printSection() {
+								// Lấy nội dung HTML của thẻ section
+								var printContents = document.getElementById('printableArea').innerHTML;
+								// Lưu trữ nội dung gốc của body
+								var originalContents = document.body.innerHTML;
+
+								// Thay thế nội dung của body bằng nội dung của section
+								document.body.innerHTML = printContents;
+
+								// Gọi hàm in của trình duyệt
+								window.print();
+
+								// Khôi phục lại nội dung gốc của body sau khi in
+								document.body.innerHTML = originalContents;
+
+								// Có thể cần reload trang hoặc điều chỉnh DOM để hiển thị đúng lại các phần tử ban đầu
+								// Đối với các ứng dụng phức tạp hơn với các event listeners, bạn có thể cần cách tiếp cận khác
+								// Ví dụ: location.reload();
+							}
+						</script>
 					</div>
 				</div>
 			</header>
 			<div class="card-body">
 				<div class="row mb-50 mt-20 order-info-wrap">
-					<div class="col-md-4">
+					<div class="col-4">
 						<article class="icontext align-items-start"><span
 								class="icon icon-sm rounded-circle bg-primary-light"><i
 									class="text-primary material-icons md-person"></i></span>
 							<div class="text">
 								<h6 class="mb-1">Customer</h6>
 								<p class="mb-1"
-									th:text="${userAddresses[0].users.firstName + ' ' + userAddresses[0].users.lastName}">
+									th:text="${order.users.username}">
 								</p>
-								<p class="mb-1" th:text="${userAddresses[0].users.email}"></p>
-								<p class="mb-1" th:text="${userAddresses[0].users.phoneNumber}"></p>
+								<p class="mb-1" th:text="${order.users.email}"></p>
 
 							</div>
 						</article>
 					</div>
-					<div class="col-md-4">
-
+					<div class="col-4">
+						<article class="icontext align-items-start">
+							<span class="icon icon-sm rounded-circle bg-primary-light"><i
+									class="text-primary material-icons md-local_shipping"></i></span>
+							<div class="text text-start">
+								<h6 class="mb-1">Order info</h6>
+								<p class="mb-1">
+									Pay method:
+									<th:block th:text="${order.paymentMethod}"></th:block>
+									<br>
+								</p>
+								<p class="mb-1">
+									Pay date:
+									<th:block th:text="${#dates.format(order.paymentDate, 'EEE, dd MMM, yyyy, hh:mm a')}"></th:block>
+									<br>
+								</p>
+							</div>
+						</article>
 					</div>
-					<div class="col-md-4">
+					<div class="col-4">
 						<article class="icontext align-items-start"><span
 								class="icon icon-sm rounded-circle bg-primary-light"><i
 									class="text-primary material-icons md-place"></i></span>
 							<div class="text">
 								<h6 class="mb-1">Deliver to</h6>
-								<p class="mb-1" th:text="${userAddresses[0].address}"></p>
-								<p class="mb-1"
-									th:text="${userAddresses[0].provinces.name + ' ' + userAddresses[0].districts.name + ' ' + userAddresses[0].wards.name }">
-								</p>
+								<p class="mb-1" th:text="${order.userAddress}"></p>
+							
 							</div>
 						</article>
 					</div>
@@ -121,7 +156,7 @@
 							<div class="col-md-4">
 								<div class="box shadow-sm bg-light">
 									<h6 class="mb-15">Payment info</h6>
-									<p><img class="border" src="assets/imgs/card-brands/2.png" height="20"> Master Card **** **** 4768<br> Business
+									<p><img class="border" th:src="@{/assets/imgs/card-brands/2.png}" height="20"> Master Card **** **** 4768<br> Business
 										name: Grand Market LLC<br> Phone: +1 (800) 555-154-52</p>
 								</div>
 							</div>

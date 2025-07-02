@@ -85,10 +85,10 @@
 						th:action="@{/vendor/store/searchByVendorCategory}">
 						<select class="form-select" name="categoryId" id="categorySelect">
 							<option value="0" th:selected="${selectedCategoryId == 0}">All</option>
-							<option th:each="vendorCategory : ${vendorCategories}"
-								th:value="${vendorCategory.productCategories.id}"
-								th:text="${vendorCategory.productCategories.name}"
-								th:selected="${vendorCategory.productCategories.id == selectedCategoryId}"></option>
+							<option th:each="category : ${categories}"
+								th:value="${category.id}"
+								th:text="${category.name}"
+								th:selected="${category.id == selectedCategoryId}"></option>
 						</select>
 					</form>
 					<script>

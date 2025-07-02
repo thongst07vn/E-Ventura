@@ -1,5 +1,11 @@
 package com.eventura.controllers.vendor;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.hibernate.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.eventura.dtos.OrderVendorDTO;
 import com.eventura.entities.OrderItems;
+import com.eventura.entities.OrderItemsOrderStatus;
 import com.eventura.entities.Orders;
 import com.eventura.entities.VendorProductCategory;
 import com.eventura.repositories.VendorEarningRepository;
@@ -127,11 +134,34 @@ public class OrderController  {
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<OrderItems> orderItemPages = orderItemService.findOrderItemsByOrderIdPage(orderId, vendorId, pageable);
+		Orders order = orderService.findOrderByOrderId(orderId);
+
 		
+		List<Map<String, Object>> orderItemStatuses = orderItemPages.getContent().stream()
+			    .map(item -> {
+			        // Assuming findStatusByOrderItemId returns a list of statuses,
+			        // and you want the one with the latest timestamp (e.g., 'updatedAt' or 'createdAt')
+			        List<OrderItemsOrderStatus> statuses = orderStatusService.findStatusByOrderItemId(item.getId());
+
+			        // Find the latest status for the current order item
+			        OrderItemsOrderStatus latestStatus = statuses.stream()
+			            .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt)) // Or getCreatedAt() if that's your timestamp
+			            .orElse(null); // Handle case where no status is found
+
+			        Map<String, Object> statusMap = new HashMap<>();
+			        if (latestStatus != null) {
+			            statusMap.put("statusName", latestStatus.getOrderStatus().getName());
+			            statusMap.put("orderItemId", latestStatus.getOrderItems().getId());
+			        }
+			        return statusMap;
+			    })
+			    .filter(map -> map.containsKey("statusName")) // Filter out items that didn't have a status
+			    .collect(Collectors.toList());
+
+		modelMap.put("orderItemStatuses", orderItemStatuses);
 		modelMap.put("orderItems", orderItemPages.getContent());
+		modelMap.put("order", order);
 		
-		/* Các thông tin khác */
-		modelMap.put("order", orderService.findOrderByOrderId(orderId));
 		modelMap.put("userAddresses", userAddressService.findUserAddressesByOrderId(orderId));
 		modelMap.put("totalAmount", orderItemService.findTotalAmountByOrderIdAndVendorId(orderId, vendorId));
 		
