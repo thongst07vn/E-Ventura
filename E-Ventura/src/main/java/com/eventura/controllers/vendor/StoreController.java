@@ -59,7 +59,7 @@ public class StoreController  {
 		
 		int pageSize = 6;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPages = productService.findByVendorIdPage(vendorId, pageable);
+		Page<Products> productPages = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 		
 		modelMap.put("products", productPages.getContent());
 		modelMap.put("currentPages", page);
@@ -91,10 +91,10 @@ public class StoreController  {
 		Page<Products> productPage;
 		
 		if(categoryId == 0) {
-			productPage = productService.findByVendorIdPage(vendorId, pageable);
+			productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 			modelMap.put("products", productPage.getContent());
 		}else {
-			productPage = productService.findByVendorCategoryPage(vendorId, categoryId, pageable);
+			productPage = productService.findProductByVendorAndDeleteAndCategoryPage(vendorId, categoryId, pageable);
 			modelMap.put("products", productPage.getContent());
 		}
 		

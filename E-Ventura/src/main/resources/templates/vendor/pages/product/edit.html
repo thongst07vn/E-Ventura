@@ -9,7 +9,7 @@
 			gap: 10px;
 			flex-wrap: wrap;
 		}
-	
+
 		.thumbnail-preview {
 			width: 100px;
 			height: 100px;
@@ -31,11 +31,11 @@
 					<div class="content-header">
 						<a th:href="@{/vendor/product/list}">
 							<i class="material-icons md-arrow_back">
-								
+
 							</i> Go back</a>
 						<br>
 					</div>
-					
+
 
 
 				</div>
@@ -46,10 +46,10 @@
 						</div>
 						<div class="card-body">
 							<div class="mb-4">
-								<label class="form-label" for="product_name">Product title</label>
+								<label class="form-label" for="product_name">Product title <span th:text="${msgErrorName}" class="text-danger"></span></label>
 								<input class="form-control" id="product_name" type="text" th:field="${product.name}">
-								<input class="form-control"  type="hidden" th:field="${product.id}">
-								<input class="form-control"  type="hidden" name="proId" th:value=${product.id}>
+								<input class="form-control" type="hidden" th:field="${product.id}">
+								<input class="form-control" type="hidden" name="proId" th:value=${product.id}>
 
 							</div>
 
@@ -57,14 +57,14 @@
 							<div class="row">
 								<div class="col-lg-4">
 									<div class="mb-4">
-										<label class="form-label">Regular price</label>
+										<label class="form-label">Price <span th:text="${msgErrorPrice}" class="text-danger"></span></label>
 										<div class="row gx-2"></div>
 										<input class="form-control" type="number" th:field="${product.price}">
 									</div>
 								</div>
 								<div class="col-lg-4">
 									<div class="mb-4">
-										<label class="form-label">Quantity</label>
+										<label class="form-label">Quantity <span th:text="${msgErrorQuantity}" class="text-danger"></span></label>
 										<div class="row gx-2"></div>
 										<input class="form-control" type="number" th:field="${product.quantity}">
 									</div>
@@ -76,7 +76,7 @@
 
 								</div>
 								<div class="mb-4">
-									<label class="form-label">Full description</label>
+									<label class="form-label">Full description <span th:text="${msgErrorDescription}" class="text-danger"></span></label>
 									<br>
 									<textarea class="form-control" cols="90" rows="8"
 										th:field=${product.description}></textarea>
@@ -110,14 +110,17 @@
 									</thead>
 									<tbody>
 										<th:block th:each="productVariant, i : ${productVariants}">
-										    <tr>
-										        <td th:text="${i.index == 0 || productVariants[i.index - 1].productAttributes.name != productVariant.productAttributes.name} ? ${productVariant.productAttributes.name} : ''"></td>
-										        <td th:text="${productVariant.value}"></td>
-										        <td class="text-center">
-										            <a class="btn btn-sm btn-primary me-1" th:href="@{'/vendor/productVariant/edit/' + ${productVariant.id}}">Edit</a>
-										            <a class="btn btn-sm btn-danger">Delete</button>
-										        </td>
-										    </tr>
+											<tr>
+												<td
+													th:text="${i.index == 0 || productVariants[i.index - 1].productAttributes.name != productVariant.productAttributes.name} ? ${productVariant.productAttributes.name} : ''">
+												</td>
+												<td th:text="${productVariant.value}"></td>
+												<td class="text-center">
+													<a class="btn btn-sm btn-primary me-1"
+														th:href="@{'/vendor/productVariant/edit/' + ${productVariant.id}}">Edit</a>
+													<a class="btn btn-sm btn-danger">Delete</button>
+												</td>
+											</tr>
 										</th:block>
 										<!-- Thêm dòng khác nếu cần -->
 									</tbody>
@@ -125,13 +128,14 @@
 								<!-- Nút Submit -->
 								<div style="float: right">
 									<!-- Button trigger modal -->
-									<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+									<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+										data-bs-target="#exampleModal">
 										<i class="material-icons md-plus"></i>Add Variant
 									</button>
-									
-									
+
+
 								</div>
-								
+
 							</div>
 						</div>
 					</div>
@@ -150,8 +154,8 @@
 										<th:block th:each="media : ${product.mediases}">
 											<div class="img-wrapper" th:attr="data-id=${media.id}">
 												<img class="img-md img-thumbnail"
-												     th:src="@{${media.name.contains('https:') ? media.name : '/assets/imgs/items/' + media.name}}"
-												     alt="Media">
+													th:src="@{${media.name.contains('https:') ? media.name : '/assets/imgs/items/' + media.name}}"
+													alt="Media">
 											</div>
 										</th:block>
 									</div>
@@ -160,32 +164,34 @@
 									<div id="deletedImageIdsContainer"></div>
 
 								</th:block>
-							
-							
+
+
 								<!-- Nếu không có ảnh -->
 								<th:block th:if="${#lists.isEmpty(product.mediases)}">
-									<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}" alt="No Image">
+									<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}"
+										alt="No Image">
 								</th:block>
-							
+
 								<!-- Hidden inputs để gửi ID ảnh cũ bị xoá -->
 								<div id="deletedImageIdsContainer"></div>
 
 								<!-- Ảnh mới -->
 								<div class="thumbnail-container" id="newImagesContainer"></div>
-								<input class="form-control mt-3" type="file" multiple id="imageInput" accept="image/*" name="files">
+								<input class="form-control mt-3" type="file" multiple id="imageInput" accept="image/*"
+									name="files">
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<!-- Nút Submit -->
-			<div>
-				<button class="btn btn-primary" type="submit">Edit Product</button>
-			</div>
+				<!-- Nút Submit -->
+				<div>
+					<button class="btn btn-primary" type="submit">Edit Product</button>
+				</div>
 		</form>
-		
-		<form>
+
 			<!-- Modal -->
-			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+				aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">
@@ -193,36 +199,69 @@
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
-							<form method="POST" th:action="@{/vendor/productVariant/add}">
-								<input type="hidden" th:field="${product.id}" />
-			
+							<form method="POST" th:action="@{/vendor/productVariant/add}" id="formAdd">
+								<input type="hidden" name="productId" th:value="${product.id}" />
+
 								<div>
 									<div class="mb-4">
-										<label class="form-label">Attribute</label>
-										<input class="form-control" type="text" th:field="${productVariant.productAttributes.name}"
-											/>
+										<label class="form-label">Attribute <span id="variantNameError" class="mt-3" style="color: red;"></span></label>
+										<input class="form-control" type="text"
+											th:field="${productAttribute.name}"  id="variantName"/>
 									</div>
-									<div class="mb-4">
-										<label class="form-label">Value</label>
-										<input class="form-control" th:field="${productVariant.value}" />
+
+									<div class="row">
+										<div class="col-lg-8">
+											<div class="mb-4">
+												<label class="form-label">Value</label>
+												<input class="form-control" th:field="${productVariant.value}" />
+											</div>
+										</div>
+										<div class="col-lg-4">
+											<div class="mb-4">
+												<label class="form-label">Quantity</label>
+												<div class="row gx-2"></div>
+												<input class="form-control" type="number"
+													th:field="${productVariant.quantity}">
+											</div>
+										</div>
 									</div>
 								</div>
-			
-								<div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+							<!--	<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Close</button>
 									<button type="submit" class="btn btn-primary">Save changes</button>
-								</div>
+								</div>-->
 							</form>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary" id="formButtonAdd">Save
+									changes</button>
+							</div>
+							<script>
+								document.getElementById('formButtonAdd').addEventListener('click', function (event) {
+								    const VariantName = document.getElementById('variantName');
+								    const VariantNameError = document.getElementById('variantNameError');
+								    VariantNameError.textContent = '';  // Sửa lỗi này, không phải cateNameError
+
+								    if (VariantName.value.trim() === '') {
+								        VariantNameError.textContent = 'Variant name is required.';  // Kiểm tra lại lỗi ở đây
+								        event.preventDefault(); // Ngừng gửi form nếu không hợp lệ
+								    } else {
+								        document.getElementById('formAdd').submit();  // Gửi form khi hợp lệ
+								    }
+								});
+
+							</script>
 						</div>
 					</div>
 				</div>
 			</div>
 			<!-- Modal -->
->
+			>
 			</div>
 			<!-- Modal -->
-		</form>
-		
+
 		<script>
 			document.getElementById("imageInput").addEventListener("change", function (event) {
 				const files = Array.from(event.target.files);
@@ -260,6 +299,25 @@
 					};
 					reader.readAsDataURL(file);
 				});
+			});
+		</script>
+		
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+		<script>
+			// JavaScript to display SweetAlert2 based on flash attributes
+			document.addEventListener('DOMContentLoaded', function () {
+				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+				if (sweetAlertStatus && sweetAlertMessage) {
+					Swal.fire({
+						icon: sweetAlertStatus, // 'success' or 'error'
+						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						text: sweetAlertMessage,
+						showConfirmButton: false,
+						timer: 3000 // Automatically close after 3 seconds
+					});
+				}
 			});
 		</script>
 

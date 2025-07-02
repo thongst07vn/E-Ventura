@@ -44,4 +44,15 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 
 	@Query("from Products where name like %:keyword% and vendors.id = :vendorId")
 	public Page<Products>  findByKeywordAndVendorIdPage(@Param("keyword") String keyword, @Param("vendorId") int vendorId, Pageable pageable);
+	
+	@Query("from Products p where p.vendors.id = :vendor_id and p.deletedAt is null and p.deleted = false")
+	public Page<Products> findProductByVendorAndDeletePage(@Param("vendor_id") int vendor_id, Pageable pageable);
+	
+	@Query("from Products p where p.vendors.id = :vendor_id and p.deletedAt is null and p.deleted = false and p.productCategories.id = :category_id")
+	public Page<Products> findProductByVendorAndDeleteAndCategoryPage(@Param("vendor_id") int vendor_id, @Param("category_id") int category_id, Pageable pageable);
+	
+	@Query("from Products p where p.vendors.id = :vendor_id and p.deletedAt is null and p.deleted = false and p.name like %:keyword%")
+	public Page<Products> findProductByVendorAndDeleteAndKeywordPage(@Param("vendor_id") int vendor_id, @Param("keyword") String keyword, Pageable pageable);
+
+
 }

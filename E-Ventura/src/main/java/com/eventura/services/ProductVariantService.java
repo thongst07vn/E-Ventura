@@ -14,5 +14,8 @@ public interface ProductVariantService {
 	public ProductVariants findById(int id);
 	
 	public boolean saveProductVariants(ProductVariants productVariants);
+	
+	public boolean delete(int id);
+
 
 }

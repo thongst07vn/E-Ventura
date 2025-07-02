@@ -27,11 +27,24 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 		// TODO Auto-generated method stub
 		return productVariantRepository.findById(id).get();
 	}
-
+	
 	@Override
 	public boolean saveProductVariants(ProductVariants productVariants) {
 		try {
+			System.out.println("service Id: " + productVariants.getId());
+
 			productVariantRepository.save(productVariants);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public boolean delete(int id) {
+		try {
+			productVariantRepository.deleteById(id);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
