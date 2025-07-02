@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 30, 2025, 6:31:20 PM by Hibernate Tools 4.3.6.Final
+// Generated Jul 2, 2025, 11:54:26 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import jakarta.persistence.AttributeOverride;

@@ -1,12 +1,10 @@
 package com.eventura.entities;
-// Generated Jun 30, 2025, 6:31:20 PM by Hibernate Tools 4.3.6.Final
+// Generated Jul 2, 2025, 11:54:26 PM by Hibernate Tools 4.3.6.Final
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -18,50 +16,37 @@ import jakarta.persistence.Table;
 @Table(name = "vouchers_campaigns")
 public class VouchersCampaigns implements java.io.Serializable {
 
-	private VouchersCampaignsId id;
+	private String voucherCode;
 	private CampaignRedemptions campaignRedemptions;
 	private Vouchers vouchers;
-	private String voucherCode;
 	private int redeemAllowedQty;
 	private int redeemUsedQty;
 
 	public VouchersCampaigns() {
 	}
 
-	public VouchersCampaigns(VouchersCampaignsId id, CampaignRedemptions campaignRedemptions, Vouchers vouchers,
+	public VouchersCampaigns(String voucherCode, CampaignRedemptions campaignRedemptions, Vouchers vouchers,
 			int redeemAllowedQty, int redeemUsedQty) {
-		this.id = id;
-		this.campaignRedemptions = campaignRedemptions;
-		this.vouchers = vouchers;
-		this.redeemAllowedQty = redeemAllowedQty;
-		this.redeemUsedQty = redeemUsedQty;
-	}
-
-	public VouchersCampaigns(VouchersCampaignsId id, CampaignRedemptions campaignRedemptions, Vouchers vouchers,
-			String voucherCode, int redeemAllowedQty, int redeemUsedQty) {
-		this.id = id;
-		this.campaignRedemptions = campaignRedemptions;
-		this.vouchers = vouchers;
 		this.voucherCode = voucherCode;
+		this.campaignRedemptions = campaignRedemptions;
+		this.vouchers = vouchers;
 		this.redeemAllowedQty = redeemAllowedQty;
 		this.redeemUsedQty = redeemUsedQty;
 	}
 
-	@EmbeddedId
+	@Id
 
-	@AttributeOverrides({
-			@AttributeOverride(name = "voucherId", column = @Column(name = "voucher_id", nullable = false)),
-			@AttributeOverride(name = "campaignId", column = @Column(name = "campaign_id", nullable = false)) })
-	public VouchersCampaignsId getId() {
-		return this.id;
+	@Column(name = "voucher_code", unique = true, nullable = false)
+	public String getVoucherCode() {
+		return this.voucherCode;
 	}
 
-	public void setId(VouchersCampaignsId id) {
-		this.id = id;
+	public void setVoucherCode(String voucherCode) {
+		this.voucherCode = voucherCode;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "campaign_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "campaign_id", nullable = false)
 	public CampaignRedemptions getCampaignRedemptions() {
 		return this.campaignRedemptions;
 	}
@@ -71,22 +56,13 @@ public class VouchersCampaigns implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "voucher_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "voucher_id", nullable = false)
 	public Vouchers getVouchers() {
 		return this.vouchers;
 	}
 
 	public void setVouchers(Vouchers vouchers) {
 		this.vouchers = vouchers;
-	}
-
-	@Column(name = "voucher_code")
-	public String getVoucherCode() {
-		return this.voucherCode;
-	}
-
-	public void setVoucherCode(String voucherCode) {
-		this.voucherCode = voucherCode;
 	}
 
 	@Column(name = "redeem_allowed_qty", nullable = false)

@@ -1,12 +1,10 @@
 package com.eventura.entities;
-// Generated Jun 30, 2025, 6:31:20 PM by Hibernate Tools 4.3.6.Final
+// Generated Jul 2, 2025, 11:54:26 PM by Hibernate Tools 4.3.6.Final
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -18,40 +16,37 @@ import jakarta.persistence.Table;
 @Table(name = "coupons_campaigns")
 public class CouponsCampaigns implements java.io.Serializable {
 
-	private CouponsCampaignsId id;
+	private String couponCode;
 	private CampaignRedemptions campaignRedemptions;
 	private Coupons coupons;
-	private String couponCode;
 	private int redeemAllowedQty;
 	private int redeemUsedQty;
 
 	public CouponsCampaigns() {
 	}
 
-	public CouponsCampaigns(CouponsCampaignsId id, CampaignRedemptions campaignRedemptions, Coupons coupons,
-			String couponCode, int redeemAllowedQty, int redeemUsedQty) {
-		this.id = id;
+	public CouponsCampaigns(String couponCode, CampaignRedemptions campaignRedemptions, Coupons coupons,
+			int redeemAllowedQty, int redeemUsedQty) {
+		this.couponCode = couponCode;
 		this.campaignRedemptions = campaignRedemptions;
 		this.coupons = coupons;
-		this.couponCode = couponCode;
 		this.redeemAllowedQty = redeemAllowedQty;
 		this.redeemUsedQty = redeemUsedQty;
 	}
 
-	@EmbeddedId
+	@Id
 
-	@AttributeOverrides({ @AttributeOverride(name = "couponId", column = @Column(name = "coupon_id", nullable = false)),
-			@AttributeOverride(name = "campaignId", column = @Column(name = "campaign_id", nullable = false)) })
-	public CouponsCampaignsId getId() {
-		return this.id;
+	@Column(name = "coupon_code", unique = true, nullable = false)
+	public String getCouponCode() {
+		return this.couponCode;
 	}
 
-	public void setId(CouponsCampaignsId id) {
-		this.id = id;
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "campaign_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "campaign_id", nullable = false)
 	public CampaignRedemptions getCampaignRedemptions() {
 		return this.campaignRedemptions;
 	}
@@ -61,22 +56,13 @@ public class CouponsCampaigns implements java.io.Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "coupon_id", nullable = false, insertable = false, updatable = false)
+	@JoinColumn(name = "coupon_id", nullable = false)
 	public Coupons getCoupons() {
 		return this.coupons;
 	}
 
 	public void setCoupons(Coupons coupons) {
 		this.coupons = coupons;
-	}
-
-	@Column(name = "coupon_code", nullable = false)
-	public String getCouponCode() {
-		return this.couponCode;
-	}
-
-	public void setCouponCode(String couponCode) {
-		this.couponCode = couponCode;
 	}
 
 	@Column(name = "redeem_allowed_qty", nullable = false)

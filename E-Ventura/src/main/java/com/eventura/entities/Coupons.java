@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 30, 2025, 6:31:20 PM by Hibernate Tools 4.3.6.Final
+// Generated Jul 2, 2025, 11:54:26 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -32,6 +32,7 @@ public class Coupons implements java.io.Serializable {
 	private Date startTime;
 	private Date endTime;
 	private boolean redeemAllowed;
+	private int quantity;
 	private Date createdAt;
 	private Date updatedAt;
 	private Date deletedAt;
@@ -41,7 +42,7 @@ public class Coupons implements java.io.Serializable {
 	}
 
 	public Coupons(Products products, Vendors vendors, double discountValue, String discountUnit, Date startTime,
-			Date endTime, boolean redeemAllowed, Date createdAt, Date updatedAt) {
+			Date endTime, boolean redeemAllowed, int quantity, Date createdAt, Date updatedAt) {
 		this.products = products;
 		this.vendors = vendors;
 		this.discountValue = discountValue;
@@ -49,12 +50,13 @@ public class Coupons implements java.io.Serializable {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.redeemAllowed = redeemAllowed;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
 
 	public Coupons(Products products, Vendors vendors, double discountValue, String discountUnit, Date startTime,
-			Date endTime, boolean redeemAllowed, Date createdAt, Date updatedAt, Date deletedAt,
+			Date endTime, boolean redeemAllowed, int quantity, Date createdAt, Date updatedAt, Date deletedAt,
 			Set<CouponsCampaigns> couponsCampaignses) {
 		this.products = products;
 		this.vendors = vendors;
@@ -63,6 +65,7 @@ public class Coupons implements java.io.Serializable {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.redeemAllowed = redeemAllowed;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.deletedAt = deletedAt;
@@ -146,6 +149,15 @@ public class Coupons implements java.io.Serializable {
 
 	public void setRedeemAllowed(boolean redeemAllowed) {
 		this.redeemAllowed = redeemAllowed;
+	}
+
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

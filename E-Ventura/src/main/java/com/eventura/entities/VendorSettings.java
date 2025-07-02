@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 30, 2025, 6:31:20 PM by Hibernate Tools 4.3.6.Final
+// Generated Jul 2, 2025, 11:54:26 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -99,6 +99,7 @@ public class VendorSettings implements java.io.Serializable {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "deleted_at", length = 19)
 	public Date getDeletedAt() {
@@ -108,6 +109,7 @@ public class VendorSettings implements java.io.Serializable {
 	public void setDeletedAt(Date deletedAt) {
 		this.deletedAt = deletedAt;
 	}
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendorSettings")
 	public Set<Vendors> getVendorses() {
 		return this.vendorses;

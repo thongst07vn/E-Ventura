@@ -1,5 +1,5 @@
 package com.eventura.entities;
-// Generated Jun 30, 2025, 6:31:20 PM by Hibernate Tools 4.3.6.Final
+// Generated Jul 2, 2025, 11:54:26 PM by Hibernate Tools 4.3.6.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -33,6 +33,7 @@ public class Vouchers implements java.io.Serializable {
 	private double minOrderValue;
 	private double maxDiscountAmount;
 	private boolean redeemAllowed;
+	private int quantity;
 	private Date createdAt;
 	private Date upadetedAt;
 	private Date deletedAt;
@@ -42,7 +43,7 @@ public class Vouchers implements java.io.Serializable {
 	}
 
 	public Vouchers(double discountValue, String discountUnit, Date startTime, Date endTime, double minOrderValue,
-			double maxDiscountAmount, boolean redeemAllowed, Date createdAt, Date upadetedAt) {
+			double maxDiscountAmount, boolean redeemAllowed, int quantity, Date createdAt, Date upadetedAt) {
 		this.discountValue = discountValue;
 		this.discountUnit = discountUnit;
 		this.startTime = startTime;
@@ -50,13 +51,14 @@ public class Vouchers implements java.io.Serializable {
 		this.minOrderValue = minOrderValue;
 		this.maxDiscountAmount = maxDiscountAmount;
 		this.redeemAllowed = redeemAllowed;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.upadetedAt = upadetedAt;
 	}
 
 	public Vouchers(Vendors vendors, double discountValue, String discountUnit, Date startTime, Date endTime,
-			double minOrderValue, double maxDiscountAmount, boolean redeemAllowed, Date createdAt, Date upadetedAt,
-			Date deletedAt, Set<VouchersCampaigns> vouchersCampaignses) {
+			double minOrderValue, double maxDiscountAmount, boolean redeemAllowed, int quantity, Date createdAt,
+			Date upadetedAt, Date deletedAt, Set<VouchersCampaigns> vouchersCampaignses) {
 		this.vendors = vendors;
 		this.discountValue = discountValue;
 		this.discountUnit = discountUnit;
@@ -65,6 +67,7 @@ public class Vouchers implements java.io.Serializable {
 		this.minOrderValue = minOrderValue;
 		this.maxDiscountAmount = maxDiscountAmount;
 		this.redeemAllowed = redeemAllowed;
+		this.quantity = quantity;
 		this.createdAt = createdAt;
 		this.upadetedAt = upadetedAt;
 		this.deletedAt = deletedAt;
@@ -156,6 +159,15 @@ public class Vouchers implements java.io.Serializable {
 
 	public void setRedeemAllowed(boolean redeemAllowed) {
 		this.redeemAllowed = redeemAllowed;
+	}
+
+	@Column(name = "quantity", nullable = false)
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)

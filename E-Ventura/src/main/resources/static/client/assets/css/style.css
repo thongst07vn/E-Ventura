@@ -3680,7 +3680,9 @@ a.text-brand-3:hover {
     /* Hoặc các hiệu ứng khác như box-shadow, transform, v.v. */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ví dụ: thêm đổ bóng */
 }
-
+.onselected-checkout{
+	border: 3px solid rgba(4, 170, 109,1) !important;
+}
 @media (min-width: 1400px) {
   .header-container .container {
     max-width: 1360px;
