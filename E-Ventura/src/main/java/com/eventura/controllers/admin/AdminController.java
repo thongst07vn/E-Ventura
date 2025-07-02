@@ -53,7 +53,6 @@ import com.eventura.entities.VendorSettings;
 import com.eventura.entities.Vendors;
 import com.eventura.entities.Vouchers;
 import com.eventura.entities.VouchersCampaigns;
-import com.eventura.entities.VouchersCampaignsId;
 import com.eventura.services.CampaignRedeemtionService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.CommissionsService;
@@ -939,9 +938,8 @@ public class AdminController {
 			SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
 			CampaignRedemptions campaignRedemptions = new CampaignRedemptions("voucher_admin_" + formatter.format(vouchers.getCreatedAt()), new Date(), new Date());
 			if(campaignRedeemtionService.saveCampaignRedeemtion(campaignRedemptions)) {
-				VouchersCampaignsId vouchersCampaignsId = new VouchersCampaignsId(vouchers.getId(),campaignRedemptions.getId());
 				for(int i = 0; i < vouchers.getQuantity(); i++) {
-					VouchersCampaigns vouchersCampaigns = new VouchersCampaigns(vouchersCampaignsId,campaignRedemptions, vouchers, "ADMIN"+formatter.format(vouchers.getCreatedAt())+RandomStringCode.generateRandomAlphaNumeric(8), 1, 0);
+					VouchersCampaigns vouchersCampaigns = new VouchersCampaigns( "ADMIN"+formatter.format(vouchers.getCreatedAt())+RandomStringCode.generateRandomAlphaNumeric(8),campaignRedemptions, vouchers, 1, 0);
 					campaignRedeemtionService.saveVoucherCampaign(vouchersCampaigns);
 				}
 				redirectAttributes.addFlashAttribute("sweetAlert", "success");
