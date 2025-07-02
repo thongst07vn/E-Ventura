@@ -146,4 +146,22 @@ public class ProductServiceImpl implements ProductService {
 		return productReviewsRepository.findByKeywordPage(id, keyword, pageable);
 	}
 
+	@Override
+	public Page<Products> findProductByVendorAndDeletePage(int id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findProductByVendorAndDeletePage(id, pageable);
+	}
+
+	@Override
+	public Page<Products> findProductByVendorAndDeleteAndCategoryPage(int vendorId, int categoryId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findProductByVendorAndDeleteAndCategoryPage(vendorId, categoryId, pageable);
+	}
+
+	@Override
+	public Page<Products> findProductByVendorAndDeleteAndKeywordPage(int vendorId, String keyword, Pageable pageable) {
+		// TODO productRepository-generated method stub
+		return productRepository.findProductByVendorAndDeleteAndKeywordPage(vendorId, keyword, pageable);
+	}
+
 }

@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2UserServices;
 import com.eventura.dtos.ProductDTO;
+import com.eventura.entities.CampaignRedemptions;
 import com.eventura.entities.Coupons;
 import com.eventura.entities.OrderItems;
 import com.eventura.entities.OrderItemsOrderStatus;
@@ -49,6 +52,9 @@ import com.eventura.entities.Users;
 import com.eventura.entities.VendorSettings;
 import com.eventura.entities.Vendors;
 import com.eventura.entities.Vouchers;
+import com.eventura.entities.VouchersCampaigns;
+import com.eventura.entities.VouchersCampaignsId;
+import com.eventura.services.CampaignRedeemtionService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.CommissionsService;
 import com.eventura.services.CouponsService;
@@ -62,6 +68,7 @@ import com.eventura.services.VendorService;
 import com.eventura.services.VendorSettingService;
 import com.eventura.services.VouchersService;
 import com.example.demo.helpers.FileHelper;
+import com.example.demo.helpers.RandomStringCode;
 
 @Controller
 @RequestMapping("admin")
@@ -91,6 +98,9 @@ public class AdminController {
 	private CouponsService couponsService;
 	@Autowired
 	private VouchersService vouchersService;
+	@Autowired
+	private CampaignRedeemtionService campaignRedeemtionService;
+
 
 	AdminController(AccountOAuth2UserServices accountOAuth2UserServices) {
 	}
@@ -589,18 +599,7 @@ public class AdminController {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Users> userPage;
 
-		switch (filter) {
-		case "enabled":
-			userPage = userService.findUsersWithRoleId3ByDeletedAtISNULLByKeyword(keyword, pageable);
-			break;
-		case "disabled":
-			userPage = userService.findUsersWithRoleId3ByDeletedAtNOTNULLByKeyword(keyword, pageable);
-			break;
-		case "show_all":
-		default:
-			userPage = userService.findUsersWithRoleId3ByKeyword(keyword, pageable);
-			break;
-		}
+		userPage = userService.findUsersWithRoleId3ByKeyword(keyword, pageable);
 		modelMap.put("users", userPage);
 
 		model.addAttribute("currentPages", page);
@@ -686,19 +685,8 @@ public class AdminController {
 			@RequestParam(defaultValue = "show_all") String filter) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Vendors> userPage;
-
-		switch (filter) {
-		case "enabled":
-			userPage = vendorService.findVendorsByDeletedAtISNULLByKeyword(keyword, pageable);
-			break;
-		case "disabled":
-			userPage = vendorService.findVendorsByDeletedAtNOTNULLByKeyword(keyword, pageable);
-			break;
-		case "show_all":
-		default:
-			userPage = vendorService.findByKeywordPage(keyword, pageable);
-			break;
-		}
+		
+		userPage = vendorService.findByKeywordPage(keyword, pageable);
 		modelMap.put("vendors", userPage.getContent());
 		model.addAttribute("currentPages", page);
 		model.addAttribute("totalPages", userPage.getTotalPages());
@@ -818,11 +806,14 @@ public class AdminController {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Coupons> couponPage;
 		switch (filter) {
-		case "enabled":
-			couponPage = couponsService.findAllByDeletedAtISNUL(pageable);
+		case "expired":
+			couponPage = couponsService.findAllCouponExpired(pageable);
 			break;
-		case "disabled":
-			couponPage = couponsService.findAllByDeletedAtISNOTNUL(pageable);
+		case "invalid":
+			couponPage = couponsService.findAllCouponInValid(pageable);
+			break;
+		case "valid":
+			couponPage = couponsService.findAllCouponValid(pageable);
 			break;
 		case "show_all":
 		default:
@@ -835,6 +826,44 @@ public class AdminController {
 		model.addAttribute("lastPageIndex", couponPage.getTotalPages() - 1);
 		model.addAttribute("pageSize", pageSize);
 		model.addAttribute("filter", filter);
+		model.addAttribute("vendors", vendorService.findAll());
+		model.addAttribute("currentPage", "coupon");
+		return "admin/page/coupon/list";
+	}
+	@GetMapping("coupon/search-by-keyword")
+	public String couponSearchByKeyword(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter,@RequestParam("keyword") String keyword) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Coupons> couponPage = couponsService.findByKeyword(keyword, pageable);
+		modelMap.put("coupons", couponPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", couponPage.getTotalPages());
+		model.addAttribute("lastPageIndex", couponPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("filter", filter);
+		model.addAttribute("vendors", vendorService.findAll());
+		model.addAttribute("currentPage", "coupon");
+		model.addAttribute("keyword", keyword);
+		return "admin/page/coupon/list";
+	}
+	@GetMapping("coupon/search-by-vendor")
+	public String couponSearchByVendor(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter,@RequestParam("vendorId") int vendorId) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Coupons> couponPage;
+		if(vendorId==0) {
+			couponPage = couponsService.findAll(pageable);
+		}else {
+			couponPage = couponsService.findByVendorId(vendorId, pageable);	
+		}
+		modelMap.put("coupons", couponPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", couponPage.getTotalPages());
+		model.addAttribute("lastPageIndex", couponPage.getTotalPages() - 1);
+		model.addAttribute("selectedVendorId", vendorId);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("filter", filter);
+		model.addAttribute("vendors", vendorService.findAll());
 		model.addAttribute("currentPage", "coupon");
 		return "admin/page/coupon/list";
 	}
@@ -842,8 +871,92 @@ public class AdminController {
 	
 	// ======= Promotion_coupon ========
 	@GetMapping("voucher/list")
-	public String addCoupon(Model model) {
+	public String voucherList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Vouchers> voucherPage;
+		switch (filter) {
+		case "expired":
+			voucherPage = vouchersService.findAllVoucherExpired(pageable);
+			break;
+		case "invalid":
+			voucherPage = vouchersService.findAllVoucherInValid(pageable);
+			break;
+		case "valid":
+			voucherPage = vouchersService.findAllVoucherValid(pageable);
+			break;
+		case "show_all":
+		default:
+			voucherPage = vouchersService.findAll(pageable);
+			break;
+		}
+		modelMap.put("vouchers", voucherPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", voucherPage.getTotalPages());
+		model.addAttribute("lastPageIndex", voucherPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("filter", filter);
+		model.addAttribute("vendors", vendorService.findAll());
+		model.addAttribute("voucher", new Vouchers());
 		model.addAttribute("currentPage", "coupon");
 		return "admin/page/voucher/list";
+	}
+	@GetMapping("voucher/search-by-vendor")
+	public String voucherSearchByVendor(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @RequestParam(defaultValue = "show_all") String filter,@RequestParam("vendorId") int vendorId) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Vouchers> voucherPage;
+		if(vendorId==-1) {
+			voucherPage = vouchersService.findAll(pageable);
+		}else if(vendorId==0) {			
+			voucherPage = vouchersService.findByVendorIdISNULL(pageable);	
+		}
+		else {
+			voucherPage = vouchersService.findByVendorId(vendorId, pageable);	
+		}
+		modelMap.put("vouchers", voucherPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", voucherPage.getTotalPages());
+		model.addAttribute("lastPageIndex", voucherPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("filter", filter);
+		model.addAttribute("selectedVendorId", vendorId);
+		model.addAttribute("vendors", vendorService.findAll());
+		model.addAttribute("voucher", new Vouchers());
+		model.addAttribute("currentPage", "coupon");
+		return "admin/page/voucher/list";
+	}
+	@PostMapping("voucher/add")
+	public String voucherAdd(@ModelAttribute("voucher") Vouchers vouchers,
+			RedirectAttributes redirectAttributes) {
+		if(vouchers.getDiscountUnit().equals("percent")){			
+			vouchers.setDiscountValue(vouchers.getDiscountValue()/100);
+		}
+		vouchers.setRedeemAllowed(true);
+		vouchers.setCreatedAt(new Date());
+		vouchers.setUpadetedAt(new Date());
+		if (vouchersService.save(vouchers)) {
+			SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
+			CampaignRedemptions campaignRedemptions = new CampaignRedemptions("voucher_admin_" + formatter.format(vouchers.getCreatedAt()), new Date(), new Date());
+			if(campaignRedeemtionService.saveCampaignRedeemtion(campaignRedemptions)) {
+				VouchersCampaignsId vouchersCampaignsId = new VouchersCampaignsId(vouchers.getId(),campaignRedemptions.getId());
+				for(int i = 0; i < vouchers.getQuantity(); i++) {
+					VouchersCampaigns vouchersCampaigns = new VouchersCampaigns(vouchersCampaignsId,campaignRedemptions, vouchers, "ADMIN"+formatter.format(vouchers.getCreatedAt())+RandomStringCode.generateRandomAlphaNumeric(8), 1, 0);
+					campaignRedeemtionService.saveVoucherCampaign(vouchersCampaigns);
+				}
+				redirectAttributes.addFlashAttribute("sweetAlert", "success");
+				redirectAttributes.addFlashAttribute("message", "Voucher add successfully!");
+				return "redirect:/admin/voucher/list";
+			}else {				
+				redirectAttributes.addFlashAttribute("sweetAlert", "error");
+				redirectAttributes.addFlashAttribute("message", "Failed to add !");
+				return "redirect:/admin/voucher/list";
+			}
+		} else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Failed to add !");
+			return "redirect:/admin/voucher/list";
+		}
+
 	}
 }

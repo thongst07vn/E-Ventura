@@ -21,11 +21,13 @@
 		<div class="card">
 			<header class="card-header">
 				<div class="row align-items-center">
-					<div class="col-lg-6 col-md-6 mb-lg-0 mb-15"><span><i
-								class="material-icons md-calendar_today"></i>
-								<b th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></b>
-							</span><br><small class="text-muted">Order ID: <span th:text="${order.id}"></span></small><br><small
-							class="text-muted">Your order has been delivered</small></div>
+					<div class="col-lg-6 col-md-6 mb-lg-0 mb-15"><span>
+						<i class="material-icons md-calendar_today"></i>
+							<b th:text="${#dates.format(order.createdAt, 'EEE, dd MMM, yyyy, hh:mm a')}"></b>
+						</span>
+						<br>
+						<small class="text-muted">Your order has been
+							delivered</small></div>
 					<div class="col-lg-6 col-md-6 ms-auto text-md-end">
 						<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200 mr-15">
 							<option>Change status</option>
@@ -33,9 +35,8 @@
 							<option>Confirmed</option>
 							<option>Shipped</option>
 							<option>Delivered</option>
-						</select><a class="btn btn-primary" href="#">Screenshot</a><a
-							class="btn btn-secondary print ms-2" href="#"><i
-								class="icon material-icons md-print mr-5"></i>Print</a>
+						</select>
+						
 					</div>
 				</div>
 			</header>
@@ -80,33 +81,57 @@
 					</div>
 				</div>
 				<div class="row mb-50 mt-20 order-info-wrap text-center">
-					<div class="col-md-4">
-						<article class="icontext align-items-start">
+					<div class="col-4">
+						<article class="icontext align-items-start"><span
+								class="icon icon-sm rounded-circle bg-primary-light"><i
+									class="text-primary material-icons md-person"></i></span>
 							<div class="text">
 								<h6 class="mb-1">Customer</h6>
-								<p class="mb-1" th:text="${userAddresses[0].users.lastName + ' ' + userAddresses[0].users.firstName}"></p>
-								<p class="mb-1" th:text="${userAddresses[0].users.email}"></p>
-								<p class="mb-1" th:text="${userAddresses[0].users.phoneNumber}"></p>
+								<p class="mb-1" th:text="${order.users.username}">
+								</p>
+								<p class="mb-1" th:text="${order.users.email}"></p>
+
 							</div>
 						</article>
 					</div>
-					<div class="col-md-4">
-					</div>
-					<div class="col-md-4">
+					<div class="col-4">
 						<article class="icontext align-items-start">
+							<span class="icon icon-sm rounded-circle bg-primary-light"><i
+									class="text-primary material-icons md-local_shipping"></i></span>
+							<div class="text text-start">
+								<h6 class="mb-1">Order info</h6>
+								<p class="mb-1">
+									Pay method:
+									<th:block th:text="${order.paymentMethod}"></th:block>
+									<br>
+								</p>
+								<p class="mb-1">
+									Pay date:
+									<th:block
+										th:text="${#dates.format(order.paymentDate, 'EEE, dd MMM, yyyy, hh:mm a')}">
+									</th:block>
+									<br>
+								</p>
+							</div>
+						</article>
+					</div>
+					<div class="col-4">
+						<article class="icontext align-items-start"><span
+								class="icon icon-sm rounded-circle bg-primary-light"><i
+									class="text-primary material-icons md-place"></i></span>
 							<div class="text">
 								<h6 class="mb-1">Deliver to</h6>
-								<p class="mb-1" th:text="${userAddresses[0].address}"></p>
-								<p class="mb-1" th:text="${userAddresses[0].provinces.name + ' ' + userAddresses[0].districts.name + ' ' + userAddresses[0].wards.name}"></p>
+								<p class="mb-1" th:text="${order.userAddress}"></p>
+
 							</div>
 						</article>
 					</div>
-				</div>
-				<div class="row">
-					<div class="text-center mt-100 mb-50"><a class="btn btn-primary" th:href="@{/vendor/order/list}">View
-							Order List</a></div>
+					<div class="row">
+						<div class="text-center mt-100 mb-50"><a class="btn btn-primary"
+								th:href="@{/vendor/order/list}">View
+								Order List</a></div>
+					</div>
 				</div>
 			</div>
-		</div>
 	</section>
 </body>

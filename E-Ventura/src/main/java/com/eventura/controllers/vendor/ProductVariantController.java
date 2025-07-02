@@ -1,13 +1,23 @@
 package com.eventura.controllers.vendor;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.eventura.entities.ProductAttributes;
+import com.eventura.entities.ProductVariants;
+import com.eventura.entities.Products;
 import com.eventura.services.CategoryService;
+import com.eventura.services.ProductAttributeService;
 import com.eventura.services.ProductService;
 import com.eventura.services.ProductVariantService;
 
@@ -19,13 +29,65 @@ public class ProductVariantController  {
 	
 	@Autowired
 	private ProductVariantService productVariantService;
+	@Autowired
+	private ProductAttributeService productAttributeService;
+	@Autowired
+	private ProductService productService;
 	
 	/*===================== PRODUCT VARIANT =====================*/
-	@GetMapping("add")
-	public String add() {
+	@PostMapping("add")
+	public String add(@ModelAttribute("productVariant") ProductVariants productVariant,
+					  @ModelAttribute("productAttribute") ProductAttributes productAttribute,
+					  @RequestParam("productId") int productId,
+					  @ModelAttribute("product") Products product,
+					   ModelMap modelMap, RedirectAttributes redirectAttributes) {
+		System.out.println("Product ID: " + product.getId());
+		System.out.println("Product Variant Value: " + productVariant.getValue());
+		System.out.println("Product Variant Quantity: " + productVariant.getQuantity());
+
+		
+		// Kiểm tra sự tồn tại của ProductAttribute với name
+	    ProductAttributes attribute = productAttributeService.findByName(productAttribute.getName());
+	    
+
+	    
+	    if (attribute == null) {
+	        // Nếu không có, tạo mới ProductAttribute
+	        attribute = new ProductAttributes();
+	        attribute.setName(productAttribute.getName());
+	        attribute.setCreatedAt(new Date());
+	        attribute.setUpdatedAt(new Date());
+	        productAttributeService.save(attribute);  // Lưu ProductAttribute mới
+		    System.out.println("atrtibute Trong if: " + attribute.getId() + '-' + attribute.getName());
+
+	    } else {
+	        // Nếu có, sử dụng attribute đã tồn tại
+	        System.out.println("Found existing ProductAttribute with name: " + attribute.getId() + '-' + attribute.getName());
+	    }
+	    
+	    System.out.println("atrtibute sau if: " + attribute.getId() + '-' + attribute.getName());
+
+
+	    // Gán Product và ProductAttribute cho ProductVariant
+	    productVariant.setProducts(productService.findById(productId));
+	    productVariant.setProductAttributes(attribute);
+	    productVariant.setCreatedAt(new Date());
+	    productVariant.setUpdatedAt(new Date());
+
+	    System.out.println("product Id:" + productService.findById(productId).getId());
+	    
+
+		
+		if(productVariantService.saveProductVariants(productVariant)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Add Variant Successfully");
+		}else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Add Variant Failed");
+		}
 		
 		
-		return "vendor/pages/productVariant/add";
+		return "redirect:/vendor/product/edit/" + productId;
 	}
 	
 	@GetMapping("edit/{id}")
@@ -33,6 +95,8 @@ public class ProductVariantController  {
 		modelMap.put("currentPage", "product");
 
 		modelMap.put("productVariant", productVariantService.findById(id));
+		
+		
 		
 		
 		return "vendor/pages/productVariant/edit";

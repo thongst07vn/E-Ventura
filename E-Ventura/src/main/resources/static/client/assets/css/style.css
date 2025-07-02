@@ -1670,6 +1670,25 @@ a.text-brand-3:hover {
   width: 0;
 }
 
+/* --- CSS for Printing --- */
+@media print {
+    /* Ẩn tất cả các phần tử con trực tiếp của body trừ thẻ section */
+    body > *:not(section) {
+        display: none;
+    }
+
+    section {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Ẩn các phần tử cụ thể bên trong section khi in */
+    .no-print { /* Thêm class này vào các phần tử không muốn in */
+        display: none !important; /* Dùng !important để đảm bảo ghi đè */
+    }
+}
+
 .checkmark {
   position: absolute;
   top: 2px;

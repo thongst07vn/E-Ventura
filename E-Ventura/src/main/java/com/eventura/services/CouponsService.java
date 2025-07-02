@@ -20,8 +20,12 @@ public interface CouponsService{
 	public Page<Coupons> findAll(Pageable pageable);
 	public Page<Coupons> findAllByDeletedAtISNUL(Pageable pageable);
 	public Page<Coupons> findAllByDeletedAtISNOTNUL(Pageable pageable);
-//	public Page<Coupons> findByDeletedAtNOTNULLByKeyword(String keyword, Pageable pageable);
-//	public Page<Coupons> findByDeletedAtISNULLByKeyword(String keyword, Pageable pageable);
-//	public Page<Coupons> findByKeyword(String keyword, Pageable pageable);
+	public Page<Coupons> findAllCouponExpired(Pageable pageable);
+	public Page<Coupons> findAllCouponInValid(Pageable pageable);
+	public Page<Coupons> findAllCouponValid(Pageable pageable);
+	public Page<Coupons> findByVendorId(int id,Pageable pageable);
+	public Page<Coupons> findByKeyword(String keyword, Pageable pageable);
+	public Coupons findById(int id);
+	public boolean save(Coupons coupons);
 
 }

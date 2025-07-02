@@ -9,13 +9,13 @@
 	<section class="content-main">
 		<a th:href="@{/vendor/productReview/list}">
 			<i class="material-icons md-arrow_back">
-		
+
 			</i> Go back</a>
 		<br>
 		<div class="content-header">
 			<div>
 				<h2 class="content-title card-title">Detail Reviews</h2>
-				<p th:text="${productReviews[0].products.name}"></p>
+				<p th:text="${product.name}"></p>
 			</div>
 			<div>
 				<input class="form-control bg-white" type="text" placeholder="Search by name">
@@ -25,11 +25,13 @@
 			<header class="card-header">
 				<div class="row gx-3">
 					<div class="col-lg-4 col-md-6 me-auto">
-						<form method="GET" th:action="@{'/vendor/productReview/searchByKeywordDetails/' + ${productReviews[0].products.id}}" id="searchForm">
-							<input class="form-control" type="text" name="keyword" placeholder="Find By Keyword .... " id="keywordInput"
-								th:value="${selectedKeyword}">
+						<form method="GET"
+							th:action="@{'/vendor/productReview/searchByKeywordDetails/' + ${product.id}}"
+							id="searchForm">
+							<input class="form-control" type="text" name="keyword" placeholder="Find By Keyword .... "
+								id="keywordInput" th:value="${selectedKeyword}">
 						</form>
-					
+
 						<script>
 							const keywordInput = document.getElementById('keywordInput');
 							const searchForm = document.getElementById('searchForm');
@@ -63,33 +65,57 @@
 							</tr>
 						</thead>
 						<tbody>
-							<th:block th:each="productReview : ${productReviews}">
+							<!-- Kiểm tra nếu productReviews không phải null và không rỗng -->
+							<th:block th:if="${productReviews != null && !productReviews.isEmpty()}">
+								<th:block th:each="productReview : ${productReviews}">
+									<tr>
+										<td class="align-middle fs-6">
+											<a class="itemside" href="#">
+												<div class="left">
+													<img class="img-sm img-thumbnail"
+														th:src="@{'/assets/imgs/avatars/' + ${productReview.users.avatar}}"
+														alt="Item">
+												</div>
+												<div class="info">
+													<h6 class="mb-0" th:text="${productReview.users.username}">Levi
+														Akerman</h6>
+												</div>
+											</a>
+										</td>
+										<td class="align-middle">
+											<th:block th:with="displayRating=${productReview.rating != null ? productReview.rating : 0},
+							                                                     cappedRating=${displayRating > 5 ? 5 : displayRating},
+							                                                     width=${cappedRating * 20}">
+												<ul class="rating-stars">
+													<li class="stars-active" th:style="'width:' + ${width} + '%'">
+														<img th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
+															style="height: 20px;">
+													</li>
+													<li>
+														<img th:src="@{/assets/imgs/icons/starts-disable.svg}"
+															alt="stars" style="height: 20px;">
+													</li>
+												</ul>
+											</th:block>
+										</td>
+										<td class="align-middle fs-6" th:text="${productReview.createdAt}">10.03.2022
+										</td>
+										<td class="align-middle fs-6" th:text="${productReview.comment}">Chất lượng sản
+											phẩm tốt, giao hàng nhanh.</td>
+									</tr>
+								</th:block>
+							</th:block>
+
+							<!-- Hiển thị thông báo nếu không có comment -->
+							<th:block th:if="${productReviews == null || productReviews.isEmpty()}">
 								<tr>
-									<td class="align-middle fs-6">
-										<a class="itemside" href="#">
-											<div class="left"><img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/avatars/' + ${productReview.users.avatar}}"
-													alt="Item"></div>
-											<div class="info">
-												<h6 class="mb-0" th:text="${productReview.users.username}">Levi Akerman</h6>
-											</div>
-										</a>
+									<td colspan="4" class="text-center">
+										No comment available here
 									</td>
-									<td class="align-middle">
-										<th:block th:with="displayRating=${productReview.rating != null ? productReview.rating : 0},
-																													             cappedRating=${displayRating > 5 ? 5 : displayRating},
-																												             width=${cappedRating * 20}">
-											<ul class="rating-stars">
-												<li class="stars-active" th:style="'width:' + ${width} + '%'"><img
-														th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars" style="height: 20px;"></li>
-												<li><img th:src="@{/assets/imgs/icons/starts-disable.svg}" alt="stars" style="height: 20px;"></li>
-											</ul>
-										</th:block>
-									</td>
-									<td class="align-middle fs-6" th:text="${productReview.createdAt}">10.03.2022</td>
-									<td class="align-middle fs-6" th:text="${productReview.comment}">Chất lượng sản phẩm tốt, giao hàng nhanh.</td>
 								</tr>
 							</th:block>
-							
+
+
 						</tbody>
 
 					</table>
@@ -103,33 +129,38 @@
 					<ul class="pagination justify-content-start">
 						<!-- Nút về đầu -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/productReview/details/' + ${productReviews[0].products.id} + '?page=' + ${0}}" aria-label="Next"> <i
-									class="material-icons md-double_arrow"
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/details/' + ${product.id} + '?page=' + ${0}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"
 									style="transform: rotate(180deg) translate(15%, -30%);"></i>
 							</a>
 						</li>
 						<!-- Nút trước -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
-								th:href="@{'/vendor/productReview/details/' + ${productReviews[0].products.id} + '?page=' + ${currentPages-1}}" class="page-link"
-								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+								th:href="@{'/vendor/productReview/details/' + ${product.id} + '?page=' + ${currentPages-1}}"
+								class="page-link" aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
 							</a></li>
-		
+
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
-		
-							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
-									th:href="@{'/vendor/productReview/details/' + ${productReviews[0].products.id} + '?page=' + ${i}}" th:text="${i + 1}"></a></li>
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link"
+									th:href="@{'/vendor/productReview/details/' + ${product.id} + '?page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
 						</th:block>
-		
+
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
-							<a class="page-link" th:href="@{'/vendor/productReview/details/' + ${productReviews[0].products.id} + '?page=' + ${currentPages+1}}"
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/details/' + ${product.id} + '?page=' + ${currentPages+1}}"
 								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 							</a>
 						</li>
-		
+
 						<!-- Nút tới cuối -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/productReview/details/' + ${productReviews[0].products.id} + '?page=' + ${lastPageIndex}}"
+							<a class="page-link"
+								th:href="@{'/vendor/productReview/details/' + ${product.id} + '?page=' + ${lastPageIndex}}"
 								aria-label="Next">
 								<i class="material-icons md-double_arrow"></i>
 							</a>
@@ -138,7 +169,7 @@
 				</nav>
 			</div>
 		</th:block>
-		
+
 		<!-- Trường hợp SEARCH BY KEYWORD -->
 		<th:block th:if="${selectedKeyword != null && !#lists.isEmpty(productReviews)}">
 			<div class="pagination-area mt-15 mb-50">
@@ -147,36 +178,37 @@
 						<!-- Nút về đầu -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
 							<a class="page-link"
-								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${productReviews[0].products.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${0}}"
+								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${product.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${0}}"
 								aria-label="Next"> <i class="material-icons md-double_arrow"
 									style="transform: rotate(180deg) translate(15%, -30%);"></i>
 							</a>
 						</li>
 						<!-- Nút trước -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
-								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${productReviews[0].products.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${currentPages-1}}"
+								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${product.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${currentPages-1}}"
 								class="page-link" aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
 							</a></li>
-		
+
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
-		
-							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
-									th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${productReviews[0].products.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${i}}"
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link"
+									th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${product.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${i}}"
 									th:text="${i + 1}"></a></li>
 						</th:block>
-		
+
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
 							<a class="page-link"
-								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${productReviews[0].products.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${currentPages+1}}"
+								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${product.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${currentPages+1}}"
 								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 							</a>
 						</li>
-		
+
 						<!-- Nút tới cuối -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
 							<a class="page-link"
-								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${productReviews[0].products.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${lastPageIndex}}"
+								th:href="@{'/vendor/productReview/searchByKeywordDetails/' + ${product.id} + '?keyword=' + ${selectedKeyword} + '&page=' + ${lastPageIndex}}"
 								aria-label="Next">
 								<i class="material-icons md-double_arrow"></i>
 							</a>

@@ -85,10 +85,10 @@
 						th:action="@{/vendor/store/searchByVendorCategory}">
 						<select class="form-select" name="categoryId" id="categorySelect">
 							<option value="0" th:selected="${selectedCategoryId == 0}">All</option>
-							<option th:each="vendorCategory : ${vendorCategories}"
-								th:value="${vendorCategory.productCategories.id}"
-								th:text="${vendorCategory.productCategories.name}"
-								th:selected="${vendorCategory.productCategories.id == selectedCategoryId}"></option>
+							<option th:each="category : ${categories}"
+								th:value="${category.id}"
+								th:text="${category.name}"
+								th:selected="${category.id == selectedCategoryId}"></option>
 						</select>
 					</form>
 					<script>
@@ -103,12 +103,18 @@
 						<div class="col-xl-2 col-lg-3 col-md-6">
 							<div class="card card-product-grid">
 								<a class="img-wrap" th:href="@{'/vendor/product/edit/' + ${product.id}}">
-									<th:block th:if="${product.mediases[0].name.contains('https:')}">
-										<img class="img-sm img-thumbnail" th:src="${product.mediases[0].name}">
+									<th:block th:if="${not #lists.isEmpty(product.mediases)}">
+										<th:block th:if="${product.mediases[0].name.contains('https:')}">
+											<img class="img-sm img-thumbnail" th:src="${product.mediases[0].name}" alt="Item">
+										</th:block>
+										<th:block th:if="${!product.mediases[0].name.contains('https:')}">
+											<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}" alt="Item">
+										</th:block>
 									</th:block>
-									<th:block th:if="${!product.mediases[0].name.contains('https:')}">
-										<img class="img-sm img-thumbnail"
-											th:src="@{'/admin/assets/imgs/others/' + ${product.mediases[0].name}}">
+									
+									<!-- Trường hợp không có ảnh -->
+									<th:block th:if="${#lists.isEmpty(product.mediases)}">
+										<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}" alt="No Image">
 									</th:block>
 								</a>
 								<div class="info-wrap">

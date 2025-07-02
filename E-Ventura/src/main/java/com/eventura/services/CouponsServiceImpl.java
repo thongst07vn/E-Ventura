@@ -56,21 +56,53 @@ public class CouponsServiceImpl implements CouponsService {
 		return couponRepository.findAllByDeletedAtISNOTNUL(pageable);
 	}
 
-//	@Override
-//	public Page<Coupons> findByDeletedAtNOTNULLByKeyword(String keyword, Pageable pageable) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public Page<Coupons> findByDeletedAtISNULLByKeyword(String keyword, Pageable pageable) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public Page<Coupons> findByKeyword(String keyword, Pageable pageable) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}	
+	@Override
+	public Page<Coupons> findAllCouponExpired(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponExpired(pageable);
+	}
+
+	@Override
+	public Page<Coupons> findAllCouponInValid(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponInvalid(pageable);
+	}
+
+	@Override
+	public Page<Coupons> findAllCouponValid(Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponValid(pageable);
+	}
+
+	@Override
+	public Page<Coupons> findByVendorId(int id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findByVendorId(id, pageable);
+	}
+
+	@Override
+	public Page<Coupons> findByKeyword(String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findByKeyword(keyword, pageable);
+	}
+
+	@Override
+	public Coupons findById(int id) {
+		// TODO Auto-generated method stub
+		return couponRepository.findById(id).get();
+	}
+
+	@Override
+	public boolean save(Coupons coupons) {
+		// TODO Auto-generated method stub
+		try {
+			couponRepository.save(coupons);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
 }
