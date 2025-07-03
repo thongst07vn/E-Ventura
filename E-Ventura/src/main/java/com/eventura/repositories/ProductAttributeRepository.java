@@ -24,7 +24,8 @@ public interface ProductAttributeRepository extends JpaRepository<ProductAttribu
 	           "WHERE p.id = :productId")
 	    List<ProductAttributes> findDistinctByProductId(@Param("productId") Integer productId);
 	
-	@Query("FROM ProductAttributes WHERE name = :keyword")
+	@Query("FROM ProductAttributes WHERE LOWER(name) = LOWER(:keyword)")
 	ProductAttributes findByName(@Param("keyword") String keyword);
+
 
 }
