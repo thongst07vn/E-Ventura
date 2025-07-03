@@ -43,4 +43,20 @@ public interface VoucherRepository extends JpaRepository<Vouchers, Integer> {
 	
 	@Query("FROM Vouchers WHERE deletedAt IS NULL and vendors IS NULL")
 	public Page<Vouchers> findByVendorIdISNULL(Pageable pageable);
+	
+	@Query("FROM Vouchers WHERE deletedAt IS NULL and endTime <= current_timestamp() and vendors.id = :vendor_id")
+	public Page<Vouchers> findAllVoucherExpiredByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Vouchers WHERE deletedAt IS NULL and startTime >= current_timestamp() and vendors.id = :vendor_id")
+	public Page<Vouchers> findAllVoucherInvalidByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Vouchers WHERE deletedAt IS NULL and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id = :vendor_id")
+	public Page<Vouchers> findAllVoucherValidByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Vouchers WHERE deletedAt IS NULL and redeemAllowed = true and vendors.id = :vendor_id")
+	public Page<Vouchers> findAllVoucherEnableByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Vouchers WHERE deletedAt IS NULL and redeemAllowed = false and vendors.id = :vendor_id")
+	public Page<Vouchers> findAllVoucherDisableByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
 }
