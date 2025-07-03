@@ -16,14 +16,20 @@
 
 					<div class="col-lg-12">
 						<section class="content-body p-xl-4">
-							<form>
+							<form method="POST" th:action="@{/vendor/profile/edit}" enctype="multipart/form-data">
 								<div class="row">
 									<div class="col-lg-8">
+										<p th:text="${msgErrorName}" class="text-danger"></p>
+
 										<div class="row gx-3">
 
 											<div class="col-6 mb-3">
 												<label class="form-label">First name</label>
 												<input class="form-control" type="text" th:field="${user.firstName}">
+												<input class="form-control" type="hidden" th:field="${user.id}">
+												<input class="form-control" type="hidden" th:field="${user.password}">
+
+
 											</div>
 											<!-- col .//-->
 											<div class="col-6 mb-3">
@@ -32,27 +38,35 @@
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
-												<label class="form-label">Email</label>
+												<label class="form-label">Email <span th:text="${msgErrorEmail}"
+														class="text-danger"></span></label>
 												<input class="form-control" type="email" th:field="${user.email}">
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
-												<label class="form-label">Phone</label>
+												<label class="form-label">Phone <span th:text="${msgErrorPhone}"
+														class="text-danger"></span></label>
 												<input class="form-control" type="tel" th:field="${user.phoneNumber}">
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-12 mb-3">
-												<label class="form-label">Address</label>
-												<input class="form-control mb-2" type="text" th:field="${user.userAddresses[0].address}">
+												
+												<label class="form-label">Address <span th:text="${msgErrorAddress}" class="text-danger"></span>
+												</label>
+												<input class="form-control mb-2" type="text"
+													th:field="${userAdresses.address}">
+												<input class="form-control mb-2" type="hidden"
+													th:field="${userAdresses.id}">
+												<span th:text="${msgErrorPDW}" class="text-danger"></span>
 
 												<div class="row gx-2">
 													<div class="col-md-6 mb-2">
 														<!-- Province -->
-														<select class="form-select" id="provinceSelect" th:field="${user.userAddresses[0].provinces.code}">
+														<select class="form-select" id="provinceSelect"
+															th:field="${userAdresses.provinces.code}">
 															<option value="" disabled selected>Chọn Tỉnh/Thành</option>
 															<option th:each="province : ${provinces}"
-															        th:value="${province.code}"
-															        th:text="${province.name}">
+																th:value="${province.code}" th:text="${province.name}">
 															</option>
 														</select>
 													</div>
@@ -60,22 +74,22 @@
 													<div class="col-md-6 mb-2">
 
 														<!-- District -->
-														<select class="form-select" id="districtSelect" th:field="${user.userAddresses[0].districts.code}">
+														<select class="form-select" id="districtSelect"
+															th:field="${userAdresses.districts.code}">
 															<option value="" disabled selected>Chọn Quận/Huyện</option>
 															<option th:each="district : ${districts}"
-															        th:value="${district.code}"
-															        th:text="${district.name}">
+																th:value="${district.code}" th:text="${district.name}">
 															</option>
 														</select>
 													</div>
 
 													<div class="col-md-6 mb-2">
 														<!-- Ward -->
-														<select class="form-select" id="wardSelect" th:field="${user.userAddresses[0].wards.code}">
+														<select class="form-select" id="wardSelect"
+															th:field="${userAdresses.wards.code}">
 															<option value="" disabled selected>Chọn Phường/Xã</option>
-															<option th:each="ward : ${wards}"
-															        th:value="${ward.code}"
-															        th:text="${ward.name}">
+															<option th:each="ward : ${wards}" th:value="${ward.code}"
+																th:text="${ward.name}">
 															</option>
 														</select>
 													</div>
@@ -87,6 +101,11 @@
 												<label class="form-label">Birthday</label>
 												<input class="form-control" type="date" th:field="${user.birthOfDate}">
 											</div>
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Username <span th:text="${msgErrorUsername}"
+														class="text-danger"></span></label>
+												<input class="form-control" type="text" th:field="${user.username}">
+											</div>
 											<!-- col .//-->
 											<!-- row.//-->
 											<!-- col.//-->
@@ -95,15 +114,90 @@
 									<aside class="col-lg-4">
 										<figure class="text-lg-center">
 											<th:block th:if="${user.avatar.contains('https:')}">
-												<img th:src="${user.avatar}">							
+												<img id="userAvatar" class="img-lg mb-3 img-avatar"
+													th:src="${user.avatar}" alt="User Photo">
 											</th:block>
 											<th:block th:if="${!user.avatar.contains('https:')}">
-												<img th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}">							
+												<img id="userAvatar" class="img-lg mb-3 img-avatar"
+													th:src="@{'/assets/imgs/avatars/'+${user.avatar}}" alt="User Photo">
 											</th:block>
-											<p>Username: <span th:text="${user.username}"></span></p>
 
-											<figcaption><a class="btn btn-light rounded font-md" href="#"><i
-														class="icons material-icons md-backup font-md"></i> Upload</a>
+
+											<figcaption>
+												<input type="file" name="file" id="actualFileInput" hidden
+													accept=".png,.jpg"> <a href="#" class="btn btn-cart w-auto"
+													id="uploadButton">
+													Upload </a>
+
+
+												<script type="text/javascript">
+													document
+														.addEventListener(
+															'DOMContentLoaded',
+															function () {
+																const actualFileInput = document
+																	.getElementById('actualFileInput');
+																const uploadButton = document
+																	.getElementById('uploadButton');
+																const userAvatar = document
+																	.getElementById('userAvatar'); // Get the image element
+
+																// Store the previous object URL to revoke it later for memory management
+																let currentObjectURL = null;
+
+																// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
+																uploadButton
+																	.addEventListener(
+																		'click',
+																		function (
+																			event) {
+																			event
+																				.preventDefault(); // Prevent the default anchor link behavior
+																			actualFileInput
+																				.click(); // Programmatically click the hidden file input
+																		});
+
+																// When a file is selected in the hidden input, update the display and the image src
+																actualFileInput
+																	.addEventListener(
+																		'change',
+																		function () {
+																			if (this.files
+																				&& this.files.length > 0) {
+																				const selectedFile = this.files[0];
+
+																				// Create a URL for the selected file
+																				const fileURL = URL
+																					.createObjectURL(selectedFile);
+
+																				// If there was a previous object URL, revoke it to free up memory
+																				if (currentObjectURL) {
+																					URL
+																						.revokeObjectURL(currentObjectURL);
+																				}
+																				currentObjectURL = fileURL; // Store the new object URL
+
+																				// Set the src of the image to the new file URL
+																				userAvatar.src = fileURL;
+
+																			}
+																		});
+
+																// Optional: Store the initial avatar URL if you ever want to revert
+																// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
+
+																// Clean up object URLs when the page unloads to prevent memory leaks
+																window
+																	.addEventListener(
+																		'beforeunload',
+																		function () {
+																			if (currentObjectURL) {
+																				URL
+																					.revokeObjectURL(currentObjectURL);
+																			}
+																		});
+															});
+												</script>
 											</figcaption>
 										</figure>
 									</aside>
@@ -143,54 +237,73 @@
 			</div>
 		</div>
 
-		
+
 		<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const provinceSelect = document.getElementById("provinceSelect");
-			const districtSelect = document.getElementById("districtSelect");
-			const wardSelect = document.getElementById("wardSelect");
+			document.addEventListener("DOMContentLoaded", function () {
+				const provinceSelect = document.getElementById("provinceSelect");
+				const districtSelect = document.getElementById("districtSelect");
+				const wardSelect = document.getElementById("wardSelect");
 
-			provinceSelect.addEventListener("change", function () {
-				const provinceCode = this.value;
-				districtSelect.innerHTML = '<option selected disabled>Loading...</option>';
-				wardSelect.innerHTML = '<option selected disabled>Ward</option>';
-				wardSelect.disabled = true;
+				provinceSelect.addEventListener("change", function () {
+					const provinceCode = this.value;
+					districtSelect.innerHTML = '<option selected disabled>Loading...</option>';
+					wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+					wardSelect.disabled = true;
 
-				fetch(`/api/address/districts?provinceCode=${provinceCode}`)
-				    .then(response => response.json())
-				    .then(data => {
-				        console.log(data);
-				        // Clear existing options BEFORE adding new ones
-				        districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
-				        data.forEach(district => {
-				            const option = document.createElement("option");
-				            option.value = district.code;
-				            option.text = district.name;
-				            districtSelect.appendChild(option);
-				        });
-				        districtSelect.disabled = false;
-				    })
-				    .catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
-			});
+					fetch(`/api/address/districts?provinceCode=${provinceCode}`)
+						.then(response => response.json())
+						.then(data => {
+							console.log(data);
+							// Clear existing options BEFORE adding new ones
+							districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
+							data.forEach(district => {
+								const option = document.createElement("option");
+								option.value = district.code;
+								option.text = district.name;
+								districtSelect.appendChild(option);
+							});
+							districtSelect.disabled = false;
+						})
+						.catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
+				});
 
-			districtSelect.addEventListener("change", function () {
-				const districtCode = this.value;
-				wardSelect.innerHTML = '<option selected disabled>Loading...</option>';
+				districtSelect.addEventListener("change", function () {
+					const districtCode = this.value;
+					wardSelect.innerHTML = '<option selected disabled>Loading...</option>';
 
-				fetch(`/api/address/wards?districtCode=${districtCode}`)
-					.then(response => response.json())
-					.then(data => {
-						wardSelect.innerHTML = '<option selected disabled>Ward</option>';
-						data.forEach(ward => {
-							const option = document.createElement("option");
-							option.value = ward.code;
-							option.text = ward.name;
-							wardSelect.appendChild(option);
+					fetch(`/api/address/wards?districtCode=${districtCode}`)
+						.then(response => response.json())
+						.then(data => {
+							wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+							data.forEach(ward => {
+								const option = document.createElement("option");
+								option.value = ward.code;
+								option.text = ward.name;
+								wardSelect.appendChild(option);
+							});
+							wardSelect.disabled = false;
 						});
-						wardSelect.disabled = false;
-					});
+				});
 			});
-		});
+		</script>
+
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+		<script>
+			// JavaScript to display SweetAlert2 based on flash attributes
+			document.addEventListener('DOMContentLoaded', function () {
+				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+				if (sweetAlertStatus && sweetAlertMessage) {
+					Swal.fire({
+						icon: sweetAlertStatus, // 'success' or 'error'
+						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						text: sweetAlertMessage,
+						showConfirmButton: false,
+						timer: 3000 // Automatically close after 3 seconds
+					});
+				}
+			});
 		</script>
 	</section>
 </body>

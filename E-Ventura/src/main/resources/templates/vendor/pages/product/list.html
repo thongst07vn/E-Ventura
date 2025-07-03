@@ -75,7 +75,7 @@
 												<img class="img-sm img-thumbnail" th:src="${product.products.mediases[0].name}" alt="Item">
 											</th:block>
 											<th:block th:if="${!product.products.mediases[0].name.contains('https:')}">
-												<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/' + ${product.products.mediases[0].name}}"
+												<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/items/' + ${product.products.mediases[0].name}}"
 													alt="Item">
 											</th:block>
 										</th:block>
@@ -92,7 +92,7 @@
 								</a>
 							</div>
 							<div class="col-lg-2 col-sm-2 col-4 col-price"><span
-									th:text="${product.products.description}"></span></div>
+									th:text="${#strings.substring(product.products.description, 0, 20) + '...'}"></span></div>
 							<div class="col-lg-1 col-sm-1 col-3 col-status"><span
 									th:text="${product.products.price}"></span>
 							</div>

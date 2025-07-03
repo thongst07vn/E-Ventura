@@ -57,7 +57,7 @@ public class StoreController  {
 		modelMap.put("vendor", vendorService.findById(vendorId));
 		modelMap.put("revenue", vendorService.sumByVendorId(vendorId));
 		
-		int pageSize = 6;
+		int pageSize = 12;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPages = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 		
@@ -86,7 +86,7 @@ public class StoreController  {
 		modelMap.put("revenue", vendorService.sumByVendorId(vendorId));
 		
 
-		int pageSize = 6;
+		int pageSize = 12;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage;
 		

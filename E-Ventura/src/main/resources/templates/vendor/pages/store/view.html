@@ -108,13 +108,13 @@
 											<img class="img-sm img-thumbnail" th:src="${product.mediases[0].name}" alt="Item">
 										</th:block>
 										<th:block th:if="${!product.mediases[0].name.contains('https:')}">
-											<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/' + ${product.mediases[0].name}}" alt="Item">
+											<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/items/' + ${product.mediases[0].name}}" alt="Item">
 										</th:block>
 									</th:block>
 									
 									<!-- Trường hợp không có ảnh -->
 									<th:block th:if="${#lists.isEmpty(product.mediases)}">
-										<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}" alt="No Image">
+										<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/items/noimg.jpg'}" alt="No Image">
 									</th:block>
 								</a>
 								<div class="info-wrap">
