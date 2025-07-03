@@ -191,19 +191,19 @@
 												th:text="${#dates.format(coupon.endTime, 'dd/MM/yyyy HH:mm:ss')}"></th:block>
 										</td>
 										<td
-											th:if="${#dates.format(coupon.startTime, 'yyyyMMdd') >= #dates.format(#dates.createNow(), 'yyyyMMdd')}">
+											th:if="${#dates.format(coupon.startTime, 'yyyyMMddHHmmss') >= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}">
 											<span class="badge rounded-pill alert-warning"> <th:block
 													th:text="${'Invalid'}"></th:block>
 										</span>
 										</td>
 										<td
-											th:if="${#dates.format(coupon.startTime, 'yyyyMMdd') <= #dates.format(#dates.createNow(), 'yyyyMMdd') && #dates.format(coupon.endTime, 'yyyyMMdd') >= #dates.format(#dates.createNow(), 'yyyyMMdd')}">
+											th:if="${#dates.format(coupon.startTime, 'yyyyMMddHHmmss') <= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss') && #dates.format(coupon.endTime, 'yyyyMMddHHmmss') >= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}">
 											<span class="badge rounded-pill alert-success"> <th:block
 													th:text="${'Valid'}"></th:block>
 										</span>
 										</td>
 										<td
-											th:if="${#dates.format(coupon.endTime, 'yyyyMMdd') <= #dates.format(#dates.createNow(), 'yyyyMMdd')}">
+											th:if="${#dates.format(coupon.endTime, 'yyyyMMddHHmmss') <= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}">
 											<span class="badge rounded-pill alert-danger"> <th:block
 													th:text="${'Expired'}"></th:block>
 										</span>
