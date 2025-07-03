@@ -30,5 +30,12 @@ public interface VouchersService{
 	public Page<Vouchers> findByVendorIdISNULL(Pageable pageable);
 	public Vouchers findById(int id);
 	public boolean save(Vouchers vouchers);
+	
+	public Page<Vouchers> findAllVoucherExpiredByVendorId(int vendorId, Pageable pageable);
+	public Page<Vouchers> findAllVoucherInValidByVendorId(int vendorId, Pageable pageable);
+	public Page<Vouchers> findAllVoucherValidByVendorId(int vendorId, Pageable pageable);
+	
+	public Page<Vouchers> findAllVoucherEnableByVendorId(int vendorId, Pageable pageable);
+	public Page<Vouchers> findAllVoucherDisableByVendorId(int vendorId, Pageable pageable);
 
 }

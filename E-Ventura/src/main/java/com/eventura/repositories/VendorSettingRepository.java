@@ -8,10 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.eventura.entities.Districts;
+import com.eventura.entities.Products;
 import com.eventura.entities.Provinces;
 import com.eventura.entities.VendorSettings;
 import com.eventura.entities.Wards;
 
 @Repository
 public interface VendorSettingRepository extends JpaRepository<VendorSettings, Integer> {
+	@Query("from VendorSettings where deletedAt IS NULL")
+	public List<VendorSettings>  findAllDeleteAt();
 }
