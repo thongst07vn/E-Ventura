@@ -724,7 +724,7 @@ public class AdminController {
 		);
 
 		modelMap.put("products", productDTOPage.getContent());
-		modelMap.put("vendorCategories", vendorProductCategoryService.findByVendorId(id));
+//		modelMap.put("vendorCategories", vendorProductCategoryService.findByVendorId(id));
 		modelMap.put("currentPages", page);
 		modelMap.put("totalPages", productPage.getTotalPages());
 		modelMap.put("lastPageIndex", productPage.getTotalPages() - 1);

@@ -71,7 +71,7 @@
 					<div class="col-lg-6">
 						<h3 class="color-brand-3 mb-25" th:text=${product.name}></h3>
 						<span class="bytext">by</span>&nbsp;<a class="byAUthor"
-							href="shop-vendor-single.html" th:text="${product.vendors.name}"></a>
+							th:href="@{'/customer/vendor/'+product.vendor.id}" th:text="${product.vendors.name}"></a>
 						<div class="rating mt-5">
 							<th:block
 								th:with="width=${avgProductReview > 0 ? widthProduct : 0}">
@@ -403,7 +403,7 @@
 						<div class="tab-pane fade" id="tab-vendor" role="tabpanel"
 							aria-labelledby="tab-vendor">
 							<a class="vendor-logo d-flex mb-30"
-								th:href="@{'/admin/vendor/detail/'+${product.vendors.users.id}}">
+								th:href="@{'/customer/vendor/'+${product.vendors.users.id}}">
 								<th:block
 									th:if="${product.vendors.users.avatar.contains('https:')}">
 									<img class="img-md img-avatar"

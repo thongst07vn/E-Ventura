@@ -1,0 +1,343 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{customer/layouts/layout :: layout('Vendor details', ~{this :: .content-main})}">
+
+<head>
+<title>Vendor</title>
+</head>
+
+<body>
+	<main class="main content-main">
+		<div class="section-box">
+			<div class="breadcrumbs-div">
+				<div class="container">
+					<ul class="breadcrumb">
+						<li><a class="font-xs color-gray-1000" th:href="@{/customer/home}">Home</a></li>
+						<li>Ecom <th:block th:text="${vendor.name}"></th:block></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<section class="section-box shop-template mt-30">
+			<div class="container">
+				<div class="d-flex box-banner-vendor">
+					<div class="vendor-left">
+						<div class="banner-vendor">
+							<div class="card-header"
+								style="height: 200px; background-color: #425a8b;"></div>
+							<div class="d-flex box-info-vendor">
+								<div class="img-thumbnail shadow bg-white" style="position: relative;top: -65px;">
+									<th:block th:if="${vendor.users.avatar.contains('https:')}">
+										<img class="center-xy img-fluid"
+											th:src="${vendor.users.avatar}" alt="Logo Brand">
+									</th:block>
+									<th:block th:if="${!vendor.users.avatar.contains('https:')}">
+										<img class="center-xy img-fluid"
+											th:src="@{'/assets/imgs/avatars/' + ${vendor.users.avatar}}"
+											alt="Logo Brand">
+									</th:block>
+								</div>
+								<div class="info-vendor" style="width: auto; height: auto;">
+									<h4 class="mb-5">
+										<th:block th:text="${vendor.name}"></th:block>
+									</h4>
+									<p class="font-xs color-gray-500 mr-20">
+										Member since
+										<th:block th:text="${#dates.format(vendor.createdAt, 'yyyy')}"></th:block>
+									</p>
+									<th:block
+										th:with="width=${avgVendorReview > 0 ? widthVendor : 0}">
+										<ul class="rating-stars">
+											<li class="stars-active"
+												th:style="'width:' + ${widthVendor} + '%'"><img
+												th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
+												style="height: 15px;"></li>
+											<li><img
+												th:src="@{/assets/imgs/icons/starts-disable.svg}"
+												alt="stars" style="height: 15px;"></li>
+										</ul>
+									</th:block>
+									<span class="font-xs color-gray-500 font-medium"> (<th:block
+											th:text="${countVendorReview}"></th:block>)
+									</span>
+								</div>
+								<div class="vendor-contact">
+									<div class="row">
+										<div class="col-xl-7 col-lg-12">
+											<div
+												class="d-inline-block font-md color-gray-500 location mb-10">
+												<th:block th:each="vendorAddress : ${vendorAddresses}"
+													th:text="${vendorAddress.address}+' '+${vendorAddress.wards.administrativeUnits.shortName}+' '+${vendorAddress.wards.name}+' '+${vendorAddress.districts.administrativeUnits.shortName}+' '+${vendorAddress.districts.name}+' '+${vendorAddress.provinces.administrativeUnits.shortName}+' '+${vendorAddress.provinces.name}"></th:block>
+											</div>
+										</div>
+										<div class="col-xl-5 col-lg-12">
+											<div class="d-inline-block font-md color-gray-500 phone">
+												<th:block th:text="${vendor.users.phoneNumber}"></th:block>
+												<br>
+												<th:block th:text="${vendor.contactEmail}"></th:block>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="vendor-right">
+						<div class="box-featured-product">
+							<div class="item-featured">
+								<div class="featured-icon">
+									<img th:src="@{/assets/imgs/page/product/delivery.svg}"
+										alt="Ecom">
+								</div>
+								<div class="featured-info">
+									<span class="font-sm-bold color-gray-1000">Free Delivery</span>
+									<p class="font-sm color-gray-500 font-medium">From all
+										orders over $10</p>
+								</div>
+							</div>
+							<div class="item-featured">
+								<div class="featured-icon">
+									<img th:src="@{/assets/imgs/page/product/support.svg}"
+										alt="Ecom">
+								</div>
+								<div class="featured-info">
+									<span class="font-sm-bold color-gray-1000">Support 24/7</span>
+									<p class="font-sm color-gray-500 font-medium">Shop with an
+										expert</p>
+								</div>
+							</div>
+							<div class="item-featured">
+								<div class="featured-icon">
+									<img th:src="@{/assets/imgs/page/product/return.svg}"
+										alt="Ecom">
+								</div>
+								<div class="featured-info">
+									<span class="font-sm-bold color-gray-1000">Return &
+										Refund</span>
+									<p class="font-sm color-gray-500 font-medium">Free return
+										over $200</p>
+								</div>
+							</div>
+							<div class="item-featured">
+								<div class="featured-icon">
+									<img th:src="@{/assets/imgs/page/product/payment.svg}"
+										alt="Ecom">
+								</div>
+								<div class="featured-info">
+									<span class="font-sm-bold color-gray-1000">Secure
+										payment</span>
+									<p class="font-sm color-gray-500 font-medium">100%
+										Protected</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="box-filters mt-0 pb-5 border-bottom">
+							<div class="row">
+								<div class="col-xl-2 col-lg-3 mb-10 text-lg-start text-center">
+
+								</div>
+								<div class="col-xl-10 col-lg-9 mb-10 text-lg-end text-center">
+									<div class="d-inline-block">
+										<span class="font-sm color-gray-500 font-medium">Show</span>
+										<div class="dropdown dropdown-sort border-1-right">
+											<button
+												class="btn dropdown-toggle font-sm color-gray-900 font-medium"
+												id="dropdownSort2" type="button" data-bs-toggle="dropdown"
+												aria-expanded="false" data-bs-display="static">
+												<span id="selectedPageSize">10 items</span>
+											</button>
+											<ul class="dropdown-menu dropdown-menu-light"
+												aria-labelledby="dropdownSort2">
+												<li><a class="dropdown-item" href="#"
+													data-pagesize="20">20 items</a></li>
+												<li><a class="dropdown-item active" href="#"
+													data-pagesize="30">30 items</a></li>
+												<li><a class="dropdown-item" href="#"
+													data-pagesize="50">50 items</a></li>
+												<li><a class="dropdown-item" href="#"
+													data-pagesize="100">100 items</a></li>
+											</ul>
+										</div>
+
+										<script>
+										    document.addEventListener('DOMContentLoaded', () => {
+										        const dropdownItems = document.querySelectorAll('.dropdown-menu-light .dropdown-item');
+										        const selectedPageSizeSpan = document.getElementById('selectedPageSize');
+										        const urlParams = new URLSearchParams(window.location.search);
+										        const pageSize = urlParams.get('pageSize') || '10'; // default to 30 as per your new dropdown
+										
+										        // Set the initial active item and button text
+										        dropdownItems.forEach(item => {
+										            if (item.dataset.pagesize === pageSize) {
+										                item.classList.add('active');
+										                selectedPageSizeSpan.textContent = `${pageSize} items`;
+										            } else {
+										                item.classList.remove('active');
+										            }
+										
+										            // Add click listener to each dropdown item
+										            item.addEventListener('click', (event) => {
+										                event.preventDefault(); // Prevent default link behavior
+										                const newPageSize = event.target.dataset.pagesize;
+										                
+										                // Simulate a select element for the existing changePageSize function
+										                const tempSelect = { value: newPageSize };
+										                changePageSize(tempSelect); // Pass the simulated select object
+										            });
+										        });
+										    });
+										
+										    function changePageSize(selectElement) {
+										        // Lấy giá trị của option đã chọn
+										        const pageSize = selectElement.value; // Now uses the passed selectElement's value
+										
+										        // Lấy giá trị của trang hiện tại, nếu có
+										        const urlParams = new URLSearchParams(window.location.search);
+										        const currentPage = urlParams.get('page') || 0; // hoặc giá trị khác tùy ý
+										
+										        // Tạo URL mới với tham số page và pageSize
+										        const newUrl = new URL(window.location.origin + window.location.pathname);
+										        newUrl.searchParams.set('page', currentPage);
+										        newUrl.searchParams.set('pageSize', pageSize);
+										        // Tải lại trang với URL mới
+										        window.location.href = newUrl.toString();
+										    }
+										    // JavaScript to display SweetAlert2 based on flash attributes
+										    document.addEventListener('DOMContentLoaded', function() {
+										        const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+										        const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+										
+										        if (sweetAlertStatus && sweetAlertMessage) {
+										            Swal.fire({
+										                icon: sweetAlertStatus, // 'success' or 'error'
+										                title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+										                text: sweetAlertMessage,
+										                showConfirmButton: false,
+										                timer: 3000 // Automatically close after 3 seconds
+										            });
+										        }
+										    });
+										</script>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="list-products-5 mt-20">
+							<div class="card-grid-style-3" th:each="product : ${products}">
+								<div class="card-grid-inner">
+									<div class="tools">
+										<a class="btn btn-trend btn-tooltip mb-10" href="#"
+											aria-label="Trend" data-bs-placement="left"></a><a
+											class="btn btn-wishlist btn-tooltip mb-10"
+											href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
+											class="btn btn-compare btn-tooltip mb-10"
+											href="shop-compare.html" aria-label="Compare"></a><a
+											class="btn btn-quickview btn-tooltip" aria-label="Quick view"
+											href="#ModalQuickview" data-bs-toggle="modal"></a>
+									</div>
+
+									<div class="image-box">
+										<a
+											th:href="@{'/product/productdetails/'+${product.products.id}}">
+											<th:block
+												th:if="${product.products.mediases[0].name.contains('https:')}">
+												<img th:src="${product.products.mediases[0].name}"
+													alt="Ecom">
+											</th:block> <th:block
+												th:if="${!product.products.mediases[0].name.contains('https:')}">
+												<img
+													th:src="@{'/assets/imgs/items/' + ${product.products.mediases[0].name}}"
+													alt="Ecom">
+											</th:block>
+										</a>
+									</div>
+									<div class="info-right">
+										<a class="color-brand-3 font-sm-bold" href="#"><th:block
+												th:text="${product.products.name}"></th:block></a>
+										<div class="rating">
+											<th:block
+												th:with="displayRating=${product.rating != null ? product.rating : 0},
+             cappedRating=${displayRating > 5 ? 5 : displayRating},
+             width=${cappedRating * 20}">
+												<ul class="rating-stars" style="width: 65px;">
+													<li class="stars-active"
+														th:style="'width:' + ${width} + '%'"><img
+														th:src="@{/assets/imgs/icons/stars-active.svg}"
+														alt="stars"></li>
+													<li style="width: 100%;"><img
+														th:src="@{/assets/imgs/icons/starts-disable.svg}"
+														alt="stars"></li>
+												</ul>
+											</th:block>
+											<span class="font-xs color-gray-500 font-medium"> (<th:block
+													th:text="${product.countRating}"></th:block> reviews)
+											</span>
+										</div>
+										<div class="price-info">
+											<strong class="font-lg-bold color-brand-3 price-main">$<th:block th:text="${product.products.price}"></th:block></strong>
+										</div>
+										<div class="mt-20 box-btn-cart">
+											<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
+										</div>
+										<ul class="list-features">
+											<li><th:block th:text="${product.products.description}"></th:block></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+						<th:block th:if="${!#lists.isEmpty(products)}">
+							<ul class="pagination">
+								<!-- nút về đầu -->
+								<li class="page-item"
+									th:classappend="${currentPages == 0} ? 'hidden'"><a
+									class="page-link" aria-label="Back to start"
+									th:href="@{'/customer/vendor/'+${vendor.id}+'?page='+${0}+ '&pageSize=' + ${pageSize}}">
+										<div style="font-size: 30;">&laquo;</div>
+								</a></li>
+								<!-- nút về trước -->
+								<li class="page-item"
+									th:classappend="${currentPages == 0} ? 'disabled'"><a
+									th:href="@{'/customer/vendor/'+${vendor.id}+'?page=' + ${currentPages-1}+ '&pageSize=' + ${pageSize}}"
+									class="page-link" aria-label="Previous"><div
+											style="font-size: 30;">&lsaquo;</div> </a></li>
+								<!-- Các trang -->
+								<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+									<li class="page-item"
+										th:classappend="${i} == ${currentPages} ? 'active'"><a
+										class="page-link"
+										th:href="@{'/customer/vendor/'+${vendor.id}+'?page=' + ${i}+ '&pageSize=' + ${pageSize}}"
+										th:text="${i + 1}"></a></li>
+								</th:block>
+
+								<!-- Nút tiếp -->
+								<li class="page-item"
+									th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+									<a class="page-link"
+									th:href="@{'/customer/vendor/'+${vendor.id}+'?page=' + ${currentPages+1}+ '&pageSize=' + ${pageSize}}"
+									aria-label="Next">
+										<div style="font-size: 30;">&rsaquo;</div>
+								</a>
+								</li>
+								<!-- Nút tới cuối -->
+								<li class="page-item"
+									th:classappend="${currentPages + 1 >= totalPage}? 'hidden' ">
+									<a class="page-link"
+									th:href="@{'/customer/vendor/'+${vendor.id}+'?page=' + ${lastPageIndex}+ '&pageSize=' + ${pageSize}}"
+									aria-label="Next">
+										<div style="font-size: 30;">&raquo;</div>
+								</a>
+								</li>
+							</ul>
+						</th:block>
+					</div>
+				</div>
+			</div>
+		</section>
+	</main>
+
+</body>

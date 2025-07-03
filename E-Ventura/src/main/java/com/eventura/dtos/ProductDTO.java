@@ -6,6 +6,7 @@ import com.eventura.entities.Products;
 public class ProductDTO {
     private Products products;
     private double rating;
+    private int countRating;
 
     public ProductDTO() {
     }
@@ -13,6 +14,12 @@ public class ProductDTO {
 	public ProductDTO(Products products, double rating) {
 		this.products = products;
 		this.rating = rating;
+	}
+	
+	public ProductDTO(Products products, double rating, int countRating) {
+		this.products = products;
+		this.rating = rating;
+		this.countRating = countRating;
 	}
 
 	public Products getProducts() {
@@ -29,6 +36,14 @@ public class ProductDTO {
 
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public int getCountRating() {
+		return countRating;
+	}
+
+	public void setCountRating(int countRating) {
+		this.countRating = countRating;
 	}
 	
     

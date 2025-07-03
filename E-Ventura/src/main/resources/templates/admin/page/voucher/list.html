@@ -237,7 +237,7 @@
 						<select class="form-select" name="vendorId" id="vendorSelect">
 							<option th:value="-1" th:selected="${selectedVendorId == -1}">All
 								Vendor</option>
-							<option th:value="0" th:selected="${selectedVendorId == 0}">E-ventura</option>
+							<option th:value="0" th:selected="${selectedVendorId == 0}">ADMIN</option>
 							<option th:each="vendor : ${vendors}"
 								th:if="${vendor.users.deletedAt==null}" th:value="${vendor.id}"
 								th:text="${vendor.name}"
@@ -351,7 +351,7 @@
 												<th:block th:text="${voucher.vendors?.name}"></th:block>
 										</a> <a class="itemside" th:if="${voucher.vendors?.id == null}"
 											th:href="@{/admin/dashboard}"> <th:block
-													th:text="${'E-ventura'}"></th:block>
+													th:text="${'ADMIN'}"></th:block>
 										</a></td>
 										<td th:if="${voucher.discountUnit == 'percent'}"
 											class="text-center"><th:block
