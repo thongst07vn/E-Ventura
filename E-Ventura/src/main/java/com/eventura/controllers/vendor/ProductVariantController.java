@@ -1,3 +1,4 @@
+
 package com.eventura.controllers.vendor;
 
 import java.util.Date;
@@ -5,6 +6,7 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,17 +67,18 @@ public class ProductVariantController  {
 	        System.out.println("Found existing ProductAttribute with name: " + attribute.getId() + '-' + attribute.getName());
 	    }
 	    
-	    System.out.println("atrtibute sau if: " + attribute.getId() + '-' + attribute.getName());
-
-
-	    // Gán Product và ProductAttribute cho ProductVariant
-	    productVariant.setProducts(productService.findById(productId));
-	    productVariant.setProductAttributes(attribute);
-	    productVariant.setCreatedAt(new Date());
-	    productVariant.setUpdatedAt(new Date());
-
-	    System.out.println("product Id:" + productService.findById(productId).getId());
-	    
+	    ProductVariants variant = productVariantService.findByProductIdAndProductAttributeAndValue(productId, attribute.getId(), productVariant.getValue());
+	    if(variant == null) {
+	    	  // Gán Product và ProductAttribute cho ProductVariant
+		    productVariant.setProducts(productService.findById(productId));
+		    productVariant.setProductAttributes(attribute);
+		    productVariant.setCreatedAt(new Date());
+		    productVariant.setUpdatedAt(new Date());
+	    }else {
+	    	 redirectAttributes.addFlashAttribute("sweetAlert", "warning");
+			redirectAttributes.addFlashAttribute("message", "Variant has existed");
+			return "redirect:/vendor/product/edit/" + productId;
+	    }	    
 
 		
 		if(productVariantService.saveProductVariants(productVariant)) {
@@ -88,6 +91,22 @@ public class ProductVariantController  {
 		
 		
 		return "redirect:/vendor/product/edit/" + productId;
+	}
+	
+	@GetMapping("delete/{id}")
+	public String delete(@PathVariable("id") int id, @RequestParam("productId") int productId,
+						 ModelMap modelMap, RedirectAttributes redirectAttributes) {
+		modelMap.put("currentPage", "product");
+
+		if (productVariantService.delete(id)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Delete Variant Successfully");
+	    } else {
+	    	redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Delete Variant Successfully");
+	    }
+        return "redirect:/vendor/product/edit/" + productId;
+
 	}
 	
 	@GetMapping("edit/{id}")

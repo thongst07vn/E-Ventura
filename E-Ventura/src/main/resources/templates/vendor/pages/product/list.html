@@ -37,6 +37,8 @@
 						</script>
 					</div>
 					<div class="col-lg-2 col-md-3 col-6">
+					</div>
+					<div class="col-lg-2 col-md-3 col-6">
 						<form id="venderCategorySearchForm" method="GET"
 							th:action="@{/vendor/product/searchByCategory}">
 							<select class="form-select" name="categoryId" id="categorySelect">
@@ -52,13 +54,7 @@
 							});
 						</script>
 					</div>
-					<div class="col-lg-2 col-md-3 col-6">
-						<select class="form-select">
-							<option>Show 20</option>
-							<option>Show 30</option>
-							<option>Show 40</option>
-						</select>
-					</div>
+
 
 
 
@@ -121,9 +117,29 @@
 									<i class="material-icons md-edit"></i> Edit
 								</a>
 								<a class="btn btn-sm font-sm rounded btn-danger text-white"
-									th:href="@{'/vendor/product/delete/' + ${product.products.id}}">
-									<i class="material-icons md-delete	"></i>
+									th:href="@{'/vendor/product/delete/' + ${product.products.id}}" onclick="return confirmDelete(event)">
+									<i class="material-icons md-delete"></i>
 								</a>
+								<script>
+									function confirmDelete(event) {
+										event.preventDefault(); // Ngừng hành động mặc định của link (không chuyển hướng ngay lập tức)
+
+										// Hiển thị SweetAlert2
+										Swal.fire({
+											title: 'Are you sure?',
+											text: 'Do you want to delete!',
+											icon: 'warning',
+											showCancelButton: true,
+											confirmButtonText: 'Yes, delete it!',
+											cancelButtonText: 'No, keep it'
+										}).then((result) => {
+											if (result.isConfirmed) {
+												// Nếu người dùng xác nhận, điều hướng đến URL
+												window.location.href = event.target.href;
+											}
+										});
+									}
+								</script>
 							</div>
 						</div>
 						<!-- row .//-->

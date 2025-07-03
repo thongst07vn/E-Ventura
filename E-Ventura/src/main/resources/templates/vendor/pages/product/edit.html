@@ -103,28 +103,124 @@
 								<table class="table table-bordered table-hover align-middle">
 									<thead class="table-light">
 										<tr>
-											<th scope="col">Attribute</th>
-											<th scope="col">Value</th>
+											<th scope="col" class="text-center">Attribute</th>
+											<th scope="col" class="text-center">Value</th>											
+											<th scope="col" class="text-center">Quantity</th>
+
 											<th scope="col" class="text-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
 										<th:block th:each="productVariant, i : ${productVariants}">
-											<tr>
-												<td
-													th:text="${i.index == 0 || productVariants[i.index - 1].productAttributes.name != productVariant.productAttributes.name} ? ${productVariant.productAttributes.name} : ''">
+											<tr th:data-id="${productVariant.id}" th:data-product-id="${product.id}" th:data-attribute-id="${productVariant.productAttributes.id}">
+												<td th:text="${i.index == 0 || productVariants[i.index - 1].productAttributes.name != productVariant.productAttributes.name} ? ${productVariant.productAttributes.name} : ''"
+												    class="text-center editable-attribute" ondblclick="editField(this, 'attribute')">
 												</td>
-												<td th:text="${productVariant.value}"></td>
+												<td th:text="${productVariant.value}" class="text-center editable-value" ondblclick="editField(this, 'value')">
+												</td>
+												<td th:text="${productVariant.quantity}" class="text-center editable-quantity" ondblclick="editField(this, 'quantity')">
+												</td>
+
 												<td class="text-center">
-													<a class="btn btn-sm btn-primary me-1"
-														th:href="@{'/vendor/productVariant/edit/' + ${productVariant.id}}">Edit</a>
-													<a class="btn btn-sm btn-danger">Delete</button>
+													<a class="btn btn-sm btn-danger"
+															th:href="@{'/vendor/productVariant/delete/' + ${productVariant.id} + '?productId=' + ${product.id}}"
+															onclick="return confirmDelete(event)">Delete
+													</a>
+														
+														<script>
+															function confirmDelete(event) {
+																event.preventDefault(); // Ngừng hành động mặc định của link (không chuyển hướng ngay lập tức)
+
+																// Hiển thị SweetAlert2 DELETE
+																Swal.fire({
+																	title: 'Are you sure?',
+																	text: 'Do you want to delete !',
+																	icon: 'warning',
+																	showCancelButton: true,
+																	confirmButtonText: 'Yes, delete it!',
+																	cancelButtonText: 'No, keep it'
+																}).then((result) => {
+																	if (result.isConfirmed) {
+																		// Nếu người dùng xác nhận, điều hướng đến URL
+																		window.location.href = event.target.href;
+																	}
+																});
+															}
+														</script>
+
 												</td>
 											</tr>
 										</th:block>
 										<!-- Thêm dòng khác nếu cần -->
 									</tbody>
 								</table>
+								
+								<!-- ================ EDIT VARIANT =================== -->
+								<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+								<script>
+									function editField(cell, fieldType) {
+									    const originalValue = cell.innerText.trim();
+									    const input = document.createElement('input');
+									    input.type = 'text';
+									    input.value = originalValue;
+									    cell.innerHTML = '';
+									    cell.appendChild(input);
+									    input.focus();
+
+									    // Lấy productId từ thuộc tính data-product-id của dòng (tr)
+									    const productId = cell.closest('tr').getAttribute('data-product-id');  // Lấy productId
+										const attributeId = cell.closest('tr').getAttribute('data-attribute-id');  // Lấy productId
+
+
+									    input.addEventListener('keydown', function (e) {
+									        if (e.key === 'Enter') {
+									            const newValue = input.value;
+									            const id = cell.closest('tr').getAttribute('data-id');  // Lấy productVariant ID từ dòng
+									            updateProductVariant(id, productId, attributeId, fieldType, newValue);  // Truyền productId vào hàm update
+									            cell.innerHTML = newValue;
+									        }
+									    });
+									}
+
+
+									function updateProductVariant(id, productId, attributeId, field, value) {
+									    $.ajax({
+									        url: `/vendor/api/product-variant/update/${productId}/${attributeId}/${id}`,  // Truyền cả productId và id vào URL
+									        type: 'PUT',
+									        data: {
+									            field: field,
+									            value: value
+									        },
+									        success: function(response) {
+									            Swal.fire({
+									                icon: 'success',
+									                title: 'Save successful!',
+									                text: response,
+									                showConfirmButton: false,
+									                timer: 1500
+									            });
+									        },
+									        error: function(xhr, status, error) {
+									            Swal.fire({
+									                icon: 'error',
+									                title: 'Error!',
+									                text: xhr.responseText || 'Something went wrong. Please try again.',
+									                showConfirmButton: false,
+									                timer: 1500
+									            });
+									        }
+									    });
+									}
+
+									</script>
+
+
+
+								<!-- ================ EDIT VARIANT =================== -->
+
+
+								
 								<!-- Nút Submit -->
 								<div style="float: right">
 									<!-- Button trigger modal -->
