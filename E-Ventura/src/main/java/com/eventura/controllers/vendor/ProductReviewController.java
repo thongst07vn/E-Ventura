@@ -44,14 +44,14 @@ public class ProductReviewController {
 		modelMap.put("currentPage", "review");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 5;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findByVendorIdPage(vendorId, pageable);
+		Page<Products> productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		// Lặp qua productPage và thêm các ProductDTO vào List
 		for (Products product : productPage) {
-			if (product.getDeletedAt() == null) {
+			if (product.getDeletedAt() == null && !product.isDeleted()) {
 				if (!productService.findProductReview(product.getId()).isEmpty()) {
 					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
 				} else {
@@ -83,12 +83,12 @@ public class ProductReviewController {
 		modelMap.put("currentPage", "review");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 5;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage;
 
 		if (categoryId == 0) {
-			productPage = productService.findByVendorIdPage(vendorId, pageable);
+			productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 			List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 			for (Products product : productPage) {
@@ -108,7 +108,7 @@ public class ProductReviewController {
 			modelMap.put("products", productDTOPage.getContent());
 //			map.put("products", productPage.getContent());
 		} else {
-			productPage = productService.findByVendorCategoryPage(vendorId, categoryId, pageable);
+			productPage = productService.findProductByVendorAndDeleteAndCategoryPage(vendorId, categoryId, pageable);
 			List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 			for (Products product : productPage) {
@@ -145,9 +145,9 @@ public class ProductReviewController {
 		modelMap.put("currentPage", "review");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 5;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findByKeywordAndVendorIdPage(keyword, vendorId, pageable);
+		Page<Products> productPage = productService.findProductByVendorAndDeleteAndKeywordPage(vendorId, keyword, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		
@@ -183,7 +183,7 @@ public class ProductReviewController {
 						 @PathVariable("productId") int productId,
 						 @RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "review");
-		int pageSize = 5;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<ProductReviews> productReviewPage = productService.findProductReviewPage(productId, pageable);
 		
@@ -209,7 +209,7 @@ public class ProductReviewController {
 										@RequestParam("keyword") String keyword,
 										@RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "review");
-		int pageSize = 5;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<ProductReviews> productReviewPage = productService.findProductReviewsByKeyword(productId, keyword, pageable);
 

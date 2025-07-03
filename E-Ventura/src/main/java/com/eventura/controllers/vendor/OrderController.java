@@ -58,7 +58,7 @@ public class OrderController  {
 		modelMap.put("currentPage", "order");
 		int vendorId = (Integer) session.getAttribute("vendorId");
 		
-		int pageSize = 6;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<OrderVendorDTO> orderVendorPages = orderService.findOrdersByVendorPage(vendorId, pageable);
 		
@@ -79,7 +79,7 @@ public class OrderController  {
 		modelMap.put("currentPage", "order");
 		int vendorId = (Integer) session.getAttribute("vendorId");
 		
-		int pageSize = 6;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<OrderVendorDTO> orderStatusPages = orderService.findOrdersByStatusPage(vendorId, orderStatusId, pageable);
 		Page<OrderVendorDTO> orderVendorPages = orderService.findOrdersByVendorPage(vendorId, pageable);
@@ -111,7 +111,7 @@ public class OrderController  {
 		modelMap.put("currentPage", "order");
 		int vendorId = (Integer) session.getAttribute("vendorId");
 		
-		int pageSize = 6;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<OrderVendorDTO> orderPages = orderService.findByKeyword(vendorId, keyword, pageable);
 		

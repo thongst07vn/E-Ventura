@@ -63,7 +63,6 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th>#ID</th>
 								<th>Product</th>
 								<th>Rating</th>
 								<th class="text-end">Action</th>
@@ -73,14 +72,13 @@
 							<th:block th:each="product : ${products}">
 								<tr>
 								
-									<td class="align-middle" th:text="${product.products.id}"></td>
 									<td>
 										<a class="itemside" href="#">
 											<th:block th:if="${product.products.mediases[0].name.contains('https:')}">
 												<img class="img-sm img-thumbnail" th:src="${product.products.mediases[0].name}" alt="Item">
 											</th:block>
 											<th:block th:if="${!product.products.mediases[0].name.contains('https:')}">
-												<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/others/' + ${product.products.mediases[0].name}}"
+												<img class="img-sm img-thumbnail" th:src="@{'/assets/imgs/items/' + ${product.products.mediases[0].name}}"
 													alt="Item">
 											</th:block>
 											<h6 class="mb-0" th:text="${product.products.name}"></h6>

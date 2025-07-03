@@ -70,7 +70,7 @@ public class ProductController {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 6;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
@@ -106,7 +106,7 @@ public class ProductController {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 6;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage;
 
@@ -167,8 +167,7 @@ public class ProductController {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		System.out.println("ncc");
-		int pageSize = 6;
+		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage = productService.findProductByVendorAndDeleteAndKeywordPage(vendorId, keyword, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
@@ -256,7 +255,7 @@ public class ProductController {
 
 		product.setCreatedAt(new Date());
 		product.setUpdatedAt(new Date());
-		product.setDeletedAt(new Date());
+		product.setDeletedAt(null);
 
 		/* IMAGE */
 		// Lưu product trước để có ID
@@ -267,13 +266,9 @@ public class ProductController {
 			if (files != null && !files.isEmpty()) {
 				for (MultipartFile file : files) {
 					try {
-						String fileName = file.getOriginalFilename();
+			            String fileName = FileHelper.generateFileName(file.getOriginalFilename());
 
 						File imagesFolder = new ClassPathResource("static/assets/imgs/items").getFile();
-						if (!imagesFolder.exists()) {
-							imagesFolder.mkdirs();
-						}
-
 						Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
 						Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
