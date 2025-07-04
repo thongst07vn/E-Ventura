@@ -1,16 +1,265 @@
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{vendor/layouts/layout :: layout('Order List', ~{this :: .content-main})}">
+	th:replace="~{vendor/layouts/layout :: layout('Coupon List', ~{this :: .content-main})}">
 
 <head>
-	<title>Promotion List</title>
+	<title>Coupon List</title>
 </head>
 
 <body>
 	<section class="content-main">
 		<div class="content-header">
 			<div>
-				<h2 class="content-title card-title">Order List</h2>
-				<p>Lorem ipsum dolor sitt amet.</p>
+				<h2 class="content-title card-title">Coupon List</h2>
+				<p>You can view your coupon list here.</p>
+			</div>
+			<div>
+				<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModal">
+					<i class="material-icons md-plus"></i>Create Coupon
+				</button>
+				<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h1 class="modal-title fs-5" id="exampleModalLabel">Add New
+									Coupon</h1>
+								<button type="button" class="btn-close" data-bs-dismiss="modal"
+									aria-label="Close"></button>
+							</div>
+							<form id="addcouponForm" th:action="@{/vendor/coupon/add}" method="post">
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-lg-12">
+											<div class="row gx-3">
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="discountValue">Discount
+														Value:</label>
+													<input class="form-control mb-2" type="number" step="1"
+														id="discountValue" name="discountValue"
+														th:field="${coupon.discountValue}" required>
+													<div class="invalid-feedback">Please enter a discount
+														value.</div>
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="discountUnit">Discount
+														Unit:</label> <select class="form-control mb-2"
+														id="discountUnit" th:field="${coupon.discountUnit}"
+														name="discountUnit" required>
+														<option th:value="percent">Percentage (%)</option>
+														<option th:value="money">Fixed Amount</option>
+													</select>
+													<div class="invalid-feedback">Please select a
+														discount unit.</div>
+												</div>
+												<div class="col-lg-12 mb-3">
+												    <label class="form-label" for="product">Product</label>
+												    <select class="form-control mb-2" id="product" th:field="${coupon.products.id}" name="product" required>
+												        <option value="">-- Select a Product --</option>
+												        <option th:each="product : ${products}"
+												                th:value="${product.id}"
+												                th:text="${product.name}">
+												        </option>
+												    </select>
+												    <div class="invalid-feedback">Please select a product.</div>
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="quantity">Quantity:</label>
+													<input class="form-control mb-2" type="number" step="1"
+														id="quantity" th:field="${coupon.quantity}" name="quantity">
+												</div>
+
+												<input class="form-control mb-2" type="hidden" id="redeemAllowed"
+													name="redeemAllowed" value="false"
+													th:field="${coupon.redeemAllowed}" required>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="startTime">Start
+														Time:</label> <input class="form-control mb-2"
+														type="datetime-local" th:field="${coupon.startTime}"
+														id="startTime" name="startTime" th:value="${startTime}"
+														required>
+													<div class="invalid-feedback" id="startTimeFeedback">
+														Please enter a start time.</div>
+												</div>
+
+												<div class="col-lg-12 mb-3">
+													<label class="form-label" for="endTime">End Time:</label> <input
+														class="form-control mb-2" type="datetime-local"
+														th:field="${coupon.endTime}" id="" name=""
+														th:value="${endTime}" required>
+													<div class="invalid-feedback" id="endTimeFeedback">
+														Please enter an end time.</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Close</button>
+									<button type="submit" class="btn btn-primary" id="formButtonAdd">Add</button>
+								</div>
+							</form>
+							<script
+								src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+							<script>
+								$(document).ready(function () {
+									const $addcouponForm = $('#addcouponForm');
+									const $formButtonAdd = $('#formButtonAdd');
+
+									// Function to allow only integers
+									function allowOnlyIntegers(event) {
+										const charCode = (event.which) ? event.which : event.keyCode;
+										if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+											event.preventDefault();
+										}
+									}
+
+									// Apply allowOnlyIntegers to relevant input fields
+									$('#discountValue, #quantity').on('keypress', allowOnlyIntegers);
+
+									// Event listener for the "Add" button click
+									$formButtonAdd.on('click', function (event) {
+										event.preventDefault();
+
+										// Reset previous validation states
+										$addcouponForm.find('.form-control').removeClass('is-invalid');
+										$addcouponForm.find('.invalid-feedback').text('');
+
+										let isValid = true;
+
+										// Validate required fields
+										$addcouponForm.find('[required]').each(function () {
+											const $input = $(this);
+											if (!$input.val().trim()) {
+												$input.addClass('is-invalid');
+												if ($input.attr('id') === 'discountValue') {
+													$input.next('.invalid-feedback').text('Please enter a discount value.');
+												} else if ($input.attr('id') === 'discountUnit') {
+													$input.next('.invalid-feedback').text('Please select a discount unit.');
+												} else if ($input.attr('id') === 'startTime') {
+													$('#startTimeFeedback').text('Please enter a start time.');
+												} else if ($input.attr('id') === 'endTime') {
+													$('#endTimeFeedback').text('Please enter an end time.');
+												}
+												isValid = false;
+											}
+										});
+
+										// Validate if numeric fields are not zero (0.0)
+
+										const $discountValue = $('#discountValue');
+										const $quantity = $('#quantity');
+
+										if ($discountValue.val() == 0.0 || $discountValue.val().trim() === '') {
+											$discountValue.addClass('is-invalid');
+											$discountValue.next('.invalid-feedback').text('Discount value must be greater than 0.');
+											isValid = false;
+										}
+
+									
+
+										if ($quantity.val() == 0 || $quantity.val().trim() === '') {
+											$quantity.addClass('is-invalid');
+											$quantity.next('.invalid-feedback').text('Quantity must be greater than 0.');
+											isValid = false;
+										}
+
+										// Validate start time vs. end time AND against current time
+										const $startTimeInput = $('#startTime');
+										const $endTimeInput = $('#endTime');
+										const $startTimeFeedback = $('#startTimeFeedback');
+										const $endTimeFeedback = $('#endTimeFeedback');
+
+										if ($startTimeInput.val() && $endTimeInput.val()) {
+											const startTime = new Date($startTimeInput.val());
+											const endTime = new Date($endTimeInput.val());
+											const currentTime = new Date(); // Get the current time
+
+											// Check if start time is before end time
+											if (startTime >= endTime) {
+												$startTimeInput.addClass('is-invalid');
+												$endTimeInput.addClass('is-invalid');
+												$startTimeFeedback.text('Start time must be before end time.');
+												$endTimeFeedback.text('End time must be after start time.');
+												isValid = false;
+											}
+
+											// Check if start time is in the future
+											if (startTime <= currentTime) {
+												$startTimeInput.addClass('is-invalid');
+												$startTimeFeedback.text('Start time must be in the future.');
+												isValid = false;
+											}
+
+											// Check if end time is in the future
+											if (endTime <= currentTime) {
+												$endTimeInput.addClass('is-invalid');
+												$endTimeFeedback.text('End time must be in the future.');
+												isValid = false;
+											}
+
+										} else if ($startTimeInput.val() && !$endTimeInput.val()) {
+											$endTimeInput.addClass('is-invalid');
+											$endTimeFeedback.text('Please enter an end time.');
+											isValid = false;
+										} else if (!$startTimeInput.val() && $endTimeInput.val()) {
+											$startTimeInput.addClass('is-invalid');
+											$startTimeFeedback.text('Please enter a start time.');
+											isValid = false;
+										}
+
+										// If all validations pass, submit the form
+										if (isValid) {
+											$addcouponForm.off('submit').submit();
+											const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
+											if (modal) {
+												modal.hide();
+											}
+											$addcouponForm[0].reset();
+										}
+									});
+
+									// Optional: Clear validation feedback when user starts typing/selecting
+									$addcouponForm.find('.form-control').on('input change', function () {
+										const $input = $(this);
+										if ($input.hasClass('is-invalid')) {
+											$input.removeClass('is-invalid');
+											const $feedbackElement = $input.next('.invalid-feedback');
+											if ($feedbackElement.length) {
+												$feedbackElement.text('');
+											} else {
+												const feedbackId = $input.attr('id') + 'Feedback';
+												$('#' + feedbackId).text('');
+											}
+										}
+									});
+								});
+								
+								// JavaScript to display SweetAlert2 based on flash attributes
+									document.addEventListener('DOMContentLoaded', function () {
+										const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+										const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+										if (sweetAlertStatus && sweetAlertMessage) {
+											Swal.fire({
+												icon: sweetAlertStatus, // 'success' or 'error'
+												title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+												text: sweetAlertMessage,
+												showConfirmButton: false,
+												timer: 3000 // Automatically close after 3 seconds
+											});
+										}
+									});
+							</script>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row">
@@ -19,17 +268,33 @@
 					<header class="card-header">
 						<div class="row gx-3">
 							<div class="col-lg-4 col-md-6 me-auto">
-								<input class="form-control" type="text" placeholder="Search...">
+
 							</div>
 							<div class="col-lg-2 col-md-3 col-6">
-								<select class="form-select">
-									<option>Status</option>
-									<option>Active</option>
-									<option>Disabled</option>
-									<option>Show all</option>
-								</select>
+								<form method="GET" th:action="@{/vendor/coupon/list}">
+									<select class="form-select" name="filter" onchange="this.form.submit()">
+										<option value="show_all" th:selected="${selectedFilter == 'show_all'}">Show All
+										</option>
+										<option value="valid" th:selected="${selectedFilter == 'valid'}">Valid</option>
+										<option value="invalid" th:selected="${selectedFilter == 'invalid'}">Invalid
+										</option>
+										<option value="expired" th:selected="${selectedFilter == 'expired'}">Expired
+										</option>
+									</select>
+								</form>
 							</div>
-						
+							<div class="col-lg-2 col-md-3 col-6">
+								<form method="GET" th:action="@{/vendor/coupon/searchByRedeemAllow}">
+									<select class="form-select" name="status" onchange="this.form.submit()">
+										<option value="show_all" th:selected="${selectedStatus == 'show_all'}">Show All
+										</option>
+										<option value="enable" th:selected="${selectedStatus == 'enable'}">Enable
+										</option>
+										<option value="disable" th:selected="${selectedStatus == 'disable'}">Disable
+										</option>
+									</select>
+								</form>
+							</div>
 						</div>
 					</header>
 					<div class="card-body">
@@ -37,153 +302,100 @@
 							<table class="table table-hover">
 								<thead>
 									<tr>
-										<th>Id</th>
-										<th>Code</th>
-										<th>Name</th>
-										<th>Descriptiopn</th>
-										<th>Percent %</th>
-										<th>Status</th>
-										<th class="text-end">Action</th>
+										<th class="text-center">Product</th>
+										<th class="text-center">Discount Value</th>
+										<th class="text-center">Start Time</th>
+										<th class="text-center">End Time</th>
+										<th class="text-center">Quantity</th>
+										<th class="text-center">Status</th>
+										<th class="text-center">Enable</th>
+										<th class="text-center">Action</th>
 									</tr>
 								</thead>
 
 								<tbody>
-									<tr>
-										<th>1</th>
-										<td>SALE20K</td>
-										<td>Giảm 20K đơn 199K</td>
-										<td>Áp dụng toàn sàn cho đơn từ 199K</td>
-										<td>20K</td>
-										<td>Active</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<th>1</th>
-										<td>FREESHIP50</td>
-										<td>Freeship đơn 50K</td>
-										<td>Miễn phí vận chuyển cho đơn từ 50K</td>
-										<td>100%</td>
-										<td>Active</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<th>1</th>
-										<td>NEWUSER10</td>
-										<td>Ưu đãi tân thủ</td>
-										<td>Chỉ áp dụng cho tài khoản mới đăng ký</td>
-										<td>10%</td>
-										<td>Active</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<th>1</th>
-										<td>FASHION15</td>
-										<td>Thời trang -15%</td>
-										<td>Áp dụng danh mục Thời trang, đơn từ 100K</td>
-										<td>15%</td>
-										<td>Active</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<th>1</th>
-										<td>BEAUTY30</td>
-										<td>Làm đẹp giảm 30K</td>
-										<td>Sản phẩm chăm sóc cá nhân, đơn từ 200K</td>
-										<td>30K</td>
-										<td>Active</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<th>1</th>
-										<td>FLASH5</td>
-										<td>Flash Sale -5%</td>
-										<td>Áp dụng trong khung giờ 12-13h</td>
-										<td>5%</td>
-										<td>Sắp hết hạn</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<th>1</th>
-										<td>EXPIRED50</td>
-										<td>Giảm 50K đơn 500K</td>
-										<td>Chỉ áp dụng cho nhóm Điện tử</td>
-										<td>50K</td>
-										<td>Expired</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
-									<tr>
-										<th>1</th>
-										<td>XMAS2025</td>
-										<td>Giáng Sinh Ưu Đãi</td>
-										<td>Áp dụng từ 20-25/12, toàn bộ đơn hàng</td>
-										<td>25%</td>
-										<td>Chưa bắt đầu</td>
-										<td class="text-end"> <a class="btn btn-sm font-sm rounded btn-brand mr-5"
-												th:href="@{/vendor/promotion/edit}"><i class="material-icons md-edit"></i>
-												Edit
-											</a>
-											<a class="btn btn-sm font-sm btn-light rounded" href="#">
-												<i class="material-icons md-delete_forever"></i>
-												Delete
-											</a>
-										</td>
-									</tr>
+									<th:block th:each="coupon : ${coupons}">
+										<tr>
+											<td th:text="${coupon.products.name}" class="text-center"></td>
+											<td th:if="${coupon.discountUnit == 'percent'}" class="text-center">
+												<th:block
+													th:text="${#numbers.formatDecimal(coupon.discountValue * 100, 0, 0)}">
+												</th:block>%
+											</td>
+											<td th:if="${coupon.discountUnit == 'money'}" class="text-center">$
+												<th:block
+													th:text="${#numbers.formatDecimal(coupon.discountValue, 0, 'COMMA', 2, 'POINT')}">
+												</th:block>
+											</td>
+											<td class="text-center">
+												<th:block
+													th:text="${#dates.format(coupon.startTime, 'dd/MM/yyyy HH:mm:ss')}">
+												</th:block>
+											</td>
+											<td class="text-center">
+												<th:block
+													th:text="${#dates.format(coupon.endTime, 'dd/MM/yyyy HH:mm:ss')}">
+												</th:block>
+											</td>
+											
+											<td class="text-center">
+												<th:block th:text="${coupon.quantity}"></th:block>
+											</td>
+											<td class="text-center"
+												th:if="${#dates.format(coupon.startTime, 'yyyyMMddHHmmss') >= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}">
+												<span class="badge rounded-pill alert-warning">
+													<th:block th:text="${'Invalid'}"></th:block>
+												</span>
+											</td>
+											<td class="text-center"
+												th:if="${#dates.format(coupon.startTime, 'yyyyMMddHHmmss') <= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss') && #dates.format(coupon.endTime, 'yyyyMMddHHmmss') >= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}">
+												<span class="badge rounded-pill alert-success">
+													<th:block th:text="${'Valid'}"></th:block>
+												</span>
+											</td>
+											<td class="text-center"
+												th:if="${#dates.format(coupon.endTime, 'yyyyMMddHHmmss') <= #dates.format(#dates.createNow(), 'yyyyMMddHHmmss')}">
+												<span class="badge rounded-pill alert-danger">
+													<th:block th:text="${'Expired'}"></th:block>
+												</span>
+											</td>
+											<td th:if="${coupon.redeemAllowed}" class="text-center text-success">
+												<th:block th:text="Enable">
+												</th:block>
+											</td>
+											<td th:if="${!coupon.redeemAllowed}" class="text-center text-danger">
+												<th:block th:text="Disable">
+												</th:block>
+											</td>
+											<td class="text-center">
+												<a class="btn btn-sm font-sm rounded btn-danger text-white"
+													th:href="@{'/vendor/coupon/delete/' + ${coupon.id}}" onclick="return confirmDelete(event)">
+													<i class="material-icons md-delete"></i>
+												</a>
+												<script>
+													function confirmDelete(event) {
+														event.preventDefault(); // Ngừng hành động mặc định của link (không chuyển hướng ngay lập tức)
+
+														// Hiển thị SweetAlert2
+														Swal.fire({
+															title: 'Are you sure?',
+															text: 'Do you want to delete!',
+															icon: 'warning',
+															showCancelButton: true,
+															confirmButtonText: 'Yes, delete it!',
+															cancelButtonText: 'No, keep it'
+														}).then((result) => {
+															if (result.isConfirmed) {
+																// Nếu người dùng xác nhận, điều hướng đến URL
+																window.location.href = event.target.href;
+															}
+														});
+													}
+												</script>
+											</td>
+										</tr>
+									</th:block>
+
 								</tbody>
 
 							</table>
@@ -193,18 +405,92 @@
 			</div>
 
 		</div>
-		<div class="pagination-area mt-15 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
-				</ul>
-			</nav>
-		</div>
+		<!-- all coupon -->
+		<th:block th:if="${selectedStatus == null && !#lists.isEmpty(coupons)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'"><a class="page-link"
+								th:href="@{'/vendor/coupon/list?page=' + ${0}+'&pageSize='+${pageSize}+'&filter='+${selectedFilter}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a></li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a class="page-link"
+								th:href="@{'/vendor/coupon/list?page=' + ${currentPages-1}+'&pageSize='+${pageSize}+'&filter='+${selectedFilter}}"
+								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link"
+									th:href="@{'/vendor/coupon/list?page=' + ${i}+'&pageSize='+${pageSize}+'&filter='+${selectedFilter}}"
+									th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+								th:href="@{'/vendor/coupon/list?page=' + ${currentPages+1}+'&pageSize='+${pageSize}+'&filter='+${selectedFilter}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+								th:href="@{'/vendor/coupon/list?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&filter='+${selectedFilter}}"
+								aria-label="Next"><i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
+
+		<!-- Search By Reddem ALlow -->
+		<th:block th:if="${selectedStatus != null && selectedFilter == null && !#lists.isEmpty(coupons)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'"><a class="page-link"
+								th:href="@{'/vendor/coupon/searchByRedeemAllow?page=' + ${0}+'&pageSize='+${pageSize}+'&status='+${selectedStatus}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a></li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a class="page-link"
+								th:href="@{'/vendor/coupon/searchByRedeemAllow?page=' + ${currentPages-1}+'&pageSize='+${pageSize}+'&status='+${selectedStatus}}"
+								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
+
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link"
+									th:href="@{'/vendor/coupon/searchByRedeemAllow?page=' + ${i}+'&pageSize='+${pageSize}+'&status='+${selectedStatus}}"
+									th:text="${i + 1}"></a></li>
+						</th:block>
+
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+								th:href="@{'/vendor/coupon/searchByRedeemAllow?page=' + ${currentPages+1}+'&pageSize='+${pageSize}+'&status='+${selectedStatus}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+							<a class="page-link"
+								th:href="@{'/vendor/coupon/searchByRedeemAllow?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}+'&status='+${selectedStatus}}"
+								aria-label="Next"><i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
 	</section>
 </body>
