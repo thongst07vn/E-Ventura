@@ -36,7 +36,7 @@
 							</div>
 							<div class="box-payment">
 								<a id="payment-cod"
-									class="btn btn-gpay justify-content-center payment-clickable">
+									class="btn btn-gpay justify-content-center payment-clickable onselected-checkout">
 									<img th:src="@{/assets/imgs/page/checkout/cod2.png}">
 								</a> <a id="payment-paypal"
 									class="btn btn-amazon justify-content-center payment-clickable">
@@ -817,6 +817,7 @@
 												<div class="wishlist-product">
 													<div class="product-wishlist">
 														<div class="product-image">
+															<input class="cartItemId" type="hidden" th:value="${item.cartItem.id}" />
 															<a href="shop-single-product.html"> <th:block
 																	th:if="${item.cartItem.products.mediases[0].name.contains('https:')}">
 																	<img
@@ -834,7 +835,7 @@
 														<div class="product-info">
 															<a href="shop-single-product.html">
 																<h6 class="color-brand-3"
-																	th:text="${item.cartItem.products.name}"></h6>
+																	th:text="${item.cartItem.products.name} + ' ' + ${item.combination}"></h6>
 															</a>
 															<div class="rating"></div>
 														</div>
@@ -869,7 +870,7 @@
 									<!-- choose voucher -->
 									<div class="form-group d-flex mx-4">
 										<div class="input-group">
-											<input type="text" class="form-control"
+											<input type="text" class="form-control" th:id="'chooseVoucherInput_'+${vendorItems.key.id}"
 												placeholder="Choose Your Voucher" readonly="readonly">
 											<div class="input-group-append">
 												<button th:id="'chooseVoucherButton_'+${vendorItems.key.id}"
@@ -878,10 +879,15 @@
 										</div>
 									</div>
 									<script>
+									var vendorMap = new Map();
+									var voucherIdMap = new Map();
+									
 								$(document).ready(function() {
+								
+									
 									$(document).on('click','#chooseVoucherButton_[[${vendorItems.key.id}]]',function(event){
 										var vendorId = $(this).attr('id').split('_')[1];
-										console.log(vendorId);
+										
 										$('#chooseVoucherModal_[[${vendorItems.key.id}]]').modal('show');
 									});
 									$(document).on('click','#saveVoucher_[[${vendorItems.key.id}]]',function(){
@@ -890,7 +896,50 @@
 								        var vendorId = modalId.split('_')[1];
 								        const $selectedVoucherInput = $modal.find('input[name="voucherForVendor_' + vendorId + '"]:checked');
 								        if ($selectedVoucherInput.length > 0) {
-								        	
+								        	var voucherId = $selectedVoucherInput.attr('id').split('_')[1];
+								        	var userId = '[[${user.id}]]';
+								        	 
+								           fetch('/customer/cart/apply-voucher', { 
+										        method: 'POST',
+										        headers: {
+										            'Content-Type': 'application/json',
+										        },
+										        body: JSON.stringify({
+										            vendorId: vendorId,
+										            voucherId: voucherId,
+										            userId: userId
+										        }),
+										    })
+										    .then(response => response.json())
+										    .then(data => {
+										        if (data.success) {
+										        	var voucherIdArray = [];
+										            var discount = 0;
+										            vendorMap.set('[[${vendorItems.key.id}]]',data.discountAmount);
+										            voucherIdMap.set('[[${vendorItems.key.id}]]',voucherId);
+										            
+										            
+										            for(var voucher of voucherIdMap.values()){
+										            	voucherIdArray = voucherIdArray.concat(voucher);
+										            }
+										            $('#vouchers').val(voucherIdArray.join(','))
+										            console.log($('#vouchers').val());
+										            for(var amount of vendorMap.values()){
+										            	discount += parseFloat(amount);
+										            }
+										        	$('#subTotalText').html(discount);
+										        	updateTotal();
+										    		$('#chooseVoucherModal_[[${vendorItems.key.id}]]').modal('hide');
+										    		
+										            
+										        } else {
+										            alert('Áp dụng voucher thất bại: ' + data.message);
+										        }
+										    })
+										    .catch((error) => {
+										        console.error('Lỗi khi gửi yêu cầu:', error);
+										        alert('Đã xảy ra lỗi khi áp dụng voucher.');
+										    });      	
 								        }
 									});
 								
@@ -920,8 +969,8 @@
 																	<input class="form-check-input" type="radio"
 																		th:id="'voucherRadio_'+${voucherByVendor.id}"
 																		th:name="'voucherForVendor_'+${vendorItems.key.id}"
-																		value="voucherId1"> <label
-																		class="form-check-label w-100"
+																		value="unselected"> <label
+																		class="form-check-label w-100 voucherIds"
 																		th:data-voucher-radio-vendor="'voucherByVendor_'+${voucherByVendors.key}"
 																		th:for="'voucherRadio_'+${voucherByVendor.id}">
 																		<div
@@ -977,14 +1026,22 @@
 							</div>
 
 							<div class="form-group mb-0">
-								<div class="row mb-10">
-									<div class="col-lg-6 col-6">
+								<div class="row mb-10"  >
+									<div class="col-lg-6 col-6" >
 										<span class="font-md-bold color-brand-3">Subtotal</span>
 									</div>
 									<div class="col-lg-6 col-6 text-end d-flex justify-content-end">
 										<span class="font-lg-bold color-brand-3">$</span>
 										<div class="font-lg-bold color-brand-3" th:text=${subTotal}></div>
 									</div>
+									<div class="col-lg-6 col-6" >
+										<span class="font-md-bold color-brand-3">&nbsp;</span>
+									</div>
+									<div class="col-lg-6 col-6 text-end d-flex justify-content-end">
+										<span class="font-lg-bold color-brand-3">-$</span>
+										<div class="font-lg-bold color-brand-3" id="subTotalText">0</div>
+									</div>
+
 								</div>
 								<div class="form-group mb-0">
 									<div class="row mb-10">
@@ -1009,10 +1066,61 @@
 										</div>
 									</div>
 									<script>
-										$(document).on('click','#chooseVoucherButtonTotal',function(event){
-											
-											$('#chooseVoucherModalTotal').modal('show');
-										});
+									function updateTotal(){
+										var total = parseFloat('[[${subTotal}]]');
+											console.log('begin Total: '+total);
+										if($('#subTotalText').text() != '0'){
+											total -= parseFloat($('#subTotalText').text());
+										}
+										if($('#totalDiscountAmount').text() != '0'){
+											total -= parseFloat($('#totalDiscountAmount').text());
+										}
+										$('#total').html(total);
+										$('#orderTotal').val(parseFloat(total));
+									}
+									function updateTotalVoucher(){
+								        const selectedVoucherId = $('input[name="voucherForEventura"]:checked').attr('id').split('_')[1];
+								        const currentTotal = parseFloat($('#total').text());
+								        if (selectedVoucherId) {  
+									        $.ajax({
+									                url: '/customer/cart/apply-total-voucher', // **CHANGE THIS TO YOUR ACTUAL ENDPOINT**
+									                type: 'POST',
+									                contentType: 'application/json', // <--- ADD THIS LINE
+									                data: JSON.stringify({ // <--- STRINGIFY YOUR DATA TO JSON
+									                    voucherId: selectedVoucherId,
+									                    currentTotal: currentTotal
+									                }),
+									                success: function(response) {
+									                    if (response.success) {
+									                     	console.log(response.discountAmount);
+															$('#totalDiscountAmount').text(response.discountAmount);
+															$('#voucherEventura').val(selectedVoucherId);
+															console.log($('#voucherEventura').val());
+															updateTotal();
+									                        $('#chooseVoucherModalTotal').modal('hide'); // Hide the modal on success
+									                    } else {
+									                        alert('Error applying voucher: ' + response.message);
+									                    }
+									                },
+									                error: function(xhr, status, error) {
+									                    console.error('AJAX Error:', status, error);
+									                    alert('An error occurred while applying the voucher. Please try again.');
+									                }
+									            });
+								        } else {
+								            alert('Please select a voucher.');
+								        }
+									}
+									
+									$(document).on('click','#chooseVoucherButtonTotal',function(event){
+								        $('#chooseVoucherModalTotal').modal('show');
+								    });
+
+								    $(document).on('click', '#voucherTotalButton', function(event) {
+								    	
+								        	updateTotalVoucher();
+								         
+								    });
 									</script>
 									<div class="modal fade" th:id="chooseVoucherModalTotal"
 										tabindex="-1" aria-labelledby="chooseVoucherModalTotal"
@@ -1032,7 +1140,8 @@
 														<div class="form-check mb-3 p-3 border rounded bg-light">
 															<input class="form-check-input" type="radio"
 																th:id="'voucherRadio_'+${voucherTotal.id}"
-																value="voucherId1"> <label
+																name="voucherForEventura"
+																value="unselected"> <label
 																class="form-check-label w-100"
 																th:for="'voucherRadio_'+${voucherTotal.id}">
 																<div
@@ -1066,49 +1175,72 @@
 																</p>
 															</label>
 														</div>
-
-
 													</th:block>
 													<div class="text-center p-4"
 														th:if="${#lists.isEmpty(voucherByEventura)}">
 														<p class="text-muted">No vouchers available at the
 															moment.</p>
 													</div>
-
-
-
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-cart-delete w-auto"
 														data-bs-dismiss="modal">Close</button>
 													<button type="button" class="btn btn-cart w-auto"
-														id="editAddressSubmitButton">Save changes</button>
+														id="voucherTotalButton">Save changes</button>
 												</div>
 											</div>
 										</div>
 									</div>
 									<div class="row">
+									<div class="col-lg-6 col-6">
+											<span class="font-md-bold color-brand-3">&nbsp;</span>
+										</div>
+										<div class="col-lg-6 col-6 text-end d-flex justify-content-end">
+											<span class="font-lg-bold color-brand-3">-$</span>
+											<h4 id="totalDiscountAmount" class="font-lg-bold color-brand-3">0</h4>
+										</div>
 										<div class="col-lg-6 col-6">
 											<span class="font-md-bold color-brand-3">Total</span>
 										</div>
-										<div class="col-lg-6 col-6 text-end">
-											<span class="font-lg-bold color-brand-3">$6.51</span>
+										<div class="col-lg-6 col-6 text-end d-flex justify-content-end">
+											<span class="font-lg-bold color-brand-3">$</span>
+											<h4 id="total" class="font-lg-bold color-brand-3" th:text="${total}"></h4>
 										</div>
+										
 									</div>
 								</div>
 							</div>
-							<div class="row mt-20">
-								<div class="col-lg-6 col-7 mb-20 text-end">&nbsp;</div>
-								<div class="col-lg-6 col-7 mb-20 text-end">
-									<a class="btn btn-buy w-auto arrow-next"
-										href="shop-checkout.html">Place an Order</a>
+							<form method="post" th:action="@{/customer/cart/process-checkout}">		
+								<input type="hidden" th:field="${newOrder.paymentMethod}">						
+								<input type="hidden" th:field="${newOrder.userAddress}">						
+													
+								<input id="orderTotal" type="hidden" th:field="${newOrder.totalAmount}">						
+								<input id="cartItems" type="hidden"	name="cartItems"/>				
+								<input id="vouchers" type="hidden" name="vouchers"/>				
+								<input id="voucherEventura" type="hidden" name="voucherEventura"/>				
+								<div class="row mt-20">
+									<div class="col-lg-6 col-7 mb-20 text-end">&nbsp;</div>
+									<div class="col-lg-6 col-7 mb-20 text-end">
+										<button class="btn btn-buy w-auto arrow-next"
+											type="submit">Place an Order</button>
+									</div>
 								</div>
-							</div>
+							</form>							
 						</div>
 					</div>
 				</div>
 				<script>
 					$(document).ready(function(){
+						var cartItemIds = []; 
+						
+						
+						$('.cartItemId').each(function() {
+							cartItemIds.push($(this).val());						    
+						});
+						
+						$('#cartItems').val(cartItemIds.join(','));
+						$('#orderTotal').val('[[${total}]]');
+						$('.card-clickable:first').addClass('onselected-checkout');
 						$('.payment-clickable').on('click',function(){
 							
 					        $('.payment-clickable').removeClass('onselected-checkout');

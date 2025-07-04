@@ -48,6 +48,17 @@ public class OrderServiceImpl implements OrderService {
 		return orderRepository.findAll(pageable);
 	}
 
+	@Override
+	public boolean saveOrder(Orders order) {
+		try {
+			orderRepository.save(order);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	
 	
 	

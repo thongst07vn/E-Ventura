@@ -33,11 +33,11 @@ import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.helpers.FileHelper;
 import com.eventura.services.AddressService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
-import com.example.demo.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 

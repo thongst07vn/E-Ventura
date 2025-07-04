@@ -24,7 +24,7 @@ public class Commissions implements java.io.Serializable {
 	private Integer id;
 	private Orders orders;
 	private Vendors vendors;
-	private long amount;
+	private double amount;
 	private Date createdAt;
 	private Date updatedAt;
 
@@ -72,11 +72,11 @@ public class Commissions implements java.io.Serializable {
 	}
 
 	@Column(name = "amount", nullable = false, precision = 10, scale = 0)
-	public long getAmount() {
+	public double getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(long amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 
