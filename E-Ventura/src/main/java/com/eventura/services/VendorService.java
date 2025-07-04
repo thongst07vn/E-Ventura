@@ -38,4 +38,6 @@ public interface VendorService {
 	public Page<Vendors> findAllVendorsByDeletedAtISNOTNUL(Pageable pageable);
 	public Page<Vendors> findVendorsByDeletedAtNOTNULLByKeyword(String keyword, Pageable pageable);
 	public Page<Vendors> findVendorsByDeletedAtISNULLByKeyword(String keyword, Pageable pageable);
+	
+	public boolean saveVendorEarning(VendorEarnings vendorEarnings);
 }

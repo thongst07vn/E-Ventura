@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.eventura.entities.Commissions;
 import com.eventura.entities.Districts;
 import com.eventura.entities.Provinces;
 import com.eventura.entities.UserAddress;
@@ -29,6 +30,17 @@ public class CommissionsServiceImpl implements CommissionsService {
 	public double sumCommission() {
 		// TODO Auto-generated method stub
 		return commissionsRepository.sumCommissions();
+	}
+
+	@Override
+	public boolean saveCommission(Commissions commission) {
+		try {
+			commissionsRepository.save(commission);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 	

@@ -39,13 +39,13 @@ import com.eventura.entities.ProductVariants;
 import com.eventura.entities.Products;
 import com.eventura.entities.Roles;
 import com.eventura.entities.Vendors;
+import com.eventura.helpers.FileHelper;
 import com.eventura.services.CategoryService;
 import com.eventura.services.MediaService;
 import com.eventura.services.ProductService;
 import com.eventura.services.ProductVariantService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
-import com.example.demo.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 

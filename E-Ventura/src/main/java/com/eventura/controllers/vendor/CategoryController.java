@@ -26,10 +26,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.VendorProductCategory;
+import com.eventura.helpers.FileHelper;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.VendorProductCategoryService;
-import com.example.demo.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 

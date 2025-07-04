@@ -52,4 +52,15 @@ public class OrderItemServiceImpl implements OrderItemService{
 		// TODO Auto-generated method stub
 		return orderItemRepository.findOrderItemsByOrderIdPage(orderId,pageable);
 	}
+
+	@Override
+	public boolean saveOrderItems(OrderItems orderItems) {
+		try {
+			orderItemRepository.save(orderItems);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

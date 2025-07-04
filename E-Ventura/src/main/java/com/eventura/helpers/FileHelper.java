@@ -1,4 +1,4 @@
-package com.example.demo.helpers;
+package com.eventura.helpers;
 
 import java.util.UUID;
 

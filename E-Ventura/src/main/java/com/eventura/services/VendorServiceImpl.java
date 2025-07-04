@@ -149,4 +149,15 @@ public class VendorServiceImpl implements VendorService {
 		return vendorRepository.findVendorsByDeletedAtNOTNULLByKeyword(keyword, pageable);
 	}
 
+	@Override
+	public boolean saveVendorEarning(VendorEarnings vendorEarnings) {
+		try {
+			vendorEarningRepository.save(vendorEarnings);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }
