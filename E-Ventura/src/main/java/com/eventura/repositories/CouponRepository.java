@@ -43,5 +43,20 @@ public interface CouponRepository extends JpaRepository<Coupons, Integer> {
 	
 	@Query("FROM Coupons WHERE deletedAt IS NULL and products.name like %:keyword%")
 	Page<Coupons> findByKeyword(@Param("keyword") String keyword,Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and endTime <= current_timestamp() and vendors.id = :vendor_id")
+	public Page<Coupons> findAllCouponExpiredByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and startTime >= current_timestamp() and vendors.id = :vendor_id")
+	public Page<Coupons> findAllCouponInvalidByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id = :vendor_id")
+	public Page<Coupons> findAllCouponValidByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and redeemAllowed = true and vendors.id = :vendor_id")
+	public Page<Coupons> findAllCouponsEnableByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
+	
+	@Query("FROM Coupons WHERE deletedAt IS NULL and redeemAllowed = false and vendors.id = :vendor_id")
+	public Page<Coupons> findAllCouponsDisableByVendorId(@Param("vendor_id") int  vendor_id, Pageable pageable);
 
 }
