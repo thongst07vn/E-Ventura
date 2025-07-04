@@ -26,4 +26,7 @@ public interface VendorReviewsRepository extends JpaRepository<VendorReviews, In
 	
 	@Query("FROM VendorReviews WHERE vendors.id = :id")
 	public Page<VendorReviews>  findVendorReviewPage(@Param("id") int id, Pageable pageable);
+
+	@Query("FROM VendorReviews WHERE vendors.id = :vendorId AND users.id = :userId")
+	public VendorReviews  findVendorReviewByUserAndVendorId(@Param("id") int vnedorId,@Param("id") int userId);
 }

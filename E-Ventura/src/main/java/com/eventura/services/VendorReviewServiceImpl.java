@@ -46,6 +46,12 @@ public class VendorReviewServiceImpl implements VendorReviewService {
 		// TODO Auto-generated method stub
 		return vendorReviewsRepository.avgVendorReview(vendorId);
 	}
+
+	@Override
+	public VendorReviews findVendorReviewByUserAndVendorId(int vendorId, int userId) {
+		// TODO Auto-generated method stub
+		return vendorReviewsRepository.findVendorReviewByUserAndVendorId(vendorId, userId);
+	}
 	
 
 }

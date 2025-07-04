@@ -18,5 +18,5 @@ public interface VendorReviewService {
 	
 	public double avgVendorReview(int vendorId);
 
-
+	public VendorReviews findVendorReviewByUserAndVendorId(int vendorId, int userId);
 }
