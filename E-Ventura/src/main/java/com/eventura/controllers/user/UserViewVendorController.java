@@ -40,18 +40,21 @@ import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.entities.VendorReviews;
+import com.eventura.entities.Vendors;
 import com.eventura.services.AddressService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
+import com.eventura.services.VendorReviewService;
 import com.eventura.services.VendorService;
 import com.eventura.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({ "customer"})
+@RequestMapping({ "customer" })
 
 public class UserViewVendorController {
 
@@ -63,13 +66,17 @@ public class UserViewVendorController {
 
 	@Autowired
 	private ProductService productService;
-	
+
 	@Autowired
 	private VendorProductCategoryService vendorProductCategoryService;
 
-	@GetMapping({ "vendor/{id}"})
-	public String home(ModelMap modelMap,HttpSession session, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "12") int pageSize,@PathVariable("id") int id) {
+	@Autowired
+	private VendorReviewService vendorReviewService;
+
+	@GetMapping({ "vendor/{id}" })
+	public String home(ModelMap modelMap, HttpSession session, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "12") int pageSize, @PathVariable("id") int id, Authentication authentication,
+			@AuthenticationPrincipal UserDetails userDetails) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<Products> productPage = productService.findByVendorIdPage(id, pageable);
 		// Khởi tạo một List để chứa các ProductDTO
@@ -79,9 +86,10 @@ public class UserViewVendorController {
 		for (Products product : productPage) {
 			if (product.getDeletedAt() == null) {
 				if (!productService.findProductReview(product.getId()).isEmpty()) {
-					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId()),productService.countProductReview(product.getId())));
+					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId()),
+							productService.countProductReview(product.getId())));
 				} else {
-					productDTOList.add(new ProductDTO(product, 0,0));
+					productDTOList.add(new ProductDTO(product, 0, 0));
 				}
 			}
 
@@ -103,6 +111,24 @@ public class UserViewVendorController {
 			modelMap.put("avgVendorReview", 0);
 			modelMap.put("widthVendor", Math.min(0, 5) * 20);
 		}
+		VendorReviews vendorReviews = null;
+        Users currentUser = null;
+
+        if (userDetails != null) {
+            currentUser = userService.findByEmail(userDetails.getUsername());
+        } else if (authentication != null && authentication.getPrincipal() instanceof AccountOAuth2User) {
+            AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+            currentUser = userService.findByEmail(accountOAuth2User.getEmail());
+        }
+
+        if (currentUser != null) {
+            // Lấy vendorReview dựa trên vendorId và userId
+            // Cần vendorId, không phải productId như bạn đang dùng productService.findById(id).getVendors().getId()
+            // Tham số 'id' ở đây là vendorId trực tiếp từ URL.
+            vendorReviews = vendorReviewService.findVendorReviewByUserAndVendorId(id, currentUser.getId());
+        }
+
+        modelMap.put("vendorReviews", vendorReviews);
 		modelMap.put("products", productDTOPage.getContent());
 		modelMap.put("currentPages", page);
 		modelMap.put("totalPages", productPage.getTotalPages());
@@ -111,17 +137,48 @@ public class UserViewVendorController {
 		modelMap.put("vendorAddresses", userService.findAddressUser(id));
 		return "customer/pages/vendor/index";
 	}
-	@PostMapping("follow")
-	public String followVendor(@RequestParam("vendorId") int vendorId,Authentication authentication,@AuthenticationPrincipal UserDetails userDetails) {
+
+	@PostMapping("toggleFollow")
+	public String followVendor(@RequestParam("vendorId") int vendorId, Authentication authentication,
+			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("actionType") String actionType) {
+		Vendors vendor = vendorService.findById(vendorId);
 		if (userDetails != null) {
 			Users user = userService.findByEmail(userDetails.getUsername());
-			
+			VendorReviews vendorReviews = vendorReviewService.findVendorReviewByUserAndVendorId(vendorId, user.getId());
+			if (vendorReviews != null) {
+				if (!vendorReviews.isFollow()) {
+					vendorReviews.setFollow(true);
+				} else {
+					vendorReviews.setFollow(false);
+				}
+			} else {
+				if ("follow".equals(actionType)) {
+					vendorReviews =	new VendorReviews(user,vendor,0,false,new Date(), new Date());
+				} else if ("unfollow".equals(actionType)) {
+					vendorReviews = new VendorReviews(user,vendor,0,true,new Date(), new Date());
+				}
+			}
+			vendorReviewService.save(vendorReviews);
 		} else if (authentication != null) {
 			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
 			Users user = userService.findByEmail(accountOAuth2User.getEmail());
-			
+			VendorReviews vendorReviews = vendorReviewService.findVendorReviewByUserAndVendorId(vendorId, user.getId());
+			if (vendorReviews != null) {
+				if (!vendorReviews.isFollow()) {
+					vendorReviews.setFollow(false);
+				} else {
+					vendorReviews.setFollow(true);
+				}
+			} else {
+				if ("follow".equals(actionType)) {
+					vendorReviews = new VendorReviews(user,vendor,0,false,new Date(), new Date());
+				} else if ("unfollow".equals(actionType)) {
+					vendorReviews = new VendorReviews(user,vendor,0,true,new Date(), new Date());
+				}
+			}
+			vendorReviewService.save(vendorReviews);
 		}
-		
-		return "redirect:/customer/vendor/"+vendorId;
+
+		return "redirect:/customer/vendor/" + vendorId;
 	}
 }
