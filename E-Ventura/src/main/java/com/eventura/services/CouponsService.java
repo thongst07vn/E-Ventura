@@ -27,5 +27,12 @@ public interface CouponsService{
 	public Page<Coupons> findByKeyword(String keyword, Pageable pageable);
 	public Coupons findById(int id);
 	public boolean save(Coupons coupons);
+	public Page<Coupons> findAllCouponExpiredByVendorId(int vendorId, Pageable pageable);
+	public Page<Coupons> findAllCouponInValidByVendorId(int vendorId, Pageable pageable);
+	public Page<Coupons> findAllCouponValidByVendorId(int vendorId, Pageable pageable);
+	
+	public Page<Coupons> findAllCouponsEnableByVendorId(int vendorId, Pageable pageable);
+	public Page<Coupons> findAllCouponsDisableByVendorId(int vendorId, Pageable pageable);
+	
 
 }

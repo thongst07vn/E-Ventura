@@ -17,4 +17,11 @@ import com.eventura.entities.Vendors;
 public interface ProductVariantRepository extends JpaRepository<ProductVariants, Integer> {
 	@Query("from ProductVariants where products.id = :productId")
 	public List<ProductVariants>  findByProductId(@Param("productId") int productId);
+	
+	@Query("from ProductVariants where products.id = :productId and productAttributes.id = :productAttributeId and LOWER(value) = LOWER(:value)")
+	public ProductVariants findByProductIdAndProductAttributeAndValue(@Param("productId") int productId, @Param("productAttributeId") int productAttributeId, @Param("value") String value);
+	
+	@Query("from ProductVariants where products.id = :productId and LOWER(value) = LOWER(:value)")
+	public ProductVariants findByProductIdAndValue(@Param("productId") int productId, @Param("value") String value);
+	
 }

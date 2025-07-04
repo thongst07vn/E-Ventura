@@ -1,6 +1,7 @@
 package com.eventura.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,6 +51,25 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public ProductVariants findByProductIdAndProductAttributeAndValue(int productId, int productAttributeId,
+			String value) {
+		// TODO Auto-generated method stub
+		return productVariantRepository.findByProductIdAndProductAttributeAndValue(productId, productAttributeId, value);
+	}
+
+	@Override
+	public Optional<ProductVariants> findById(Integer id) {
+		// TODO Auto-generated method stub
+		return productVariantRepository.findById(id);
+	}
+
+	@Override
+	public ProductVariants findByProductIdAndValue(int productId, String value) {
+		// TODO Auto-generated method stub
+		return productVariantRepository.findByProductIdAndValue(productId, value);
 	}
 	
 }

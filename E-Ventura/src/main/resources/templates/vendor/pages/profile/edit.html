@@ -16,68 +16,96 @@
 
 					<div class="col-lg-12">
 						<section class="content-body p-xl-4">
-							<form>
+							<form method="POST" th:action="@{/vendor/profile/edit}" enctype="multipart/form-data"
+								id="editProfileForm">
 								<div class="row">
 									<div class="col-lg-8">
+
 										<div class="row gx-3">
 
 											<div class="col-6 mb-3">
 												<label class="form-label">First name</label>
-												<input class="form-control" type="text" th:field="${user.firstName}">
+												<input class="form-control" type="text" th:field="${user.firstName}"
+													id="firstNameEdit" name="firstName" required>
+												<div class="invalid-feedback">Please enter First Name.</div>
+												<input class="form-control" type="hidden" th:field="${user.id}">
+												<input class="form-control" type="hidden" th:field="${user.password}">
+
+
 											</div>
 											<!-- col .//-->
 											<div class="col-6 mb-3">
 												<label class="form-label">Last name</label>
-												<input class="form-control" type="text" th:field="${user.lastName}">
+												<input class="form-control" type="text" th:field="${user.lastName}"
+													id="lastNameEdit" name="lastName" required>
+												<div class="invalid-feedback">Please enter Last Name.</div>
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
-												<label class="form-label">Email</label>
-												<input class="form-control" type="email" th:field="${user.email}">
+												<label class="form-label">Email </label>
+												<input class="form-control" type="email" th:field="${user.email}"
+													id="emailEdit" name="email" required readonly>
+												<div class="invalid-feedback">Please enter Email.</div>
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
-												<label class="form-label">Phone</label>
-												<input class="form-control" type="tel" th:field="${user.phoneNumber}">
+												<label class="form-label">Phone </label>
+												<input class="form-control" type="tel" th:field="${user.phoneNumber}"
+													id="phoneNumberEdit" name="phoneNumber" required>
+												<div class="invalid-feedback">Please enter Phone Number.</div>
 											</div>
 											<!-- col .//-->
 											<div class="col-lg-12 mb-3">
-												<label class="form-label">Address</label>
-												<input class="form-control mb-2" type="text" th:field="${user.userAddresses[0].address}">
+
+												<label class="form-label">Address </span>
+												</label>
+												<input class="form-control mb-2" type="text"
+													th:field="${userAdresses.address}" id="addressDetailEdit"
+													name="addressDetail" required>
+												<div class="invalid-feedback">Please enter Address details.</div>
+												<input class="form-control mb-2" type="hidden"
+													th:field="${userAdresses.id}">
+												<span th:text="${msgErrorPDW}" class="text-danger"></span>
 
 												<div class="row gx-2">
 													<div class="col-md-6 mb-2">
 														<!-- Province -->
-														<select class="form-select" id="provinceSelect" th:field="${user.userAddresses[0].provinces.code}">
+														<select class="form-select" id="provinceSelect"
+															th:field="${userAdresses.provinces.code}">
 															<option value="" disabled selected>Chọn Tỉnh/Thành</option>
 															<option th:each="province : ${provinces}"
-															        th:value="${province.code}"
-															        th:text="${province.name}">
+																th:value="${province.code}" th:text="${province.name}">
 															</option>
 														</select>
+														<div class="invalid-feedback">Please select Province.</div>
+
 													</div>
 
 													<div class="col-md-6 mb-2">
 
 														<!-- District -->
-														<select class="form-select" id="districtSelect" th:field="${user.userAddresses[0].districts.code}">
+														<select class="form-select" id="districtSelect"
+															th:field="${userAdresses.districts.code}">
 															<option value="" disabled selected>Chọn Quận/Huyện</option>
 															<option th:each="district : ${districts}"
-															        th:value="${district.code}"
-															        th:text="${district.name}">
+																th:value="${district.code}" th:text="${district.name}">
 															</option>
 														</select>
+														<div class="invalid-feedback">Please select District.</div>
+
 													</div>
 
 													<div class="col-md-6 mb-2">
 														<!-- Ward -->
-														<select class="form-select" id="wardSelect" th:field="${user.userAddresses[0].wards.code}">
+														<select class="form-select" id="wardSelect"
+															th:field="${userAdresses.wards.code}">
 															<option value="" disabled selected>Chọn Phường/Xã</option>
-															<option th:each="ward : ${wards}"
-															        th:value="${ward.code}"
-															        th:text="${ward.name}">
+															<option th:each="ward : ${wards}" th:value="${ward.code}"
+																th:text="${ward.name}">
 															</option>
 														</select>
+														<div class="invalid-feedback">Please select Ward.</div>
+
 													</div>
 												</div>
 											</div>
@@ -85,7 +113,15 @@
 											<!-- col .//-->
 											<div class="col-lg-6 mb-3">
 												<label class="form-label">Birthday</label>
-												<input class="form-control" type="date" th:field="${user.birthOfDate}">
+												<input class="form-control" type="date" th:field="${user.birthOfDate}"
+													id="birthOfDateEdit" name="birthOfDate" required>
+												<div class="invalid-feedback">Please enter Birthday.</div>
+											</div>
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Username </label>
+												<input class="form-control" type="text" th:field="${user.username}"
+													id="usernameEdit" name="username" required readonly>
+												<div class="invalid-feedback">Please enter Username.</div>
 											</div>
 											<!-- col .//-->
 											<!-- row.//-->
@@ -95,23 +131,300 @@
 									<aside class="col-lg-4">
 										<figure class="text-lg-center">
 											<th:block th:if="${user.avatar.contains('https:')}">
-												<img th:src="${user.avatar}">							
+												<img id="userAvatar" class="img-lg mb-3 img-avatar"
+													th:src="${user.avatar}" alt="User Photo">
 											</th:block>
 											<th:block th:if="${!user.avatar.contains('https:')}">
-												<img th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}">							
+												<img id="userAvatar" class="img-lg mb-3 img-avatar"
+													th:src="@{'/assets/imgs/avatars/'+${user.avatar}}" alt="User Photo">
 											</th:block>
-											<p>Username: <span th:text="${user.username}"></span></p>
 
-											<figcaption><a class="btn btn-light rounded font-md" href="#"><i
-														class="icons material-icons md-backup font-md"></i> Upload</a>
+
+											<figcaption>
+												<input type="file" name="file" id="actualFileInput" hidden
+													accept=".png,.jpg"> <a href="#" class="btn btn-cart w-auto"
+													id="uploadButton">
+													Upload </a>
+
+
+												<script type="text/javascript">
+													document
+														.addEventListener(
+															'DOMContentLoaded',
+															function () {
+																const actualFileInput = document
+																	.getElementById('actualFileInput');
+																const uploadButton = document
+																	.getElementById('uploadButton');
+																const userAvatar = document
+																	.getElementById('userAvatar'); // Get the image element
+
+																// Store the previous object URL to revoke it later for memory management
+																let currentObjectURL = null;
+
+																// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
+																uploadButton
+																	.addEventListener(
+																		'click',
+																		function (
+																			event) {
+																			event
+																				.preventDefault(); // Prevent the default anchor link behavior
+																			actualFileInput
+																				.click(); // Programmatically click the hidden file input
+																		});
+
+																// When a file is selected in the hidden input, update the display and the image src
+																actualFileInput
+																	.addEventListener(
+																		'change',
+																		function () {
+																			if (this.files
+																				&& this.files.length > 0) {
+																				const selectedFile = this.files[0];
+
+																				// Create a URL for the selected file
+																				const fileURL = URL
+																					.createObjectURL(selectedFile);
+
+																				// If there was a previous object URL, revoke it to free up memory
+																				if (currentObjectURL) {
+																					URL
+																						.revokeObjectURL(currentObjectURL);
+																				}
+																				currentObjectURL = fileURL; // Store the new object URL
+
+																				// Set the src of the image to the new file URL
+																				userAvatar.src = fileURL;
+
+																			}
+																		});
+
+																// Optional: Store the initial avatar URL if you ever want to revert
+																// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
+
+																// Clean up object URLs when the page unloads to prevent memory leaks
+																window
+																	.addEventListener(
+																		'beforeunload',
+																		function () {
+																			if (currentObjectURL) {
+																				URL
+																					.revokeObjectURL(currentObjectURL);
+																			}
+																		});
+															});
+												</script>
 											</figcaption>
 										</figure>
 									</aside>
 									<!-- col.//-->
 									<!-- row.//-->
 								</div><br>
-								<button class="btn btn-primary" type="submit">Save changes</button>
+								<button class="btn btn-primary" type="submit" id="saveChangesButton">Save
+									changes</button>
 							</form>
+							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+							<script
+								src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+							<script
+								src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+							<script>
+								$(document).ready(function () {
+									const $editProfileForm = $('#editProfileForm');
+									const $saveChangesButton = $('#saveChangesButton');
+
+									$saveChangesButton.on('click', function (event) {
+										event.preventDefault(); // Ngăn chặn submit form mặc định
+
+										// Reset trạng thái validation trước đó
+										$editProfileForm.find('.form-control, .form-select').removeClass('is-invalid');
+										$editProfileForm.find('.invalid-feedback').text('');
+
+										let isValid = true; // Cờ theo dõi trạng thái hợp lệ của form
+
+										// Lặp qua tất cả các trường có thuộc tính 'required'
+										$editProfileForm.find('[required]').each(function () {
+											const $input = $(this);
+											const inputId = $input.attr('id');
+
+											// Debug: Log giá trị của các trường để kiểm tra
+											if (inputId === 'provinceSelectEdit' || inputId === 'districtSelectEdit' || inputId === 'wardSelectEdit' || inputId === 'addressDetailEdit' || inputId === 'firstNameEdit' || inputId === 'lastNameEdit' || inputId === 'emailEdit' || inputId === 'phoneNumberEdit' || inputId === 'birthOfDateEdit' || inputId === 'usernameEdit') {
+												console.log(`Checking ${inputId}: Value = "${$input.val()}" (trimmed: "${$input.val().trim()}")`);
+											}
+
+											// Kiểm tra nếu giá trị rỗng hoặc chỉ toàn khoảng trắng
+											if (!$input.val().trim()) {
+												$input.addClass('is-invalid'); // Thêm class 'is-invalid' để hiển thị lỗi Bootstrap
+
+												// Thiết lập thông báo lỗi cụ thể
+												let feedbackMessage = 'This field is required.'; // Thông báo mặc định
+
+												if (inputId === 'firstNameEdit') {
+													feedbackMessage = 'Please enter your First Name.';
+												} else if (inputId === 'lastNameEdit') {
+													feedbackMessage = 'Please enter your Last Name.';
+												} else if (inputId === 'emailEdit') {
+													feedbackMessage = 'Please enter your Email.';
+												} else if (inputId === 'phoneNumberEdit') {
+													feedbackMessage = 'Please enter your Phone Number.';
+												} else if (inputId === 'addressDetailEdit') {
+													feedbackMessage = 'Please enter your Address details.';
+												} else if (inputId === 'provinceSelectEdit') {
+													feedbackMessage = 'Please select a Province.';
+												} else if (inputId === 'districtSelectEdit') {
+													feedbackMessage = 'Please select a District.';
+												} else if (inputId === 'wardSelectEdit') {
+													feedbackMessage = 'Please select a Ward.';
+												} else if (inputId === 'birthOfDateEdit') {
+													feedbackMessage = 'Please enter your Birthday.';
+												} else if (inputId === 'usernameEdit') {
+													feedbackMessage = 'Please enter your Username.';
+												}
+
+												$input.next('.invalid-feedback').text(feedbackMessage); // Cập nhật text của invalid-feedback
+
+												isValid = false; // Đặt cờ form là không hợp lệ
+											}
+										});
+
+										// Nếu tất cả các validation đã pass, submit form
+										if (isValid) {
+											$editProfileForm.submit();
+										}
+									});
+
+									// ===============================================
+									// Logic cho Province/District/Ward (tương tự như trước)
+									// ===============================================
+									const provinceSelect = document.getElementById("provinceSelectEdit");
+									const districtSelect = document.getElementById("districtSelectEdit");
+									const wardSelect = document.getElementById("wardSelectEdit");
+
+									// Hàm để load districts
+									function loadDistricts(provinceCode) {
+										districtSelect.innerHTML = '<option value="" disabled selected>Loading...</option>';
+										wardSelect.innerHTML = '<option value="" disabled selected>Chọn Phường/Xã</option>';
+										wardSelect.disabled = true;
+
+										if (provinceCode) {
+											fetch(`/api/address/districts?provinceCode=${provinceCode}`)
+												.then(response => {
+													if (!response.ok) {
+														throw new Error(`HTTP error! status: ${response.status}`);
+													}
+													return response.json();
+												})
+												.then(data => {
+													districtSelect.innerHTML = '<option value="" disabled selected>Chọn Quận/Huyện</option>';
+													if (data && data.length > 0) {
+														data.forEach(district => {
+															const option = document.createElement("option");
+															option.value = district.code;
+															option.text = district.name; // Sửa lại thành district.name
+															districtSelect.appendChild(option);
+														});
+														districtSelect.disabled = false;
+													} else {
+														districtSelect.innerHTML = '<option value="" disabled selected>Không có Quận/Huyện</option>';
+														districtSelect.disabled = true;
+													}
+												})
+												.catch(error => {
+													console.error('Error fetching districts:', error);
+													districtSelect.innerHTML = '<option value="" disabled selected>Lỗi tải Quận/Huyện</option>';
+													districtSelect.disabled = true;
+													Swal.fire({icon: 'error', title: 'Error', text: 'Failed to load districts. Please try again.', showConfirmButton: false, timer: 3000});
+												});
+										} else {
+											districtSelect.innerHTML = '<option value="" disabled selected>Chọn Quận/Huyện</option>';
+											districtSelect.disabled = true;
+										}
+									}
+
+									// Hàm để load wards
+									function loadWards(districtCode) {
+										wardSelect.innerHTML = '<option value="" disabled selected>Loading...</option>';
+
+										if (districtCode) {
+											fetch(`/api/address/wards?districtCode=${districtCode}`)
+												.then(response => {
+													if (!response.ok) {
+														throw new Error(`HTTP error! status: ${response.status}`);
+													}
+													return response.json();
+												})
+												.then(data => {
+													wardSelect.innerHTML = '<option value="" disabled selected>Chọn Phường/Xã</option>';
+													if (data && data.length > 0) {
+														data.forEach(ward => {
+															const option = document.createElement("option");
+															option.value = ward.code;
+															option.text = ward.name; // Sửa lại thành ward.name
+															wardSelect.appendChild(option);
+														});
+														wardSelect.disabled = false;
+													} else {
+														wardSelect.innerHTML = '<option value="" disabled selected>Không có Phường/Xã</option>';
+														wardSelect.disabled = true;
+													}
+												})
+												.catch(error => {
+													console.error('Error fetching wards:', error);
+													wardSelect.innerHTML = '<option value="" disabled selected>Lỗi tải Phường/Xã</option>';
+													wardSelect.disabled = true;
+													Swal.fire({icon: 'error', title: 'Error', text: 'Failed to load wards. Please try again.', showConfirmButton: false, timer: 3000});
+												});
+										} else {
+											wardSelect.innerHTML = '<option value="" disabled selected>Chọn Phường/Xã</option>';
+											wardSelect.disabled = true;
+										}
+									}
+
+									// Gắn sự kiện change
+									provinceSelect.addEventListener("change", function () {
+										loadDistricts(this.value);
+									});
+
+									districtSelect.addEventListener("change", function () {
+										loadWards(this.value);
+									});
+
+									// Xử lý khi trang được tải lần đầu (nếu có dữ liệu cũ)
+									// Nếu userAdresses.provinces.code đã có giá trị từ Thymeleaf, load districts tương ứng
+									// (Đây là logic nếu bạn muốn tự động điền các dropdown khi trang tải lần đầu)
+									// Ví dụ:
+									const initialProvinceCode = provinceSelect.value;
+									const initialDistrictCode = districtSelect.value;
+
+									if (initialProvinceCode) {
+										// Nếu có province được chọn ban đầu, load districts
+										loadDistricts(initialProvinceCode);
+									} else {
+										// Nếu không có province được chọn, vô hiệu hóa district và ward
+										districtSelect.disabled = true;
+										wardSelect.disabled = true;
+									}
+
+									// Thêm một DOMContentLoaded listener riêng nếu bạn muốn, nhưng jQuery ready là đủ
+									document.addEventListener('DOMContentLoaded', function () {
+										// JavaScript to display SweetAlert2 based on flash attributes
+										const sweetAlertStatus = '[[${sweetAlert}]]';
+										const sweetAlertMessage = '[[${message}]]';
+
+										if (sweetAlertStatus && sweetAlertMessage) {
+											Swal.fire({
+												icon: sweetAlertStatus,
+												title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+												text: sweetAlertMessage,
+												showConfirmButton: false,
+												timer: 3000
+											});
+										}
+									});
+								});
+							</script>
 							<hr class="my-5">
 							<div class="row" style="max-width:920px">
 								<div class="col-md">
@@ -143,54 +456,73 @@
 			</div>
 		</div>
 
-		
+
 		<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const provinceSelect = document.getElementById("provinceSelect");
-			const districtSelect = document.getElementById("districtSelect");
-			const wardSelect = document.getElementById("wardSelect");
+			document.addEventListener("DOMContentLoaded", function () {
+				const provinceSelect = document.getElementById("provinceSelect");
+				const districtSelect = document.getElementById("districtSelect");
+				const wardSelect = document.getElementById("wardSelect");
 
-			provinceSelect.addEventListener("change", function () {
-				const provinceCode = this.value;
-				districtSelect.innerHTML = '<option selected disabled>Loading...</option>';
-				wardSelect.innerHTML = '<option selected disabled>Ward</option>';
-				wardSelect.disabled = true;
+				provinceSelect.addEventListener("change", function () {
+					const provinceCode = this.value;
+					districtSelect.innerHTML = '<option selected disabled>Loading...</option>';
+					wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+					wardSelect.disabled = true;
 
-				fetch(`/api/address/districts?provinceCode=${provinceCode}`)
-				    .then(response => response.json())
-				    .then(data => {
-				        console.log(data);
-				        // Clear existing options BEFORE adding new ones
-				        districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
-				        data.forEach(district => {
-				            const option = document.createElement("option");
-				            option.value = district.code;
-				            option.text = district.name;
-				            districtSelect.appendChild(option);
-				        });
-				        districtSelect.disabled = false;
-				    })
-				    .catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
-			});
+					fetch(`/api/address/districts?provinceCode=${provinceCode}`)
+						.then(response => response.json())
+						.then(data => {
+							console.log(data);
+							// Clear existing options BEFORE adding new ones
+							districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
+							data.forEach(district => {
+								const option = document.createElement("option");
+								option.value = district.code;
+								option.text = district.name;
+								districtSelect.appendChild(option);
+							});
+							districtSelect.disabled = false;
+						})
+						.catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
+				});
 
-			districtSelect.addEventListener("change", function () {
-				const districtCode = this.value;
-				wardSelect.innerHTML = '<option selected disabled>Loading...</option>';
+				districtSelect.addEventListener("change", function () {
+					const districtCode = this.value;
+					wardSelect.innerHTML = '<option selected disabled>Loading...</option>';
 
-				fetch(`/api/address/wards?districtCode=${districtCode}`)
-					.then(response => response.json())
-					.then(data => {
-						wardSelect.innerHTML = '<option selected disabled>Ward</option>';
-						data.forEach(ward => {
-							const option = document.createElement("option");
-							option.value = ward.code;
-							option.text = ward.name;
-							wardSelect.appendChild(option);
+					fetch(`/api/address/wards?districtCode=${districtCode}`)
+						.then(response => response.json())
+						.then(data => {
+							wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+							data.forEach(ward => {
+								const option = document.createElement("option");
+								option.value = ward.code;
+								option.text = ward.name;
+								wardSelect.appendChild(option);
+							});
+							wardSelect.disabled = false;
 						});
-						wardSelect.disabled = false;
-					});
+				});
 			});
-		});
+		</script>
+
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+		<script>
+			// JavaScript to display SweetAlert2 based on flash attributes
+			document.addEventListener('DOMContentLoaded', function () {
+				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+				if (sweetAlertStatus && sweetAlertMessage) {
+					Swal.fire({
+						icon: sweetAlertStatus, // 'success' or 'error'
+						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						text: sweetAlertMessage,
+						showConfirmButton: false,
+						timer: 3000 // Automatically close after 3 seconds
+					});
+				}
+			});
 		</script>
 	</section>
 </body>

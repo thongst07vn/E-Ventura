@@ -120,6 +120,41 @@ public class VouchersServiceImpl implements VouchersService {
 	}
 
 
+	@Override
+	public Page<Vouchers> findAllVoucherExpiredByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherExpiredByVendorId(vendorId, pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllVoucherInValidByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherInvalidByVendorId(vendorId, pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllVoucherValidByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherValidByVendorId(vendorId, pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllVoucherEnableByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherEnableByVendorId(vendorId, pageable);
+	}
+
+
+	@Override
+	public Page<Vouchers> findAllVoucherDisableByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return voucherRepository.findAllVoucherDisableByVendorId(vendorId, pageable);
+	}
+
+
 	
 	
 }

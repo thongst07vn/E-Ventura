@@ -1,0 +1,87 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('Add Product', ~{this :: .content-main})}">
+
+<head>
+	<title>Add Promotion</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="row">
+			<div class="col-9">
+				<div class="content-header">
+					<h2 class="content-title">Add New Promotion</h2>
+					<div>
+						<button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
+						<button class="btn btn-md rounded font-sm hover-up">Publich</button>
+					</div>
+				</div>
+			</div>
+			<div>
+				<a th:href="@{/vendor/promotion/list}" class="btn btn-primary mb-3">Promotion List</a>
+			</div>
+			<div class="col-lg-12">
+				<div class="card mb-4">
+					<div class="card-header">
+						<h4>Basic</h4>
+					</div>
+					<div class="card-body">
+						<form>
+							<div class="row">
+								<div class="col-lg-6">
+									<div class="mb-4">
+										<label class="form-label">Code</label>
+										<div class="row gx-2"></div>
+										<input class="form-control" type="text">
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="mb-4">
+										<label class="form-label">Percent (%)</label>
+										<div class="row gx-2"></div>
+										<input class="form-control" id="product_name" type="number" placeholder="%">
+									</div>
+								</div>
+
+							</div>
+
+							<div class="mb-4">
+								<label class="form-label" for="product_name">Name</label>
+								<input class="form-control" id="product_name" type="text" placeholder="Type here">
+							</div>
+
+							<div class="mb-4">
+								<label class="form-label">Full description</label>
+								<div id="editor" style="height: 200px;"></div>
+							</div>
+							<input type="hidden" name="description" id="description">
+
+							<div class="row">
+								<div class="col-lg-6">
+									<div class="mb-4">
+										<label class="form-label">Start Date</label>
+										<div class="row gx-2"></div>
+										<input class="form-control" type="date">
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="mb-4">
+										<label class="form-label">End Date</label>
+										<div class="row gx-2"></div>
+										<input class="form-control" id="product_name" type="date">
+									</div>
+								</div>
+							</div>
+
+							<div>
+								<button class="btn btn-primary">Add Promotion</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+</body>

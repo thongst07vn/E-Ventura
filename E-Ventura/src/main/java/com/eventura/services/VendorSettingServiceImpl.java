@@ -18,7 +18,7 @@ public class VendorSettingServiceImpl implements VendorSettingService {
 	@Override
 	public List<VendorSettings> findAll() {
 		// TODO Auto-generated method stub
-		return vendorSettingRepository.findAll();
+		return vendorSettingRepository.findAllDeleteAt();
 	}
 
 	@Override

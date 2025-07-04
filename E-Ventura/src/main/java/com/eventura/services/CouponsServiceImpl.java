@@ -104,5 +104,35 @@ public class CouponsServiceImpl implements CouponsService {
 		}
 	}
 
+	@Override
+	public Page<Coupons> findAllCouponExpiredByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponExpiredByVendorId(vendorId, pageable);
+	}
+
+	@Override
+	public Page<Coupons> findAllCouponInValidByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponInvalidByVendorId(vendorId, pageable);
+	}
+
+	@Override
+	public Page<Coupons> findAllCouponValidByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponValidByVendorId(vendorId, pageable);
+	}
+
+	@Override
+	public Page<Coupons> findAllCouponsEnableByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponsEnableByVendorId(vendorId, pageable);
+	}
+
+	@Override
+	public Page<Coupons> findAllCouponsDisableByVendorId(int vendorId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return couponRepository.findAllCouponsDisableByVendorId(vendorId, pageable);
+	}
+
 
 }

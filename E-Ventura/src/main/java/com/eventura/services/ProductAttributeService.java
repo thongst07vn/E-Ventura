@@ -17,5 +17,5 @@ public interface ProductAttributeService {
 	public boolean delete(int id);
 	
 	public ProductAttributes findByName(String keyword);
-
+	
 }
