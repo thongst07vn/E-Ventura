@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -157,6 +158,24 @@ public class CouponController  {
 			return "redirect:/vendor/coupon/list";
 		}
 	}
+	
+	@GetMapping("delete/{id}")
+	public String delete(@PathVariable("id") int id,
+					      RedirectAttributes redirectAttributes) {
+		
+		Coupons coupon = couponService.findById(id);
+		coupon.setDeletedAt(new Date());
+		if(couponService.save(coupon)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Delete coupon successfully!");
+		}else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Delete coupon failed!");
+		}
+
+		return "redirect:/vendor/voucher/list";
+	}
+	
 	
 	@GetMapping("edit")
 	public String couponEdit(ModelMap modelMap) {
