@@ -111,4 +111,17 @@ public class UserViewVendorController {
 		modelMap.put("vendorAddresses", userService.findAddressUser(id));
 		return "customer/pages/vendor/index";
 	}
+	@PostMapping("follow")
+	public String followVendor(@RequestParam("vendorId") int vendorId,Authentication authentication,@AuthenticationPrincipal UserDetails userDetails) {
+		if (userDetails != null) {
+			Users user = userService.findByEmail(userDetails.getUsername());
+			
+		} else if (authentication != null) {
+			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+			Users user = userService.findByEmail(accountOAuth2User.getEmail());
+			
+		}
+		
+		return "redirect:/customer/vendor/"+vendorId;
+	}
 }

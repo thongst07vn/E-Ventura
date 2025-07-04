@@ -59,6 +59,10 @@
 									<span class="font-xs color-gray-500 font-medium"> (<th:block
 											th:text="${countVendorReview}"></th:block>)
 									</span>
+									<form method="post" th:action="@{customer/follow}">
+										<input type="hidden" name="vendorId" th:value="${vendor.id}">
+										<button type="button" class="btn btn-outline-primary btn-sm mt-1">Follow</button>
+									</form>
 								</div>
 								<div class="vendor-contact">
 									<div class="row">
