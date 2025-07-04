@@ -173,7 +173,7 @@ public class CouponController  {
 			redirectAttributes.addFlashAttribute("message", "Delete coupon failed!");
 		}
 
-		return "redirect:/vendor/voucher/list";
+		return "redirect:/vendor/coupon/list";
 	}
 	
 	
