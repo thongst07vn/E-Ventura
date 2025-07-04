@@ -437,11 +437,14 @@ public class ProductController {
 
 			redirectAttributes.addFlashAttribute("sweetAlert", "success");
 			redirectAttributes.addFlashAttribute("message", "Delete Product Successfully");
+			return "redirect:/vendor/product/list";
+
 		} else {
 			redirectAttributes.addFlashAttribute("sweetAlert", "error");
 			redirectAttributes.addFlashAttribute("message", "Delete Product Failed");
+			return "redirect:/vendor/product/list";
+
 		}
-		return "redirect:/vendor/product/list";
 	}
 
 	@GetMapping("review")
