@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
+import com.eventura.entities.VendorReviews;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
+import com.eventura.services.VendorReviewService;
 import com.eventura.services.VendorService;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,6 +35,8 @@ public class StoreController  {
 	private ProductService productService;
 	@Autowired
 	private CategoryService categoryService;
+	@Autowired
+	private VendorReviewService vendorReviewService;
 
 	
 	/*===================== STORE =====================*/
@@ -109,8 +113,24 @@ public class StoreController  {
 	}
 	
 	@GetMapping("review")
-	public String storeReview(ModelMap modelMap) {
+	public String storeReview(ModelMap modelMap, HttpSession session,
+							 @RequestParam(defaultValue = "0") int page,
+							 @RequestParam(defaultValue = "10") int pageSize) {
 		modelMap.put("currentPage", "review");
+		Integer vendorId = (Integer) session.getAttribute("vendorId");
+		
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<VendorReviews> vendorReviewsPage = vendorReviewService.findVendorReviewByVendorId(vendorId, pageable);
+		
+		modelMap.put("vendorReviews", vendorReviewsPage.getContent());
+		modelMap.put("currentPages", page);
+		modelMap.put("totalPage", vendorReviewsPage.getTotalPages());
+		modelMap.put("lastPageIndex", vendorReviewsPage.getTotalPages() - 1);
+
+		modelMap.put("vendor", vendorService.findById(vendorId));
+		modelMap.put("avgRating", vendorReviewService.avgVendorReview(vendorId));
+		modelMap.put("count", vendorReviewService.countVendorReview(vendorId));
+		
 
 		return "vendor/pages/store/review";
 	}
