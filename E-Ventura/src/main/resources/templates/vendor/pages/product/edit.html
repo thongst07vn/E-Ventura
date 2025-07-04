@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{vendor/layouts/layout :: layout('Edit Product', ~{this :: .content-main})}">
 
@@ -5,18 +6,35 @@
 	<title></title>
 	<style>
 		.thumbnail-container {
-			display: flex;
-			gap: 10px;
-			flex-wrap: wrap;
+		    display: flex;
+		    gap: 10px;
+		    flex-wrap: wrap;
+		    /* Optional: căn giữa các ảnh nếu có ít ảnh */
+		    /* justify-content: flex-start; */
+		    /* align-items: flex-start; */
 		}
 
-		.thumbnail-preview {
-			width: 100px;
-			height: 100px;
-			object-fit: cover;
-			border: 1px solid #ccc;
-			border-radius: 4px;
-			padding: 3px;
+		/* Đảm bảo img-wrapper là một flex item linh hoạt */
+		.img-wrapper {
+		    /* Đảm bảo không có display: block; hoặc width: 100% không cần thiết */
+		    /* Bạn có thể đặt kích thước cố định ở đây nếu muốn mỗi wrapper có kích thước nhất định */
+		    width: 100px; /* Kích thước tương tự như thumbnail-preview */
+		    height: 100px;
+		    border: 1px solid #ccc;
+		    border-radius: 4px;
+		    padding: 3px;
+		    box-sizing: border-box; /* Quan trọng để padding không làm tăng kích thước */
+		    overflow: hidden; /* Đảm bảo ảnh không tràn ra ngoài */
+		    display: flex; /* Dùng flex cho wrapper để căn giữa ảnh bên trong */
+		    justify-content: center;
+		    align-items: center;
+		}
+
+		.img-wrapper img { /* Áp dụng cho ảnh bên trong wrapper */
+		    width: 100%; /* Ảnh lấp đầy wrapper */
+		    height: 100%;
+		    object-fit: cover;
+		    display: block; /* Đảm bảo img là block để object-fit hoạt động tốt */
 		}
 	</style>
 
@@ -35,10 +53,8 @@
 							</i> Go back</a>
 						<br>
 					</div>
-
-
-
 				</div>
+
 				<div class="col-lg-6">
 					<div class="card mb-4">
 						<div class="card-header">
@@ -46,25 +62,26 @@
 						</div>
 						<div class="card-body">
 							<div class="mb-4">
-								<label class="form-label" for="product_name">Product title <span th:text="${msgErrorName}" class="text-danger"></span></label>
+								<label class="form-label" for="product_name">Product title <span
+										th:text="${msgErrorName}" class="text-danger"></span></label>
 								<input class="form-control" id="product_name" type="text" th:field="${product.name}">
 								<input class="form-control" type="hidden" th:field="${product.id}">
 								<input class="form-control" type="hidden" name="proId" th:value=${product.id}>
-
 							</div>
-
 
 							<div class="row">
 								<div class="col-lg-4">
 									<div class="mb-4">
-										<label class="form-label">Price <span th:text="${msgErrorPrice}" class="text-danger"></span></label>
+										<label class="form-label">Price <span th:text="${msgErrorPrice}"
+												class="text-danger"></span></label>
 										<div class="row gx-2"></div>
 										<input class="form-control" type="number" th:field="${product.price}">
 									</div>
 								</div>
 								<div class="col-lg-4">
 									<div class="mb-4">
-										<label class="form-label">Quantity <span th:text="${msgErrorQuantity}" class="text-danger"></span></label>
+										<label class="form-label">Quantity <span th:text="${msgErrorQuantity}"
+												class="text-danger"></span></label>
 										<div class="row gx-2"></div>
 										<input class="form-control" type="number" th:field="${product.quantity}">
 									</div>
@@ -73,13 +90,14 @@
 								<div class="col-lg-4">
 									<label class="form-label">Currency</label>
 									<input class="form-control" value="USD" type="text" readonly>
-
 								</div>
 								<div class="mb-4">
-									<label class="form-label">Full description <span th:text="${msgErrorDescription}" class="text-danger"></span></label>
+									<label class="form-label">Full description </label>
 									<br>
-									<textarea class="form-control" cols="90" rows="8"
-										th:field=${product.description}></textarea>
+									<textarea class="form-control" cols="90" rows="15" id="productDescription" 
+										th:field="${product.description}" required
+										th:classappend="${msgErrorDescription} ? 'is-invalid' : ''"></textarea>
+									<div class="invalid-feedback">Please enter a product description.</div>
 								</div>
 								<div class="mb-4">
 									<label class="form-label">Category</label>
@@ -89,11 +107,9 @@
 									</select>
 								</div>
 							</div>
-
-
-
 						</div>
 					</div>
+
 					<div class="card mb-4">
 						<div class="card-header">
 							<h4 class="mb-0">Product Variations</h4>
@@ -104,139 +120,49 @@
 									<thead class="table-light">
 										<tr>
 											<th scope="col" class="text-center">Attribute</th>
-											<th scope="col" class="text-center">Value</th>											
+											<th scope="col" class="text-center">Value</th>
 											<th scope="col" class="text-center">Quantity</th>
-
 											<th scope="col" class="text-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
 										<th:block th:each="productVariant, i : ${productVariants}">
-											<tr th:data-id="${productVariant.id}" th:data-product-id="${product.id}" th:data-attribute-id="${productVariant.productAttributes.id}">
+											<tr th:data-id="${productVariant.id}" th:data-product-id="${product.id}"
+												th:data-attribute-id="${productVariant.productAttributes.id}">
 												<td th:text="${i.index == 0 || productVariants[i.index - 1].productAttributes.name != productVariant.productAttributes.name} ? ${productVariant.productAttributes.name} : ''"
-												    class="text-center editable-attribute" ondblclick="editField(this, 'attribute')">
+													class="text-center editable-attribute"
+													ondblclick="editField(this, 'attribute')">
 												</td>
-												<td th:text="${productVariant.value}" class="text-center editable-value" ondblclick="editField(this, 'value')">
+												<td th:text="${productVariant.value}" class="text-center editable-value"
+													ondblclick="editField(this, 'value')">
 												</td>
-												<td th:text="${productVariant.quantity}" class="text-center editable-quantity" ondblclick="editField(this, 'quantity')">
+												<td th:text="${productVariant.quantity}"
+													class="text-center editable-quantity"
+													ondblclick="editField(this, 'quantity')">
 												</td>
 
 												<td class="text-center">
 													<a class="btn btn-sm btn-danger"
-															th:href="@{'/vendor/productVariant/delete/' + ${productVariant.id} + '?productId=' + ${product.id}}"
-															onclick="return confirmDelete(event)">Delete
+														th:href="@{'/vendor/productVariant/delete/' + ${productVariant.id} + '?productId=' + ${product.id}}"
+														onclick="return confirmDelete(event)">Delete
 													</a>
-														
-														<script>
-															function confirmDelete(event) {
-																event.preventDefault(); // Ngừng hành động mặc định của link (không chuyển hướng ngay lập tức)
-
-																// Hiển thị SweetAlert2 DELETE
-																Swal.fire({
-																	title: 'Are you sure?',
-																	text: 'Do you want to delete !',
-																	icon: 'warning',
-																	showCancelButton: true,
-																	confirmButtonText: 'Yes, delete it!',
-																	cancelButtonText: 'No, keep it'
-																}).then((result) => {
-																	if (result.isConfirmed) {
-																		// Nếu người dùng xác nhận, điều hướng đến URL
-																		window.location.href = event.target.href;
-																	}
-																});
-															}
-														</script>
-
 												</td>
 											</tr>
 										</th:block>
-										<!-- Thêm dòng khác nếu cần -->
 									</tbody>
 								</table>
-								
-								<!-- ================ EDIT VARIANT =================== -->
-								<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-								<script>
-									function editField(cell, fieldType) {
-									    const originalValue = cell.innerText.trim();
-									    const input = document.createElement('input');
-									    input.type = 'text';
-									    input.value = originalValue;
-									    cell.innerHTML = '';
-									    cell.appendChild(input);
-									    input.focus();
-
-									    // Lấy productId từ thuộc tính data-product-id của dòng (tr)
-									    const productId = cell.closest('tr').getAttribute('data-product-id');  // Lấy productId
-										const attributeId = cell.closest('tr').getAttribute('data-attribute-id');  // Lấy productId
-
-
-									    input.addEventListener('keydown', function (e) {
-									        if (e.key === 'Enter') {
-									            const newValue = input.value;
-									            const id = cell.closest('tr').getAttribute('data-id');  // Lấy productVariant ID từ dòng
-									            updateProductVariant(id, productId, attributeId, fieldType, newValue);  // Truyền productId vào hàm update
-									            cell.innerHTML = newValue;
-									        }
-									    });
-									}
-
-
-									function updateProductVariant(id, productId, attributeId, field, value) {
-									    $.ajax({
-									        url: `/vendor/api/product-variant/update/${productId}/${attributeId}/${id}`,  // Truyền cả productId và id vào URL
-									        type: 'PUT',
-									        data: {
-									            field: field,
-									            value: value
-									        },
-									        success: function(response) {
-									            Swal.fire({
-									                icon: 'success',
-									                title: 'Save successful!',
-									                text: response,
-									                showConfirmButton: false,
-									                timer: 1500
-									            });
-									        },
-									        error: function(xhr, status, error) {
-									            Swal.fire({
-									                icon: 'error',
-									                title: 'Error!',
-									                text: xhr.responseText || 'Something went wrong. Please try again.',
-									                showConfirmButton: false,
-									                timer: 1500
-									            });
-									        }
-									    });
-									}
-
-									</script>
-
-
-
-								<!-- ================ EDIT VARIANT =================== -->
-
-
-								
-								<!-- Nút Submit -->
 								<div style="float: right">
-									<!-- Button trigger modal -->
 									<button type="button" class="btn btn-primary" data-bs-toggle="modal"
 										data-bs-target="#exampleModal">
 										<i class="material-icons md-plus"></i>Add Variant
 									</button>
-
-
 								</div>
-
 							</div>
 						</div>
 					</div>
-
 				</div>
+
 				<div class="col-lg-4">
 					<div class="card mb-4">
 						<div class="card-header">
@@ -245,7 +171,6 @@
 						<div class="card-body">
 							<div class="input-upload">
 								<th:block th:if="${not #lists.isEmpty(product.mediases)}">
-									<!-- Ảnh cũ -->
 									<div class="thumbnail-container" id="existingImagesContainer">
 										<th:block th:each="media : ${product.mediases}">
 											<div class="img-wrapper" th:attr="data-id=${media.id}">
@@ -255,23 +180,15 @@
 											</div>
 										</th:block>
 									</div>
-
-									<!-- Hidden inputs chứa ID ảnh bị xóa -->
 									<div id="deletedImageIdsContainer"></div>
-
 								</th:block>
 
-
-								<!-- Nếu không có ảnh -->
 								<th:block th:if="${#lists.isEmpty(product.mediases)}">
 									<img class="img-md img-thumbnail" th:src="@{'/assets/imgs/others/noimg.jpg'}"
 										alt="No Image">
 								</th:block>
 
-								<!-- Hidden inputs để gửi ID ảnh cũ bị xoá -->
 								<div id="deletedImageIdsContainer"></div>
-
-								<!-- Ảnh mới -->
 								<div class="thumbnail-container" id="newImagesContainer"></div>
 								<input class="form-control mt-3" type="file" multiple id="imageInput" accept="image/*"
 									name="files">
@@ -279,148 +196,220 @@
 						</div>
 					</div>
 				</div>
-				<!-- Nút Submit -->
+
 				<div>
 					<button class="btn btn-primary" type="submit">Edit Product</button>
 				</div>
+			</div>
 		</form>
 
-			<!-- Modal -->
-			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-				aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h1 class="modal-title fs-5" id="exampleModalLabel">Add Variant</h1>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-						</div>
-						<div class="modal-body">
-							<form method="POST" th:action="@{/vendor/productVariant/add}" id="formAdd">
-								<input type="hidden" name="productId" th:value="${product.id}" />
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Add Variant</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form method="POST" th:action="@{/vendor/productVariant/add}" id="formAdd">
+							<input type="hidden" name="productId" th:value="${product.id}" />
 
-								<div>
-									<div class="mb-4">
-										<label class="form-label">Attribute <span id="variantNameError" class="mt-3" style="color: red;"></span></label>
-										<input class="form-control" type="text"
-											th:field="${productAttribute.name}"  id="variantName"/>
-									</div>
+							<div>
+								<div class="mb-4">
+									<label class="form-label">Attribute <span id="variantNameError" class="mt-3"
+											style="color: red;"></span></label>
+									<input class="form-control" type="text" th:field="${productAttribute.name}"
+										id="variantName" />
+								</div>
 
-									<div class="row">
-										<div class="col-lg-8">
-											<div class="mb-4">
-												<label class="form-label">Value</label>
-												<input class="form-control" th:field="${productVariant.value}" />
-											</div>
+								<div class="row">
+									<div class="col-lg-8">
+										<div class="mb-4">
+											<label class="form-label">Value</label>
+											<input class="form-control" th:field="${productVariant.value}" />
 										</div>
-										<div class="col-lg-4">
-											<div class="mb-4">
-												<label class="form-label">Quantity</label>
-												<div class="row gx-2"></div>
-												<input class="form-control" type="number"
-													th:field="${productVariant.quantity}">
-											</div>
+									</div>
+									<div class="col-lg-4">
+										<div class="mb-4">
+											<label class="form-label">Quantity</label>
+											<div class="row gx-2"></div>
+											<input class="form-control" type="number"
+												th:field="${productVariant.quantity}">
 										</div>
 									</div>
 								</div>
-
-							<!--	<div class="modal-footer">
-									<button type="button" class="btn btn-secondary"
-										data-bs-dismiss="modal">Close</button>
-									<button type="submit" class="btn btn-primary">Save changes</button>
-								</div>-->
-							</form>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary" id="formButtonAdd">Save
-									changes</button>
 							</div>
-							<script>
-								document.getElementById('formButtonAdd').addEventListener('click', function (event) {
-								    const VariantName = document.getElementById('variantName');
-								    const VariantNameError = document.getElementById('variantNameError');
-								    VariantNameError.textContent = '';  // Sửa lỗi này, không phải cateNameError
-
-								    if (VariantName.value.trim() === '') {
-								        VariantNameError.textContent = 'Variant name is required.';  // Kiểm tra lại lỗi ở đây
-								        event.preventDefault(); // Ngừng gửi form nếu không hợp lệ
-								    } else {
-								        document.getElementById('formAdd').submit();  // Gửi form khi hợp lệ
-								    }
-								});
-
-							</script>
+						</form>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary" id="formButtonAdd">Save
+								changes</button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<!-- Modal -->
-			>
-			</div>
-			<!-- Modal -->
+		</div>
 
-		<script>
-			document.getElementById("imageInput").addEventListener("change", function (event) {
-				const files = Array.from(event.target.files);
-				const newContainer = document.getElementById("newImagesContainer");
-				const existingContainer = document.getElementById("existingImagesContainer");
-				const deletedContainer = document.getElementById("deletedImageIdsContainer");
+		<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
-				// Xoá tất cả ảnh cũ khỏi giao diện và tạo input hidden để gửi deleteMediaIds[]
-				const oldImages = existingContainer.querySelectorAll(".img-wrapper");
-				oldImages.forEach(wrapper => {
-					const id = wrapper.getAttribute("data-id");
-					if (id) {
-						const hiddenInput = document.createElement("input");
-						hiddenInput.type = "hidden";
-						hiddenInput.name = "deleteMediaIds";
-						hiddenInput.value = id;
-						deletedContainer.appendChild(hiddenInput);
-					}
-					wrapper.remove(); // Xoá ảnh khỏi giao diện
-				});
-
-				// Preview ảnh mới
-				newContainer.innerHTML = "";
-				files.forEach(file => {
-					const reader = new FileReader();
-					reader.onload = function (e) {
-						const wrapper = document.createElement("div");
-						wrapper.classList.add("img-wrapper");
-
-						const img = document.createElement("img");
-						img.src = e.target.result;
-
-						wrapper.appendChild(img);
-						newContainer.appendChild(wrapper);
-					};
-					reader.readAsDataURL(file);
-				});
-			});
-		</script>
-		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 		<script>
-			// JavaScript to display SweetAlert2 based on flash attributes
-			document.addEventListener('DOMContentLoaded', function () {
+			// Gom tất cả logic jQuery và khởi tạo CKEditor vào một khối $(document).ready lớn
+			$(document).ready(function () {
+				// Khởi tạo CKEditor trên textarea có id="productDescription"
+				ClassicEditor
+					.create(document.querySelector('#productDescription'))
+					.then(editor => {
+						// addProductDescriptionEditor = editor; // Gán instance vào biến nếu cần
+						console.log('CKEditor was initialized for productDescription', editor);
+					})
+					.catch(error => {
+						console.error('Lỗi khi khởi tạo CKEditor:', error);
+					});
+
+				// Hàm cho phép chỉnh sửa trường trong bảng
+				window.editField = function (cell, fieldType) { // Đặt trong window để có thể gọi từ onclick
+					const originalValue = cell.innerText.trim();
+					const input = document.createElement('input');
+					input.type = 'text';
+					input.value = originalValue;
+					cell.innerHTML = '';
+					cell.appendChild(input);
+					input.focus();
+
+					const productId = cell.closest('tr').getAttribute('data-product-id');
+					const attributeId = cell.closest('tr').getAttribute('data-attribute-id');
+
+					input.addEventListener('keydown', function (e) {
+						if (e.key === 'Enter') {
+							const newValue = input.value;
+							const id = cell.closest('tr').getAttribute('data-id');
+							updateProductVariant(id, productId, attributeId, fieldType, newValue);
+							cell.innerHTML = newValue;
+						}
+					});
+				};
+
+				// Hàm cập nhật biến thể sản phẩm qua AJAX
+				function updateProductVariant(id, productId, attributeId, field, value) {
+					$.ajax({
+						url: `/vendor/api/product-variant/update/${productId}/${attributeId}/${id}`,
+						type: 'PUT',
+						data: {
+							field: field,
+							value: value
+						},
+						success: function (response) {
+							Swal.fire({
+								icon: 'success',
+								title: 'Save Successfully!',
+								text: response,
+								showConfirmButton: false,
+								timer: 1500
+							});
+						},
+						error: function (xhr, status, error) {
+							Swal.fire({
+								icon: 'error',
+								title: 'Failed!',
+								text: xhr.responseText || 'Error, Please Try Again!.',
+								showConfirmButton: false,
+								timer: 1500
+							});
+						}
+					});
+				}
+
+				// Hàm xác nhận xóa biến thể
+				window.confirmDelete = function (event) { // Đặt trong window để có thể gọi từ onclick
+					event.preventDefault();
+					Swal.fire({
+						title: 'Are you sure?',
+						text: 'Do you want to delete!',
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonText: 'Có, xóa nó!',
+						cancelButtonText: 'Không, giữ lại'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							window.location.href = event.target.href;
+						}
+					});
+				};
+
+				// Xử lý thay đổi ảnh sản phẩm
+				document.getElementById("imageInput").addEventListener("change", function (event) {
+					const files = Array.from(event.target.files);
+					const newContainer = document.getElementById("newImagesContainer");
+					const existingContainer = document.getElementById("existingImagesContainer");
+					const deletedContainer = document.getElementById("deletedImageIdsContainer");
+
+					// Xóa tất cả ảnh cũ khỏi giao diện và tạo input hidden để gửi deleteMediaIds[]
+					const oldImages = existingContainer.querySelectorAll(".img-wrapper");
+					oldImages.forEach(wrapper => {
+						const id = wrapper.getAttribute("data-id");
+						if (id) {
+							const hiddenInput = document.createElement("input");
+							hiddenInput.type = "hidden";
+							hiddenInput.name = "deleteMediaIds";
+							hiddenInput.value = id;
+							deletedContainer.appendChild(hiddenInput);
+						}
+						wrapper.remove(); // Xóa ảnh khỏi giao diện
+					});
+
+					// Preview ảnh mới
+					newContainer.innerHTML = "";
+					files.forEach(file => {
+						const reader = new FileReader();
+						reader.onload = function (e) {
+							const wrapper = document.createElement("div");
+							wrapper.classList.add("img-wrapper");
+
+							const img = document.createElement("img");
+							img.src = e.target.result;
+
+							wrapper.appendChild(img);
+							newContainer.appendChild(wrapper);
+						};
+						reader.readAsDataURL(file);
+					});
+				});
+
+				// Logic cho nút "Save changes" trong modal Add Variant
+				document.getElementById('formButtonAdd').addEventListener('click', function (event) {
+					const VariantName = document.getElementById('variantName');
+					const VariantNameError = document.getElementById('variantNameError');
+					VariantNameError.textContent = '';
+
+					if (VariantName.value.trim() === '') {
+						VariantNameError.textContent = 'Tên thuộc tính biến thể là bắt buộc.';
+						// Ngừng gửi form nếu không hợp lệ
+					} else {
+						document.getElementById('formAdd').submit(); // Gửi form khi hợp lệ
+					}
+				});
+
+				// Hiển thị SweetAlert2 dựa trên flash attributes
 				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
 				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
 
 				if (sweetAlertStatus && sweetAlertMessage) {
 					Swal.fire({
 						icon: sweetAlertStatus, // 'success' or 'error'
-						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						title: sweetAlertStatus === 'success' ? 'Thành công!' : 'Lỗi!',
 						text: sweetAlertMessage,
 						showConfirmButton: false,
-						timer: 3000 // Automatically close after 3 seconds
+						timer: 3000 // Tự động đóng sau 3 giây
 					});
 				}
-			});
+			}); // ĐÂY LÀ DẤU ĐÓNG NGOẶC THIẾU
 		</script>
-
-
-
 	</section>
 
-
-
 </body>
+
+</html>

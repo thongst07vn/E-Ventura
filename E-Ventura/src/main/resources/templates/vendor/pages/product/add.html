@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{vendor/layouts/layout :: layout('Add Product', ~{this :: .content-main})}">
 
@@ -9,6 +10,7 @@
 			gap: 10px;
 			flex-wrap: wrap;
 		}
+
 		.thumbnail-preview {
 			width: 100px;
 			height: 100px;
@@ -17,16 +19,23 @@
 			border-radius: 4px;
 			padding: 3px;
 		}
+
+		/* Đảm bảo các thông báo lỗi từ server cũng hiển thị đúng */
+		.text-danger.d-block {
+			font-size: 0.875em;
+			/* Kích thước tương tự invalid-feedback */
+			margin-top: 0.25rem;
+			/* Khoảng cách với input */
+		}
 	</style>
 
 </head>
 
 <body>
 	<section class="content-main">
-		<form method="POST"  th:action="@{/vendor/product/add}" enctype="multipart/form-data">
+		<form method="POST" th:action="@{/vendor/product/add}" enctype="multipart/form-data" id="addProductForm">
 			<div class="row">
 				<div class="col-9">
-
 					<div class="content-header">
 						<a th:href="@{/vendor/product/list}">
 							<i class="material-icons md-arrow_back">
@@ -36,66 +45,69 @@
 				</div>
 				<div class="col-lg-6">
 					<div class="card mb-4">
-
 						<div class="card-header">
 							<h2 class="content-title">Add New Product</h2>
 							<h4>Basic</h4>
 						</div>
 						<div class="card-body">
-							<form>
+							<div class="mb-4">
+								<label class="form-label" for="productName">Product title </label>
+								<input class="form-control" id="productName" type="text" placeholder="Type here"
+									th:field="${product.name}" required
+									th:classappend="${msgErrorName} ? 'is-invalid' : ''">
+								<div class="invalid-feedback">Please enter product title.</div>
+							</div>
+
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="mb-4">
+										<label class="form-label">Price </label>
+										<div class="row gx-2"></div>
+										<input class="form-control" id="productPrice" placeholder="$" type="number"
+											th:field="${product.price}" required min="0" step="0.01"
+											th:classappend="${msgErrorPrice} ? 'is-invalid' : ''">
+										<div class="invalid-feedback">Please enter a valid price (non-negative).</div>
+									</div>
+								</div>
+								<div class="col-lg-4">
+									<div class="mb-4">
+										<label class="form-label">Quantity </label>
+										<div class="row gx-2"></div>
+										<input class="form-control" id="productQuantity" type="number"
+											th:field="${product.quantity}" required min="1"
+											th:classappend="${msgErrorQuantity} ? 'is-invalid' : ''">
+										<div class="invalid-feedback">Please enter a valid quantity (at least 1).</div>
+									</div>
+								</div>
+
+								<div class="col-lg-4">
+									<label class="form-label">Currency</label>
+									<input class="form-control" value="USD" type="text" readonly>
+								</div>
 								<div class="mb-4">
-									<label class="form-label" for="product_name">Product title <span th:text="${msgErrorName}" class="text-danger"></span></label>
-									<input class="form-control" id="product_name" type="text" placeholder="Type here" th:field="${product.name}">
+									<label class="form-label">Full description </label>
+									<br>
+									<textarea class="form-control" cols="90" rows="15" id="productDescription"
+										th:field="${product.description}" required
+										th:classappend="${msgErrorDescription} ? 'is-invalid' : ''"></textarea>
+									<div class="invalid-feedback">Please enter a product description.</div>
 								</div>
-
-
-								<div class="row">
-									<div class="col-lg-4">
-										<div class="mb-4">
-											<label class="form-label">Price <span th:text="${msgErrorPrice}" class="text-danger"></span></label>
-											<div class="row gx-2"></div>
-											<input class="form-control" placeholder="$" type="number" th:field="${product.price}">
-										</div>
-									</div>
-									<div class="col-lg-4">
-										<div class="mb-4">
-											<label class="form-label">Quantity <span th:text="${msgErrorQuantity}" class="text-danger"></span></label>
-											<div class="row gx-2"></div>
-											<input class="form-control" type="number" th:field="${product.quantity}">
-										</div>
-									</div>
-
-									<div class="col-lg-4">
-										<label class="form-label">Currency</label>
-										<input class="form-control" value="USD" type="text" readonly>
-
-									</div>
-									<div class="mb-4">
-										<label class="form-label">Full description <span th:text="${msgErrorDescription}" class="text-danger"></span></label>
-										<br>
-										<textarea class="form-control" cols="90" rows="8" th:field="${product.description}">
-											
-										</textarea>
-									</div>
-									<div class="mb-4">
-										<label class="form-label">Category</label>
-										<select class="form-select" name="categoryId">
-											<option th:each="category: ${categories}" th:value="${category.id}"
-												th:text="${category.name}"> </option>
-										</select>
-									</div>
+								<div class="mb-4">
+									<label class="form-label">Category</label>
+									<select class="form-select" name="categoryId" id="productCategory" required>
+										<option value="" disabled selected>Select Category</option>
+										<option th:each="category: ${categories}" th:value="${category.id}"
+											th:text="${category.name}"> </option>
+									</select>
+									<div class="invalid-feedback">Please select a category.</div>
 								</div>
-
-
-
+							</div>
 						</div>
 					</div>
 					<div>
-						<button class="btn btn-primary" type="submit">Add Product</button>
+						<button class="btn btn-primary" type="submit" id="addProductButton">Add Product</button>
 					</div>
-
 				</div>
-
 
 				<div class="col-lg-4">
 					<div class="card mb-4">
@@ -104,64 +116,175 @@
 						</div>
 						<div class="card-body">
 							<div class="input-upload">
-								<!-- Container hiển thị ảnh preview -->
 								<div class="thumbnail-container" id="thumbnailContainer"></div>
 
-								<!-- Input file -->
-								<input class="form-control mt-3" type="file" multiple id="imageInput" accept="image/*" name="files">
+								<input class="form-control mt-3" type="file" multiple id="imageInput" accept="image/*"
+									name="files" required>
+								<div class="invalid-feedback">Please upload at least one image.</div>
 							</div>
 						</div>
-
 					</div>
-
 				</div>
 			</div>
 		</form>
 		
-		<script>
-			document.getElementById("imageInput").addEventListener("change", function (event) {
-				const files = event.target.files;
-				const thumbnailContainer = document.getElementById("thumbnailContainer");
+		<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 
-				thumbnailContainer.innerHTML = ""; // Clear trước
-
-				if (files.length === 0) return;
-
-				Array.from(files).slice(0, 8).forEach(file => {
-					const reader = new FileReader();
-					reader.onload = function (e) {
-						const img = document.createElement("img");
-						img.src = e.target.result;
-						img.classList.add("thumbnail-preview");
-						thumbnailContainer.appendChild(img);
-					};
-					reader.readAsDataURL(file);
-				});
-			});
-		</script>
-
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+		
 		<script>
-			// JavaScript to display SweetAlert2 based on flash attributes
-				document.addEventListener('DOMContentLoaded', function () {
-					const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
-					const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+			// Gom tất cả logic jQuery và khởi tạo CKEditor vào một khối $(document).ready lớn
+			$(document).ready(function() {
+			    // Biến để lưu instance của CKEditor
+			    let addProductDescriptionEditor; 
 
-					if (sweetAlertStatus && sweetAlertMessage) {
-						Swal.fire({
-							icon: sweetAlertStatus, // 'success' or 'error'
-							title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
-							text: sweetAlertMessage,
-							showConfirmButton: false,
-							timer: 3000 // Automatically close after 3 seconds
-						});
+			    // Khởi tạo CKEditor trên textarea có id="productDescription"
+			    ClassicEditor
+			        .create( document.querySelector( '#productDescription' ) ) // Đã sửa ID ở đây
+			        .then( editor => {
+			            addProductDescriptionEditor = editor; // Gán instance vào biến
+			            console.log( 'CKEditor was initialized for productDescription', editor );
+			        } )
+			        .catch( error => {
+			            console.error( error );
+			        } );
+
+				// ===============================================
+				// Script Preview Image
+				// ===============================================
+				document.getElementById("imageInput").addEventListener("change", function (event) {
+					const files = event.target.files;
+					const thumbnailContainer = document.getElementById("thumbnailContainer");
+
+					thumbnailContainer.innerHTML = ""; // Clear trước
+
+					if (files.length === 0) return;
+
+					// Chỉ hiển thị tối đa 8 ảnh để tránh quá tải UI
+					Array.from(files).slice(0, 8).forEach(file => {
+						const reader = new FileReader();
+						reader.onload = function (e) {
+							const img = document.createElement("img");
+							img.src = e.target.result;
+							img.classList.add("thumbnail-preview");
+							thumbnailContainer.appendChild(img);
+						};
+						reader.readAsDataURL(file);
+					});
+				});
+
+				// ===============================================
+				// Script Validation cho form ADD PRODUCT
+				// ===============================================
+				const $addProductForm = $('#addProductForm');
+				const $addProductButton = $('#addProductButton');
+
+				$addProductButton.on('click', function (event) {
+					event.preventDefault(); // Ngăn chặn submit form mặc định
+					console.log('--- Add Product Button Clicked ---'); // DEBUG
+
+					// Reset trạng thái validation trước đó
+					$addProductForm.find('.form-control, .form-select').removeClass('is-invalid');
+					$addProductForm.find('.invalid-feedback').text('');
+					
+					let isValid = true; // Cờ theo dõi trạng thái hợp lệ của form
+
+					// Lặp qua tất cả các trường có thuộc tính 'required'
+					$addProductForm.find('[required]').each(function () {
+						const $input = $(this);
+						const inputId = $input.attr('id');
+						let inputValue = $input.val(); // Lấy giá trị thô ban đầu
+						let fieldIsValid = true; // Cờ riêng cho từng trường
+						let feedbackMessage = '';
+
+						// Xử lý đặc biệt cho CKEditor textarea
+						if (inputId === 'productDescription' && addProductDescriptionEditor) {
+							inputValue = addProductDescriptionEditor.getData().trim();
+							// CKEditor có thể trả về <p>&nbsp;</p> cho nội dung trống
+							if (inputValue === '<p>&nbsp;</p>' || inputValue === '<p></p>' || inputValue === '') {
+								inputValue = ''; // Coi như rỗng
+							}
+							console.log(`Validating CKEditor field: ${inputId}, Current value: "${inputValue}"`); // DEBUG
+						} else {
+							inputValue = inputValue ? inputValue.trim() : ''; // Cho các input khác, trim và xử lý null/undefined
+							console.log(`Validating field: ${inputId}, Current value: "${inputValue}"`); // DEBUG
+						}
+
+						// 1. Kiểm tra trường rỗng
+						if (!inputValue) {
+							feedbackMessage = 'This field is required.';
+							fieldIsValid = false;
+						} else {
+							// 2. Kiểm tra validation đặc biệt cho Price và Quantity (nếu không rỗng)
+							if (inputId === 'productPrice') {
+								const priceValue = parseFloat(inputValue);
+								if (isNaN(priceValue) || priceValue <= 0) {
+									feedbackMessage = 'Price must be greater than 0.';
+									fieldIsValid = false;
+								}
+							} else if (inputId === 'productQuantity') {
+								const quantityValue = parseInt(inputValue);
+								if (isNaN(quantityValue) || quantityValue < 1) {
+									feedbackMessage = 'Quantity must be at least 1.';
+									fieldIsValid = false;
+								}
+							} else if (inputId === 'imageInput') { // Xử lý input file
+								// input type file không có .val(), mà là .files.length
+								if ($input[0].files.length === 0) {
+									feedbackMessage = 'Please upload at least one image.';
+									fieldIsValid = false;
+								}
+							}
+						}
+
+						// Nếu trường hiện tại không hợp lệ, thêm class và cập nhật thông báo
+						if (!fieldIsValid) {
+							$input.addClass('is-invalid');
+							// Đối với input file, invalid-feedback có thể không phải là next() mà là em của nó.
+							// Kiểm tra inputId === 'imageInput' để chọn đúng element feedback.
+							if (inputId === 'imageInput') {
+                                $input.siblings('.invalid-feedback').text(feedbackMessage);
+                            } else {
+                                $input.next('.invalid-feedback').text(feedbackMessage);
+                            }
+							isValid = false; // Đặt cờ form tổng thể là không hợp lệ
+							console.log(`  -> ${inputId} is invalid. Message: "${feedbackMessage}". isValid = ${isValid}`); // DEBUG
+						}
+					});
+
+					console.log(`Final isValid before submit: ${isValid}`); // DEBUG
+
+					// Nếu tất cả các validation đã pass, submit form
+					if (isValid) {
+						$addProductForm.submit();
 					}
 				});
+			});
+			
+			
 		</script>
+		
+		
 
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
 
+				if (sweetAlertStatus && sweetAlertMessage) {
+					Swal.fire({
+						icon: sweetAlertStatus, // 'success' or 'error'
+						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						text: sweetAlertMessage,
+						showConfirmButton: false,
+						timer: 3000 // Automatically close after 3 seconds
+					});
+				}
+			});
+		</script>
 	</section>
-
-
-
 </body>
+
+</html>
