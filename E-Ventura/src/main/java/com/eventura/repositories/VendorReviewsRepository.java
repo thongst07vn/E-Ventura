@@ -23,4 +23,7 @@ public interface VendorReviewsRepository extends JpaRepository<VendorReviews, In
 	
 	@Query("select avg(v.rating) from VendorReviews v where v.vendors.id = :id")
 	public double avgVendorReview(@Param("id") int id);
+	
+	@Query("FROM VendorReviews WHERE vendors.id = :id")
+	public Page<VendorReviews>  findVendorReviewPage(@Param("id") int id, Pageable pageable);
 }

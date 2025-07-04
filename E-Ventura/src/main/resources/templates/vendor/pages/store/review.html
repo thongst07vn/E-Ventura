@@ -14,33 +14,34 @@
 
 		<div class="card mx-auto" style="max-width: 400px;">
 			<div class="card-header bg-white text-center">
-				<!-- Logo -->
-				<img class="img-fluid mb-3" height="64" th:src="@{/vendor/assets/imgs/brands/brand-1.jpg}"
-					alt="Store Logo">
 				<!-- Store image -->
 				<img class="rounded-circle img-thumbnail" width="100" height="100"
-					th:src="@{/vendor/assets/imgs/people/avatar1.jpg}" alt="Store Avatar">
+				     th:src="${vendor.users.avatar != null and vendor.users.avatar != ''} ? 
+				              @{'/assets/imgs/avatars/' + ${vendor.users.avatar}} : 
+				              @{'/assets/imgs/avatars/noimg.jpg'}" 
+				     alt="Store Avatar">
+				
 			</div>
 
 			<div class="card-body text-center">
 				<!-- Store name -->
-				<h4 class="card-title mb-2">Cardinal Official Store</h4>
+				<h4 class="card-title mb-2" th:text="${vendor.name}"></h4>
 
 				<!-- Rating number -->
-				<h5 class="text-warning mb-2">4.5 / 5.0</h5>
-
-				<!-- Stars -->
-				<ul class="rating-stars d-inline-flex">
-					<li class="stars-active" style="width: 90%;">
-						<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars" style="height: 24px;">
-					</li>
-					<li>
-						<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars" style="height: 24px;">
-					</li>
-				</ul>
+				<h5 class="text-warning mb-2">
+					<th:block th:with="displayRating=${avgRating != null ? avgRating : 0},
+			             cappedRating=${displayRating > 5 ? 5 : displayRating},
+			             width=${cappedRating * 20}">
+						<ul class="rating-stars">
+							<li class="stars-active" th:style="'width:' + ${width} + '%'"><img
+									th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars" style="height: 20px;"></li>
+							<li><img th:src="@{/assets/imgs/icons/starts-disable.svg}" alt="stars" style="height: 20px;"></li>
+						</ul>
+					</th:block>
+				</h5>
 
 				<!-- Optional: number of reviews -->
-				<p class="text-muted mt-2 mb-0">(1,258 reviews)</p>
+				<p class="text-muted mt-2 mb-0" th:text="${count + ' Reviewer'}"></p>
 			</div>
 		</div>
 
@@ -53,132 +54,83 @@
 								<th style="width: 20%;">Name</th>
 								<th style="width: 20%;">Rating</th>
 								<th style="width: 20%;">Date</th>
-								<th style="width: 40%;">Comment</th>
 							</tr>
 						</thead>
 
 						<tbody>
-							<tr>
+							<tr th:each="vendorReview : ${vendorReviews}">
 								<td class="align-middle fs-6">
 									<a class="itemside" href="#">
 										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar1.jpg}" alt="Item"></div>
+												th:src="@{'/assets/imgs/avatars/' + ${vendorReview.users.avatar}}" alt="Item"></div>
 										<div class="info">
 											<h6 class="mb-0">Levi Akerman</h6>
 										</div>
 									</a>
 								</td>
 								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 80%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
+									<th:block th:with="displayRating=${vendorReview.rating != null ? vendorReview.rating : 0},
+																					             cappedRating=${displayRating > 5 ? 5 : displayRating},
+																					             width=${cappedRating * 20}">
+										<ul class="rating-stars">
+											<li class="stars-active" th:style="'width:' + ${width} + '%'"><img
+													th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars" style="height: 20px;"></li>
+											<li><img th:src="@{/assets/imgs/icons/starts-disable.svg}" alt="stars" style="height: 20px;"></li>
+										</ul>
+									</th:block>
 								</td>
-								<td class="align-middle fs-6">10.03.2022</td>
-								<td class="align-middle fs-6 text-wrap">Chất lượng sản phẩm tốt, giao hàng nhanh.</td>
+								<td class="align-middle fs-6" th:text="${#dates.format(vendorReview.createdAt, 'dd/MM/yyyy HH:mm:ss')}">10.03.2022</td>
 							</tr>
 
-							<tr>
-								<td class="align-middle fs-6">
-									<a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar3.jpg}" alt="Item"></div>
-										<div class="info">
-											<h6 class="mb-0">Eren Jeager</h6>
-										</div>
-									</a>
-								</td>
-								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 100%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
-								</td>
-								<td class="align-middle fs-6">12.04.2022</td>
-								<td class="align-middle fs-6 text-wrap">Hài lòng với sản phẩm, đúng mô tả.</td>
-							</tr>
-
-							<tr>
-								<td class="align-middle fs-6">
-									<a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar2.jpg}" alt="Item"></div>
-										<div class="info">
-											<h6 class="mb-0">Erwin Smith</h6>
-										</div>
-									</a>
-								</td>
-								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 40%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
-								</td>
-								<td class="align-middle fs-6">18.05.2022</td>
-								<td class="align-middle fs-6 text-wrap">Sản phẩm chưa như mong đợi, chất vải hơi mỏng.</td>
-							</tr>
-							<tr>
-								<td class="align-middle fs-6">
-									<a class="itemside" href="#">
-										<div class="left"><img class="img-sm img-thumbnail"
-												th:src="@{/vendor/assets/imgs/people/avatar4.jpg}" alt="Item"></div>
-										<div class="info">
-											<h6 class="mb-0">Mikasa</h6>
-										</div>
-									</a>
-								</td>
-								<td class="align-middle">
-									<ul class="rating-stars">
-										<li class="stars-active" style="width: 100%;">
-											<img th:src="@{/vendor/assets/imgs/icons/stars-active.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-										<li>
-											<img th:src="@{/vendor/assets/imgs/icons/starts-disable.svg}" alt="stars"
-												style="height: 20px;">
-										</li>
-									</ul>
-								</td>
-								<td class="align-middle fs-6">12.04.2022</td>
-								<td class="align-middle fs-6 text-wrap">Hài lòng với sản phẩm, đúng mô tả. </td>
-							</tr>
+							
 						</tbody>
 
 					</table>
 				</div>
 			</div>
 		</div>
-		<div class="pagination-area mt-30 mb-50">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination justify-content-start">
-					<li class="page-item active"><a class="page-link" href="#">01</a></li>
-					<li class="page-item"><a class="page-link" href="#">02</a></li>
-					<li class="page-item"><a class="page-link" href="#">03</a></li>
-					<li class="page-item"><a class="page-link dot" href="#">...</a></li>
-					<li class="page-item"><a class="page-link" href="#">16</a></li>
-					<li class="page-item"><a class="page-link" href="#"><i
-								class="material-icons md-chevron_right"></i></a></li>
-				</ul>
-			</nav>
-		</div>
+		<!-- Trường hợp danh sách tất cả sản phẩm -->
+		<th:block th:if="${selectedKeyword == null && selectedCategoryId == null && !#lists.isEmpty(products)}">
+			<div class="pagination-area mt-15 mb-50">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination justify-content-start">
+						<!-- Nút về đầu -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/store/review?page=' + ${0}}" aria-label="Next"> <i
+									class="material-icons md-double_arrow"
+									style="transform: rotate(180deg) translate(15%, -30%);"></i>
+							</a>
+						</li>
+						<!-- Nút trước -->
+						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+								th:href="@{'/vendor/store/review?page=' + ${currentPages-1}}" class="page-link"
+								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+							</a></li>
+		
+						<!-- Các trang -->
+						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+		
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
+									th:href="@{'/vendor/product/list?page=' + ${i}}" th:text="${i + 1}"></a></li>
+						</th:block>
+		
+						<!-- Nút tiếp -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
+							<a class="page-link" th:href="@{'/vendor/product/list?page=' + ${currentPages+1}}"
+								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+							</a>
+						</li>
+		
+						<!-- Nút tới cuối -->
+						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link" th:href="@{'/vendor/product/list?page=' + ${lastPageIndex}}" aria-label="Next">
+								<i class="material-icons md-double_arrow"></i>
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</th:block>
 	</section>
 </body>
 
