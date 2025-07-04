@@ -31,7 +31,7 @@ import com.eventura.entities.Users;
 import com.eventura.entities.Wards;
 import com.eventura.services.AddressService;
 import com.eventura.services.UserService;
-import com.example.demo.helpers.FileHelper;
+import com.eventura.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 @Controller("vendorProfileController")

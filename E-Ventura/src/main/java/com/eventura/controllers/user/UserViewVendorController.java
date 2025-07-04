@@ -46,7 +46,7 @@ import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
-import com.example.demo.helpers.FileHelper;
+import com.eventura.helpers.FileHelper;
 
 import jakarta.servlet.http.HttpSession;
 

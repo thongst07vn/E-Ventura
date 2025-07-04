@@ -34,7 +34,7 @@ import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorService;
-import com.example.demo.helpers.RandomStringCode;
+import com.eventura.helpers.RandomStringCode;
 
 import jakarta.servlet.http.HttpSession;
 
