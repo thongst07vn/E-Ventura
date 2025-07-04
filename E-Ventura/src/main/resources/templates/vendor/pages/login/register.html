@@ -33,7 +33,7 @@
 	<main class="main">
 		<section class="section-box shop-template mt-60">
 			<div class="container">
-				<form method="POST" th:action="@{/vendor/account/register}">
+				<form method="POST" th:action="@{/vendor/account/register}" id="registerForm">
 
 					<div class="row mb-100">
 						<div class="col-lg-6">
@@ -42,79 +42,67 @@
 							<h5 th:text="${msgFailed}" class="text-danger"></h5>
 
 							<div class="form-register mt-30 mb-30">
-								<p th:text="${msgErrorName}" class="text-danger"></p>
 								<div class="row">
 									<div class="form-group col-6">
 										<label class="mb-5 font-sm color-gray-700">Last Name </label>
-										<input class="form-control" type="text" th:field="${user.lastName}" th:value="${selectedFirstName}">
+										<input class="form-control" type="text" th:field="${user.lastName}"
+											id="lastName" name="lastName" required>
+										<div class="invalid-feedback">Please enter Last Name</div>
 									</div>
 									<div class="form-group col-6">
 										<label class="mb-5 font-sm color-gray-700">First Name <span></span></label>
-										<input class="form-control" type="text" th:field="${user.firstName}" th:value="${selectedFirstName}">
+										<input class="form-control" type="text" th:field="${user.firstName}"
+											id="firstName" name="firstName" required>
+										<div class="invalid-feedback">Please enter First Name Name</div>
+
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="mb-5 font-sm color-gray-700">Phone Number <span
-											th:text="${msgErrorPhone}" class="text-danger"></span></label>
-									<input class="form-control" type="text" th:field="${user.phoneNumber}" th:value="${selectedPhone}">
+									<label class="mb-5 font-sm color-gray-700">Phone Number</label>
+									<input class="form-control" type="text" th:field="${user.phoneNumber}"
+										id="phoneNumber" name="phoneNumber" required>
+									<div class="invalid-feedback">Please enter Phone Number</div>
+
 								</div>
 								<div class="form-group">
-									<label class="mb-5 font-sm color-gray-700">Email <span th:text="${msgErrorEmail}"
-											class="text-danger"></span></label>
-									<input class="form-control" type="text" th:field="${user.email}" th:value="${selectedEmail}">
+									<label class="mb-5 font-sm color-gray-700">Email</label>
+									<input class="form-control" type="email" th:field="${user.email}" id="email"
+										name="email" required>
+									<div class="invalid-feedback">Please enter Email</div>
+
 								</div>
 								<div class="form-group">
-									<label class="mb-5 font-sm color-gray-700">Username <span
-											th:text="${msgErrorUsername}" class="text-danger"></span></label>
-									<input class="form-control" type="text" th:field="${user.username}" th:value="${selectedUsername}">
+									<label class="mb-5 font-sm color-gray-700">Username</label>
+									<input class="form-control" type="text" th:field="${user.username}" id="username"
+										name="username" required>
+									<div class="invalid-feedback">Please enter Username</div>
+
 								</div>
-								<span th:text="${msgErrorPassword}" class="text-danger"></span>
-								<span th:text="${msgErrorPasswordStrength}" class="text-danger"></span>
+								<div class="invalid-feedback-password">Password and Re-Password do not match</div>
 								<div class="form-group">
 									<label class="mb-5 font-sm color-gray-700">Password </label>
-									<input class="form-control" type="password" th:field="${user.password}">
+									<input class="form-control" type="password" th:field="${user.password}"
+										id="password" name="password" required>
+									<div class="invalid-feedback" id="password-feedback">Please enter Password</div>
 								</div>
+
 								<div class="form-group">
 									<label class="mb-5 font-sm color-gray-700">Re-Password </label>
-									<input class="form-control" type="password" name="rePassword">
-								</div>
-								<div class="form-group">
-									<span th:text="${msgErrorPDW}" class="text-danger"></span>
-									<div class="row">
-										<div class="form-group col-4">
-											<label class="mb-5 font-sm color-gray-700">Provinces </label>
-											<select class="form-select" id="provinceSelect" name="provinceCode">
-												<option selected disabled>Provinces</option>
-												<option th:each="province : ${provinces}" th:value="${province.code}"
-													th:text="${province.administrativeUnits.shortName + ' ' + province.name}" th:selected="${province.code == selectedProvinceCode}">
-												</option>
-											</select>
-										</div>
-
-										<div class="form-group col-4">
-											<label class="mb-5 font-sm color-gray-700">District </label>
-											<select class="form-select" id="districtSelect" name="districtCode">
-												<option selected disabled>District</option>
-												<!-- Các quận sẽ được thêm vào qua JavaScript -->
-											</select>
-										</div>
-
-										<div class="form-group col-4">
-											<label class="mb-5 font-sm color-gray-700">Ward </label>
-											<select class="form-select" id="wardSelect" name="wardCode">
-												<option selected disabled>Ward</option>
-												<!-- Các phường sẽ được thêm vào qua JavaScript -->
-											</select>
-										</div>
-
+									<input class="form-control" type="password" name="rePassword" id="rePassword"
+										required>
+									<div class="invalid-feedback" id="repassword-feedback">Please enter Re-Password
+									</div>
+									<div class="invalid-feedback" id="password-match-feedback" style="display: none;">
+										Password and Re-Password do not match
 									</div>
 								</div>
-								<span th:text="${msgErrorAddress}" class="text-danger"></span>
 								<div class="form-group">
 									<label class="mb-5 font-sm color-gray-700">Address </label>
-									<input class="form-control" type="text" th:field="${userAddress.address}" th:value="${selectedAddress}">
-								</div>
+									<input class="form-control" type="text" th:field="${userAddress.address}"
+										id="address" name="address" required>
+									<div class="invalid-feedback">Please select Address</div>
 
+								</div>
 
 							</div>
 						</div>
@@ -124,47 +112,182 @@
 							<h3>Vendor Information</h3>
 							<div class="form-register mt-30 mb-30">
 								<div class="row">
-									
+
 									<div class="form-group col-6">
-										<p th:text="${msgErrorVendorName}" class="text-danger"></p>
 										<label class="mb-5 font-sm color-gray-700">Vendor's Name</label>
-										<input class="form-control" type="text" th:field="${vendor.name}" th:value="${selectedVendorName}">
+										<input class="form-control" type="text" th:field="${vendor.name}"
+											id="vendorName" required>
+										<div class="invalid-feedback">Please select Vendor's name</div>
+
 									</div>
 									<div class="form-group col-6">
-										<p th:text="${msgErrorVendorContactName}" class="text-danger"></p>
 										<label class="mb-5 font-sm color-gray-700">Contact Name<span></span></label>
-										<input class="form-control" type="text" th:field="${vendor.contactName}" th:value="${selectedVendorContactName}">
+										<input class="form-control" type="text" th:field="${vendor.contactName}"
+											id="vendorContactName" required>
+										<div class="invalid-feedback">Please select Contact name</div>
+
 									</div>
 								</div>
-								
+
 								<div class="form-group">
-									<label class="mb-5 font-sm color-gray-700">Contact Email<span
-											th:text="${msgErrorVendorContactEmail}" class="text-danger"></span></label>
-									<input class="form-control" type="text" th:field="${vendor.contactEmail}" th:value="${selectedVendorContactEmail}">
+									<label class="mb-5 font-sm color-gray-700">Contact Email</label>
+									<input class="form-control" type="text" th:field="${vendor.contactEmail}"
+										id="vendorContactEmail" required>
+									<div class="invalid-feedback">Please select Contact Email</div>
+
 								</div>
 								<div class="form-group">
 									<label class="mb-5 font-sm color-gray-700">Vendor's Type</label>
 									<select class="form-select" name="vendorSettingId">
 										<option th:each="vendorSetting : ${vendorSettings}"
-											th:value="${vendorSetting.id}" th:text="${vendorSetting.vendorType}" th:selected="${vendorSetting.id == selectedVendorTypeId}">
+											th:value="${vendorSetting.id}" th:text="${vendorSetting.vendorType}"
+											id="vendorSettingId" required>
 										</option>
 									</select>
+									<div class="invalid-feedback">Please select Vendor's Type</div>
+
+								</div>
+								<div class="form-group">
+									<div class="row">
+										<div class="form-group col-4">
+											<label class="mb-5 font-sm color-gray-700">Provinces </label>
+											<select class="form-select" id="provinceSelect" name="provinceCode"
+												required>
+												<option selected disabled value="">Provinces</option>
+												<option th:each="province : ${provinces}" th:value="${province.code}"
+													th:text="${province.administrativeUnits.shortName + ' ' + province.name}"
+													th:selected="${province.code == selectedProvinceCode}">
+												</option>
+											</select>
+											<div class="invalid-feedback">Please select Province</div>
+										</div>
+
+										<div class="form-group col-4">
+											<label class="mb-5 font-sm color-gray-700">District </label>
+											<select class="form-select" id="districtSelect" name="districtCode"
+												required>
+												<option selected disabled value="">District</option>
+												<!-- Các quận sẽ được thêm vào qua JavaScript -->
+											</select>
+											<div class="invalid-feedback">Please select District</div>
+										</div>
+
+										<div class="form-group col-4">
+											<label class="mb-5 font-sm color-gray-700">Ward </label>
+											<select class="form-select" id="wardSelect" name="wardCode" required>
+												<option selected disabled value="">Ward</option>
+												<!-- Các phường sẽ được thêm vào qua JavaScript -->
+											</select>
+											<div class="invalid-feedback">Please select Ward</div>
+
+										</div>
+
+									</div>
 								</div>
 
 
 							</div>
 						</div>
 						<div class="form-group">
-							<input class="font-md-bold btn btn-buy" type="submit" value="Sign Up">
+							<input class="font-md-bold btn btn-buy" type="submit" value="Sign Up"
+								id="formButtonRegister">
 						</div>
 						<div class="mt-20"><span class="font-xs color-gray-500 font-medium">Already have an
-								account?</span><a class="font-xs color-brand-3 font-medium" th:href="@{/vendor/account/login}"> Sign In</a>
+								account?</span><a class="font-xs color-brand-3 font-medium"
+								th:href="@{/vendor/account/login}"> Sign In</a>
 						</div>
 					</div>
-					
+
 				</form>
 			</div>
-			
+
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+			<script>
+				$(document).ready(function () {
+					const $registerForm = $('#registerForm');
+					const $formButtonRegister = $('#formButtonRegister');
+					const $password = $('#password'); // Khai báo biến $password và $rePassword một lần ở đây
+					const $rePassword = $('#rePassword');
+
+					$formButtonRegister.on('click', function (event) {
+						event.preventDefault();
+
+						// Reset previous validation states
+						$registerForm.find('.form-control').removeClass('is-invalid');
+						$registerForm.find('.invalid-feedback').text(''); // Clear custom messages
+						$('#password-match-feedback').hide().text(''); // Ẩn và xóa lỗi khớp mật khẩu
+
+						let isValid = true; // Flag để theo dõi tổng thể form hợp lệ hay không
+
+						// 1. Validate ALL required fields (bao gồm cả password và rePassword)
+						$registerForm.find('[required]').each(function () {
+							const $input = $(this);
+							// Kiểm tra giá trị rỗng hoặc chỉ toàn khoảng trắng
+							if (!$input.val().trim()) {
+								$input.addClass('is-invalid');
+								// Đặt thông báo lỗi cụ thể dựa trên ID
+								if ($input.attr('id') === 'firstName') {
+									$input.next('.invalid-feedback').text('Please enter a first name.');
+								} else if ($input.attr('id') === 'lastName') {
+									$input.next('.invalid-feedback').text('Please enter a last name.');
+								} else if ($input.attr('id') === 'phoneNumber') {
+									$input.next('.invalid-feedback').text('Please enter a phone number. ');
+								} else if ($input.attr('id') === 'email') {
+									$input.next('.invalid-feedback').text('Please enter an email. ');
+								} else if ($input.attr('id') === 'username') {
+									$input.next('.invalid-feedback').text('Please enter a username. ');
+								} else if ($input.attr('id') === 'password') {
+									// Mật khẩu sẽ được xử lý riêng cho phần khớp, nhưng vẫn cần bắt lỗi rỗng ở đây
+									$('#password-feedback').text('Please enter a password.');
+								} else if ($input.attr('id') === 'rePassword') {
+									// Re-password cũng vậy
+									$('#repassword-feedback').text('Please enter a re-password.');
+								} else if ($input.attr('id') === 'provinceSelect') {
+									$input.next('.invalid-feedback').text('Please select a province.');
+								} else if ($input.attr('id') === 'districtSelect') {
+									$input.next('.invalid-feedback').text('Please select a district.');
+								} else if ($input.attr('id') === 'wardSelect') {
+									$input.next('.invalid-feedback').text('Please select a ward.');
+								} else if ($input.attr('id') === 'address') {
+									$input.next('.invalid-feedback').text('Please enter an address. ');
+								} else if ($input.attr('id') === 'vendorName') {
+									$input.next('.invalid-feedback').text('Please enter a vendor name.');
+								} else if ($input.attr('id') === 'vendorContactName') {
+									$input.next('.invalid-feedback').text('Please enter a vendor contact name. ');
+								} else if ($input.attr('id') === 'vendorContactEmail') {
+									$input.next('.invalid-feedback').text('Please enter a vendor contact email. ');
+								} else if ($input.attr('id') === 'vendorSettingId') {
+									$input.next('.invalid-feedback').text('Please select a vendor type. ');
+								}
+								isValid = false; // Nếu có bất kỳ trường required nào trống, form không hợp lệ
+							}
+						});
+
+						// 2. Validate password match (CHỈ SAU KHI tất cả các trường required đã được kiểm tra)
+						// Chỉ kiểm tra khớp nếu cả hai trường mật khẩu không rỗng
+						if ($password.val().trim() && $rePassword.val().trim()) {
+							if ($password.val() !== $rePassword.val()) {
+								$password.addClass('is-invalid');
+								$rePassword.addClass('is-invalid');
+								$('#password-match-feedback').text('Password and Re-Password do not match.').show();
+								isValid = false; // Mật khẩu không khớp -> form không hợp lệ
+							}
+						}
+						// Nếu một trong hai hoặc cả hai mật khẩu rỗng, lỗi 'required' đã được bắt ở bước 1.
+						// Không cần `else if` phức tạp ở đây.
+
+						// 3. Nếu tất cả các validation pass, submit the form
+						if (isValid) {
+							$registerForm.submit();
+						}
+					});
+					// ... (phần code cho province/district/ward change listeners và SweetAlert) ...
+				});
+
+
+			</script>
+
 			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
 
@@ -189,7 +312,7 @@
 								data.forEach(district => {
 									const option = document.createElement("option");
 									option.value = district.code;
-									option.text = district.shortName + ' ' +district.name;
+									option.text = district.shortName + ' ' + district.name;
 									districtSelect.appendChild(option);
 								});
 								districtSelect.disabled = false;
@@ -215,23 +338,23 @@
 							});
 					});
 				});
-				
-				
-				// JavaScript to display SweetAlert2 based on flash attributes
-					document.addEventListener('DOMContentLoaded', function () {
-						const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
-						const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
 
-						if (sweetAlertStatus && sweetAlertMessage) {
-							Swal.fire({
-								icon: sweetAlertStatus, // 'success' or 'error'
-								title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
-								text: sweetAlertMessage,
-								showConfirmButton: false,
-								timer: 3000 // Automatically close after 3 seconds
-							});
-						}
-					});
+
+				// JavaScript to display SweetAlert2 based on flash attributes
+				document.addEventListener('DOMContentLoaded', function () {
+					const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+					const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+					if (sweetAlertStatus && sweetAlertMessage) {
+						Swal.fire({
+							icon: sweetAlertStatus, // 'success' or 'error'
+							title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+							text: sweetAlertMessage,
+							showConfirmButton: false,
+							timer: 3000 // Automatically close after 3 seconds
+						});
+					}
+				});
 			</script>
 		</section>
 

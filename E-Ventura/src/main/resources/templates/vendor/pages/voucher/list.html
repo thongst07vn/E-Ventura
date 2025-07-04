@@ -32,7 +32,8 @@
 				
 												<div class="col-lg-12 mb-3">
 													<label class="form-label" for="discountValue">Discount
-														Value:</label> <input class="form-control mb-2" type="number" step="1"
+														Value:</label> 
+														<input class="form-control mb-2" type="number" step="1"
 														id="discountValue" name="discountValue" th:field="${voucher.discountValue}"
 														required>
 													<div class="invalid-feedback">Please enter a discount
@@ -146,6 +147,36 @@
 												isValid = false; // Mark form as invalid
 											}
 										});
+										
+										// Validate if numeric fields are not zero (0.0)
+										const $discountValue = $('#discountValue');
+										const $minOrderValue = $('#minOrderValue');
+										const $maxDiscountAmount = $('#maxDiscountAmount');
+										const $quantity = $('#quantity');
+
+										if ($discountValue.val() == 0.0 || $discountValue.val().trim() === '') {
+											$discountValue.addClass('is-invalid');
+											$discountValue.next('.invalid-feedback').text('Discount value cannot be 0.0.');
+											isValid = false;
+										}
+
+										if ($minOrderValue.val() == 0.0 || $minOrderValue.val().trim() === '') {
+											$minOrderValue.addClass('is-invalid');
+											$minOrderValue.next('.invalid-feedback').text('Minimum order value cannot be 0.0.');
+											isValid = false;
+										}
+
+										if ($maxDiscountAmount.val() == 0.0 || $maxDiscountAmount.val().trim() === '') {
+											$maxDiscountAmount.addClass('is-invalid');
+											$maxDiscountAmount.next('.invalid-feedback').text('Maximum discount amount cannot be 0.0.');
+											isValid = false;
+										}
+
+										if ($quantity.val() == 0 || $quantity.val().trim() === '') {
+											$quantity.addClass('is-invalid');
+											$quantity.next('.invalid-feedback').text('Quantity cannot be 0.');
+											isValid = false;
+										}
 
 										// Validate start time vs. end time
 										const $startTimeInput = $('#startTime');
