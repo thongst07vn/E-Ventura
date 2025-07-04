@@ -107,115 +107,152 @@
 									<button type="submit" class="btn btn-primary" id="formButtonAdd">Add</button>
 								</div>
 							</form>
-							<script
-								src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 							<script>
-								$(document).ready(function () {
-									const $addVoucherForm = $('#addVoucherForm');
-									const $formButtonAdd = $('#formButtonAdd');
-
-									// Hàm để chỉ cho phép nhập số nguyên
-									function allowOnlyIntegers(event) {
-										const charCode = (event.which) ? event.which : event.keyCode;
-										// Chấp nhận số (0-9) và các phím điều khiển như Backspace, Tab, Enter
-										if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-											event.preventDefault(); // Ngăn chặn nhập ký tự không phải số
-										}
-									}
-
-									// Áp dụng hàm allowOnlyIntegers cho các trường input
-									$('#discountValue, #minOrderValue, #maxDiscountAmount, #quantity').on('keypress', allowOnlyIntegers);
-
-									// Event listener for the "Add" button click
-									$formButtonAdd.on('click', function (event) {
-										// Ngăn chặn việc submit form mặc định trước để thực hiện validation bằng JavaScript
-										event.preventDefault();
-
-										// Reset previous validation states
-										$addVoucherForm.find('.form-control').removeClass('is-invalid');
-										$addVoucherForm.find('.invalid-feedback').text(''); // Clear custom messages
-
-										let isValid = true; // Flag to track overall form validity
-
-										// Validate required fields
-										$addVoucherForm.find('[required]').each(function () {
-											const $input = $(this);
-											if (!$input.val().trim()) { // Check if the input value is empty or just whitespace
-												$input.addClass('is-invalid'); // Add Bootstrap's invalid class
-												// Set specific feedback message based on input ID
-												if ($input.attr('id') === 'discountValue') {
-													$input.next('.invalid-feedback').text('Please enter a discount value.');
-												} else if ($input.attr('id') === 'discountUnit') {
-													$input.next('.invalid-feedback').text('Please select a discount unit.');
-												} else if ($input.attr('id') === 'startTime') {
-													$('#startTimeFeedback').text('Please enter a start time.');
-												} else if ($input.attr('id') === 'endTime') {
-													$('#endTimeFeedback').text('Please enter an end time.');
-												}
-												isValid = false; // Mark form as invalid
-											}
-										});
-
-										// Validate start time vs. end time
-										const $startTimeInput = $('#startTime');
-										const $endTimeInput = $('#endTime');
-										const $startTimeFeedback = $('#startTimeFeedback');
-										const $endTimeFeedback = $('#endTimeFeedback');
-
-										if ($startTimeInput.val() && $endTimeInput.val()) { // Only compare if both are filled
-											const startTime = new Date($startTimeInput.val());
-											const endTime = new Date($endTimeInput.val());
-
-											if (startTime >= endTime) { // Check if start time is not less than end time
-												$startTimeInput.addClass('is-invalid');
-												$endTimeInput.addClass('is-invalid');
-												$startTimeFeedback.text('Start time must be before end time.');
-												$endTimeFeedback.text('End time must be after start time.');
-												isValid = false; // Mark form as invalid
-											}
-										} else if ($startTimeInput.val() && !$endTimeInput.val()) {
-											// If start time is filled but end time is not, ensure end time shows required error
-											$endTimeInput.addClass('is-invalid');
-											$endTimeFeedback.text('Please enter an end time.');
-											isValid = false;
-										} else if (!$startTimeInput.val() && $endTimeInput.val()) {
-											// If end time is filled but start time is not, ensure start time shows required error
-											$startTimeInput.addClass('is-invalid');
-											$startTimeFeedback.text('Please enter a start time.');
-											isValid = false;
-										}
-
-										// If all validations pass, submit the form
-										if (isValid) {
-											// Remove the event.preventDefault() for the button click
-											// and let the form submit naturally
-											$addVoucherForm.off('submit').submit(); // Remove previous submit handlers and then submit
-											// Optionally, you might still want to hide the modal and clear the form
-											// if the submission is handled via AJAX later or if you need immediate UI feedback.
-											// For a standard form submission, the page will reload/redirect.
-											const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
-											if (modal) {
-												modal.hide();
-											}
-											$addVoucherForm[0].reset(); // Clear the form after submission (if not redirecting)
-										}
-									});
-
-									// Optional: Clear validation feedback when user starts typing/selecting
-									$addVoucherForm.find('.form-control').on('input change', function () { // Use 'change' for select elements
-										const $input = $(this);
-										if ($input.hasClass('is-invalid')) {
-											$input.removeClass('is-invalid');
-											const $feedbackElement = $input.next('.invalid-feedback');
-											if ($feedbackElement.length) { // Check if the next sibling is the feedback element
-												$feedbackElement.text('');
-											} else { // Fallback for specific IDs like startTimeFeedback, endTimeFeedback
-												const feedbackId = $input.attr('id') + 'Feedback';
-												$('#' + feedbackId).text('');
-											}
-										}
-									});
+							    $(document).ready(function() {
+								    const $addVoucherForm = $('#addVoucherForm');
+								    const $formButtonAdd = $('#formButtonAdd');
+								
+								    // Hàm để chỉ cho phép nhập số nguyên
+								    function allowOnlyIntegers(event) {
+								        const charCode = (event.which) ? event.which : event.keyCode;
+								        // Chấp nhận số (0-9) và các phím điều khiển như Backspace, Tab, Enter
+								        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+								            event.preventDefault(); // Ngăn chặn nhập ký tự không phải số
+								        }
+								    }
+								
+								    // Áp dụng hàm allowOnlyIntegers cho các trường input
+								    $('#discountValue, #minOrderValue, #maxDiscountAmount, #quantity').on('keypress', allowOnlyIntegers);
+								
+								    // Event listener for the "Add" button click
+								    $formButtonAdd.on('click', function(event) {
+								        // Ngăn chặn việc submit form mặc định trước để thực hiện validation bằng JavaScript
+								        event.preventDefault();
+								
+								        // Reset previous validation states
+								        $addVoucherForm.find('.form-control').removeClass('is-invalid');
+								        $addVoucherForm.find('.invalid-feedback').text(''); // Clear custom messages
+								
+								        let isValid = true; // Flag to track overall form validity
+								
+								        // Validate required fields
+								        $addVoucherForm.find('[required]').each(function() {
+								            const $input = $(this);
+								            if (!$input.val().trim()) { // Check if the input value is empty or just whitespace
+								                $input.addClass('is-invalid'); // Add Bootstrap's invalid class
+								                // Set specific feedback message based on input ID
+								                if ($input.attr('id') === 'discountValue') {
+								                    $input.next('.invalid-feedback').text('Please enter a discount value.');
+								                } else if ($input.attr('id') === 'discountUnit') {
+								                    $input.next('.invalid-feedback').text('Please select a discount unit.');
+								                } else if ($input.attr('id') === 'startTime') {
+								                    $('#startTimeFeedback').text('Please enter a start time.');
+								                } else if ($input.attr('id') === 'endTime') {
+								                    $('#endTimeFeedback').text('Please enter an end time.');
+								                }
+								                isValid = false; // Mark form as invalid
+								            }
+								        });
+								
+								        // --- NEW VALIDATION: Check if numeric values are greater than 0 ---
+								        const numericInputs = {
+								            'discountValue': 'Discount value',
+								            'minOrderValue': 'Minimum order value',
+								            'maxDiscountAmount': 'Maximum discount amount',
+								            'quantity': 'Quantity'
+								        };
+								
+								        for (const id in numericInputs) {
+								            const $input = $(`#${id}`);
+								            const value = parseInt($input.val(), 10);
+								            // Check if the input has a value and if it's less than or equal to 0
+								            if ($input.val().trim() !== '' && (isNaN(value) || value <= 0)) {
+								                $input.addClass('is-invalid');
+								                $input.next('.invalid-feedback').text(`${numericInputs[id]} must be greater than 0.`);
+								                isValid = false;
+								            }
+								        }
+								        // --- END NEW VALIDATION ---
+								
+								
+								        // Validate start time vs. end time
+								        const $startTimeInput = $('#startTime');
+								        const $endTimeInput = $('#endTime');
+								        const $startTimeFeedback = $('#startTimeFeedback');
+								        const $endTimeFeedback = $('#endTimeFeedback');
+								        if ($startTimeInput.val() && $endTimeInput.val()) { // Only compare if both are filled
+								            const now = new Date();
+								            // Optional: Set seconds and milliseconds to 0 for a cleaner comparison if you only care about minutes/hours
+								            now.setSeconds(0);
+								            now.setMilliseconds(0);
+								            const startTime = new Date($startTimeInput.val());
+								            const endTime = new Date($endTimeInput.val());
+								
+								            // Check if start time is before the current time
+								            if (startTime < now) {
+								                $startTimeInput.addClass('is-invalid');
+								                $startTimeFeedback.text('Start time cannot be in the past.');
+								                isValid = false;
+								            }
+								
+								            // Check if end time is before the current time
+								            if (endTime < now) {
+								                $endTimeInput.addClass('is-invalid');
+								                $endTimeFeedback.text('End time cannot be in the past.');
+								                isValid = false;
+								            }
+								
+								            // Check if start time is not less than end time (existing logic)
+								            if (startTime >= endTime) {
+								                $startTimeInput.addClass('is-invalid');
+								                $endTimeInput.addClass('is-invalid');
+								                $startTimeFeedback.text('Start time must be before end time.');
+								                $endTimeFeedback.text('End time must be after start time.');
+								                isValid = false;
+								            }
+								        } else if ($startTimeInput.val() && !$endTimeInput.val()) {
+								            // If start time is filled but end time is not, ensure end time shows required error
+								            $endTimeInput.addClass('is-invalid');
+								            $endTimeFeedback.text('Please enter an end time.');
+								            isValid = false;
+								        } else if (!$startTimeInput.val() && $endTimeInput.val()) {
+								            // If end time is filled but start time is not, ensure start time shows required error
+								            $startTimeInput.addClass('is-invalid');
+								            $startTimeFeedback.text('Please enter a start time.');
+								            isValid = false;
+								        }
+								
+								        // If all validations pass, submit the form
+								        if (isValid) {
+								            // Remove the event.preventDefault() for the button click
+								            // and let the form submit naturally
+								            $addVoucherForm.off('submit').submit(); // Remove previous submit handlers and then submit
+								            // Optionally, you might still want to hide the modal and clear the form
+								            // if the submission is handled via AJAX later or if you need immediate UI feedback.
+								            // For a standard form submission, the page will reload/redirect.
+								            const modal = bootstrap.Modal.getInstance(document.getElementById('createModal'));
+								            if (modal) {
+								                modal.hide();
+								            }
+								            $addVoucherForm[0].reset(); // Clear the form after submission (if not redirecting)
+								        }
+								    });
+								
+								    // Optional: Clear validation feedback when user starts typing/selecting
+								    $addVoucherForm.find('.form-control').on('input change', function() { // Use 'change' for select elements
+								        const $input = $(this);
+								        if ($input.hasClass('is-invalid')) {
+								            $input.removeClass('is-invalid');
+								            const $feedbackElement = $input.next('.invalid-feedback');
+								            if ($feedbackElement.length) { // Check if the next sibling is the feedback element
+								                $feedbackElement.text('');
+								            } else { // Fallback for specific IDs like startTimeFeedback, endTimeFeedback
+								                const feedbackId = $input.attr('id') + 'Feedback';
+								                $('#' + feedbackId).text('');
+								            }
+								        }
+								    });
 								});
 							</script>
 						</div>
@@ -314,7 +351,6 @@
 		<div class="card">
 			<div class="card-body">
 				<div class="row">
-
 					<div class="col-md-12">
 						<div class="table-responsive">
 							<table class="table table-hover">
@@ -553,3 +589,4 @@
 		</div>
 	</section>
 </body>
+</html>

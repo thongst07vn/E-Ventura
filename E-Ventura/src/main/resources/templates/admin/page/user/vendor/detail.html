@@ -32,9 +32,30 @@
 					</div>
 					<!-- col.//-->
 					<div class="col-xl col-lg">
-						<h3>
-							<th:block th:text="${vendor.name}"></th:block>
-						</h3>
+						<div
+							style="display: flex; align-items: center;">
+							<h3>
+								<th:block th:text="${vendor.name}"></th:block>&nbsp;
+							</h3>
+							<div class="rating">
+								<th:block
+									th:with="width=${avgVendorReview > 0 ? widthVendor : 0}">
+									<ul class="rating-stars"
+										style="display: inline-block; margin-right: 5px;">
+										<li class="stars-active"
+											th:style="'width:' + ${widthVendor} + '%'"><img
+											th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
+											style="height: 20px;"></li>
+										<li><img
+											th:src="@{/assets/imgs/icons/starts-disable.svg}" alt="stars"
+											style="height: 20px;"></li>
+									</ul>
+								</th:block>
+								<span class="font-xs color-gray-500 font-medium"> (<th:block
+										th:text="${countVendorReview}"></th:block> reviews)
+								</span>
+							</div>
+						</div>
 						<p>
 
 							<th:block th:each="vendorAddress : ${vendorAddresses}"
@@ -154,10 +175,10 @@
 		<!-- card.//-->
 		<div class="card mb-4">
 			<div class="card-body">
-			<div class="row">				
-				<h5 class="card-title col-6">Products by seller</h5>
-				
-			</div>
+				<div class="row">
+					<h5 class="card-title col-6">Products by seller</h5>
+
+				</div>
 				<div class="row">
 					<div class="col-xl-2 col-lg-3 col-md-6"
 						th:each="product : ${products}">
@@ -202,45 +223,55 @@
 			</div>
 		</div>
 		<!-- card //-->
-		
+
 		<!-- Trường hợp danh sách tất cả sản phẩm -->
-		<th:block th:if="${selectedCategoryId == null && !#lists.isEmpty(products)}">
+		<th:block
+			th:if="${selectedCategoryId == null && !#lists.isEmpty(products)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
 						<!-- Nút về đầu -->
-						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
-							<a class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${0}}" aria-label="Next"> <i
-									class="material-icons md-double_arrow"
-									style="transform: rotate(180deg) translate(15%, -30%);"></i>
-							</a>
-						</li>
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'hidden'"><a
+							class="page-link"
+							th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${0}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"
+								style="transform: rotate(180deg) translate(15%, -30%);"></i>
+						</a></li>
 						<!-- Nút trước -->
-						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
-								th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${currentPages-1}}" class="page-link"
-								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
-							</a></li>
+						<li class="page-item"
+							th:classappend="${currentPages == 0} ? 'disabled'"><a
+							th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${currentPages-1}}"
+							class="page-link" aria-label="Previous"> <i
+								class="material-icons md-chevron_left"></i>
+						</a></li>
 
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
 
-							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
-									class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${i}}"
-									th:text="${i + 1}"></a></li>
+							<li class="page-item"
+								th:classappend="${i} == ${currentPages} ? 'active'"><a
+								class="page-link"
+								th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${i}}"
+								th:text="${i + 1}"></a></li>
 						</th:block>
 
 						<!-- Nút tiếp -->
-						<li class="page-item" th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
-							<a class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${currentPages+1}}"
-								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
-							</a>
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+							<a class="page-link"
+							th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${currentPages+1}}"
+							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
+						</a>
 						</li>
 
 						<!-- Nút tới cuối -->
-						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
-							<a class="page-link" th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${lastPageIndex}}"
-								aria-label="Next"> <i class="material-icons md-double_arrow"></i>
-							</a>
+						<li class="page-item"
+							th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
+							<a class="page-link"
+							th:href="@{'/admin/vendor/detail/'+${id}+'?page=' + ${lastPageIndex}}"
+							aria-label="Next"> <i class="material-icons md-double_arrow"></i>
+						</a>
 						</li>
 					</ul>
 				</nav>
