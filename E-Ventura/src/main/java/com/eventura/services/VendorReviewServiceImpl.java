@@ -52,6 +52,19 @@ public class VendorReviewServiceImpl implements VendorReviewService {
 		// TODO Auto-generated method stub
 		return vendorReviewsRepository.findVendorReviewByUserAndVendorId(vendorId, userId);
 	}
+
+	@Override
+	public boolean save(VendorReviews vendorReviews) {
+		// TODO Auto-generated method stub
+		try {
+			vendorReviewsRepository.save(vendorReviews);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+	}
 	
 
 }

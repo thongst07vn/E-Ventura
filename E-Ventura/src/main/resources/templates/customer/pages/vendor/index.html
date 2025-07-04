@@ -11,7 +11,8 @@
 			<div class="breadcrumbs-div">
 				<div class="container">
 					<ul class="breadcrumb">
-						<li><a class="font-xs color-gray-1000" th:href="@{/customer/home}">Home</a></li>
+						<li><a class="font-xs color-gray-1000"
+							th:href="@{/customer/home}">Home</a></li>
 						<li>Ecom <th:block th:text="${vendor.name}"></th:block></li>
 					</ul>
 				</div>
@@ -25,7 +26,8 @@
 							<div class="card-header"
 								style="height: 200px; background-color: #425a8b;"></div>
 							<div class="d-flex box-info-vendor">
-								<div class="img-thumbnail shadow bg-white" style="position: relative;top: -65px;">
+								<div class="img-thumbnail shadow bg-white"
+									style="position: relative; top: -65px;">
 									<th:block th:if="${vendor.users.avatar.contains('https:')}">
 										<img class="center-xy img-fluid"
 											th:src="${vendor.users.avatar}" alt="Logo Brand">
@@ -59,9 +61,19 @@
 									<span class="font-xs color-gray-500 font-medium"> (<th:block
 											th:text="${countVendorReview}"></th:block>)
 									</span>
-									<form method="post" th:action="@{customer/follow}">
+									<form method="post" th:action="@{/customer/toggleFollow}">
 										<input type="hidden" name="vendorId" th:value="${vendor.id}">
-										<button type="button" class="btn btn-outline-primary btn-sm mt-1">Follow</button>
+
+										<div th:if="${vendorReviews == null or !vendorReviews.follow}">
+											<button type="submit"
+												class="btn btn-outline-primary btn-sm mt-1">Follow</button>
+											<input type="hidden" name="actionType" value="follow">
+										</div>
+
+										<div th:if="${vendorReviews != null and vendorReviews.follow}">
+											<button type="submit" class="btn btn-primary btn-sm mt-1">Unfollow</button>
+											<input type="hidden" name="actionType" value="unfollow">
+										</div>
 									</form>
 								</div>
 								<div class="vendor-contact">
@@ -151,7 +163,7 @@
 												class="btn dropdown-toggle font-sm color-gray-900 font-medium"
 												id="dropdownSort2" type="button" data-bs-toggle="dropdown"
 												aria-expanded="false" data-bs-display="static">
-												<span id="selectedPageSize">10 items</span>
+												<span id="selectedPageSize">20 items</span>
 											</button>
 											<ul class="dropdown-menu dropdown-menu-light"
 												aria-labelledby="dropdownSort2">
@@ -171,7 +183,7 @@
 										        const dropdownItems = document.querySelectorAll('.dropdown-menu-light .dropdown-item');
 										        const selectedPageSizeSpan = document.getElementById('selectedPageSize');
 										        const urlParams = new URLSearchParams(window.location.search);
-										        const pageSize = urlParams.get('pageSize') || '10'; // default to 30 as per your new dropdown
+										        const pageSize = urlParams.get('pageSize') || '20'; // default to 30 as per your new dropdown
 										
 										        // Set the initial active item and button text
 										        dropdownItems.forEach(item => {
@@ -233,14 +245,7 @@
 							<div class="card-grid-style-3" th:each="product : ${products}">
 								<div class="card-grid-inner">
 									<div class="tools">
-										<a class="btn btn-trend btn-tooltip mb-10" href="#"
-											aria-label="Trend" data-bs-placement="left"></a><a
-											class="btn btn-wishlist btn-tooltip mb-10"
-											href="shop-wishlist.html" aria-label="Add To Wishlist"></a><a
-											class="btn btn-compare btn-tooltip mb-10"
-											href="shop-compare.html" aria-label="Compare"></a><a
-											class="btn btn-quickview btn-tooltip" aria-label="Quick view"
-											href="#ModalQuickview" data-bs-toggle="modal"></a>
+
 									</div>
 
 									<div class="image-box">
@@ -281,7 +286,8 @@
 											</span>
 										</div>
 										<div class="price-info">
-											<strong class="font-lg-bold color-brand-3 price-main">$<th:block th:text="${product.products.price}"></th:block></strong>
+											<strong class="font-lg-bold color-brand-3 price-main">$<th:block
+													th:text="${product.products.price}"></th:block></strong>
 										</div>
 										<div class="mt-20 box-btn-cart">
 											<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
