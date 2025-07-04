@@ -54,7 +54,7 @@ public class VendorServiceImpl implements VendorService {
 	@Override
 	public int countByVendorId(int id) {
 		// TODO Auto-generated method stub
-		if(vendorEarningRepository.findById(id).isPresent()) {			
+		if(vendorRepository.findById(id).isPresent()) {			
 			return vendorEarningRepository.countByVendorId(id);
 		}else {			
 			return 0;			
@@ -63,7 +63,7 @@ public class VendorServiceImpl implements VendorService {
 
 	@Override
 	public double sumByVendorId(int id) {
-		if(vendorEarningRepository.findById(id).isPresent()) {			
+		if(vendorRepository.findById(id).isPresent()) {
 			return vendorEarningRepository.sumByVendorId(id);
 		}else {
 			return 0;			
