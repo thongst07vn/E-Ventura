@@ -16,5 +16,6 @@ import com.eventura.entities.Wards;
 
 @Repository
 public interface CouponCampaignRepository extends JpaRepository<CouponsCampaigns, String> {
-	
+	@Query("from CouponsCampaigns where coupons.id= :id and redeemUsedQty = 0")
+	public List<CouponsCampaigns> findAllCouponsCampaignsByCouponsId(@Param("id") int id);
 }

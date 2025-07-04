@@ -33,15 +33,20 @@ import com.eventura.entities.CartItems;
 import com.eventura.entities.Carts;
 import com.eventura.entities.Commissions;
 import com.eventura.entities.Coupons;
+import com.eventura.entities.CouponsCampaigns;
 import com.eventura.entities.OrderItems;
 import com.eventura.entities.Orders;
+import com.eventura.entities.OrdersCampaigns;
+import com.eventura.entities.OrdersCampaignsId;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
 import com.eventura.entities.VendorEarnings;
 import com.eventura.entities.Vendors;
 import com.eventura.entities.Vouchers;
+import com.eventura.entities.VouchersCampaigns;
 import com.eventura.helpers.RandomStringCode;
 import com.eventura.services.AddressService;
+import com.eventura.services.CampaignRedeemtionService;
 import com.eventura.services.CartService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.CommissionsService;
@@ -85,6 +90,9 @@ public class CartController {
 	private OrderItemService orderItemService;
 	@Autowired
 	private CommissionsService commissionsService;
+	@Autowired
+	private CampaignRedeemtionService campaignRedeemtionService;
+
 	// User Cart
 	@GetMapping({ "cartitems" })
 	public String cartList(Authentication authentication, ModelMap modelMap,
@@ -427,7 +435,7 @@ public class CartController {
 	@PostMapping({ "process-checkout" })
 	public String processCheckout(Authentication authentication, @ModelAttribute("newOrder") Orders newOrder,
 			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("cartItems") String cartItems,
-			@RequestParam("vouchers") String vouchers,@RequestParam("voucherEventura") String voucherEventura) {
+			@RequestParam("vouchers") String vouchers, @RequestParam("voucherEventura") String voucherEventura) {
 		// Order
 		Users user = null;
 		if (userDetails != null) {
@@ -440,16 +448,17 @@ public class CartController {
 		newOrder.setPaymentDate(new Date());
 		newOrder.setCreatedAt(new Date());
 		newOrder.setUpdatedAt(new Date());
-		newOrder.setName(newOrder.getUsers().getUsername() + "_Order_" + RandomStringCode.generateRandomAlphaNumeric(8));
+		newOrder.setName(
+				newOrder.getUsers().getUsername() + "_Order_" + RandomStringCode.generateRandomAlphaNumeric(8));
 		// Oder Items
 		System.out.println(newOrder.getName());
 		System.out.println(newOrder.getTotalAmount());
 		System.out.println(cartItems);
 		System.out.println(vouchers);
 		// Save Order
-		if(orderService.saveOrder(newOrder)) {		
+		if (orderService.saveOrder(newOrder)) {
 			// find Order Items
-			if(!cartItems.equals("")) {
+			if (!cartItems.equals("")) {
 				List<CartItems> checkoutList = new ArrayList();
 				List<Coupons> allCoupons = couponsService.findAllCoupons();
 				Map<Vendors, List<CartItemsDTO>> groupedCheckoutList = new HashMap<>();
@@ -462,7 +471,30 @@ public class CartController {
 					double afterDiscountPrice = originalPrice;
 					boolean hasDiscount = false;
 					for (Coupons coupon : allCoupons) {
-						if (coupon.getProducts() != null && coupon.getProducts().getId() == item.getProducts().getId()) {
+						if (coupon.getProducts() != null
+								&& coupon.getProducts().getId() == item.getProducts().getId()) {
+
+							CouponsCampaigns couponsCampaigns = campaignRedeemtionService
+									.findAllCouponsCampaignsByCouponsId(coupon.getId()).get(0);
+							couponsCampaigns.setRedeemUsedQty(1);
+							if (campaignRedeemtionService.saveCouponCampaign(couponsCampaigns)) {
+								coupon.setQuantity(coupon.getQuantity() - 1);
+								if (couponsService.save(coupon)) {
+									OrdersCampaignsId ordersCampaignsId = new OrdersCampaignsId(newOrder.getId(),
+											couponsCampaigns.getCampaignRedemptions().getId());
+									OrdersCampaigns ordersCampaigns = new OrdersCampaigns(ordersCampaignsId,
+											couponsCampaigns.getCampaignRedemptions(), newOrder, new Date());
+									if (!campaignRedeemtionService.saveOrderCampaign(ordersCampaigns)) {
+										System.out.println("Save Order Campaign wrong " + coupon.getId());										
+									} 
+								} else {
+									System.out.println("Save Coupon wrong " + coupon.getId());
+								}
+
+							} else {
+								System.out.println("Save Coupon Campaign wrong " + coupon.getId());
+							}
+
 							if (coupon.getDiscountUnit().equals("percent")) {
 								afterDiscountPrice = originalPrice - (originalPrice * coupon.getDiscountValue());
 							} else if (coupon.getDiscountUnit().equals("money")) {
@@ -474,16 +506,16 @@ public class CartController {
 					}
 					String[] combinationArray = item.getCombination().split("-");
 					StringBuilder combinationStringBuilder = new StringBuilder(); // Use StringBuilder for efficiency
-					
+
 					// Loop with an index to check for the last element
 					for (int i = 0; i < combinationArray.length; i++) {
 						String variantId = combinationArray[i];
-						
+
 						// Find the ProductVariant by ID and append its value
 						String value = productVariantService.findById(Integer.parseInt(variantId)).getValue();
-						
+
 						combinationStringBuilder.append(value);
-						
+
 						// Append a hyphen if it's not the last element
 						if (i < combinationArray.length - 1) {
 							combinationStringBuilder.append("-");
@@ -502,94 +534,144 @@ public class CartController {
 					orderItem.setProducts(dto.getCartItem().getProducts());
 					orderItem.setProductVariants(dto.getCartItem().getProductVariants());
 					orderItem.setQuantity(dto.getCartItem().getQuantity());
-					if(dto.isHasDiscount()) {					
+					if (dto.isHasDiscount()) {
 						orderItem.setPrice(afterDiscountPrice);
-					} else {					
+					} else {
 						orderItem.setPrice(originalPrice);
 					}
 					// Save Order Item
-					orderItemService.saveOrderItems(orderItem);					
-				}	
-				// find applied voucher	
+					
+					if(!orderItemService.saveOrderItems(orderItem)) {
+						System.out.println("save order item wrong " + orderItem.getId());
+					}
+				}
+				// find applied voucher
 				List<Vouchers> appliedVoucher = new ArrayList<>();
-				if(!vouchers.equals("")) {
-	            	String[] voucherIds = vouchers.split(",");
-	            	for(int i=0; i<voucherIds.length; i++) {
-	            		
-	            		appliedVoucher.add(vouchersService.findById(Integer.parseInt(voucherIds[i])));
-	            	}
-	            }
-				//calculate commission
+				if (!vouchers.equals("")) {
+					String[] voucherIds = vouchers.split(",");
+					for (int i = 0; i < voucherIds.length; i++) {
+						Vouchers voucher = vouchersService.findById(Integer.parseInt(voucherIds[i]));
+						VouchersCampaigns vouchersCampaigns = campaignRedeemtionService
+								.findAllVouchersCampaignsByVouchersId(voucher.getId()).get(0);
+						vouchersCampaigns.setRedeemUsedQty(1);
+						if (campaignRedeemtionService.saveVoucherCampaign(vouchersCampaigns)) {
+							voucher.setQuantity(voucher.getQuantity() - 1);
+							if(vouchersService.save(voucher)) {
+								OrdersCampaignsId ordersCampaignsId = new OrdersCampaignsId(newOrder.getId(),
+										vouchersCampaigns.getCampaignRedemptions().getId());
+								OrdersCampaigns ordersCampaigns = new OrdersCampaigns(ordersCampaignsId,
+										vouchersCampaigns.getCampaignRedemptions(), newOrder, new Date());
+								if(!campaignRedeemtionService.saveOrderCampaign(ordersCampaigns)) {
+									System.out.println("save Order campaign voucher wrong " + voucher.getId());
+								}
+							} else {
+								System.out.println("save voucher wrong " + voucher.getId());
+							}
+								
+						} else {
+							System.out.println("save voucher campaign wrong " + voucher.getId());
+						}
+						appliedVoucher.add(voucher);
+					}
+				}
+				// calculate commission
 				List<Commissions> commissionBeforeTotalVoucher = new ArrayList<>();
 				double totalCommission = 0;
-				for(Map.Entry<Vendors, List<CartItemsDTO>> entry : groupedCheckoutList.entrySet()) {
+				for (Map.Entry<Vendors, List<CartItemsDTO>> entry : groupedCheckoutList.entrySet()) {
 					Vendors vendor = entry.getKey();
-		            List<CartItemsDTO> cartItemsList = entry.getValue();
-		            double vendorOrderTotal = 0;
-		            
-		            for(CartItemsDTO dto : cartItemsList) {
-						if(dto.isHasDiscount()) {					
-							vendorOrderTotal += dto.getAfterDiscountPrice()*dto.getCartItem().getQuantity();
-						} else {					
-							vendorOrderTotal += dto.getOriginalPrice()*dto.getCartItem().getQuantity();								
-						}	
+					List<CartItemsDTO> cartItemsList = entry.getValue();
+					double vendorOrderTotal = 0;
+
+					for (CartItemsDTO dto : cartItemsList) {
+						if (dto.isHasDiscount()) {
+							vendorOrderTotal += dto.getAfterDiscountPrice() * dto.getCartItem().getQuantity();
+						} else {
+							vendorOrderTotal += dto.getOriginalPrice() * dto.getCartItem().getQuantity();
+						}
 					}
-		            if(!appliedVoucher.isEmpty()) {
-		            	for(Vouchers voucher : appliedVoucher) {
-		            		if(voucher.getVendors().getId() == vendor.getId()) {
-		            			if(voucher.getDiscountUnit().equals("percent")) {
-									if(vendorOrderTotal*voucher.getDiscountValue() > voucher.getMaxDiscountAmount()) {
+					if (!appliedVoucher.isEmpty()) {
+						for (Vouchers voucher : appliedVoucher) {
+							if (voucher.getVendors().getId() == vendor.getId()) {
+								if (voucher.getDiscountUnit().equals("percent")) {
+									if (vendorOrderTotal * voucher.getDiscountValue() > voucher
+											.getMaxDiscountAmount()) {
 										vendorOrderTotal -= voucher.getMaxDiscountAmount();
-									} else {								
-										vendorOrderTotal -= vendorOrderTotal*voucher.getDiscountValue();
+									} else {
+										vendorOrderTotal -= vendorOrderTotal * voucher.getDiscountValue();
 									}
-								} else if(voucher.getDiscountUnit().equals("money")) {
+								} else if (voucher.getDiscountUnit().equals("money")) {
 									vendorOrderTotal -= voucher.getDiscountValue();
 								}
-		            		}
-		            	}
-		            }
-		            double vendorOrderAfterVoucher = vendorOrderTotal*vendor.getVendorSettings().getCommissionValue();
+							}
+						}
+					}
+					double vendorOrderAfterVoucher = vendorOrderTotal * vendor.getVendorSettings().getCommissionValue();
 					VendorEarnings vendorEarning = new VendorEarnings();
 					vendorEarning.setCreatedAt(new Date());
 					vendorEarning.setUpdatedAt(new Date());
 					vendorEarning.setOrders(newOrder);
 					vendorEarning.setVendors(vendor);
 					vendorEarning.setAmount(vendorOrderAfterVoucher);
-					vendorService.saveVendorEarning(vendorEarning);
+					if(!vendorService.saveVendorEarning(vendorEarning)) {
+						System.out.println("save vendor earning wrong " + vendorEarning.getId());
+					}
 					Commissions commission = new Commissions();
 					commission.setVendors(vendor);
 					commission.setOrders(newOrder);
-					commission.setAmount(vendorOrderTotal-vendorOrderAfterVoucher);
+					commission.setAmount(vendorOrderTotal - vendorOrderAfterVoucher);
 					commission.setCreatedAt(new Date());
 					commission.setUpdatedAt(new Date());
 					commissionBeforeTotalVoucher.add(commission);
 					totalCommission += commission.getAmount();
 				}
-				if(!voucherEventura.equals("")) {
+				if (!voucherEventura.equals("")) {
 					Vouchers voucher = vouchersService.findById(Integer.parseInt(voucherEventura));
+					VouchersCampaigns vouchersCampaigns = campaignRedeemtionService
+							.findAllVouchersCampaignsByVouchersId(voucher.getId()).get(0);
+					vouchersCampaigns.setRedeemUsedQty(1);
+					if (campaignRedeemtionService.saveVoucherCampaign(vouchersCampaigns)) {
+						voucher.setQuantity(voucher.getQuantity() - 1);
+						if(vouchersService.save(voucher)) {
+							OrdersCampaignsId ordersCampaignsId = new OrdersCampaignsId(newOrder.getId(),
+									vouchersCampaigns.getCampaignRedemptions().getId());
+							OrdersCampaigns ordersCampaigns = new OrdersCampaigns(ordersCampaignsId,
+									vouchersCampaigns.getCampaignRedemptions(), newOrder, new Date());
+							if(!campaignRedeemtionService.saveOrderCampaign(ordersCampaigns)) {
+								System.out.println("save Order campaign voucher wrong " + voucher.getId());
+							}
+						} else {
+							System.out.println("save voucher wrong " + voucher.getId());
+						}
+							
+					} else {
+						System.out.println("save voucher campaign wrong " + voucher.getId());
+					}
 					double discountAmount = 0;
-					if(voucher.getDiscountUnit().equals("percent")) {
-						discountAmount = totalCommission*voucher.getDiscountValue();
-					} else if(voucher.getDiscountUnit().equals("money")) {
+					if (voucher.getDiscountUnit().equals("percent")) {
+						discountAmount = totalCommission * voucher.getDiscountValue();
+					} else if (voucher.getDiscountUnit().equals("money")) {
 						discountAmount = voucher.getDiscountValue();
 					}
-					if(discountAmount > voucher.getMaxDiscountAmount()) {
+					if (discountAmount > voucher.getMaxDiscountAmount()) {
 						discountAmount = voucher.getMaxDiscountAmount();
 					}
-					for(Commissions commission : commissionBeforeTotalVoucher) {
-						if(commission.getAmount() > discountAmount) {
+					for (Commissions commission : commissionBeforeTotalVoucher) {
+						if (commission.getAmount() > discountAmount) {
 							commission.setAmount(commission.getAmount() - discountAmount);
 							break;
 						}
 					}
 				}
-				for(Commissions commissions : commissionBeforeTotalVoucher) {
-					commissionsService.saveCommission(commissions);
+				for (Commissions commissions : commissionBeforeTotalVoucher) {
+					if(!commissionsService.saveCommission(commissions)) {
+						System.out.println("save commission wrong "+commissions.getId());
+					}
 				}
-				}
-				
-			}		
+			}
+
+		} else {
+			System.out.println("Save Order wrong");
+		}
 		return "redirect:/customer/cart/cartitems";
 	}
 }
