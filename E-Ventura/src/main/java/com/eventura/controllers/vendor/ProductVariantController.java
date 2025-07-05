@@ -46,6 +46,14 @@ public class ProductVariantController  {
 		System.out.println("Product ID: " + product.getId());
 		System.out.println("Product Variant Value: " + productVariant.getValue());
 		System.out.println("Product Variant Quantity: " + productVariant.getQuantity());
+		System.out.println(productVariantService.getTotalVariantQuantityByProductId(productId));
+		System.out.println(productService.findById(productId).getQuantity());
+		
+		if(productVariantService.getTotalVariantQuantityByProductId(productId) + productVariant.getQuantity() > productService.findById(productId).getQuantity()){
+			redirectAttributes.addFlashAttribute("sweetAlert", "warning");
+			redirectAttributes.addFlashAttribute("message", "Total variant quantity must less than or equal to total product quantity");
+			return "redirect:/vendor/product/edit/" + productId;
+		}
 
 		
 		// Kiểm tra sự tồn tại của ProductAttribute với name

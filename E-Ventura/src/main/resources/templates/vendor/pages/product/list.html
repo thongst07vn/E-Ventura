@@ -124,15 +124,15 @@
 									<i class="material-icons md-edit"></i> Edit
 								</a>
 								<a class="btn btn-sm font-sm rounded btn-danger text-white"
-									th:href="@{'/vendor/product/delete/' + ${product.products.id}}"
-									onclick="return confirmDelete(event)">
-									<i class="material-icons md-delete"></i>
+								   th:href="@{'/vendor/product/delete/' + ${product.products.id}}"
+								   th:onclick="'return confirmDelete(\'/vendor/product/delete/' + ${product.products.id} + '\')'">
+								   <i class="material-icons md-delete"></i>
 								</a>
-								<script>
-									function confirmDelete(event) {
-										event.preventDefault(); // Ngừng hành động mặc định của link (không chuyển hướng ngay lập tức)
 
-										// Hiển thị SweetAlert2
+								<script>
+									function confirmDelete(href) {
+										event.preventDefault(); // vẫn giữ nếu bạn không muốn nhảy trang ngay
+
 										Swal.fire({
 											title: 'Are you sure?',
 											text: 'Do you want to delete!',
@@ -142,12 +142,13 @@
 											cancelButtonText: 'No, keep it'
 										}).then((result) => {
 											if (result.isConfirmed) {
-												// Nếu người dùng xác nhận, điều hướng đến URL
-												window.location.href = event.target.href;
+												window.location.href = href;
 											}
 										});
+										return false;
 									}
 								</script>
+
 							</div>
 						</div>
 						<!-- row .//-->
@@ -317,6 +318,8 @@
 					});
 				}
 			});
+			
+			
 		</script>
 	</section>
 	
