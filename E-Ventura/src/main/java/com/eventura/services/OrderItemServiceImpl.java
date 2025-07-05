@@ -63,4 +63,10 @@ public class OrderItemServiceImpl implements OrderItemService{
 			return false;
 		}
 	}
+
+	@Override
+	public OrderItems findById(int id) {
+		// TODO Auto-generated method stub
+		return orderItemRepository.findById(id).get();
+	}
 }

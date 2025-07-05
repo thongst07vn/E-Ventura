@@ -35,6 +35,8 @@ import com.eventura.entities.Commissions;
 import com.eventura.entities.Coupons;
 import com.eventura.entities.CouponsCampaigns;
 import com.eventura.entities.OrderItems;
+import com.eventura.entities.OrderItemsOrderStatus;
+import com.eventura.entities.OrderItemsOrderStatusId;
 import com.eventura.entities.Orders;
 import com.eventura.entities.OrdersCampaigns;
 import com.eventura.entities.OrdersCampaignsId;
@@ -53,6 +55,7 @@ import com.eventura.services.CommissionsService;
 import com.eventura.services.CouponsService;
 import com.eventura.services.OrderItemService;
 import com.eventura.services.OrderService;
+import com.eventura.services.OrderStatusService;
 import com.eventura.services.ProductService;
 import com.eventura.services.ProductVariantService;
 import com.eventura.services.UserAddressService;
@@ -92,6 +95,8 @@ public class CartController {
 	private CommissionsService commissionsService;
 	@Autowired
 	private CampaignRedeemtionService campaignRedeemtionService;
+	@Autowired
+	private OrderStatusService orderStatusService;
 
 	// User Cart
 	@GetMapping({ "cartitems" })
@@ -470,6 +475,7 @@ public class CartController {
 					double originalPrice = item.getProducts().getPrice();
 					double afterDiscountPrice = originalPrice;
 					boolean hasDiscount = false;
+					
 					for (Coupons coupon : allCoupons) {
 						if (coupon.getProducts() != null
 								&& coupon.getProducts().getId() == item.getProducts().getId()) {
@@ -541,8 +547,18 @@ public class CartController {
 					}
 					// Save Order Item
 					
-					if(!orderItemService.saveOrderItems(orderItem)) {
-						System.out.println("save order item wrong " + orderItem.getId());
+					if(orderItemService.saveOrderItems(orderItem)) {
+						OrderItemsOrderStatusId orderItemsOrderStatusId = new OrderItemsOrderStatusId(orderItem.getId(),orderStatusService.findById(1).getId());
+						OrderItemsOrderStatus orderItemsOrderStatus = new OrderItemsOrderStatus(orderItemsOrderStatusId, orderItem, orderStatusService.findById(1), new Date());
+						if(!orderStatusService.saveOrderItemsOrderStatus(orderItemsOrderStatus)) {							
+							System.out.println("save order item order status wrong " + orderItem.getId());						
+						}
+					}else {
+						System.out.println("save order item wrong " + orderItem.getId());						
+					}
+					if(!cartService.deleteCartItem(item)) {
+						System.out.println("delete cart item wrong " + item.getId());						
+						
 					}
 				}
 				// find applied voucher

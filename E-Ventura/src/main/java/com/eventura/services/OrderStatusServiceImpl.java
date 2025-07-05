@@ -42,4 +42,22 @@ public class OrderStatusServiceImpl implements OrderStatusService{
 		return orderStatusReposItemOrderStatusRepository.findAll(Sort.by("createdAt").descending());
 	}
 
+	@Override
+	public OrderStatus findById(int id) {
+		// TODO Auto-generated method stub
+		return orderStatusRepository.findById(id).get();
+	}
+
+	@Override
+	public boolean saveOrderItemsOrderStatus(OrderItemsOrderStatus orderItemsOrderStatus) {
+		// TODO Auto-generated method stub
+		try {
+			orderStatusReposItemOrderStatusRepository.save(orderItemsOrderStatus);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }

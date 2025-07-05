@@ -18,4 +18,6 @@ public interface OrderItemService {
 	public Page<OrderItems> findAllOrderItemsByOrderIdPage(int orderId, Pageable pageable);
 	
 	public boolean saveOrderItems(OrderItems orderItems);
+	
+	public OrderItems findById(int id);
 }

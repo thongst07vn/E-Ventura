@@ -82,6 +82,18 @@ public class CartServiceImpl implements CartService {
 		}
 	}
 
+	@Override
+	public boolean deleteCartItem(CartItems cartItems) {
+		// TODO Auto-generated method stub
+		try {
+			cartItemsRepository.delete(cartItems);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	
 
 }

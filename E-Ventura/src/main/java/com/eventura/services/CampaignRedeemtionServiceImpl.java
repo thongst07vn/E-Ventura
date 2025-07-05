@@ -1,8 +1,8 @@
 package com.eventura.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +33,7 @@ import com.eventura.repositories.VoucherRepository;
 
 @Service
 public class CampaignRedeemtionServiceImpl implements CampaignRedeemtionService {
-	
+
 	@Autowired
 	private CampaignRedeemtionRepository campaignRedeemtionRepository;
 	@Autowired
@@ -81,7 +81,7 @@ public class CampaignRedeemtionServiceImpl implements CampaignRedeemtionService 
 
 	@Override
 	public List<CouponsCampaigns> findAllCouponsCampaignsByCouponsId(int id) {
-		
+
 		return couponCampaignRepository.findAllCouponsCampaignsByCouponsId(id);
 	}
 
@@ -101,5 +101,39 @@ public class CampaignRedeemtionServiceImpl implements CampaignRedeemtionService 
 		// TODO Auto-generated method stub
 		return voucherCampaignRepository.findAllVouchersCampaignsByVouchersId(id);
 	}
-	
+
+	@Override
+	public Page<OrdersCampaigns> findOrderByCampaignRedeem(int campaignRedeemId, Pageable pageable) {
+		Page<OrdersCampaigns> result = orderCampaignRepository.findOrderByCampaignRedeem(campaignRedeemId, pageable);
+
+		return result;
+	}
+
+	@Override
+	public List<VouchersCampaigns> findAllVouchersCampaignsByVouchersIdWithredeemUsedQty(int id) {
+		// TODO Auto-generated method stub
+		List<VouchersCampaigns> result = voucherCampaignRepository.findAllVouchersCampaignsByVouchersIdWithredeemUsedQty(id);
+
+		// This check is usually not needed for methods returning List<T>
+		// from Spring Data JPA, as they return an empty list if no results.
+		if (result == null) {
+			return Collections.emptyList();
+		}
+		return result;
+	}
+
+	@Override
+	public List<CouponsCampaigns> findAllCouponsCampaignsByCouponsIdWithredeemUsedQty(int id) {
+		// TODO Auto-generated method stub
+		List<CouponsCampaigns> result = couponCampaignRepository
+				.findAllCouponsCampaignsByCouponsIdWithredeemUsedQty(id);
+
+		// This check is usually not needed for methods returning List<T>
+		// from Spring Data JPA, as they return an empty list if no results.
+		if (result == null) {
+			return Collections.emptyList();
+		}
+		return result;
+	}
+
 }

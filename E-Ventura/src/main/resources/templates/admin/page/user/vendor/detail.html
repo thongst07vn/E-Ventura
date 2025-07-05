@@ -133,7 +133,7 @@
 								<p class="mb-0 text-muted">Income:</p>
 								<h5 class="text-success mb-0">
 									$
-									<th:block th:text="${income}"></th:block>
+									<th:block th:text="${#numbers.formatDecimal(income, 0, 'COMMA', 2, 'POINT')}"></th:block>
 								</h5>
 							</article>
 						</div>
