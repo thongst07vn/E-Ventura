@@ -15,7 +15,7 @@
 					<article class="icontext"><span class="icon icon-sm rounded-circle bg-primary-light"><i
 								class="text-primary material-icons md-monetization_on"></i></span>
 						<div class="text">
-							<h6 class="mb-1 card-title">Revenue</h6><span>$ <th:block th:text="${sumCommission}"></th:block></span><span
+							<h6 class="mb-1 card-title">Revenue</h6><span>$ <th:block th:text="${#numbers.formatDecimal(sumCommission, 0, 'COMMA', 2, 'POINT')}"></th:block></span><span
 								class="text-sm">&nbsp;</span>
 						</div>
 					</article>

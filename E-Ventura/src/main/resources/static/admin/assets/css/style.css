@@ -28,6 +28,14 @@ time, mark, audio, video {
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+   /* Standard property */
+   user-select: none;
+   /* For older browsers (Firefox) */
+   -moz-user-select: none;
+   /* For older browsers (IE/Edge) */
+   -ms-user-select: none;
+   /* For older browsers (Safari) */
+    -webkit-user-select: none;
 }
 
 thead {
@@ -60,6 +68,7 @@ q:before, q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
+  
 }
 
 img {
@@ -85,7 +94,12 @@ input[type=number]:focus,
   outline: none !important;
   box-shadow: none;
 }
-
+/* Styles for interactive table rows */
+tr[ondblclick]:hover {
+  cursor: pointer; /* Changes cursor to a hand pointer */
+  background-color: #e9ecef; /* A light background on hover */
+  box-shadow: inset 3px 0 0 0 #007bff; /* Optional: a subtle left border highlight */
+}
 input:focus::-moz-placeholder {
   opacity: 0;
   -moz-transition: 0.4s;
@@ -1601,6 +1615,16 @@ input:checked + .slider:before {
   }
 }
 /*Order Tracking*/
+.order-status {
+   /* Standard property */
+   user-select: none;
+   /* For older browsers (Firefox) */
+   -moz-user-select: none;
+   /* For older browsers (IE/Edge) */
+   -ms-user-select: none;
+   /* For older browsers (Safari) */
+    -webkit-user-select: none;
+}
 .order-tracking .steps .step {
   display: block;
   width: 100%;

@@ -16,6 +16,10 @@
 				</p>
 			</div>
 		</div>
+		<div class="content-header">
+			<a href="javascript:history.back()"><i
+				class="material-icons md-arrow_back"></i> Go back</a>
+		</div>
 		<div class="card">
 			<header class="card-header">
 				<div class="row align-items-center">
@@ -26,14 +30,7 @@
 
 					</div>
 					<div class="col-lg-6 col-md-6 ms-auto text-md-end">
-						<select
-							class="form-select d-inline-block mb-lg-0 mb-15 mw-200 no-print">
-							<option>Change status</option>
-							<option>Awaiting payment</option>
-							<option>Confirmed</option>
-							<option>Shipped</option>
-							<option>Delivered</option>
-						</select>
+						
 						<button onclick="printSection()"
 							class="btn btn-secondary print ms-2 no-print">
 							<i class="icon material-icons md-print"></i>
@@ -156,12 +153,15 @@
 											<td class="text-center"><th:block
 													th:each="status : ${orderItemStatuses}">
 													<th:block th:if="${orderItem.id == status.orderItemId}">
-														<span class="badge rounded-pill"
+														<span class="badge rounded-pill order-status"
+															th:id="'status-' + ${status.orderItemId}"
+															th:data-order-item-id="${status.orderItemId}"
+															th:data-current-status="${status.statusName}"
 															th:classappend="${status.statusName == 'Ordered' ? 'alert-info' :
-                                   (status.statusName == 'Confirmed' ? 'alert-primary' :
-                                   (status.statusName == 'Delivering' ? 'alert-warning' :
-                                   (status.statusName == 'Received' ? 'alert-success' :
-                                   (status.statusName == 'Canceled' ? 'alert-danger' : ''))))}"
+                         (status.statusName == 'Confirmed' ? 'alert-primary' :
+                         (status.statusName == 'Delivering' ? 'alert-warning' :
+                         (status.statusName == 'Received' ? 'alert-success' :
+                         (status.statusName == 'Canceled' ? 'alert-danger' : ''))))}"
 															th:text="${status.statusName}"> </span>
 													</th:block>
 												</th:block></td>
@@ -172,12 +172,123 @@
 								</tbody>
 							</table>
 						</div>
-						<a class="btn btn-primary no-print"
-							href="page-orders-tracking.html">View Order Tracking</a>
 					</div>
 				</div>
 			</div>
 		</div>
-
+		<script th:src="@{/admin/assets/js/vendors/jquery-3.6.0.min.js}"></script>
+		<script>
+		    $(document).ready(function() {
+		        // Handle double-click on status badge
+		        $('.order-status').dblclick(function() {
+		            const $this = $(this);
+		            const orderItemId = $this.data('order-item-id');
+		            const currentStatus = $this.data('current-status');
+		            let newStatus = '';
+		
+		            if (currentStatus === 'Confirmed') {
+		                newStatus = 'Delivering';
+		                updateOrderStatus(orderItemId, newStatus, $this);
+		            } else if (currentStatus === 'Delivering') {
+		                Swal.fire({
+		                    title: 'Change Order Status',
+		                    text: "What's the next status for this order item?",
+		                    icon: 'question',
+		                    showCancelButton: true,
+		                    showDenyButton: true, // Show a "Deny" button for "Canceled"
+		                    confirmButtonText: 'Received',
+		                    denyButtonText: 'Canceled', // Text for the "Deny" button
+		                    cancelButtonText: 'Keep Delivering', // Text for the "Cancel" button
+		                    reverseButtons: true, // Puts confirm button on the right
+		                    customClass: {
+		                        confirmButton: 'swal2-confirm',
+		                        denyButton: 'swal2-deny',
+		                        cancelButton: 'swal2-cancel'
+		                    }
+		                }).then((result) => {
+		                    if (result.isConfirmed) {
+		                        newStatus = 'Received';
+		                        updateOrderStatus(orderItemId, newStatus, $this);
+		                    } else if (result.isDenied) {
+		                        newStatus = 'Canceled';
+		                        updateOrderStatus(orderItemId, newStatus, $this);
+		                    }
+		                    // If result.isDismissed (e.g., clicked "Keep Delivering" or outside), do nothing
+		                });
+		            }
+		        });
+		
+		        function updateOrderStatus(orderItemId, newStatus, $element) {
+		            // Show a loading spinner while processing
+		            Swal.fire({
+		                title: 'Updating...',
+		                text: 'Please wait while we update the order status.',
+		                allowOutsideClick: false,
+		                didOpen: () => {
+		                    Swal.showLoading();
+		                }
+		            });
+		
+		            // Send AJAX request to your Spring Boot backend
+		            $.ajax({
+		                url: '/admin/order-items/update-status', // Your Spring Boot endpoint
+		                type: 'POST', // Or 'PUT', depending on your API design
+		                contentType: 'application/json',
+		                data: JSON.stringify({
+		                    orderItemId: orderItemId,
+		                    newStatus: newStatus
+		                }),
+		                success: function(response) {
+		                    Swal.close(); // Close the loading spinner
+		                    if (response.success) {
+		                        // Update the badge text and class on success
+		                        $element.text(newStatus);
+		                        $element.data('current-status', newStatus); // Update data attribute
+		
+		                        // Remove existing alert classes and add the new one
+		                        $element.removeClass('alert-info alert-primary alert-warning alert-success alert-danger');
+		                        if (newStatus === 'Ordered') {
+		                            $element.addClass('alert-info');
+		                        } else if (newStatus === 'Confirmed') {
+		                            $element.addClass('alert-primary');
+		                        } else if (newStatus === 'Delivering') {
+		                            $element.addClass('alert-warning');
+		                        } else if (newStatus === 'Received') {
+		                            $element.addClass('alert-success');
+		                        } else if (newStatus === 'Canceled') {
+		                            $element.addClass('alert-danger');
+		                        }
+		
+		                        Swal.fire({
+		                            title: 'Success!',
+		                            text: 'Order status updated successfully to ' + newStatus + '!',
+		                            icon: 'success',
+		                            confirmButtonText: 'OK'
+		                        });
+		                        // Optionally, you might want to refresh part of the page or the entire page
+		                        // location.reload();
+		                    } else {
+		                        Swal.fire({
+		                            title: 'Error!',
+		                            text: 'Failed to update order status: ' + response.message,
+		                            icon: 'error',
+		                            confirmButtonText: 'OK'
+		                        });
+		                    }
+		                },
+		                error: function(xhr, status, error) {
+		                    Swal.close(); // Close the loading spinner
+		                    Swal.fire({
+		                        title: 'Error!',
+		                        text: 'An error occurred while updating order status. Please try again.',
+		                        icon: 'error',
+		                        confirmButtonText: 'OK'
+		                    });
+		                    console.error("AJAX Error: ", xhr.responseText);
+		                }
+		            });
+		        }
+		    });
+		</script>
 	</section>
 </body>

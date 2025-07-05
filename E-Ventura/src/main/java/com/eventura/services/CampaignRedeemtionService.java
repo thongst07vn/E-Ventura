@@ -23,6 +23,9 @@ public interface CampaignRedeemtionService{
 	
 	public boolean saveOrderCampaign(OrdersCampaigns ordersCampaigns);
 	public List<CouponsCampaigns> findAllCouponsCampaignsByCouponsId(int id);
+	public List<CouponsCampaigns> findAllCouponsCampaignsByCouponsIdWithredeemUsedQty(int id);
 	public List<VouchersCampaigns> findAllVouchersCampaignsByVouchersId(int id);
+	public List<VouchersCampaigns> findAllVouchersCampaignsByVouchersIdWithredeemUsedQty(int id);
 
+	public Page<OrdersCampaigns> findOrderByCampaignRedeem(int campaignRedeemId, Pageable pageable);
 }
