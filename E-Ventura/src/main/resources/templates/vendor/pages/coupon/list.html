@@ -54,15 +54,15 @@
 														discount unit.</div>
 												</div>
 												<div class="col-lg-12 mb-3">
-												    <label class="form-label" for="product">Product</label>
-												    <select class="form-control mb-2" id="product" th:field="${coupon.products.id}" name="product" required>
-												        <option value="">-- Select a Product --</option>
-												        <option th:each="product : ${products}"
-												                th:value="${product.id}"
-												                th:text="${product.name}">
-												        </option>
-												    </select>
-												    <div class="invalid-feedback">Please select a product.</div>
+													<label class="form-label" for="product">Product</label>
+													<select class="form-control mb-2" id="product"
+														th:field="${coupon.products.id}" name="product" required>
+														<option value="">-- Select a Product --</option>
+														<option th:each="product : ${products}" th:value="${product.id}"
+															th:text="${product.name}">
+														</option>
+													</select>
+													<div class="invalid-feedback">Please select a product.</div>
 												</div>
 
 												<div class="col-lg-12 mb-3">
@@ -88,8 +88,8 @@
 												<div class="col-lg-12 mb-3">
 													<label class="form-label" for="endTime">End Time:</label> <input
 														class="form-control mb-2" type="datetime-local"
-														th:field="${coupon.endTime}" id="" name=""
-														th:value="${endTime}" required>
+														th:field="${coupon.endTime}" id="" name="" th:value="${endTime}"
+														required>
 													<div class="invalid-feedback" id="endTimeFeedback">
 														Please enter an end time.</div>
 												</div>
@@ -162,7 +162,7 @@
 											isValid = false;
 										}
 
-									
+
 
 										if ($quantity.val() == 0 || $quantity.val().trim() === '') {
 											$quantity.addClass('is-invalid');
@@ -240,22 +240,22 @@
 										}
 									});
 								});
-								
-								// JavaScript to display SweetAlert2 based on flash attributes
-									document.addEventListener('DOMContentLoaded', function () {
-										const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
-										const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
 
-										if (sweetAlertStatus && sweetAlertMessage) {
-											Swal.fire({
-												icon: sweetAlertStatus, // 'success' or 'error'
-												title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
-												text: sweetAlertMessage,
-												showConfirmButton: false,
-												timer: 3000 // Automatically close after 3 seconds
-											});
-										}
-									});
+								// JavaScript to display SweetAlert2 based on flash attributes
+								document.addEventListener('DOMContentLoaded', function () {
+									const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+									const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+									if (sweetAlertStatus && sweetAlertMessage) {
+										Swal.fire({
+											icon: sweetAlertStatus, // 'success' or 'error'
+											title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+											text: sweetAlertMessage,
+											showConfirmButton: false,
+											timer: 3000 // Automatically close after 3 seconds
+										});
+									}
+								});
 							</script>
 						</div>
 					</div>
@@ -337,7 +337,7 @@
 													th:text="${#dates.format(coupon.endTime, 'dd/MM/yyyy HH:mm:ss')}">
 												</th:block>
 											</td>
-											
+
 											<td class="text-center">
 												<th:block th:text="${coupon.quantity}"></th:block>
 											</td>
@@ -369,14 +369,15 @@
 											</td>
 											<td class="text-center">
 												<a class="btn btn-sm font-sm rounded btn-danger text-white"
-													th:href="@{'/vendor/coupon/delete/' + ${coupon.id}}" onclick="return confirmDelete(event)">
+													th:href="@{'/vendor/coupon/delete/' + ${coupon.id}}"
+													th:onclick="'return confirmDelete(\'/vendor/coupon/delete/' + ${coupon.id} + '\')'">
 													<i class="material-icons md-delete"></i>
 												</a>
-												<script>
-													function confirmDelete(event) {
-														event.preventDefault(); // Ngừng hành động mặc định của link (không chuyển hướng ngay lập tức)
 
-														// Hiển thị SweetAlert2
+												<script>
+													function confirmDelete(href) {
+														event.preventDefault(); // vẫn giữ nếu bạn không muốn nhảy trang ngay
+
 														Swal.fire({
 															title: 'Are you sure?',
 															text: 'Do you want to delete!',
@@ -386,10 +387,10 @@
 															cancelButtonText: 'No, keep it'
 														}).then((result) => {
 															if (result.isConfirmed) {
-																// Nếu người dùng xác nhận, điều hướng đến URL
-																window.location.href = event.target.href;
+																window.location.href = href;
 															}
 														});
+														return false;
 													}
 												</script>
 											</td>
