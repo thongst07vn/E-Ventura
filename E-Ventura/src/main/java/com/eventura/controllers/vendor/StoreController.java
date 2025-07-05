@@ -1,5 +1,8 @@
 package com.eventura.controllers.vendor;
 
+import java.time.DateTimeException;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,18 +11,23 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.VendorReviews;
+import com.eventura.entities.Vendors;
 import com.eventura.services.CategoryService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 import com.eventura.services.VendorProductCategoryService;
 import com.eventura.services.VendorReviewService;
 import com.eventura.services.VendorService;
+import com.eventura.services.VendorSettingService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -37,6 +45,8 @@ public class StoreController  {
 	private CategoryService categoryService;
 	@Autowired
 	private VendorReviewService vendorReviewService;
+	@Autowired
+	private VendorSettingService vendorSettingService;
 
 	
 	/*===================== STORE =====================*/
@@ -47,8 +57,27 @@ public class StoreController  {
 		int id = (Integer) session.getAttribute("vendorId");
 		modelMap.put("user", userService.findById(id));
 		modelMap.put("vendor", vendorService.findById(id));
+		modelMap.put("vendorSettings", vendorSettingService.findAll());
 
 		return "vendor/pages/store/edit";
+	}
+	
+	@PostMapping("edit")
+	public String storeEdit(@ModelAttribute("vendor") Vendors vendor,
+							RedirectAttributes redirectAttributes) {
+		
+		vendor.setVendorSettings(vendorSettingService.findById(vendor.getVendorSettings().getId()));
+		vendor.setUpdatedAt(new Date());
+		
+		if(vendorService.save(vendor)) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "success");
+			redirectAttributes.addFlashAttribute("message", "Save Vendor Profile Successfully");
+		}else {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Save Vendor Profile Failed");
+		}
+
+		return "redirect:/vendor/store/edit";
 	}
 	
 	@GetMapping("view")
@@ -60,6 +89,8 @@ public class StoreController  {
 		modelMap.put("user", userService.findById(vendorId));
 		modelMap.put("vendor", vendorService.findById(vendorId));
 		modelMap.put("revenue", vendorService.sumByVendorId(vendorId));
+		modelMap.put("sale", vendorService.countByVendorId(vendorId));
+
 		
 		int pageSize = 12;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));

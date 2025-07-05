@@ -37,17 +37,23 @@
 					<!-- col.//-->
 					<!-- card-body.//-->
 					<hr class="my-4">
-					<form>
+					<form method="POST" th:action="@{/vendor/store/edit}">
 						<div class="row">
 							<div class="col-lg-12">
 								<div class="row gx-3">
 									<div class="col-6 mb-3">
 										<label class="form-label">Store name</label>
 										<input class="form-control" type="text" th:field="${vendor.name}">
+										<input type="hidden" th:field="${vendor.id}">
+										<input type="hidden" th:field="${vendor.createdAt}">
+
 									</div>
 									<div class="col-6 mb-3">
 										<label class="form-label">Store Type</label>
-										<input class="form-control" type="text" th:value="${vendor.vendorSettings.vendorType}"  readonly>
+										<select class="form-select" th:field="${vendor.vendorSettings.id}">
+											<option th:each="vendorSetting : ${vendorSettings}" th:value="${vendorSetting.id}" th:text="${vendorSetting.vendorType}"
+												th:selected="${vendorSetting.id == selectedCategoryId}"></option>
+										</select>
 									</div>
 									<div class="col-6 mb-3">
 										<label class="form-label">Contact name</label>
@@ -56,13 +62,13 @@
 									<!-- col .//-->
 									<!-- col .//-->
 									<div class="col-lg-6 mb-3">
-										<label class="form-label">Email</label>
+										<label class="form-label">Contact Email</label>
 										<input class="form-control" type="email" th:field="${vendor.contactEmail}">
 									</div>
 
 									<div class="col-lg-12 mb-4">
 										<label class="form-label">Full description</label>
-										<textarea class="form-control" rows="4" th:field="${vendor.description}"></textarea>
+										<textarea class="form-control" rows="4" th:field="${vendor.description}" id="productDescription"></textarea>
 									</div>
 
 
@@ -81,6 +87,50 @@
 				</div>
 			</div>
 		</div>
+		<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+		<script>
+			// Gom tất cả logic jQuery và khởi tạo CKEditor vào một khối $(document).ready lớn
+			$(document).ready(function () {
+				// Biến để lưu instance của CKEditor
+				let addProductDescriptionEditor;
+
+				// Khởi tạo CKEditor trên textarea có id="productDescription"
+				ClassicEditor
+					.create(document.querySelector('#productDescription')) // Đã sửa ID ở đây
+					.then(editor => {
+						addProductDescriptionEditor = editor; // Gán instance vào biến
+						console.log('CKEditor was initialized for productDescription', editor);
+					})
+					.catch(error => {
+						console.error(error);
+					});
+
+
+			});
+
+
+		</script>
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+				if (sweetAlertStatus && sweetAlertMessage) {
+					Swal.fire({
+						icon: sweetAlertStatus, // 'success' or 'error'
+						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						text: sweetAlertMessage,
+						showConfirmButton: false,
+						timer: 3000 // Automatically close after 3 seconds
+					});
+				}
+			});
+		</script>
 
 	</section>
 </body>
