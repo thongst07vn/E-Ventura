@@ -64,7 +64,7 @@
 										<div class="left"><img class="img-sm img-thumbnail"
 												th:src="@{'/assets/imgs/avatars/' + ${vendorReview.users.avatar}}" alt="Item"></div>
 										<div class="info">
-											<h6 class="mb-0">Levi Akerman</h6>
+											<h6 class="mb-0" th:text="${vendorReview.users.username}">Levi Akerman</h6>
 										</div>
 									</a>
 								</td>
@@ -90,7 +90,7 @@
 			</div>
 		</div>
 		<!-- Trường hợp danh sách tất cả sản phẩm -->
-		<th:block th:if="${selectedKeyword == null && selectedCategoryId == null && !#lists.isEmpty(products)}">
+		<th:block th:if="${!#lists.isEmpty(vendorReviews)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
@@ -111,19 +111,19 @@
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
 		
 							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
-									th:href="@{'/vendor/product/list?page=' + ${i}}" th:text="${i + 1}"></a></li>
+									th:href="@{'/vendor/store/review?page=' + ${i}}" th:text="${i + 1}"></a></li>
 						</th:block>
 		
 						<!-- Nút tiếp -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
-							<a class="page-link" th:href="@{'/vendor/product/list?page=' + ${currentPages+1}}"
+							<a class="page-link" th:href="@{'/vendor/store/review?page=' + ${currentPages+1}}"
 								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 							</a>
 						</li>
 		
 						<!-- Nút tới cuối -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/product/list?page=' + ${lastPageIndex}}" aria-label="Next">
+							<a class="page-link" th:href="@{'/vendor/store/review?page=' + ${lastPageIndex}}" aria-label="Next">
 								<i class="material-icons md-double_arrow"></i>
 							</a>
 						</li>

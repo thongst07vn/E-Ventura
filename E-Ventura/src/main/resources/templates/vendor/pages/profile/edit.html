@@ -74,7 +74,7 @@
 															th:field="${userAdresses.provinces.code}">
 															<option value="" disabled selected>Chọn Tỉnh/Thành</option>
 															<option th:each="province : ${provinces}"
-																th:value="${province.code}" th:text="${province.name}">
+																th:value="${province.code}" th:text="${province.administrativeUnits.shortName + ' ' + province.name}">
 															</option>
 														</select>
 														<div class="invalid-feedback">Please select Province.</div>
@@ -88,7 +88,8 @@
 															th:field="${userAdresses.districts.code}">
 															<option value="" disabled selected>Chọn Quận/Huyện</option>
 															<option th:each="district : ${districts}"
-																th:value="${district.code}" th:text="${district.name}">
+																th:value="${district.code}" 
+																th:text="${district.administrativeUnits.shortName + ' ' + district.name}">
 															</option>
 														</select>
 														<div class="invalid-feedback">Please select District.</div>
@@ -100,8 +101,9 @@
 														<select class="form-select" id="wardSelect"
 															th:field="${userAdresses.wards.code}">
 															<option value="" disabled selected>Chọn Phường/Xã</option>
-															<option th:each="ward : ${wards}" th:value="${ward.code}"
-																th:text="${ward.name}">
+															<option th:each="ward : ${wards}" 
+																th:value="${ward.code}"
+																th:text="${ward.administrativeUnits.shortName + ' ' + ward.name}">
 															</option>
 														</select>
 														<div class="invalid-feedback">Please select Ward.</div>
@@ -478,7 +480,7 @@
 							data.forEach(district => {
 								const option = document.createElement("option");
 								option.value = district.code;
-								option.text = district.name;
+								option.text = district.shortName + ' ' + district.name;
 								districtSelect.appendChild(option);
 							});
 							districtSelect.disabled = false;
@@ -497,7 +499,7 @@
 							data.forEach(ward => {
 								const option = document.createElement("option");
 								option.value = ward.code;
-								option.text = ward.name;
+								option.text = ward.shortName + ' ' + ward.name;
 								wardSelect.appendChild(option);
 							});
 							wardSelect.disabled = false;

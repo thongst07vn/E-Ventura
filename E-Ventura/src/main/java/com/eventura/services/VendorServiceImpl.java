@@ -56,6 +56,7 @@ public class VendorServiceImpl implements VendorService {
 		// TODO Auto-generated method stub
 		if(vendorRepository.findById(id).isPresent()) {			
 			return vendorEarningRepository.countByVendorId(id);
+			
 		}else {			
 			return 0;			
 		}

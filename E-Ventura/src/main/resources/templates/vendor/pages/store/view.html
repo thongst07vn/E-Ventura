@@ -24,7 +24,7 @@
 						<h3 th:text="${vendor.name}"></h3>
 						<p>
 							<span style="font-weight: bold;">Address: </span>
-							<span th:text="${user.userAddresses[0].address}"></span>
+							<span th:text="${user.userAddresses[0].address}+' '+${user.userAddresses[0].wards.administrativeUnits.shortName}+' '+${user.userAddresses[0].wards.name}+' '+${user.userAddresses[0].districts.administrativeUnits.shortName}+' '+${user.userAddresses[0].districts.name}+' '+${user.userAddresses[0].provinces.administrativeUnits.shortName}+' '+${user.userAddresses[0].provinces.name}"></span>
 						</p>
 
 						<p>
@@ -40,7 +40,7 @@
 						<div class="col-md-12 col-lg-4 col-xl-2">
 							<article class="box">
 								<p class="mb-0 text-muted">Total sales:</p>
-								<h5 class="text-success">238</h5>
+								<h5 class="text-success" th:text="${sale}">238</h5>
 								<p class="mb-0 text-muted">Revenue:</p>
 								<h5 class="text-success mb-0" th:text="${revenue}"></h5>
 							</article>
@@ -66,7 +66,7 @@
 							<h6>Address</h6>
 							<p th:text="${user.userAddresses[0].address}"></p>
 							<p
-								th:text="${user.userAddresses[0].provinces.name + ', ' + user.userAddresses[0].districts.name + ', ' + user.userAddresses[0].wards.name}">
+								th:text="${user.userAddresses[0].wards.administrativeUnits.shortName}+' '+${user.userAddresses[0].wards.name}+' '+${user.userAddresses[0].districts.administrativeUnits.shortName}+' '+${user.userAddresses[0].districts.name}+' '+${user.userAddresses[0].provinces.administrativeUnits.shortName}+' '+${user.userAddresses[0].provinces.name}">
 							</p>
 						</div>
 
