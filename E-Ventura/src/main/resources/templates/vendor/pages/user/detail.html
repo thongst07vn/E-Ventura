@@ -1,0 +1,178 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('User Detail', ~{this :: .content-main})}">
+
+<head>
+<title>Customer List</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header">
+			<a th:href="@{/vendor/dashboard/home}"><i
+				class="material-icons md-arrow_back"></i> Go back</a>
+		</div>
+		<div class="content-header">
+			<h2 class="content-title">Profile setting</h2>
+		</div>
+		<div class="card">
+			<div class="card-body">
+				<div class="row gx-5">
+					<div class="col-lg-12">
+						<section class="content-body p-xl-4">
+							<form>
+								<div class="row">
+									<div class="col-lg-8">
+										<div class="row gx-3">
+											<div class="col-6 mb-3">
+												<label class="form-label">First name</label>
+												<p class="form-control">
+													<th:block th:text="${user.firstName}">
+													</th:block>
+												</p>
+											</div>
+											<!-- col .//-->
+											<div class="col-6 mb-3">
+												<label class="form-label">Last name</label>
+												<p class="form-control">
+													<th:block th:text="${user.lastName}">
+													</th:block>
+												</p>
+											</div>
+											<!-- col .//-->
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Email</label>
+												<p class="form-control">
+													<th:block th:text="${user.email}">
+													</th:block>
+												</p>
+											</div>
+											<!-- col .//-->
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Username</label>
+												<p class="form-control">
+													<th:block th:text="${user.username}">
+													</th:block>
+												</p>
+											</div>
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Phonenumber</label>
+												<p class="form-control">
+													<th:block th:text="${user.phoneNumber}">
+													</th:block>
+												</p>
+											</div>
+											<div class="col-lg-6 mb-3">
+												<label class="form-label">Birthday</label>
+												<p class="form-control">
+													<th:block
+														th:text="${#dates.format(user.birthOfDate, 'dd/MM/yyyy')}">
+													</th:block>
+												</p>
+											</div>
+										</div>
+									</div>
+									<aside class="col-lg-4">
+										<figure class="text-lg-center">
+											<th:block th:if="${user.avatar.contains('https:')}">
+												<img class="img-lg mb-3 img-avatar" th:src="${user.avatar}"
+													alt="User pic">
+											</th:block>
+											<th:block th:if="${!user.avatar.contains('https:')}">
+												<img class="img-lg mb-3 img-avatar"
+													th:src="@{'/assets/imgs/avatars/' + ${user.avatar}}"
+													alt="User pic">
+											</th:block>
+										</figure>
+									</aside>
+									<!-- col.//-->
+									<!-- row.//-->
+								</div>
+								<br>
+							</form>
+							<hr class="my-5">
+							<div class="card mb-2">
+								<div class="card-body">
+									<h3>
+										Shipping Address
+									</h3>
+									<br/>
+									<th:block th:each="userAdress, i : ${userAdresses}">
+										<div th:if="${userAdress.deletedAt == null}" class="mb-2">
+											<div class="bg-light">
+												<article class="box mb-3 bg-light">
+													<h6 th:text="${userAdress.name}"></h6>
+													<small class="text-muted d-block" style="width: 70%">
+														<th:block
+															th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}"></th:block>
+													</small>
+												</article>
+											</div>
+										</div>
+									</th:block>
+								</div>
+							</div>
+
+							<div class="row" style="max-width: 920px">
+								<!-- col.//-->
+
+								<div class="col-md">
+									<article class="box mb-3 bg-light">
+										<form class="w-auto d-inline-block float-end" method="post"
+											th:action="@{/admin/customer/edit}" id="editDeletedAtForm">
+											<label class="switch"> <th:block
+													th:if="${user.deletedAt==null}">
+													<input type="checkbox" id="mySwitch">
+													<span class="slider round"></span>
+												</th:block> <th:block th:if="${user.deletedAt!=null}">
+													<input type="checkbox" checked id="mySwitch">
+													<span class="slider round"></span>
+												</th:block>
+											</label> <input type="hidden" name="id" th:value="${id}" /> <input
+												type="hidden" name="actionType" id="actionType"
+												th:value="${actionType}" />
+										</form>
+										<h6>Remove account</h6>
+										<small class="text-muted d-block" style="width: 70%">Once
+											you delete your account, there is no going back.</small>
+									</article>
+									<script>
+									  const switchElement = document.getElementById('mySwitch');
+									  const actionTypeInput = document.getElementById('actionType'); // Get the new hidden input
+			
+									  switchElement.addEventListener('click', function(e) {
+									    e.preventDefault();
+			
+									    // Determine the *intended* state after the click
+									    const willBeChecked = !this.checked; // If currently checked, it will be unchecked. If unchecked, it will be checked.
+			
+									    const message = willBeChecked ? "Are you sure you want to enable this vendor?" : 'Are you sure you want to disable this vendor?';
+			
+									    Swal.fire({
+									      title: message,
+									      icon: 'warning',
+									      showCancelButton: true,
+									      confirmButtonColor: "#3085d6",
+									      cancelButtonColor: "#d33",
+									      confirmButtonText: "Yes!"
+									    }).then((result) => {
+									      if (result.isConfirmed) {
+									        // Set the hidden input value based on the intended state
+									        actionTypeInput.value = willBeChecked ? 'enable' : 'disable';
+									        // Manually change the switch state before submitting
+									        this.checked = willBeChecked;
+									        document.getElementById('editDeletedAtForm').submit();
+									      }
+									      // If canceled, do nothing. The switch state remains as it was.
+									    });
+									  });
+									</script>
+								</div>
+
+							</div>
+						</section>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>

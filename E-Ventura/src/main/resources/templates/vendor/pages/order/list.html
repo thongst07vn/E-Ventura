@@ -21,10 +21,11 @@
 							<!-- SEARCH BY KEYWORD -->
 							<div class="col-lg-4 col-md-6 me-auto">
 								<form method="GET" th:action="@{/vendor/order/searchByKeyword}" id="searchForm">
-									<input class="form-control" type="text" name="keyword" placeholder="Find By Keyword .... " id="keywordInput"
+									<input class="form-control" type="text" name="keyword"
+										placeholder="Find By Keyword .... " id="keywordInput"
 										th:value="${selectedKeyword}">
 								</form>
-								
+
 								<script>
 									const keywordInput = document.getElementById('keywordInput');
 									const searchForm = document.getElementById('searchForm');
@@ -36,19 +37,18 @@
 									});
 								</script>
 							</div>
-							
+
 							<div class="col-lg-2 col-md-3 col-6">
-							
+
 							</div>
-							
-							
+
+
 							<!-- FIND BY STATUS-->
 							<div class="col-lg-2 col-md-3 col-6">
 								<form id="orderStatusSearchForm" method="GET" th:action="@{/vendor/order/findByStatus}">
 									<select class="form-select" name="orderStatusId" id="orderStatusSelect">
 										<option value="0" th:selected="${selectedOrderStatusId == 0}">All</option>
-										<option th:each="orderStatus : ${orderStatuses}" 
-											th:value="${orderStatus.id}"
+										<option th:each="orderStatus : ${orderStatuses}" th:value="${orderStatus.id}"
 											th:text="${orderStatus.name}"
 											th:selected="${orderStatus.id == selectedOrderStatusId}"></option>
 									</select>
@@ -66,59 +66,65 @@
 					<div class="card-body">
 						<div class="table-responsive">
 							<table class="table table-hover">
-								<thead>
+								<thead class="table-light">
 									<tr>
-										<th>ID</th>
-										<th>Order name</th>
-										<th>Total Amount</th>
-										<th>Status</th>
-										<th>Date</th>
-										<th class="text-end"> Action</th>
+
+										<th class="align-middle" scope="col">Order ID</th>
+										<th class="align-middle" scope="col">Billing Name</th>
+										<th class="align-middle" scope="col">Date</th>
+										<th class="align-middle" scope="col">Total</th>
+										<th class="align-middle" scope="col">Payment Status</th>
+										<th class="align-middle" scope="col">Payment Method</th>
+										<th class="align-middle text-center" scope="col">View Details</th>
 									</tr>
 								</thead>
 								<tbody>
 									<th:block th:each="order : ${orders}">
-									        <tr>
-									            <td th:text="${order.orderId}"></td>
-									            <td th:text="${order.orderName}"><b>Devon Lane</b></td>
-									            <td th:text="${order.totalAmount}">$948.55</td>
-									        
-												<td>
-													<span th:text="${order.orderStatus.name}"
-														th:class="|badge rounded-pill 
-										                     ${order.orderStatus.name == 'Received' ? 'alert-success' : 
-										                       order.orderStatus.name == 'Canceled' ? 'alert-danger' : 
-										                       order.orderStatus.name == 'Orderd' ? 'alert-warning' : 
-										                       order.orderStatus.name == 'Confirmed' || order.orderStatus.name == 'Delivering' ? 'alert-info' : 'alert-secondary'}|">
-													</span>
-												</td>
-									        
-									            <td th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></td>
-									            <td class="text-end">
-									                <a class="btn btn-md rounded font-sm" th:href="@{'/vendor/order/detail/' + ${order.orderId}}">Detail</a>
-									                <div class="dropdown">
-									                    <a class="btn btn-light rounded btn-sm font-sm" href="#" data-bs-toggle="dropdown">
-									                        <i class="material-icons md-more_horiz"></i>
-									                    </a>
-									                    <div class="dropdown-menu">
-									                        <a class="dropdown-item" href="#">View detail</a>
-									                        <a class="dropdown-item" href="#">Edit info</a>
-									                        <a class="dropdown-item text-danger" href="#">Delete</a>
-									                    </div>
-									                </div>
-									            </td>
-									        </tr>
-									    </th:block>
+										<tr>
+											<td th:text="${order.orderId}"></td>
+											<td th:text="${order.orderName}"><b>Devon Lane</b></td>
+											<td th:text="${#dates.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></td>
+											<td th:text="${order.totalAmount}">$948.55</td>
+											<td>
+												<span th:text="${order.orderStatus.name}"
+													th:class="|badge rounded-pill 
+														                     ${order.orderStatus.name == 'Received' ? 'alert-success' : 
+														                       order.orderStatus.name == 'Canceled' ? 'alert-danger' : 
+														                       order.orderStatus.name == 'Orderd' ? 'alert-warning' : 
+														                       order.orderStatus.name == 'Confirmed' || order.orderStatus.name == 'Delivering' ? 'alert-info' : 'alert-secondary'}|">
+												</span>
+											</td>
+											<td>
+												<div th:if="${order.paymentMethod == 'VNPAY'}">
+													<i class="material-icons md-payment font-xxl text-muted mr-5"></i>
+													VNPAY
+												</div>
+												<div th:if="${order.paymentMethod == 'COD'}">
+													<i
+														class="material-icons md-local_shipping font-xxl text-muted mr-5"></i>
+													COD
+												</div>
+												<div th:if="${order.paymentMethod == 'PAYPAL'}">
+													<i class="material-icons md-money font-xxl text-muted mr-5"></i>
+													Tiền mặt
+												</div>
+
+											</td>
+											<td class="text-center">
+												<a class="btn btn-md rounded font-sm"
+													th:href="@{'/vendor/order/detail/' + ${order.orderId}}">Detail</a>
+
+											</td>
+										</tr>
 									</th:block>
 
-									
 								</tbody>
 							</table>
 						</div>
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 		<!-- Trường hợp danh sách tất cả sản phẩm -->
 		<th:block th:if="${selectedKeyword == null && selectedOrderStatusId == null && !#lists.isEmpty(orders)}">
@@ -137,24 +143,26 @@
 								th:href="@{'/vendor/order/list?page=' + ${currentPages-1}}" class="page-link"
 								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
 							</a></li>
-		
+
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
-		
-							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
-									th:href="@{'/vendor/order/list?page=' + ${i}}" th:text="${i + 1}"></a></li>
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link" th:href="@{'/vendor/order/list?page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
 						</th:block>
-		
+
 						<!-- Nút tiếp -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
 							<a class="page-link" th:href="@{'/vendor/order/list?page=' + ${currentPages+1}}"
 								aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 							</a>
 						</li>
-		
+
 						<!-- Nút tới cuối -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/order/list?page=' + ${lastPageIndex}}" aria-label="Next">
+							<a class="page-link" th:href="@{'/vendor/order/list?page=' + ${lastPageIndex}}"
+								aria-label="Next">
 								<i class="material-icons md-double_arrow"></i>
 							</a>
 						</li>
@@ -162,7 +170,7 @@
 				</nav>
 			</div>
 		</th:block>
-		
+
 		<!-- Trường hợp Lọc theo Status -->
 		<th:block th:if="${selectedKeyword == null && selectedOrderStatusId != null && !#lists.isEmpty(orders)}">
 			<div class="pagination-area mt-15 mb-50">
@@ -170,34 +178,41 @@
 					<ul class="pagination justify-content-start">
 						<!-- Nút về đầu -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${0}}" aria-label="Next"> <i
-									class="material-icons md-double_arrow"
+							<a class="page-link"
+								th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${0}}"
+								aria-label="Next"> <i class="material-icons md-double_arrow"
 									style="transform: rotate(180deg) translate(15%, -30%);"></i>
 							</a>
 						</li>
 						<!-- Nút trước -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
-								th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${currentPages-1}}" class="page-link"
-								aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
+								th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${currentPages-1}}"
+								class="page-link" aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
 							</a></li>
-		
+
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
-		
-							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
-									th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${i}}" th:text="${i + 1}"></a></li>
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link"
+									th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${i}}"
+									th:text="${i + 1}"></a></li>
 						</th:block>
-		
+
 						<!-- Nút tiếp -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
-							<a class="page-link" th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${currentPages+1}}" aria-label="Next">
+							<a class="page-link"
+								th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${currentPages+1}}"
+								aria-label="Next">
 								<i class="material-icons md-chevron_right"></i>
 							</a>
 						</li>
-		
+
 						<!-- Nút tới cuối -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${lastPageIndex}}" aria-label="Next">
+							<a class="page-link"
+								th:href="@{'/vendor/order/findByStatus?orderStatusId=' + ${selectedOrderStatusId} + '&page=' + ${lastPageIndex}}"
+								aria-label="Next">
 								<i class="material-icons md-double_arrow"></i>
 							</a>
 						</li>
@@ -205,7 +220,7 @@
 				</nav>
 			</div>
 		</th:block>
-		
+
 		<!-- Trường hợp Lọc theo Keyword -->
 		<th:block th:if="${selectedKeyword != null && selectedOrderStatusId == null && !#lists.isEmpty(orders)}">
 			<div class="pagination-area mt-15 mb-50">
@@ -224,15 +239,16 @@
 								th:href="@{'/vendor/order/searchByKeyword?keyword=' + ${selectedKeyword} + '&page=' + ${currentPages-1}}"
 								class="page-link" aria-label="Previous"> <i class="material-icons md-chevron_left"></i>
 							</a></li>
-		
+
 						<!-- Các trang -->
 						<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
-		
-							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a class="page-link"
+
+							<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+									class="page-link"
 									th:href="@{'/vendor/order/searchByKeyword?keyword=' + ${selectedKeyword} + '&page=' + ${i}}"
 									th:text="${i + 1}"></a></li>
 						</th:block>
-		
+
 						<!-- Nút tiếp -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'disabled'">
 							<a class="page-link"
@@ -241,7 +257,7 @@
 								<i class="material-icons md-chevron_right"></i>
 							</a>
 						</li>
-		
+
 						<!-- Nút tới cuối -->
 						<li class="page-item" th:classappend="${currentPages + 1 >= totalPage} ? 'hidden'">
 							<a class="page-link"

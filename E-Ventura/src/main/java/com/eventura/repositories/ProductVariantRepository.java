@@ -24,4 +24,8 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariants,
 	@Query("from ProductVariants where products.id = :productId and LOWER(value) = LOWER(:value)")
 	public ProductVariants findByProductIdAndValue(@Param("productId") int productId, @Param("value") String value);
 	
+	@Query("SELECT SUM(pv.quantity) FROM ProductVariants pv WHERE pv.products.id = :productId")
+	Long getTotalVariantQuantityByProductId(@Param("productId") int productId);
+
+	
 }

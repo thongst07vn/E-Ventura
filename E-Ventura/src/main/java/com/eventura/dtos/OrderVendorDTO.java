@@ -9,15 +9,17 @@ import com.eventura.entities.OrderStatus;
 public class OrderVendorDTO {
     private Integer orderId;
     private String orderName;
+    private String paymentMethod;
     private Date createdAt;
     private Double totalAmount;
     private OrderStatus orderStatus; 
 
     // Constructor ánh xạ dữ liệu
-    public OrderVendorDTO(Integer orderId, String orderName, Date createdAt, 
+    public OrderVendorDTO(Integer orderId, String orderName, String paymentMethod, Date createdAt, 
                           Double totalAmount, OrderStatus orderStatus) {
         this.orderId = orderId;
         this.orderName = orderName;
+        this.paymentMethod = paymentMethod;
         this.createdAt = createdAt;
         this.totalAmount = totalAmount;
         this.orderStatus = orderStatus;  // Ánh xạ trạng thái vào DTO
@@ -34,6 +36,15 @@ public class OrderVendorDTO {
 
 	public String getOrderName() {
 		return orderName;
+	}
+
+	
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(String paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 
 	public void setOrderName(String orderName) {

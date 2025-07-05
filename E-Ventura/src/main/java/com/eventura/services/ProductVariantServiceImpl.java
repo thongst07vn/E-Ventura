@@ -71,5 +71,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 		// TODO Auto-generated method stub
 		return productVariantRepository.findByProductIdAndValue(productId, value);
 	}
+
+	@Override
+	public long getTotalVariantQuantityByProductId(int productId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

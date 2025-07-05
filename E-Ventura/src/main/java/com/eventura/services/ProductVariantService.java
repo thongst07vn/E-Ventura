@@ -25,6 +25,8 @@ public interface ProductVariantService {
 	
 	/* API */
 	 public Optional<ProductVariants> findById(Integer id);
+	 
+	 public long getTotalVariantQuantityByProductId(int productId);
 	
 	
 
