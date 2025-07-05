@@ -20,6 +20,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 		    SELECT new com.eventura.dtos.OrderVendorDTO(
 		        o.id,
 		        o.name,
+		        o.paymentMethod,
 		        o.createdAt,
 		        SUM(oi.price * oi.quantity),
 		        os.orderStatus
@@ -30,7 +31,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 		    JOIN p.vendors v
 		    LEFT JOIN oi.orderItemsOrderStatuses os  
 		    WHERE v.id = :vendorId
-		    GROUP BY o.id, o.name, o.createdAt, os.orderStatus
+		    GROUP BY o.id, o.name, o.paymentMethod, o.createdAt, os.orderStatus
 		""")
 	Page<OrderVendorDTO> findOrdersByVendorPage(@Param("vendorId") Integer vendorId, Pageable pageable);
 	
@@ -41,6 +42,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 			SELECT new com.eventura.dtos.OrderVendorDTO(
 		        o.id,
 		        o.name,
+		        o.paymentMethod,
 		        o.createdAt,
 		        SUM(oi.price * oi.quantity),
 		        oios.orderStatus
@@ -60,6 +62,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 			SELECT new com.eventura.dtos.OrderVendorDTO(
 		        o.id,
 		        o.name,
+		        o.paymentMethod, 
 		        o.createdAt,
 		        SUM(oi.price * oi.quantity),
 		        oios.orderStatus
@@ -71,7 +74,7 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 		    LEFT JOIN oi.orderItemsOrderStatuses oios
 		    JOIN oios.orderStatus os
 		    WHERE v.id = :vendorId AND o.name like %:keyword%
-		    GROUP BY o.id, o.name, o.createdAt, oios.orderStatus
+		    GROUP BY o.id, o.name, o.paymentMethod,  o.createdAt, oios.orderStatus
 		""")
 	Page<OrderVendorDTO> findByKeyword(@Param("vendorId") int vendorId, @Param("keyword") String keyword, Pageable pageable);
 

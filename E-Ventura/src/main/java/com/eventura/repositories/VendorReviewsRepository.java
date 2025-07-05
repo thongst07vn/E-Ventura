@@ -28,5 +28,12 @@ public interface VendorReviewsRepository extends JpaRepository<VendorReviews, In
 	public Page<VendorReviews>  findVendorReviewPage(@Param("id") int id, Pageable pageable);
 
 	@Query("FROM VendorReviews WHERE vendors.id = :vendorId AND users.id = :userId")
-	public VendorReviews  findVendorReviewByUserAndVendorId(@Param("vendorId") int vnedorId,@Param("userId") int userId);
+	public VendorReviews  findVendorReviewByUserAndVendorId(@Param("vendorId") int vendorId,@Param("userId") int userId);
+	
+	@Query("select count(v) from VendorReviews v where v.vendors.id = :vendorId and v.follow = true")
+	public int countFollowerByVendorId(@Param("vendorId") int vendorId);
+	
+	@Query("SELECT vr FROM VendorReviews vr WHERE vr.vendors.id = :vendorId AND vr.follow = true ORDER BY vr.createdAt DESC")
+	List<VendorReviews> findTop5ByVendorsIdAndFollowTrueOrderByCreatedAtDesc(@Param("vendorId") int vendorId, Pageable pageable);
+
 }

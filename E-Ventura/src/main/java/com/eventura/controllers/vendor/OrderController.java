@@ -121,6 +121,8 @@ public class OrderController  {
 		modelMap.put("lastPageIndex", orderPages.getTotalPages() - 1);
 		
 		modelMap.put("selectedKeyword", keyword);
+		modelMap.put("orderStatuses", orderStatusService.findAll());
+
 	
 		return "vendor/pages/order/list";
 	}

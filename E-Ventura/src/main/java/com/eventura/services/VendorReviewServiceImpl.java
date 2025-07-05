@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -65,6 +66,21 @@ public class VendorReviewServiceImpl implements VendorReviewService {
 			return false;
 		}
 	}
+
+	@Override
+	public int countFollowerByVendorId(int vendorId) {
+		// TODO Auto-generated method stub
+		return vendorReviewsRepository.countFollowerByVendorId(vendorId);
+	}
+
+	@Override
+	public List<VendorReviews> getTop5LatestReviews(int vendorId) {
+	    Pageable limit = PageRequest.of(0, 5);
+	    return vendorReviewsRepository.findTop5ByVendorsIdAndFollowTrueOrderByCreatedAtDesc(vendorId, limit);
+	}
+
+	
+	
 	
 
 }

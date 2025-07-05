@@ -22,4 +22,9 @@ public interface VendorReviewService {
 
 	public boolean save(VendorReviews vendorReviews);
 	
+	public int countFollowerByVendorId(int vendorId);
+	
+	public List<VendorReviews>  getTop5LatestReviews(int vendorId);
+
+	
 }
