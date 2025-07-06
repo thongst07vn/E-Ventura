@@ -87,7 +87,7 @@ public class UserController {
 	// User profile
 	@GetMapping({ "profile" })
 	public String profile(Authentication authentication, ModelMap modelMap,
-			@AuthenticationPrincipal UserDetails userDetails) {
+			@AuthenticationPrincipal UserDetails userDetails,@RequestParam(name="tab",required = false,defaultValue = "orders") String activeTab) {
 		if (userDetails != null) {
 			Users user = userService.findByEmail(userDetails.getUsername());
 			List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
@@ -102,6 +102,7 @@ public class UserController {
 		}
 		modelMap.put("addAddressVariable", new UserAddress());
 		modelMap.put("provinces", addressService.findAllProvinces());
+		modelMap.addAttribute("activeTab",activeTab);
 		return "customer/pages/account/profile";
 	}
 
@@ -159,11 +160,11 @@ public class UserController {
 	    if(userService.save(user)) {
 	    	redirectAttributes.addFlashAttribute("msg","Edit profile success");
 	    	redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-	    	return "redirect:/customer/profile";    	
+	    	return "redirect:/customer/profile?tab=setting";    	
 	    } else {
 	    	redirectAttributes.addFlashAttribute("msg","Edit profile failed");
 	    	redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-	    	return "redirect:/customer/profile";    	    	
+	    	return "redirect:/customer/profile?tab=setting";    	    	
 	    }
 	}
 	
@@ -186,11 +187,11 @@ public class UserController {
 		if(userService.save(currentUser)) {
 			redirectAttributes.addFlashAttribute("msg","Change password success");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile";    	
+			return "redirect:/customer/profile?tab=setting";    	
 		} else {
 			redirectAttributes.addFlashAttribute("msg","Change password failed");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile";    	    	
+			return "redirect:/customer/profile?tab=setting";    	    	
 		}  	    	
 	}
 		
@@ -205,11 +206,11 @@ public class UserController {
 		if(addressService.save(addAddressVariable)) {
 			redirectAttributes.addFlashAttribute("msg","Add address success");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile";    	
+			return "redirect:/customer/profile?tab=setting";    	
 		} else {
 			redirectAttributes.addFlashAttribute("msg","Add address failed");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile";    	    	
+			return "redirect:/customer/profile?tab=setting";    	    	
 		} 		    	
 	}
 
@@ -227,11 +228,11 @@ public class UserController {
 		if(addressService.save(addAddressVariable)) {
 			redirectAttributes.addFlashAttribute("msg","Edit address success");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile";    	
+			return "redirect:/customer/profile?tab=setting";    	
 		} else {
 			redirectAttributes.addFlashAttribute("msg","Edit address failed");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile";    	    	
+			return "redirect:/customer/profile?tab=setting";    	    	
 		} 	
 //		return "redirect:/customer/profile";    	    	
 		
@@ -245,11 +246,11 @@ public class UserController {
 		if(addressService.save(address)) {
 			redirectAttributes.addFlashAttribute("msg","Delete address success");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile";    	
+			return "redirect:/customer/profile?tab=setting";    	
 		} else {
 			redirectAttributes.addFlashAttribute("msg","Delete address failed");
 			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile";    	    	
+			return "redirect:/customer/profile?tab=setting";    	    	
 		} 	
 //		return "redirect:/customer/profile";    	    	
 		

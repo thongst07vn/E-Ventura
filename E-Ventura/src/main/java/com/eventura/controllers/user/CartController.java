@@ -340,9 +340,16 @@ public class CartController {
 	@PostMapping("/apply-voucher")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> applyVoucher(@RequestBody Map<String, String> payload) {
+		
 		String vendorId = payload.get("vendorId");
 		String voucherId = payload.get("voucherId");
 		String userId = payload.get("userId");
+		String cartItemsIdses = payload.get("cartItemsIdses");
+		String[] cartItemIds = cartItemsIdses.split(",");
+		List<CartItems> cartItems = new ArrayList<>();
+		for(String i : cartItemIds) {
+			cartItems.add(cartService.findCartItemsById(Integer.parseInt(i)));
+		}
 		List<Coupons> allCoupons = couponsService.findAllCoupons();
 		Map<String, Object> response = new HashMap<>();
 
@@ -671,6 +678,7 @@ public class CartController {
 					if (discountAmount > voucher.getMaxDiscountAmount()) {
 						discountAmount = voucher.getMaxDiscountAmount();
 					}
+					
 					for (Commissions commission : commissionBeforeTotalVoucher) {
 						if (commission.getAmount() > discountAmount) {
 							commission.setAmount(commission.getAmount() - discountAmount);

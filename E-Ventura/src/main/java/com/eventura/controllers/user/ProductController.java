@@ -180,6 +180,7 @@ public class ProductController {
 		}
 		if(user != null) {
 			List<Carts> userCarts = cartService.findCartByUserId(user.getId());
+			
 			for(Carts cart : userCarts) {
 				Set<CartItems> cartItemsSet = cart.getCartItemses();
 			    List<CartItems> cartItemsList = new ArrayList<>(cartItemsSet);
