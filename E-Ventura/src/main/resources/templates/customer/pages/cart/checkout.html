@@ -898,7 +898,7 @@
 								        if ($selectedVoucherInput.length > 0) {
 								        	var voucherId = $selectedVoucherInput.attr('id').split('_')[1];
 								        	var userId = '[[${user.id}]]';
-								        	 
+								        	var cartItemsIdses = $('#cartItems').val();
 								           fetch('/customer/cart/apply-voucher', { 
 										        method: 'POST',
 										        headers: {
@@ -907,7 +907,8 @@
 										        body: JSON.stringify({
 										            vendorId: vendorId,
 										            voucherId: voucherId,
-										            userId: userId
+										            userId: userId,
+										            cartItemsIdses: cartItemsIdses
 										        }),
 										    })
 										    .then(response => response.json())

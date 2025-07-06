@@ -899,8 +899,8 @@ public class AdminController {
 		if (couponCampaigns != null && !couponCampaigns.isEmpty()) { // Added !vouchersCampaigns.isEmpty()
 		    // It's good practice to also check if getCampaignRedemptions() is not null
 		    // though the NoSuchElementException is specifically from getFirst()
-		    if (couponCampaigns.getFirst().getCampaignRedemptions() != null) {
-		        orderCampaignPage = campaignRedeemtionService.findOrderByCampaignRedeem(couponCampaigns.getFirst().getCampaignRedemptions().getId(), pageable);
+		    if (couponCampaigns.get(0).getCampaignRedemptions() != null) {
+		        orderCampaignPage = campaignRedeemtionService.findOrderByCampaignRedeem(couponCampaigns.get(0).getCampaignRedemptions().getId(), pageable);
 		        // It's possible findOrderByCampaignRedeem returns null, so handle that
 		        if (orderCampaignPage == null) {
 		            orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
@@ -1026,8 +1026,8 @@ public class AdminController {
 		if (vouchersCampaigns != null && !vouchersCampaigns.isEmpty()) { // Added !vouchersCampaigns.isEmpty()
 		    // It's good practice to also check if getCampaignRedemptions() is not null
 		    // though the NoSuchElementException is specifically from getFirst()
-		    if (vouchersCampaigns.getFirst().getCampaignRedemptions() != null) {
-		        orderCampaignPage = campaignRedeemtionService.findOrderByCampaignRedeem(vouchersCampaigns.getFirst().getCampaignRedemptions().getId(), pageable);
+		    if (vouchersCampaigns.get(0).getCampaignRedemptions() != null) {
+		        orderCampaignPage = campaignRedeemtionService.findOrderByCampaignRedeem(vouchersCampaigns.get(0).getCampaignRedemptions().getId(), pageable);
 		        // It's possible findOrderByCampaignRedeem returns null, so handle that
 		        if (orderCampaignPage == null) {
 		            orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);

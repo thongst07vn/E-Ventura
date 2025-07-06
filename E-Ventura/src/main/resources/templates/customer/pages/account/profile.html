@@ -22,475 +22,20 @@
 				<span th:class="${classedit}" th:if="${msg}" th:text="${msg}"></span>
 				<div class="box-tabs mb-100">
 					<ul class="nav nav-tabs nav-tabs-account" role="tablist">
-						<li><a class="active" href="#tab-notification"
-							data-bs-toggle="tab" role="tab" aria-controls="tab-notification"
-							aria-selected="true">Notification</a></li>
-						<li><a href="#tab-wishlist" data-bs-toggle="tab" role="tab"
-							aria-controls="tab-wishlist" aria-selected="true">Wishlist</a></li>
-						<li><a href="#tab-orders" data-bs-toggle="tab" role="tab"
-							aria-controls="tab-orders" aria-selected="true">Orders</a></li>
-						<li><a href="#tab-order-tracking" data-bs-toggle="tab"
-							role="tab" aria-controls="tab-order-tracking"
-							aria-selected="true">Order Tracking</a></li>
-						<li><a href="#tab-setting" data-bs-toggle="tab" role="tab"
-							aria-controls="tab-setting" aria-selected="true">Setting</a></li>
+
+						<li><a th:classappend="${activeTab == 'orders' ? 'active' : ''}" href="#tab-orders" data-bs-toggle="tab"
+							role="tab" aria-controls="tab-orders" th:aria-selected="${activeTab == 'orders' ? 'true' : 'false'}">Orders</a></li>
+						<li><a th:classappend="${activeTab == 'order-tracking' ? 'active' : ''}" href="#tab-order-tracking" data-bs-toggle="tab"
+							role="tab" aria-controls="tab-order-tracking" 
+							th:aria-selected="${activeTab == 'order-tracking' ? 'true' : 'false'}">Order Tracking</a></li>
+						<li><a th:classappend="${activeTab == 'setting' ? 'active' : ''}" href="#tab-setting" data-bs-toggle="tab" role="tab"
+							aria-controls="tab-setting" th:aria-selected="${activeTab == 'setting' ? 'true' : 'false'}">Setting</a></li>
 					</ul>
 					<div class="border-bottom mt-20 mb-40"></div>
 					<div class="tab-content mt-30">
-						<div class="tab-pane fade active show" id="tab-notification"
-							role="tabpanel" aria-labelledby="tab-notification">
-							<div class="list-notifications">
-								<div class="item-notification">
-									<div class="image-notification">
-										<img th:src="@{/client/assets/imgs/page/account/img-1.png}"
-											alt="Ecom">
-									</div>
-									<div class="info-notification">
-										<h5 class="mb-5">COD payment confirmed</h5>
-										<p class="font-md color-brand-3">
-											Order<span class="font-md-bold"> 220914QR92BXNH</span> has
-											been confirmed. Please check the estimated delivery time in
-											the order details section!
-										</p>
-									</div>
-									<div class="button-notification">
-										<a class="btn btn-buy w-auto">View Details</a>
-									</div>
-								</div>
-								<div class="item-notification">
-									<div class="image-notification">
-										<img th:src="@{/client/assets/imgs/page/account/img-2.png}"
-											alt="Ecom">
-									</div>
-									<div class="info-notification">
-										<h5 class="mb-5">COD payment confirmed</h5>
-										<p class="font-md color-brand-3">
-											Order<span class="font-md-bold"> 220914QR92BXNH</span> has
-											been confirmed. Please check the estimated delivery time in
-											the order details section!
-										</p>
-									</div>
-									<div class="button-notification">
-										<a class="btn btn-buy w-auto">View Details</a>
-									</div>
-								</div>
-								<div class="item-notification">
-									<div class="image-notification">
-										<img th:src="@{/client/assets/imgs/page/account/img-3.png}"
-											alt="Ecom">
-									</div>
-									<div class="info-notification">
-										<h5 class="mb-5">COD payment confirmed</h5>
-										<p class="font-md color-brand-3">
-											Order<span class="font-md-bold"> 220914QR92BXNH</span> has
-											been confirmed. Please check the estimated delivery time in
-											the order details section!
-										</p>
-									</div>
-									<div class="button-notification">
-										<a class="btn btn-buy w-auto">View Details</a>
-									</div>
-								</div>
-								<div class="item-notification">
-									<div class="image-notification">
-										<img th:src="@{/client/assets/imgs/page/account/img-4.png}"
-											alt="Ecom">
-									</div>
-									<div class="info-notification">
-										<h5>COD payment confirmed</h5>
-										<p class="font-md color-brand-3">
-											Order<span class="font-md-bold"> 220914QR92BXNH</span> has
-											been confirmed. Please check the estimated delivery time in
-											the order details section!
-										</p>
-									</div>
-									<div class="button-notification">
-										<a class="btn btn-buy w-auto">View Details</a>
-									</div>
-								</div>
-							</div>
-							<nav>
-								<ul class="pagination">
-									<li class="page-item"><a class="page-link page-prev"
-										href="#"></a></li>
-									<li class="page-item"><a class="page-link" href="#">1</a></li>
-									<li class="page-item"><a class="page-link active" href="#">2</a></li>
-									<li class="page-item"><a class="page-link" href="#">3</a></li>
-									<li class="page-item"><a class="page-link" href="#">4</a></li>
-									<li class="page-item"><a class="page-link" href="#">5</a></li>
-									<li class="page-item"><a class="page-link" href="#">6</a></li>
-									<li class="page-item"><a class="page-link page-next"
-										href="#"></a></li>
-								</ul>
-							</nav>
-						</div>
-						<div class="tab-pane fade" id="tab-wishlist" role="tabpanel"
-							aria-labelledby="tab-wishlist">
-							<div class="box-wishlist">
-								<div class="head-wishlist">
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-all" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<span class="font-md-bold color-brand-3">Product</span>
-										</div>
-										<div class="wishlist-price">
-											<span class="font-md-bold color-brand-3">Price</span>
-										</div>
-										<div class="wishlist-status">
-											<span class="font-md-bold color-brand-3">Stock status</span>
-										</div>
-										<div class="wishlist-action">
-											<span class="font-md-bold color-brand-3">Action</span>
-										</div>
-										<div class="wishlist-remove">
-											<span class="font-md-bold color-brand-3">Remove</span>
-										</div>
-									</div>
-								</div>
-								<div class="content-wishlist">
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-select" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<div class="product-wishlist">
-												<div class="product-image">
-													<a href="shop-single-product.html"><img
-														th:src="@{/client/assets/imgs/page/product/img-sub.png}"
-														alt="Ecom"></a>
-												</div>
-												<div class="product-info">
-													<a href="shop-single-product.html">
-														<h6 class="color-brand-3">Samsung 36&quot; French
-															door 28 cu. ft. Smart Energy Star Refrigerator</h6>
-													</a>
-													<div class="rating">
-														<img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><span class="font-xs color-gray-500">
-															(65)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="wishlist-price">
-											<h4 class="color-brand-3">$2.51</h4>
-										</div>
-										<div class="wishlist-status">
-											<span class="btn btn-gray font-md-bold color-brand-3">In
-												Stock</span>
-										</div>
-										<div class="wishlist-action">
-											<a class="btn btn-cart font-sm-bold" href="shop-cart.html">Add
-												to Cart</a>
-										</div>
-										<div class="wishlist-remove">
-											<a class="btn btn-delete" href="#"></a>
-										</div>
-									</div>
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-select" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<div class="product-wishlist">
-												<div class="product-image">
-													<a href="shop-single-product.html"><img
-														th:src="@{/client/assets/imgs/page/product/img-sub2.png}"
-														alt="Ecom"></a>
-												</div>
-												<div class="product-info">
-													<a href="shop-single-product.html">
-														<h6 class="color-brand-3">Samsung 36&quot; French
-															door 28 cu. ft. Smart Energy Star Refrigerator</h6>
-													</a>
-													<div class="rating">
-														<img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><span class="font-xs color-gray-500">
-															(65)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="wishlist-price">
-											<h4 class="color-brand-3">$1.51</h4>
-										</div>
-										<div class="wishlist-status">
-											<span class="btn btn-gray font-md-bold color-brand-3">In
-												Stock</span>
-										</div>
-										<div class="wishlist-action">
-											<a class="btn btn-cart font-sm-bold" href="shop-cart.html">Add
-												to Cart</a>
-										</div>
-										<div class="wishlist-remove">
-											<a class="btn btn-delete" href="#"></a>
-										</div>
-									</div>
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-select" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<div class="product-wishlist">
-												<div class="product-image">
-													<a href="shop-single-product.html"><img
-														th:src="@{/client/assets/imgs/page/product/img-sub3.png}"
-														alt="Ecom"></a>
-												</div>
-												<div class="product-info">
-													<a href="shop-single-product.html">
-														<h6 class="color-brand-3">Samsung 36&quot; French
-															door 28 cu. ft. Smart Energy Star Refrigerator</h6>
-													</a>
-													<div class="rating">
-														<img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><span class="font-xs color-gray-500">
-															(65)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="wishlist-price">
-											<h4 class="color-brand-3">$3.51</h4>
-										</div>
-										<div class="wishlist-status">
-											<span class="btn btn-gray font-md-bold color-brand-3">In
-												Stock</span>
-										</div>
-										<div class="wishlist-action">
-											<a class="btn btn-cart font-sm-bold" href="shop-cart.html">Add
-												to Cart</a>
-										</div>
-										<div class="wishlist-remove">
-											<a class="btn btn-delete" href="#"></a>
-										</div>
-									</div>
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-select" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<div class="product-wishlist">
-												<div class="product-image">
-													<a href="shop-single-product.html"><img
-														th:src="@{/client/assets/imgs/page/product/img-sub4.png}"
-														alt="Ecom"></a>
-												</div>
-												<div class="product-info">
-													<a href="shop-single-product.html">
-														<h6 class="color-brand-3">Samsung 36&quot; French
-															door 28 cu. ft. Smart Energy Star Refrigerator</h6>
-													</a>
-													<div class="rating">
-														<img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><span class="font-xs color-gray-500">
-															(65)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="wishlist-price">
-											<h4 class="color-brand-3">$4.51</h4>
-										</div>
-										<div class="wishlist-status">
-											<span class="btn btn-gray font-md-bold color-brand-3">In
-												Stock</span>
-										</div>
-										<div class="wishlist-action">
-											<a class="btn btn-cart font-sm-bold" href="shop-cart.html">Add
-												to Cart</a>
-										</div>
-										<div class="wishlist-remove">
-											<a class="btn btn-delete" href="#"></a>
-										</div>
-									</div>
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-select" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<div class="product-wishlist">
-												<div class="product-image">
-													<a href="shop-single-product.html"><img
-														th:src="@{/client/assets/imgs/page/product/img-sub5.png}"
-														alt="Ecom"></a>
-												</div>
-												<div class="product-info">
-													<a href="shop-single-product.html">
-														<h6 class="color-brand-3">Samsung 36&quot; French
-															door 28 cu. ft. Smart Energy Star Refrigerator</h6>
-													</a>
-													<div class="rating">
-														<img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><span class="font-xs color-gray-500">
-															(65)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="wishlist-price">
-											<h4 class="color-brand-3">$3.51</h4>
-										</div>
-										<div class="wishlist-status">
-											<span class="btn btn-gray font-md-bold color-brand-3">In
-												Stock</span>
-										</div>
-										<div class="wishlist-action">
-											<a class="btn btn-cart font-sm-bold" href="shop-cart.html">Add
-												to Cart</a>
-										</div>
-										<div class="wishlist-remove">
-											<a class="btn btn-delete" href="#"></a>
-										</div>
-									</div>
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-select" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<div class="product-wishlist">
-												<div class="product-image">
-													<a href="shop-single-product.html"><img
-														th:src="@{/client/assets/imgs/page/product/img-sub.png}"
-														alt="Ecom"></a>
-												</div>
-												<div class="product-info">
-													<a href="shop-single-product.html">
-														<h6 class="color-brand-3">Samsung 36&quot; French
-															door 28 cu. ft. Smart Energy Star Refrigerator</h6>
-													</a>
-													<div class="rating">
-														<img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><span class="font-xs color-gray-500">
-															(65)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="wishlist-price">
-											<h4 class="color-brand-3">$2.51</h4>
-										</div>
-										<div class="wishlist-status">
-											<span class="btn btn-gray font-md-bold color-brand-3">In
-												Stock</span>
-										</div>
-										<div class="wishlist-action">
-											<a class="btn btn-cart font-sm-bold" href="shop-cart.html">Add
-												to Cart</a>
-										</div>
-										<div class="wishlist-remove">
-											<a class="btn btn-delete" href="#"></a>
-										</div>
-									</div>
-									<div class="item-wishlist">
-										<div class="wishlist-cb">
-											<input class="cb-layout cb-select" type="checkbox">
-										</div>
-										<div class="wishlist-product">
-											<div class="product-wishlist">
-												<div class="product-image">
-													<a href="shop-single-product.html"><img
-														th:src="@{/client/assets/imgs/page/product/img-sub2.png}"
-														alt="Ecom"></a>
-												</div>
-												<div class="product-info">
-													<a href="shop-single-product.html">
-														<h6 class="color-brand-3">Samsung 36&quot; French
-															door 28 cu. ft. Smart Energy Star Refrigerator</h6>
-													</a>
-													<div class="rating">
-														<img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><img
-															th:src="@{/client/assets/imgs/template/icons/star.svg}"
-															alt="Ecom"><span class="font-xs color-gray-500">
-															(65)</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="wishlist-price">
-											<h4 class="color-brand-3">$1.51</h4>
-										</div>
-										<div class="wishlist-status">
-											<span class="btn btn-gray font-md-bold color-brand-3">In
-												Stock</span>
-										</div>
-										<div class="wishlist-action">
-											<a class="btn btn-cart font-sm-bold" href="shop-cart.html">Add
-												to Cart</a>
-										</div>
-										<div class="wishlist-remove">
-											<a class="btn btn-delete" href="#"></a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="tab-pane fade" id="tab-orders" role="tabpanel"
-							aria-labelledby="tab-orders">
+
+						<div class="tab-pane fade" th:classappend="${activeTab == 'orders' ? 'active show' : ''}" id="tab-orders"
+							role="tabpanel" aria-labelledby="tab-orders">
 							<div class="box-orders">
 								<div class="head-orders">
 									<div class="head-left">
@@ -651,7 +196,7 @@
 								</ul>
 							</nav>
 						</div>
-						<div class="tab-pane fade" id="tab-order-tracking" role="tabpanel"
+						<div class="tab-pane fade" th:classappend="${activeTab == 'order-tracking' ? 'active show' : ''}" id="tab-order-tracking" role="tabpanel"
 							aria-labelledby="tab-order-tracking">
 							<p class="font-md color-gray-600">
 								To track your order please enter your OrderID in the box below
@@ -768,7 +313,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="tab-pane fade" id="tab-setting" role="tabpanel"
+						<div class="tab-pane fade" th:classappend="${activeTab == 'setting' ? 'active show' : ''}" id="tab-setting" role="tabpanel"
 							aria-labelledby="tab-setting">
 							<div class="card">
 								<div class="card-body">
@@ -816,7 +361,7 @@
 																</div>
 																<div class="col-lg-6 mb-3">
 																	<label class="form-label">Birthday</label> <input
-																		class="form-control" type="text"
+																		class="form-control" type="date"
 																		th:field="${user.birthOfDate}" required="required">
 																</div>
 																<!-- col .//-->
@@ -1199,15 +744,15 @@
 															</script>
 
 														<th:block th:each="userAdress, i : ${userAdresses}">
-															<div th:if="${userAdress.deletedAt == null}" class="card mb-2">
+															<div th:if="${userAdress.deletedAt == null}"
+																class="card mb-2">
 																<div class="card-body bg-light">
 																	<article class="box mb-3 bg-light">
 																		<a class="btn btn-cart w-auto float-end changeAddress"
-																			th:data-address-id="${userAdress.id}">Change</a>
-																			<a
-																			class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a> 
-																			<a
-																			class="btn btn-cart-delete w-auto float-end deleteAddress" th:data-address-id="${userAdress.id}">Delete</a>
+																			th:data-address-id="${userAdress.id}">Change</a> <a
+																			class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a> <a
+																			class="btn btn-cart-delete w-auto float-end deleteAddress"
+																			th:data-address-id="${userAdress.id}">Delete</a>
 																		<h6 th:text="${userAdress.name}"></h6>
 																		<small class="text-muted d-block" style="width: 70%">
 																			<th:block
@@ -1220,8 +765,9 @@
 
 													</div>
 												</div>
-												<div class="modal fade" id="deleteAddressModal" tabindex="-1"
-													aria-labelledby="editAddressModal" aria-hidden="true">
+												<div class="modal fade" id="deleteAddressModal"
+													tabindex="-1" aria-labelledby="editAddressModal"
+													aria-hidden="true">
 													<div class="modal-dialog">
 														<div class="modal-content">
 															<div class="modal-header">
@@ -1231,9 +777,11 @@
 																	data-bs-dismiss="modal" aria-label="Close"></button>
 															</div>
 															<div class="modal-body">
-																<form method="post" th:action="@{/customer/deleteaddress}"
+																<form method="post"
+																	th:action="@{/customer/deleteaddress}"
 																	id="deleteAddressForm">
-																		<input type="number" id="deleteAddressInput" name="addressId" hidden>
+																	<input type="number" id="deleteAddressInput"
+																		name="addressId" hidden>
 																</form>
 																<p>Are you sure you want to delete this address?</p>
 															</div>
@@ -1348,8 +896,6 @@
 														</div>
 													</div>
 												</div>
-												
-												
 												<!-- begin edit address handler -->
 												<script>
 													document.addEventListener("DOMContentLoaded", function () {
@@ -1521,7 +1067,7 @@
 												        });
 													});
 													</script>
-												
+
 												<script
 													th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
 												<script>
@@ -1539,7 +1085,7 @@
 														});
 													});
 												</script>
-												
+
 												<script>                                                
 													$(document).ready(function() {
 													    $('.changeAddress').on('click', function(event) {
