@@ -182,7 +182,13 @@ public class CartController {
 
 	@GetMapping({ "deletecartitem/{cartItemId}" })
 	public String deleteCartItem(@PathVariable("cartItemId") int cartItemId, RedirectAttributes redirectAttributes) {
+		CartItems cartItem = cartService.findCartItemsById(cartItemId);
 		if (cartService.deleteCartItems(cartItemId)) {
+			if(cartService.findCartById(cartItem.getCarts().getId()).getCartItemses().isEmpty()) {
+				if(!cartService.deleteCart(cartService.findCartById(cartItem.getCarts().getId()))){								
+					System.out.println("delete cart wrong " + cartItem.getId());						
+				}
+			}	
 			redirectAttributes.addFlashAttribute("msg", "update cart item success");
 		} else {
 			redirectAttributes.addFlashAttribute("msg", "update cart item failed");
@@ -372,9 +378,9 @@ public class CartController {
 										- coupon.getDiscountValue() * cartItem.getQuantity());
 								break;
 							}
-
 						} else {
 							oldSubTotal += cartItem.getProducts().getPrice() * cartItem.getQuantity();
+							break;
 						}
 					}
 				}
@@ -386,8 +392,9 @@ public class CartController {
 		if (voucher.getDiscountUnit().equals("percent")) {
 			discountAmount = oldSubTotal * voucher.getDiscountValue();
 		} else if (voucher.getDiscountUnit().equals("money")) {
-			discountAmount = voucher.getDiscountValue();
+			discountAmount = oldSubTotal - voucher.getDiscountValue();
 		}
+		System.out.println(oldSubTotal);
 		if (discountAmount > voucher.getMaxDiscountAmount()) {
 			discountAmount = voucher.getMaxDiscountAmount();
 		}
@@ -563,7 +570,14 @@ public class CartController {
 					}else {
 						System.out.println("save order item wrong " + orderItem.getId());						
 					}
-					if(!cartService.deleteCartItem(item)) {
+					if(cartService.deleteCartItem(item)) {
+						if(cartService.findCartById(item.getCarts().getId()).getCartItemses().isEmpty()) {
+							if(!cartService.deleteCart(cartService.findCartById(item.getCarts().getId()))){								
+								System.out.println("delete cart wrong " + item.getId());						
+							}
+						}
+												
+					}else {
 						System.out.println("delete cart item wrong " + item.getId());						
 						
 					}
@@ -642,10 +656,12 @@ public class CartController {
 					commission.setVendors(vendor);
 					commission.setOrders(newOrder);
 					commission.setAmount(vendorOrderTotal - vendorOrderAfterVoucher);
+					System.out.println("commission Ammout: "+commission.getAmount());
 					commission.setCreatedAt(new Date());
 					commission.setUpdatedAt(new Date());
 					commissionBeforeTotalVoucher.add(commission);
 					totalCommission += commission.getAmount();
+					System.out.println("commission totalCommission	: "+totalCommission);
 				}
 				if (!voucherEventura.equals("")) {
 					Vouchers voucher = vouchersService.findById(Integer.parseInt(voucherEventura));
@@ -678,15 +694,23 @@ public class CartController {
 					if (discountAmount > voucher.getMaxDiscountAmount()) {
 						discountAmount = voucher.getMaxDiscountAmount();
 					}
-					
+
+					boolean noAmmountBigger = true;
 					for (Commissions commission : commissionBeforeTotalVoucher) {
 						if (commission.getAmount() > discountAmount) {
 							commission.setAmount(commission.getAmount() - discountAmount);
+							noAmmountBigger = false;
 							break;
+						}
+					}
+					if(noAmmountBigger) {
+						for (Commissions commission : commissionBeforeTotalVoucher) {
+							commission.setAmount(0);
 						}
 					}
 				}
 				for (Commissions commissions : commissionBeforeTotalVoucher) {
+					System.out.println("save commission amout sau khi  tính toán "+commissions.getAmount());					
 					if(!commissionsService.saveCommission(commissions)) {
 						System.out.println("save commission wrong "+commissions.getId());
 					}

@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -124,7 +125,7 @@ public class AdminController {
 		modelMap.put("countActivityLogPhone", userService.countActivityLogPhone());
 		modelMap.put("countCommission", commissionsService.countCommission());
 		modelMap.put("sumCommission", commissionsService.sumCommission());
-
+		modelMap.put("newUsers", userService.findNewUser());
 		model.addAttribute("currentPage", "dashboard");
 		return "admin/page/dashboard/index";
 	}
@@ -530,37 +531,43 @@ public class AdminController {
 
 	@GetMapping("order/detail/{id}")
 	public String orderDetail(Model model, ModelMap modelMap, @PathVariable("id") int id,
-			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int pageSize) {
-		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<OrderItems> orderPage = orderItemService.findAllOrderItemsByOrderIdPage(id, pageable);
-		Orders order = orderService.findOrderByOrderId(id);
+	        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int pageSize) {
+	    Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+	    Page<OrderItems> orderPage = orderItemService.findAllOrderItemsByOrderIdPage(id, pageable);
+	    Orders order = orderService.findOrderByOrderId(id);
 
-		List<Map<String, Object>> orderItemStatuses = orderPage.getContent().stream().map(item -> {
-			// Assuming findStatusByOrderItemId returns a list of statuses,
-			// and you want the one with the latest timestamp (e.g., 'updatedAt' or
-			// 'createdAt')
-			List<OrderItemsOrderStatus> statuses = orderStatusService.findStatusByOrderItemId(item.getId());
+	    // 1. Group OrderItems by Vendor ID
+	    // Assumption: orderItem.getProducts().getVendorId() returns ID of the vendor
+	    Map<Integer, List<OrderItems>> orderItemsByVendorId = orderPage.getContent().stream()
+	            .collect(Collectors.groupingBy(item -> item.getProducts().getVendors().getId()));
 
-			// Find the latest status for the current order item
-			OrderItemsOrderStatus latestStatus = statuses.stream()
-					.max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt)) // Or getCreatedAt() if that's your
-																					// timestamp
-					.orElse(null); // Handle case where no status is found
+	    // 2. Prepare data for the view
+	    Map<Integer, String> vendorLatestStatuses = new HashMap<>(); // Key: Vendor ID, Value: Latest Status Name
+	    Map<Integer, String> vendorNames = new HashMap<>(); // Key: Vendor ID, Value: Vendor Name
+	    Map<Integer, List<OrderItems>> groupedOrderItems = new LinkedHashMap<>(); // To maintain order for display
 
-			Map<String, Object> statusMap = new HashMap<>();
-			if (latestStatus != null) {
-				statusMap.put("statusName", latestStatus.getOrderStatus().getName());
-				statusMap.put("orderItemId", latestStatus.getOrderItems().getId());
-			}
-			return statusMap;
-		}).filter(map -> map.containsKey("statusName")) // Filter out items that didn't have a status
-				.collect(Collectors.toList());
+	    orderItemsByVendorId.forEach((vendorId, items) -> {
+	        vendorNames.put(vendorId, items.get(0).getProducts().getVendors().getName()); // Get vendor name
+	        groupedOrderItems.put(vendorId, items);
 
-		modelMap.put("orderItemStatuses", orderItemStatuses);
-		modelMap.put("order", order);
-		modelMap.put("orderItems", orderPage);
-		model.addAttribute("currentPage", "order");
-		return "admin/page/order/detail";
+	        // Determine the overall status for the vendor block
+	        // For simplicity, let's assume the status of the first item represents the vendor's status initially,
+	        // or you might want more complex logic (e.g., "Mixed" if statuses differ, or the "lowest" status)
+	        // For now, we'll get the latest status of the first item for the vendor block display.
+	        List<OrderItemsOrderStatus> statuses = orderStatusService.findStatusByOrderItemId(items.get(0).getId());
+	        String latestStatus = statuses.stream()
+	                .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
+	                .map(ois -> ois.getOrderStatus().getName())
+	                .orElse("N/A");
+	        vendorLatestStatuses.put(vendorId, latestStatus);
+	    });
+
+	    modelMap.put("order", order);
+	    modelMap.put("groupedOrderItems", groupedOrderItems);
+	    modelMap.put("vendorLatestStatuses", vendorLatestStatuses);
+	    modelMap.put("vendorNames", vendorNames);
+	    model.addAttribute("currentPage", "order");
+	    return "admin/page/order/detail";
 	}
 
 	// ======= USER_CUSTOMER ========
@@ -783,7 +790,7 @@ public class AdminController {
 	// ======= Commission_Setting ========
 	@GetMapping("commission-setting/list")
 	public String commissionSettingList(Model model, ModelMap modelMap) {
-		modelMap.put("vendorSettings", vendorSettingService.findAll());
+		modelMap.put("vendorSettings", vendorSettingService.findAlls());
 		modelMap.put("vendorSetting", new VendorSettings());
 		model.addAttribute("currentPage", "setting");
 		return "admin/page/setting/list";

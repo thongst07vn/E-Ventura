@@ -1,5 +1,7 @@
 package com.eventura.repositories;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,4 +39,7 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 	
 	@Query("SELECT u FROM Users u WHERE u.roles.id = 3 and username like %:keyword% ORDER BY u.createdAt DESC")
 	Page<Users> findUsersWithRoleId3ByKeyword(@Param("keyword") String keyword, Pageable pageable);
+	
+	@Query("from Users WHERE roles.id = 3 ORDER BY createdAt DESC LIMIT 3")
+	public List<Users> findNewUser();
 }

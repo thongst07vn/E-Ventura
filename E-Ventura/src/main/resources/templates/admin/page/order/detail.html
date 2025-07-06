@@ -30,7 +30,7 @@
 
 					</div>
 					<div class="col-lg-6 col-md-6 ms-auto text-md-end">
-						
+
 						<button onclick="printSection()"
 							class="btn btn-secondary print ms-2 no-print">
 							<i class="icon material-icons md-print"></i>
@@ -118,55 +118,67 @@
 								<thead>
 									<tr>
 										<th width="50%">Product</th>
-										<th width="10%">Unit Price</th>
-										<th width="10%">Quantity</th>
 										<th class="text-center" width="20%">Status</th>
-										<th class="text-end" width="10%">Total</th>
 									</tr>
 								</thead>
 								<tbody>
-									<th:block th:if="${orderItems != null}">
-										<tr th:each="orderItem : ${orderItems}">
-											<td><a class="itemside"
-												th:href="@{'/admin/product/detail/'+${orderItem.products.id}}">
-													<div class="left">
-														<th:block
-															th:if="${orderItem.products.mediases[0].name.contains('https:')}">
+									<th:block
+										th:if="${groupedOrderItems != null and not #maps.isEmpty(groupedOrderItems)}">
+										<th:block th:each="vendorEntry : ${groupedOrderItems}">
+											<tr class="table-group-divider vendor-row-header">
+											
+												<td colspan="10" class="table-primary py-2"><strong>Vendor
+														Name: <span th:text="${vendorNames.get(vendorEntry.key)}"></span>
+												</strong> <span class="badge rounded-pill vendor-status-badge"
+													th:id="'vendor-status-' + ${vendorEntry.key}"
+													th:data-vendor-id="${vendorEntry.key}"
+													th:data-current-status="${vendorLatestStatuses.get(vendorEntry.key)}"
+													th:classappend="${vendorLatestStatuses.get(vendorEntry.key) == 'Ordered' ? 'alert-info' :
+                   (vendorLatestStatuses.get(vendorEntry.key) == 'Confirmed' ? 'alert-primary' :
+                   (vendorLatestStatuses.get(vendorEntry.key) == 'Delivering' ? 'alert-warning' :
+                   (vendorLatestStatuses.get(vendorEntry.key) == 'Received' ? 'alert-success' :
+                   (vendorLatestStatuses.get(vendorEntry.key) == 'Canceled' ? 'alert-danger' : ''))))}"
+													th:text="${vendorLatestStatuses.get(vendorEntry.key)}">Vendor
+														Status</span></td>
+											</tr>
+											<tr th:each="orderItem : ${vendorEntry.value}">
+												<td><a class="itemside"
+													th:href="@{'/admin/product/detail/'+${orderItem.products.id}}">
+														<div class="left">
 															<img class="img-xs img-thumbnail"
-																th:src="${orderItem.products.mediases[0].name}"
+																th:src="${orderItem.products.mediases != null and not orderItem.products.mediases.empty and orderItem.products.mediases[0].name.contains('https:') ?
+                                   orderItem.products.mediases[0].name :
+                                   (orderItem.products.mediases != null and not orderItem.products.mediases.empty ? '/assets/imgs/items/' + orderItem.products.mediases[0].name : '/assets/imgs/placeholder.jpg')}"
 																alt="Item" width="40" height="40">
-														</th:block>
-														<th:block
-															th:if="${!orderItem.products.mediases[0].name.contains('https:')}">
-															<img class="img-sm img-thumbnail"
-																th:src="@{'/assets/imgs/items/' + ${orderItem.products.mediases[0].name}}"
-																width="40" height="40" alt="Item">
-														</th:block>
-													</div>
-													<div class="info">
-														<th:block th:text="${orderItem.products.name}">
-													</div>
-											</a></td>
-											<td>$ <th:block th:text="${orderItem.products.price}"></th:block></td>
-											<td class="text-center"><th:block
-													th:text="${orderItem.quantity}"></th:block></td>
-											<td class="text-center"><th:block
-													th:each="status : ${orderItemStatuses}">
-													<th:block th:if="${orderItem.id == status.orderItemId}">
-														<span class="badge rounded-pill order-status"
-															th:id="'status-' + ${status.orderItemId}"
-															th:data-order-item-id="${status.orderItemId}"
-															th:data-current-status="${status.statusName}"
-															th:classappend="${status.statusName == 'Ordered' ? 'alert-info' :
-                         (status.statusName == 'Confirmed' ? 'alert-primary' :
-                         (status.statusName == 'Delivering' ? 'alert-warning' :
-                         (status.statusName == 'Received' ? 'alert-success' :
-                         (status.statusName == 'Canceled' ? 'alert-danger' : ''))))}"
-															th:text="${status.statusName}"> </span>
-													</th:block>
-												</th:block></td>
-											<td class="text-end">$ <th:block
-													th:text="${orderItem.products.price*orderItem.quantity}"></th:block></td>
+														</div>
+														<div class="info">
+															<span th:text="${orderItem.products.name}">Tên sản
+																phẩm</span>
+														</div>
+												</a></td>
+												<td class="text-center"><span
+													class="badge rounded-pill order-item-status"
+													th:id="'status-' + ${orderItem.id}"
+													th:data-order-item-id="${orderItem.id}"
+													th:data-vendor-id="${orderItem.products.vendors.id}"
+													th:data-current-status="${vendorLatestStatuses.get(orderItem.products.vendors.id)}"
+													th:classappend="${vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Ordered' ? 'alert-info' :
+                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Confirmed' ? 'alert-primary' :
+                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Delivering' ? 'alert-warning' :
+                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Received' ? 'alert-success' :
+                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Canceled' ? 'alert-danger' : ''))))}"
+													th:text="${vendorLatestStatuses.get(orderItem.products.vendors.id)}">Trạng
+														thái</span></td>
+											</tr>
+										</th:block>
+									</th:block>
+									<th:block
+										th:if="${groupedOrderItems == null or #maps.isEmpty(groupedOrderItems)}">
+										<tr>
+											<td colspan="5" class="text-center py-4">
+												<p class="text-muted">Không tìm thấy mặt hàng nào cho
+													đơn hàng này.</p>
+											</td>
 										</tr>
 									</th:block>
 								</tbody>
@@ -179,27 +191,27 @@
 		<script th:src="@{/admin/assets/js/vendors/jquery-3.6.0.min.js}"></script>
 		<script>
 		    $(document).ready(function() {
-		        // Handle double-click on status badge
-		        $('.order-status').dblclick(function() {
+		        // Handle double-click on vendor status badge
+		        $('.vendor-status-badge').dblclick(function() {
 		            const $this = $(this);
-		            const orderItemId = $this.data('order-item-id');
+		            const vendorId = $this.data('vendor-id');
 		            const currentStatus = $this.data('current-status');
 		            let newStatus = '';
 		
 		            if (currentStatus === 'Confirmed') {
 		                newStatus = 'Delivering';
-		                updateOrderStatus(orderItemId, newStatus, $this);
+		                updateVendorOrderStatus(vendorId, newStatus, $this);
 		            } else if (currentStatus === 'Delivering') {
 		                Swal.fire({
-		                    title: 'Change Order Status',
-		                    text: "What's the next status for this order item?",
+		                    title: 'Change Vendor Order Status',
+		                    text: "What's the next status for ALL items from this vendor?",
 		                    icon: 'question',
 		                    showCancelButton: true,
-		                    showDenyButton: true, // Show a "Deny" button for "Canceled"
+		                    showDenyButton: true,
 		                    confirmButtonText: 'Received',
-		                    denyButtonText: 'Canceled', // Text for the "Deny" button
-		                    cancelButtonText: 'Keep Delivering', // Text for the "Cancel" button
-		                    reverseButtons: true, // Puts confirm button on the right
+		                    denyButtonText: 'Canceled',
+		                    cancelButtonText: 'Keep Delivering',
+		                    reverseButtons: true,
 		                    customClass: {
 		                        confirmButton: 'swal2-confirm',
 		                        denyButton: 'swal2-deny',
@@ -208,65 +220,55 @@
 		                }).then((result) => {
 		                    if (result.isConfirmed) {
 		                        newStatus = 'Received';
-		                        updateOrderStatus(orderItemId, newStatus, $this);
+		                        updateVendorOrderStatus(vendorId, newStatus, $this);
 		                    } else if (result.isDenied) {
 		                        newStatus = 'Canceled';
-		                        updateOrderStatus(orderItemId, newStatus, $this);
+		                        updateVendorOrderStatus(vendorId, newStatus, $this);
 		                    }
-		                    // If result.isDismissed (e.g., clicked "Keep Delivering" or outside), do nothing
 		                });
 		            }
 		        });
 		
-		        function updateOrderStatus(orderItemId, newStatus, $element) {
-		            // Show a loading spinner while processing
+		        function updateVendorOrderStatus(vendorId, newStatus, $vendorBadgeElement) {
 		            Swal.fire({
 		                title: 'Updating...',
-		                text: 'Please wait while we update the order status.',
+		                text: 'Please wait while we update the order status for this vendor.',
 		                allowOutsideClick: false,
 		                didOpen: () => {
 		                    Swal.showLoading();
 		                }
 		            });
 		
-		            // Send AJAX request to your Spring Boot backend
 		            $.ajax({
-		                url: '/admin/order-items/update-status', // Your Spring Boot endpoint
-		                type: 'POST', // Or 'PUT', depending on your API design
+		                url: '/admin/order-items/update-status-by-vendor', // New endpoint for vendor-level update
+		                type: 'POST',
 		                contentType: 'application/json',
 		                data: JSON.stringify({
-		                    orderItemId: orderItemId,
+		                    vendorId: vendorId,
 		                    newStatus: newStatus
 		                }),
 		                success: function(response) {
-		                    Swal.close(); // Close the loading spinner
+		                    Swal.close();
 		                    if (response.success) {
-		                        // Update the badge text and class on success
-		                        $element.text(newStatus);
-		                        $element.data('current-status', newStatus); // Update data attribute
+		                        // Update the vendor badge
+		                        $vendorBadgeElement.text(newStatus);
+		                        $vendorBadgeElement.data('current-status', newStatus);
+		                        updateBadgeClasses($vendorBadgeElement, newStatus);
 		
-		                        // Remove existing alert classes and add the new one
-		                        $element.removeClass('alert-info alert-primary alert-warning alert-success alert-danger');
-		                        if (newStatus === 'Ordered') {
-		                            $element.addClass('alert-info');
-		                        } else if (newStatus === 'Confirmed') {
-		                            $element.addClass('alert-primary');
-		                        } else if (newStatus === 'Delivering') {
-		                            $element.addClass('alert-warning');
-		                        } else if (newStatus === 'Received') {
-		                            $element.addClass('alert-success');
-		                        } else if (newStatus === 'Canceled') {
-		                            $element.addClass('alert-danger');
-		                        }
+		                        // Update all individual order item badges for this vendor
+		                        $(`.order-item-status[data-vendor-id='${vendorId}']`).each(function() {
+		                            const $itemBadge = $(this);
+		                            $itemBadge.text(newStatus);
+		                            $itemBadge.data('current-status', newStatus);
+		                            updateBadgeClasses($itemBadge, newStatus);
+		                        });
 		
 		                        Swal.fire({
 		                            title: 'Success!',
-		                            text: 'Order status updated successfully to ' + newStatus + '!',
+		                            text: 'Order status for vendor updated successfully to ' + newStatus + '!',
 		                            icon: 'success',
 		                            confirmButtonText: 'OK'
 		                        });
-		                        // Optionally, you might want to refresh part of the page or the entire page
-		                        // location.reload();
 		                    } else {
 		                        Swal.fire({
 		                            title: 'Error!',
@@ -277,16 +279,32 @@
 		                    }
 		                },
 		                error: function(xhr, status, error) {
-		                    Swal.close(); // Close the loading spinner
+		                    Swal.close();
 		                    Swal.fire({
 		                        title: 'Error!',
-		                        text: 'An error occurred while updating order status. Please try again.',
+		                        text: 'An error occurred while updating vendor order status. Please try again.',
 		                        icon: 'error',
 		                        confirmButtonText: 'OK'
 		                    });
 		                    console.error("AJAX Error: ", xhr.responseText);
 		                }
 		            });
+		        }
+		
+		        // Helper function to update badge classes
+		        function updateBadgeClasses($element, newStatus) {
+		            $element.removeClass('alert-info alert-primary alert-warning alert-success alert-danger');
+		            if (newStatus === 'Ordered') {
+		                $element.addClass('alert-info');
+		            } else if (newStatus === 'Confirmed') {
+		                $element.addClass('alert-primary');
+		            } else if (newStatus === 'Delivering') {
+		                $element.addClass('alert-warning');
+		            } else if (newStatus === 'Received') {
+		                $element.addClass('alert-success');
+		            } else if (newStatus === 'Canceled') {
+		                $element.addClass('alert-danger');
+		            }
 		        }
 		    });
 		</script>

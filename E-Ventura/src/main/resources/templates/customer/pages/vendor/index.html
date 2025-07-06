@@ -264,7 +264,7 @@
 										</a>
 									</div>
 									<div class="info-right">
-										<a class="color-brand-3 font-sm-bold" href="#"><th:block
+										<a class="color-brand-3 font-sm-bold" th:href="@{'/product/productdetails/'+${product.products.id}}"><th:block
 												th:text="${product.products.name}"></th:block></a>
 										<div class="rating">
 											<th:block
@@ -288,9 +288,6 @@
 										<div class="price-info">
 											<strong class="font-lg-bold color-brand-3 price-main">$<th:block
 													th:text="${product.products.price}"></th:block></strong>
-										</div>
-										<div class="mt-20 box-btn-cart">
-											<a class="btn btn-cart" href="shop-cart.html">Add To Cart</a>
 										</div>
 										<ul class="list-features">
 											<li><th:block th:text="${product.products.description}"></th:block></li>

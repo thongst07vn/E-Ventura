@@ -18,9 +18,9 @@ import com.eventura.entities.Wards;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Vouchers, Integer> {
-	@Query("from Vouchers where redeemAllowed = true and deletedAt is null and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id = :id and minOrderValue <= :value")
+	@Query("from Vouchers where redeemAllowed = true and deletedAt is null and quantity > 0 and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id = :id and minOrderValue <= :value")
 	public List<Vouchers> findAllVouchersByVendorId(@Param("id") int id,@Param("value") double value);
-	@Query("from Vouchers where redeemAllowed = true and deletedAt is null and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id IS NULL and minOrderValue <= :value")
+	@Query("from Vouchers where redeemAllowed = true and deletedAt is null and quantity > 0 and startTime <= current_timestamp() and endTime >= current_timestamp() and vendors.id IS NULL and minOrderValue <= :value")
 	public List<Vouchers> findAllVouchers(@Param("value") double value);
 	
 	@Query("FROM Vouchers WHERE deletedAt IS NULL ORDER BY createdAt DESC")
