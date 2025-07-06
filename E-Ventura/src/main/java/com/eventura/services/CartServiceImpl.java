@@ -94,6 +94,24 @@ public class CartServiceImpl implements CartService {
 		}
 	}
 
+	@Override
+	public boolean deleteCart(Carts cart) {
+		// TODO Auto-generated method stub
+		try {
+			cartRepository.delete(cart);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public Carts findCartById(int id) {
+		// TODO Auto-generated method stub
+		return cartRepository.findById(id).get();
+	}
+
 	
 
 }

@@ -24,4 +24,6 @@ public interface CartService {
 	public CartItems findCartItemsById(int id);
 	
 	public boolean deleteCartItem(CartItems cartItems);
+	public boolean deleteCart(Carts cart);
+	public Carts findCartById(int id);
 }

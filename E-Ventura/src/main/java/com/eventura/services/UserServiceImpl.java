@@ -160,6 +160,12 @@ public class UserServiceImpl implements UserService {
 		return activityLogRepository.countActivityLogPhone();
 	}
 
+	@Override
+	public List<Users> findNewUser() {
+		// TODO Auto-generated method stub
+		return userRepository.findNewUser();
+	}
+
 
 
 	

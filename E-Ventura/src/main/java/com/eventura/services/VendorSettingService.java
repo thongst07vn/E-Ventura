@@ -15,6 +15,8 @@ import com.eventura.repositories.VendorSettingRepository;
 public interface VendorSettingService {
 	
 	public List<VendorSettings> findAll();
+
+	public List<VendorSettings> findAlls();
 	
 	public VendorSettings findById(int id);
 	
