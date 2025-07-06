@@ -40,5 +40,11 @@ public class VendorSettingServiceImpl implements VendorSettingService {
 		}
 	}
 
+	@Override
+	public List<VendorSettings> findAlls() {
+		// TODO Auto-generated method stub
+		return vendorSettingRepository.findAll();
+	}
+
 
 }

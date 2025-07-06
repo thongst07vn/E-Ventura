@@ -20,4 +20,6 @@ public interface OrderItemService {
 	public boolean saveOrderItems(OrderItems orderItems);
 	
 	public OrderItems findById(int id);
+	
+	public List<OrderItems> findAllOrderItemsByVendorId(int vendorId);
 }

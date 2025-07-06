@@ -33,4 +33,6 @@ public interface UserService extends UserDetailsService {
 	public boolean saveActivityLog(ActivityLog activityLog);
 	public int countActivityLogPC();
 	public int countActivityLogPhone();
+	
+	public List<Users> findNewUser(); 
 }
