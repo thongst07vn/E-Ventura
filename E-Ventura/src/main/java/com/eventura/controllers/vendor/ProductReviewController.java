@@ -46,7 +46,7 @@ public class ProductReviewController {
 
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
+		Page<Products> productPage = productService.findProductReviewed(vendorId, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		// Lặp qua productPage và thêm các ProductDTO vào List

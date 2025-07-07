@@ -163,5 +163,20 @@ public class ProductServiceImpl implements ProductService {
 		// TODO productRepository-generated method stub
 		return productRepository.findProductByVendorAndDeleteAndKeywordPage(vendorId, keyword, pageable);
 	}
+	
+	@Override
+	public Page<Products> findProductReviewed(int vendorId, Pageable pageable) {
+		// TODO productRepository-generated method stub
+		return productRepository.findProductReviewed(vendorId, pageable);
+	}
+
+	@Override
+	public Page<Products> find5ProductReviewed(int vendorId) {
+		// TODO Auto-generated method stub
+		PageRequest limit = PageRequest.of(0, 4); // trang 0, lấy 5 dòng
+		Page<Products> top5 = productRepository.findProductReviewed(vendorId, limit);
+
+		return top5;
+	}
 
 }

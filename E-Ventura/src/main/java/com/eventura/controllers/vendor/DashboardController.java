@@ -1,7 +1,11 @@
 package com.eventura.controllers.vendor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.eventura.dtos.OrderVendorDTO;
+import com.eventura.dtos.ProductDTO;
+import com.eventura.entities.Products;
 import com.eventura.services.AddressService;
 import com.eventura.services.CategoryService;
 import com.eventura.services.OrderService;
@@ -26,8 +32,8 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller("vendorDashboardController")
 @RequestMapping("vendor/dashboard")
-public class DashboardController  {
-	
+public class DashboardController {
+
 	@Autowired
 	private VendorService vendorService;
 	@Autowired
@@ -44,25 +50,41 @@ public class DashboardController  {
 	private UserService userService;
 	@Autowired
 	private AddressService addressService;
-	
-	
-	/*===================== DASHBOARD =====================*/
+
+	/* ===================== DASHBOARD ===================== */
 	@GetMapping("home")
-	public String home(ModelMap modelMap, HttpSession session,
-					  @RequestParam(defaultValue = "0") int page) {
+	public String home(ModelMap modelMap, HttpSession session, @RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "dashboard");
 		int vendorId = (Integer) session.getAttribute("vendorId");
-		
+
 		/* Top 5 Follower */
 		modelMap.put("followers", vendorReviewService.getTop5LatestReviews(vendorId));
+		/* Top 5 Product Reviewed */
+		Page<Products> productPage = productService.find5ProductReviewed(vendorId);
+		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
+		// Lặp qua productPage và thêm các ProductDTO vào List
+		for (Products product : productPage) {
+			if (product.getDeletedAt() == null && !product.isDeleted()) {
 
+				if (!productService.findProductReview(product.getId()).isEmpty()) {
+					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
+				} else {
+					productDTOList.add(new ProductDTO(product, 0));
+				}
+			}
+		}
+		Page<ProductDTO> productDTOPage = new PageImpl<ProductDTO>(productDTOList, productPage.getPageable(),
+				productPage.getTotalElements());
+
+		modelMap.put("products", productDTOPage.getContent());
+		
 		/* DASHBOARD */
 		modelMap.put("totalFollowers", vendorReviewService.countFollowerByVendorId(vendorId));
 		modelMap.put("totalRevenues", vendorService.sumByVendorId(vendorId));
 		modelMap.put("totalOrders", vendorService.countByVendorId(vendorId));
 		modelMap.put("totalProducts", productService.findByVendorId(vendorId).size());
 		modelMap.put("totalCategories", categoryService.findAll().size());
-	
+
 		/* Phân trang Order */
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
@@ -71,89 +93,83 @@ public class DashboardController  {
 		modelMap.put("currentPages", page);
 		modelMap.put("totalPage", orderVendorPages.getTotalPages());
 		modelMap.put("lastPageIndex", orderVendorPages.getTotalPages() - 1);
-		
+
 		modelMap.put("orderStatuses", orderStatusService.findAll());
 
-		
-		
 		return "vendor/pages/dashboard/index";
 	}
-	
+
 	@GetMapping("findByStatus")
 	public String findByStatus(@RequestParam("orderStatusId") int orderStatusId, ModelMap modelMap, HttpSession session,
-							   @RequestParam(defaultValue = "0") int page) {
+			@RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "order");
 		int vendorId = (Integer) session.getAttribute("vendorId");
-		
+
 		/* DASHBOARD */
 		modelMap.put("totalFollowers", vendorReviewService.countFollowerByVendorId(vendorId));
 		modelMap.put("totalRevenues", vendorService.sumByVendorId(vendorId));
 		modelMap.put("totalOrders", vendorService.countByVendorId(vendorId));
 		modelMap.put("totalProducts", productService.findByVendorId(vendorId).size());
 		modelMap.put("totalCategories", categoryService.findAll().size());
-		
+
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<OrderVendorDTO> orderStatusPages = orderService.findOrdersByStatusPage(vendorId, orderStatusId, pageable);
 		Page<OrderVendorDTO> orderVendorPages = orderService.findOrdersByVendorPage(vendorId, pageable);
 
-		
-		if(orderStatusId == 0) {
+		if (orderStatusId == 0) {
 			modelMap.put("orders", orderVendorPages.getContent());
 			modelMap.put("currentPages", page);
 			modelMap.put("totalPage", orderVendorPages.getTotalPages());
 			modelMap.put("lastPageIndex", orderVendorPages.getTotalPages() - 1);
-		}else {
+		} else {
 			modelMap.put("orders", orderStatusPages.getContent());
 			modelMap.put("currentPages", page);
 			modelMap.put("totalPage", orderStatusPages.getTotalPages());
 			modelMap.put("lastPageIndex", orderStatusPages.getTotalPages() - 1);
 		}
-		
 
 		modelMap.put("selectedOrderStatusId", orderStatusId);
 		modelMap.put("orderStatuses", orderStatusService.findAll());
 
-
 		return "vendor/pages/dashboard/index";
 	}
-	
+
 	@GetMapping("searchByKeyword")
 	public String findByKeyword(@RequestParam("keyword") String keyword, ModelMap modelMap, HttpSession session,
-							   @RequestParam(defaultValue = "0") int page) {
+			@RequestParam(defaultValue = "0") int page) {
 		modelMap.put("currentPage", "order");
 		int vendorId = (Integer) session.getAttribute("vendorId");
-		
+
 		/* DASHBOARD */
 		modelMap.put("totalFollowers", vendorReviewService.countFollowerByVendorId(vendorId));
 		modelMap.put("totalRevenues", vendorService.sumByVendorId(vendorId));
 		modelMap.put("totalOrders", vendorService.countByVendorId(vendorId));
 		modelMap.put("totalProducts", productService.findByVendorId(vendorId).size());
 		modelMap.put("totalCategories", categoryService.findAll().size());
-		
+
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
 		Page<OrderVendorDTO> orderPages = orderService.findByKeyword(vendorId, keyword, pageable);
-		
+
 		modelMap.put("orders", orderPages.getContent());
 		modelMap.put("currentPages", page);
 		modelMap.put("totalPage", orderPages.getTotalPages());
 		modelMap.put("lastPageIndex", orderPages.getTotalPages() - 1);
-		
+
 		modelMap.put("selectedKeyword", keyword);
 		modelMap.put("orderStatuses", orderStatusService.findAll());
 
 		return "vendor/pages/dashboard/index";
 	}
-	
+
 	@GetMapping("userDetails/{userId}")
 	public String userDetails(@PathVariable("userId") int userId, ModelMap modelMap) {
-		
+
 		modelMap.put("user", userService.findById(userId));
 		modelMap.put("userAdresses", userService.findAddressUser(userId));
 
 		return "vendor/pages/user/detail";
 	}
-	
-	
+
 }
