@@ -27,20 +27,30 @@
 								4:34PM</b></small></div>
 					<form id="changeStatusForm" method="POST" th:action="@{/vendor/order/changeStatus}">
 						<div class="col-lg-6 col-md-6 ms-auto text-md-end">
-							<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="statusId"
-								id="statusSelect">
-								<option th:value="1" th:text="Ordered" th:selected="${selectedStatusId == 1}"></option>
-								<option th:value="2" th:text="Confirm" th:selected="${selectedStatusId == 2}"></option>
+							<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="statusId" id="statusSelect">
+							    <option 
+							        th:value="1" 
+							        th:text="Ordered" 
+							        th:selected="${selectedStatusId == 1}" 
+							        th:disabled="${selectedStatusId != 1}" 
+							    ></option>
 
-								<option th:if="${selectedStatusId == 3}" th:value="3" th:text="Delivering"
-									th:selected="true" disabled>
-								</option>
-								<option th:if="${selectedStatusId == 4}" th:value="4" th:text="Received"
-									th:selected="true" disabled>
-								</option>
-								<option th:if="${selectedStatusId == 5}" th:value="5" th:text="Cancelled"
-									th:selected="true" disabled>
-								</option>
+							    <option 
+							        th:value="2" 
+							        th:text="Confirm" 
+							        th:selected="${selectedStatusId == 2}" 
+							        th:disabled="${selectedStatusId >= 2 or selectedStatusId == 5}" 
+							        ></option>
+
+							    <option 
+							        th:value="5" 
+							        th:text="Cancelled" 
+							        th:selected="${selectedStatusId == 5}"
+							        th:disabled="${selectedStatusId >= 3 and selectedStatusId != 5}" 
+							        ></option>
+
+							    <option th:if="${selectedStatusId == 3}" th:value="3" th:text="Delivering" th:selected="true" disabled></option>
+							    <option th:if="${selectedStatusId == 4}" th:value="4" th:text="Received" th:selected="true" disabled></option>
 							</select>
 							<input type="hidden" name="orderId" th:value="${order.id}">
 					</form>
@@ -224,5 +234,25 @@
 			</div>
 		</div>
 		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+				const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+				if (sweetAlertStatus && sweetAlertMessage) {
+					Swal.fire({
+						icon: sweetAlertStatus, // 'success' or 'error'
+						title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+						text: sweetAlertMessage,
+						showConfirmButton: false,
+						timer: 3000 // Automatically close after 3 seconds
+					});
+				}
+			});
+		</script>
+	</section>
 	</section>
 </body>
