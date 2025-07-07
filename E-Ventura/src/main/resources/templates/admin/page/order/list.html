@@ -17,35 +17,20 @@
 			<header class="card-header">
 				<div class="row gx-3">
 					<div class="col-lg-4 col-md-6 me-auto">
-						<form method="get" th:action="@{/admin/order/search-by-keyword}"  id="productSearchForm">
-							<input class="form-control font-xs" type="text" value=""
-								placeholder="Search....." name="keyword" id="productSearchKeyword">
-						</form>
-						<script>
-							document.getElementById('productSearchKeyword').addEventListener('keyup', function(event) {									
-								 if (event.key === 'Enter' || event.keyCode === 13) {
-								        document.getElementById('productSearchForm').submit();
-								    }
-                            });
-						</script>
+						
 					</div>
 					<div class="col-lg-2 col-6 col-md-3">
-						<select class="form-select">
-							<option>Status</option>
-							<option>Active</option>
-							<option>Disabled</option>
-							<option>Show all</option>
-						</select>
+						
 					</div>
 					<div class="col-lg-2 col-md-3 col-6">
 						<select id="pageSizeSelect" class="form-select"
 							onchange="changePageSize()">
-							<option th:value="20" th:text="'Show 20'"
-								th:selected="${pageSize == 20}"></option>
-							<option th:value="30" th:text="'Show 30'"
-								th:selected="${pageSize == 30}"></option>
-							<option th:value="50" th:text="'Show 50'"
-								th:selected="${pageSize == 50}"></option>
+							<option th:value="5" th:text="'Show 5'"
+								th:selected="${pageSize == 5}"></option>
+							<option th:value="10" th:text="'Show 10'"
+								th:selected="${pageSize == 10}"></option>
+							<option th:value="15" th:text="'Show 15'"
+								th:selected="${pageSize == 15}"></option>
 						</select>
 					</div>
 
@@ -53,7 +38,7 @@
 						document.addEventListener('DOMContentLoaded', () => {
 					        const select = document.getElementById('pageSizeSelect');
 					        const urlParams = new URLSearchParams(window.location.search);
-					        const pageSize = urlParams.get('pageSize') || '20'; // default là 5
+					        const pageSize = urlParams.get('pageSize') || '5'; // default là 5
 					        select.value = pageSize;
 					    });
 						function changePageSize() {
@@ -69,7 +54,7 @@
 						    const newUrl = new URL(window.location.origin + window.location.pathname);
 						    newUrl.searchParams.set('page', currentPage);
 						    newUrl.searchParams.set('pageSize', pageSize);
-							if (window.location.pathname === '/admin/vendor/search-by-keyword') {
+							if (window.location.pathname === '/admin/order/search-by-keyword') {
 					           const keyword = urlParams.get('keyword');
 					          if (keyword !== null) { 
 					                newUrl.searchParams.set('keyword', keyword);
@@ -130,7 +115,7 @@
 				</div>
 			</div>
 		</div>
-		<th:block th:if="${keyword!=null && !#lists.isEmpty(vendors)}">
+		<th:block th:if="${keyword!=null && !#lists.isEmpty(orders)}">
 			
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
@@ -138,7 +123,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'hidden'"><a
 							class="page-link"
-							th:href="@{'/vendor/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${0}+'&pageSize='+${pageSize}}"
+							th:href="@{'/order/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${0}+'&pageSize='+${pageSize}}"
 							aria-label="Next"> <i class="material-icons md-double_arrow"
 								style="transform: rotate(180deg) translate(15%, -30%);"></i>
 						</a></li>
@@ -146,7 +131,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'disabled'"><a
 							class="page-link"
-							th:href="@{'/vendor/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+							th:href="@{'/order/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
 							aria-label="Previous"> <i
 								class="material-icons md-chevron_left"></i>
 						</a></li>
@@ -157,7 +142,7 @@
 							<li class="page-item"
 								th:classappend="${i} == ${currentPages} ? 'active'"><a
 								class="page-link"
-								th:href="@{'/vendor/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${i}+'&pageSize='+${pageSize}}"
+								th:href="@{'/order/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${i}+'&pageSize='+${pageSize}}"
 								th:text="${i + 1}"></a></li>
 						</th:block>
 	
@@ -165,7 +150,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
 							<a class="page-link"
-							th:href="@{'/vendor/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+							th:href="@{'/order/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
 							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 						</a>
 						</li>
@@ -173,7 +158,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
 							<a class="page-link"
-							th:href="@{'/vendor/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
+							th:href="@{'/order/search-by-keyword?keyword='+'${keyword}'+'&page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
 							aria-label="Next"><i class="material-icons md-double_arrow"></i>
 						</a>
 						</li>
@@ -181,14 +166,14 @@
 				</nav>
 			</div>
 		</th:block>
-		<th:block th:if="${keyword==null && !#lists.isEmpty(vendors)}">
+		<th:block th:if="${keyword==null && !#lists.isEmpty(orders)}">
 			<div class="pagination-area mt-15 mb-50">
 				<nav aria-label="Page navigation example">
 					<ul class="pagination justify-content-start">
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'hidden'"><a
 							class="page-link"
-							th:href="@{'/admin/vendor/list?page=' + ${0}+'&pageSize='+${pageSize}}"
+							th:href="@{'/admin/order/list?page=' + ${0}+'&pageSize='+${pageSize}}"
 							aria-label="Next"> <i class="material-icons md-double_arrow"
 								style="transform: rotate(180deg) translate(15%, -30%);"></i>
 						</a></li>
@@ -196,7 +181,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages == 0} ? 'disabled'"><a
 							class="page-link"
-							th:href="@{'/admin/vendor/list?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+							th:href="@{'/admin/order/list?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
 							aria-label="Previous"> <i
 								class="material-icons md-chevron_left"></i>
 						</a></li>
@@ -207,7 +192,7 @@
 							<li class="page-item"
 								th:classappend="${i} == ${currentPages} ? 'active'"><a
 								class="page-link"
-								th:href="@{'/admin/vendor/list?page=' + ${i}+'&pageSize='+${pageSize}}"
+								th:href="@{'/admin/order/list?page=' + ${i}+'&pageSize='+${pageSize}}"
 								th:text="${i + 1}"></a></li>
 						</th:block>
 
@@ -215,7 +200,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
 							<a class="page-link"
-							th:href="@{'/admin/vendor/list?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+							th:href="@{'/admin/order/list?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
 							aria-label="Next"> <i class="material-icons md-chevron_right"></i>
 						</a>
 						</li>
@@ -223,7 +208,7 @@
 						<li class="page-item"
 							th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
 							<a class="page-link"
-							th:href="@{'/admin/vendor/list?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
+							th:href="@{'/admin/order/list?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
 							aria-label="Next"><i class="material-icons md-double_arrow"></i>
 						</a>
 						</li>
