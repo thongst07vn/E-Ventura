@@ -58,14 +58,13 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-		</div>
+		<div class="row"></div>
 		<div class="card mb-4">
 			<header class="card-header">
 				<div
 					style="display: flex; flex-direction: row; justify-content: space-between;">
 					<h3 class="card-title">New Members</h3>
-					<a th:src="@{/admin/customer/list}">show more</a>
+					<a th:href="@{/admin/customer/list}">show more</a>
 				</div>
 			</header>
 			<div class="card-body">
@@ -80,7 +79,8 @@
 					</thead>
 					<tbody>
 						<tr th:each="newUser : ${newUsers}">
-							<td width="40%"><a class="itemside" th:href="@{'/admin/customer/detail/'+${newUser.id}}"
+							<td width="40%"><a class="itemside"
+								th:href="@{'/admin/customer/detail/'+${newUser.id}}"
 								style="flex-direction: column;">
 									<div class="left">
 										<th:block th:if="${newUser.avatar.contains('https:')}">
@@ -110,5 +110,6 @@
 				<!-- table-responsive end//-->
 			</div>
 		</div>
+		
 	</section>
 </body>

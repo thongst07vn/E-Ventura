@@ -126,7 +126,7 @@
 										th:if="${groupedOrderItems != null and not #maps.isEmpty(groupedOrderItems)}">
 										<th:block th:each="vendorEntry : ${groupedOrderItems}">
 											<tr class="table-group-divider vendor-row-header">
-											
+
 												<td colspan="10" class="table-primary py-2"><strong>Vendor
 														Name: <span th:text="${vendorNames.get(vendorEntry.key)}"></span>
 												</strong> <span class="badge rounded-pill vendor-status-badge"
