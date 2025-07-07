@@ -1,10 +1,13 @@
 package com.eventura.controllers.vendor;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.eventura.entities.CampaignRedemptions;
 import com.eventura.entities.Coupons;
 import com.eventura.entities.CouponsCampaigns;
+import com.eventura.entities.OrdersCampaigns;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.Vendors;
@@ -182,5 +186,38 @@ public class CouponController  {
 		modelMap.put("currentPage", "promotion");
 
 		return "vendor/pages/coupon/edit";
+	}
+	
+	@GetMapping("detail/{id}")
+	public String couponDetails(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int pageSize, @PathVariable("id")int campaignId) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "redemptionDate"));
+		List<CouponsCampaigns> couponCampaigns = campaignRedeemtionService.findAllCouponsCampaignsByCouponsIdWithredeemUsedQty(campaignId);
+		Page<OrdersCampaigns> orderCampaignPage;
+
+		// Check if the list is not empty before trying to get the first element
+		if (couponCampaigns != null && !couponCampaigns.isEmpty()) { // Added !vouchersCampaigns.isEmpty()
+		    // It's good practice to also check if getCampaignRedemptions() is not null
+		    // though the NoSuchElementException is specifically from getFirst()
+		    if (couponCampaigns.get(0).getCampaignRedemptions() != null) {
+		        orderCampaignPage = campaignRedeemtionService.findOrderByCampaignRedeem(couponCampaigns.get(0).getCampaignRedemptions().getId(), pageable);
+		        // It's possible findOrderByCampaignRedeem returns null, so handle that
+		        if (orderCampaignPage == null) {
+		            orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+		        }
+		    } else {
+		        orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+		    }
+		} else {
+		    orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+		}
+		modelMap.put("orderCampaigns", orderCampaignPage.getContent());
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", orderCampaignPage.getTotalPages());
+		model.addAttribute("lastPageIndex", orderCampaignPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("campaignId", campaignId);
+		model.addAttribute("currentPage", "coupon");
+		return "vendor/pages/coupon/detail";
 	}
 }

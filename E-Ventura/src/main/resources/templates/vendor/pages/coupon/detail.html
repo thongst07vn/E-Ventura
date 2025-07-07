@@ -1,18 +1,18 @@
 <html xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{vendor/layouts/layout :: layout('Voucher Detail', ~{this :: .content-main})}">
+	th:replace="~{vendor/layouts/layout :: layout('Coupon Detail', ~{this :: .content-main})}">
 
 <head>
-<title>Voucher Detail</title>
+<title>Coupon Detail</title>
 </head>
 
 <body>
 	<section class="content-main">
 		<div class="content-header">
 			<div>
-				<h2 class="content-title card-title">Vouchers</h2>
-				<p>Voucher Detail</p>
+				<h2 class="content-title card-title">Coupons</h2>
+				<p>Coupon Detail</p>
 				<div class="content-header">
-					<a th:href="@{/vendor/voucher/list}"><i
+					<a th:href="@{/vendor/coupon/list}"><i
 						class="material-icons md-arrow_back"></i> Go back</a>
 				</div>
 			</div>
@@ -53,7 +53,7 @@
 						const newUrl = new URL(window.location.origin + window.location.pathname);
 						newUrl.searchParams.set('page', currentPage);
 						newUrl.searchParams.set('pageSize', pageSize);
-						if (window.location.pathname === '/admin/voucher/search-by-vendor') {
+						if (window.location.pathname === '/admin/coupon/search-by-vendor') {
 							const vendorId = urlParams.get('vendorId');
 							if (vendorId !== null) {
 								newUrl.searchParams.set('vendorId', vendorId);
@@ -126,7 +126,7 @@
 								</tbody>
 
 							</table>
-							<!-- all voucher -->
+							<!-- all coupon -->
 							<th:block th:if="${!#lists.isEmpty(orderCampaigns)}">
 								<div class="pagination-area mt-15 mb-50">
 									<nav aria-label="Page navigation example">
@@ -134,7 +134,7 @@
 											<li class="page-item"
 												th:classappend="${currentPages == 0} ? 'hidden'"><a
 												class="page-link"
-												th:href="@{'/vendor/voucher/detail/'+${campaignId}+'?page=' + ${0}+'&pageSize='+${pageSize}}"
+												th:href="@{'/vendor/coupon/detail/'+${campaignId}+'?page=' + ${0}+'&pageSize='+${pageSize}}"
 												aria-label="Next"> <i
 													class="material-icons md-double_arrow"
 													style="transform: rotate(180deg) translate(15%, -30%);"></i>
@@ -143,7 +143,7 @@
 											<li class="page-item"
 												th:classappend="${currentPages == 0} ? 'disabled'"><a
 												class="page-link"
-												th:href="@{'/vendor/voucher/detail/'+${campaignId}+'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+												th:href="@{'/vendor/coupon/detail/'+${campaignId}+'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
 												aria-label="Previous"> <i
 													class="material-icons md-chevron_left"></i>
 											</a></li>
@@ -155,7 +155,7 @@
 												<li class="page-item"
 													th:classappend="${i} == ${currentPages} ? 'active'"><a
 													class="page-link"
-													th:href="@{'/vendor/voucher/detail/'+${campaignId}+'?page=' + ${i}+'&pageSize='+${pageSize}}"
+													th:href="@{'/vendor/coupon/detail/'+${campaignId}+'?page=' + ${i}+'&pageSize='+${pageSize}}"
 													th:text="${i + 1}"></a></li>
 											</th:block>
 
@@ -163,7 +163,7 @@
 											<li class="page-item"
 												th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
 												<a class="page-link"
-												th:href="@{'/admin/voucher/detail/'+${campaignId}+'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+												th:href="@{'/vendor/coupon/detail/'+${campaignId}+'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
 												aria-label="Next"> <i
 													class="material-icons md-chevron_right"></i>
 											</a>
@@ -172,7 +172,7 @@
 											<li class="page-item"
 												th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
 												<a class="page-link"
-												th:href="@{'/vendor/voucher/detail/'+${campaignId}+'?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
+												th:href="@{'/vendor/coupon/detail/'+${campaignId}+'?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
 												aria-label="Next"><i
 													class="material-icons md-double_arrow"></i> </a>
 											</li>

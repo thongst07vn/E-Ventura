@@ -315,7 +315,8 @@
 
 								<tbody>
 									<th:block th:each="coupon : ${coupons}">
-										<tr>
+										<tr th:attr="ondblclick='location.href=\'/vendor/coupon/detail/' + ${coupon.id} + '\''" data-placement="top"
+											title="Double click to view details">
 											<td th:text="${coupon.products.name}" class="text-center"></td>
 											<td th:if="${coupon.discountUnit == 'percent'}" class="text-center">
 												<th:block

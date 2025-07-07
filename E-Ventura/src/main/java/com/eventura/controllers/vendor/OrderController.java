@@ -16,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.dtos.OrderVendorDTO;
 import com.eventura.entities.OrderItems;
@@ -129,7 +131,7 @@ public class OrderController  {
 	
 	@GetMapping("detail/{orderId}")
 	public String orderDetail(@PathVariable("orderId") int orderId, ModelMap modelMap, HttpSession session,
-							  @RequestParam(defaultValue = "0") int page) {
+							  @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int statusId) {
 		modelMap.put("currentPage", "order");
 		int vendorId = (Integer) session.getAttribute("vendorId");
 		
@@ -174,6 +176,23 @@ public class OrderController  {
 		return "vendor/pages/order/detail";
 	}
 	
+	@PostMapping("changeStatus")
+	public String changeStatus(ModelMap modelMap,
+							   @RequestParam("orderId") int orderId,
+							   @RequestParam("statusId") int statusId,
+							   	RedirectAttributes redirectAttributes) {
+		modelMap.put("currentPage", "order");
+		
+		List<OrderItems> orderItems = orderItemService.findAllOrderItemsByOrderId(orderId);
+		
+		if (orderItems.isEmpty()) {
+			redirectAttributes.addFlashAttribute("sweetAlert", "error");
+			redirectAttributes.addFlashAttribute("message", "Your order don't have order Items");
+        }
+
+		return "redirect:/vendor/order/detail/" + orderId + "?selectedStatus=" + statusId;
+	}
+	
 	@GetMapping("tracking/{orderId}")
 	public String orderTracking(@PathVariable("orderId") int orderId, ModelMap modelMap) {
 		modelMap.put("currentPage", "order");
@@ -183,6 +202,10 @@ public class OrderController  {
 
 		return "vendor/pages/order/tracking";
 	}
+	
+
+	
+	
 	
 	@GetMapping("returnList")
 	public String orderReturnList(ModelMap modelMap) {
