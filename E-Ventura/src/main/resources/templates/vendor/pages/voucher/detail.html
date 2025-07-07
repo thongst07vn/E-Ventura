@@ -1,0 +1,190 @@
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{vendor/layouts/layout :: layout('Voucher Detail', ~{this :: .content-main})}">
+
+<head>
+<title>Voucher Detail</title>
+</head>
+
+<body>
+	<section class="content-main">
+		<div class="content-header">
+			<div>
+				<h2 class="content-title card-title">Vouchers</h2>
+				<p>Voucher Detail</p>
+				<div class="content-header">
+					<a href="javascript:history.back()"><i
+						class="material-icons md-arrow_back"></i> Go back</a>
+				</div>
+			</div>
+		</div>
+		<header class="card-header">
+			<div class="row gx-3">
+				<div class="col-lg-6 col-md-6 me-auto"></div>
+
+				<div class="col-lg-2 col-md-3 col-6">
+					<select id="pageSizeSelect" class="form-select"
+						onchange="changePageSize()">
+						<option th:value="5" th:text="'Show 5'"
+							th:selected="${pageSize == 5}"></option>
+						<option th:value="20" th:text="'Show 20'"
+							th:selected="${pageSize == 20}"></option>
+						<option th:value="30" th:text="'Show 30'"
+							th:selected="${pageSize == 30}"></option>
+					</select>
+				</div>
+
+				<script>
+					document.addEventListener('DOMContentLoaded', () => {
+						const select = document.getElementById('pageSizeSelect');
+						const urlParams = new URLSearchParams(window.location.search);
+						const pageSize = urlParams.get('pageSize') || '5'; // default là 5
+						select.value = pageSize;
+					});
+					function changePageSize() {
+						// Lấy giá trị của option đã chọn
+						const select = document.getElementById('pageSizeSelect');
+						const pageSize = select.value;
+
+						// Lấy giá trị của trang hiện tại, nếu có
+						const urlParams = new URLSearchParams(window.location.search);
+						const currentPage = urlParams.get('page') || 0; // hoặc giá trị khác tùy ý
+
+						// Tạo URL mới với tham số page và pageSize
+						const newUrl = new URL(window.location.origin + window.location.pathname);
+						newUrl.searchParams.set('page', currentPage);
+						newUrl.searchParams.set('pageSize', pageSize);
+						if (window.location.pathname === '/admin/voucher/search-by-vendor') {
+							const vendorId = urlParams.get('vendorId');
+							if (vendorId !== null) {
+								newUrl.searchParams.set('vendorId', vendorId);
+							}
+						}
+
+						// Tải lại trang với URL mới
+						window.location.href = newUrl.toString();
+					}
+					// JavaScript to display SweetAlert2 based on flash attributes
+					document.addEventListener('DOMContentLoaded', function () {
+						const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+						const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+						if (sweetAlertStatus && sweetAlertMessage) {
+							Swal.fire({
+								icon: sweetAlertStatus, // 'success' or 'error'
+								title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+								text: sweetAlertMessage,
+								showConfirmButton: false,
+								timer: 3000 // Automatically close after 3 seconds
+							});
+						}
+					});
+				</script>
+
+			</div>
+		</header>
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th class="text-center">User Detail</th>
+										<th class="text-center">Redemption Date</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="orderCampaign : ${orderCampaigns}">
+										<td width="40%"><a class="itemside"
+											th:href="@{'/admin/customer/detail/'+${orderCampaign.orders.users.id}}"
+											style="flex-direction: column;">
+												<div class="left">
+													<th:block
+														th:if="${orderCampaign.orders.users.avatar.contains('https:')}">
+														<img class="img-md img-avatar"
+															th:src="${orderCampaign.orders.users.avatar}"
+															alt="User pic">
+													</th:block>
+													<th:block
+														th:if="${!orderCampaign.orders.users.avatar.contains('https:')}">
+														<img class="img-md img-avatar"
+															th:src="@{'/assets/imgs/avatars/' + ${orderCampaign.orders.users.avatar}}"
+															alt="User pic">
+													</th:block>
+												</div>
+												<div class="info pl-3">
+													<h6 class="mb-0 title">
+														<th:block th:text="${orderCampaign.orders.users.username}"></th:block>
+													</h6>
+												</div>
+										</a></td>
+										<td class="text-center"><th:block
+												th:text="${#dates.format(orderCampaign.redemptionDate, 'EEEE, dd MMMM, yyyy')}+ ' at ' + ${#dates.format(orderCampaign.redemptionDate, 'h:mm a')}">
+											</th:block></td>
+									</tr>
+								</tbody>
+
+							</table>
+							<!-- all voucher -->
+							<th:block th:if="${!#lists.isEmpty(orderCampaigns)}">
+								<div class="pagination-area mt-15 mb-50">
+									<nav aria-label="Page navigation example">
+										<ul class="pagination justify-content-start">
+											<li class="page-item"
+												th:classappend="${currentPages == 0} ? 'hidden'"><a
+												class="page-link"
+												th:href="@{'/admin/voucher/detail/'+${campaignId}+'?page=' + ${0}+'&pageSize='+${pageSize}}"
+												aria-label="Next"> <i
+													class="material-icons md-double_arrow"
+													style="transform: rotate(180deg) translate(15%, -30%);"></i>
+											</a></li>
+											<!-- Nút trước -->
+											<li class="page-item"
+												th:classappend="${currentPages == 0} ? 'disabled'"><a
+												class="page-link"
+												th:href="@{'/admin/voucher/detail/'+${campaignId}+'?page=' + ${currentPages-1}+'&pageSize='+${pageSize}}"
+												aria-label="Previous"> <i
+													class="material-icons md-chevron_left"></i>
+											</a></li>
+
+											<!-- Các trang -->
+											<th:block
+												th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+												<li class="page-item"
+													th:classappend="${i} == ${currentPages} ? 'active'"><a
+													class="page-link"
+													th:href="@{'/admin/voucher/detail/'+${campaignId}+'?page=' + ${i}+'&pageSize='+${pageSize}}"
+													th:text="${i + 1}"></a></li>
+											</th:block>
+
+											<!-- Nút tiếp -->
+											<li class="page-item"
+												th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+												<a class="page-link"
+												th:href="@{'/admin/voucher/detail/'+${campaignId}+'?page=' + ${currentPages+1}+'&pageSize='+${pageSize}}"
+												aria-label="Next"> <i
+													class="material-icons md-chevron_right"></i>
+											</a>
+											</li>
+
+											<li class="page-item"
+												th:classappend="${currentPages + 1 >= totalPages} ? 'hidden'">
+												<a class="page-link"
+												th:href="@{'/admin/voucher/detail/'+${campaignId}+'?page=' + ${lastPageIndex}+'&pageSize='+${pageSize}}"
+												aria-label="Next"><i
+													class="material-icons md-double_arrow"></i> </a>
+											</li>
+										</ul>
+									</nav>
+								</div>
+							</th:block>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</body>
+</html>
