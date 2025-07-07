@@ -116,25 +116,7 @@
 								<!-- col.//-->
 
 								<div class="col-md">
-									<article class="box mb-3 bg-light">
-										<form class="w-auto d-inline-block float-end" method="post"
-											th:action="@{/admin/customer/edit}" id="editDeletedAtForm">
-											<label class="switch"> <th:block
-													th:if="${user.deletedAt==null}">
-													<input type="checkbox" id="mySwitch">
-													<span class="slider round"></span>
-												</th:block> <th:block th:if="${user.deletedAt!=null}">
-													<input type="checkbox" checked id="mySwitch">
-													<span class="slider round"></span>
-												</th:block>
-											</label> <input type="hidden" name="id" th:value="${id}" /> <input
-												type="hidden" name="actionType" id="actionType"
-												th:value="${actionType}" />
-										</form>
-										<h6>Remove account</h6>
-										<small class="text-muted d-block" style="width: 70%">Once
-											you delete your account, there is no going back.</small>
-									</article>
+									
 									<script>
 									  const switchElement = document.getElementById('mySwitch');
 									  const actionTypeInput = document.getElementById('actionType'); // Get the new hidden input

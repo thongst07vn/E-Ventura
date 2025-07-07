@@ -22,4 +22,7 @@ public interface OrderItemService {
 	public OrderItems findById(int id);
 	
 	public List<OrderItems> findAllOrderItemsByVendorId(int vendorId);
+	
+	public List<OrderItems> findAllOrderItemsByOrderId(int orderId);
+
 }

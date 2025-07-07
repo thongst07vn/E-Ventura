@@ -75,4 +75,10 @@ public class OrderItemServiceImpl implements OrderItemService{
 		// TODO Auto-generated method stub
 		return orderItemRepository.findAllOrderItemsByVendorId(vendorId);
 	}
+
+	@Override
+	public List<OrderItems> findAllOrderItemsByOrderId(int orderId) {
+		// TODO Auto-generated method stub
+		return orderItemRepository.findOrderItemsByOrderId(orderId);
+	}
 }
