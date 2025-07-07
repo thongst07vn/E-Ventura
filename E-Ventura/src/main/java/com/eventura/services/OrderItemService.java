@@ -23,6 +23,9 @@ public interface OrderItemService {
 	
 	public List<OrderItems> findAllOrderItemsByVendorId(int vendorId);
 	
-	public List<OrderItems> findAllOrderItemsByOrderId(int orderId);
+	public List<OrderItems> findAllOrderItemsByOrderId(int orderIds);
+	
+	public List<OrderItems> findAllOrderItemsByOrderIdAndVendorId(int orderId, int vendorId);
+
 
 }

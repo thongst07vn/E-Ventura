@@ -54,5 +54,15 @@ public interface OrderItemRepository extends JpaRepository<OrderItems, Integer> 
 		""")
 	List<OrderItems> findOrderItemsByOrderId(@Param("orderId") Integer orderId);
 
+	
+	@Query("""
+			  SELECT oi
+			  FROM OrderItems oi
+			  JOIN oi.orders o
+			  JOIN oi.products p
+		      JOIN p.vendors v
+			  WHERE oi.orders.id = :orderId and v.id = :vendorId
+		""")
+	List<OrderItems> findOrderItemsByOrderIdAndVendorId(@Param("orderId") Integer orderId, @Param("vendorId") Integer vendorId);
 }
 
