@@ -331,7 +331,8 @@
 
 								<tbody>
 									<th:block th:each="voucher : ${vouchers}">
-										<tr>
+										<tr th:attr="ondblclick='location.href=\'/vendor/voucher/detail/' + ${voucher.id} + '\''" data-placement="top"
+											title="Double click to view details">
 											<td th:if="${voucher.discountUnit == 'percent'}" class="text-center">
 												<th:block
 													th:text="${#numbers.formatDecimal(voucher.discountValue * 100, 0, 0)}">

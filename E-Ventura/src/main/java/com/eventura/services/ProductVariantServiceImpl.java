@@ -75,7 +75,11 @@ public class ProductVariantServiceImpl implements ProductVariantService {
 	@Override
 	public long getTotalVariantQuantityByProductId(int productId) {
 		// TODO Auto-generated method stub
-		return productVariantRepository.getTotalVariantQuantityByProductId(productId);
+		if(productVariantRepository.getTotalVariantQuantityByProductId(productId) != null) {
+			return productVariantRepository.getTotalVariantQuantityByProductId(productId);
+		}else {
+			return 0;
+		}
 	}
 	
 }
