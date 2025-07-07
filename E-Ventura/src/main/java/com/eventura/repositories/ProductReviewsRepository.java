@@ -30,4 +30,6 @@ public interface ProductReviewsRepository extends JpaRepository<ProductReviews, 
 	@Query("FROM ProductReviews WHERE users.username like %:keyword%")
 	public Page<ProductReviews>  findByKeywordPage(@Param("id") int id, @Param("keyword") String keyword, Pageable pageable);	
 	
+	
+	
 }

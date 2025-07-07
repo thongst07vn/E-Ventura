@@ -53,6 +53,11 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	
 	@Query("from Products p where p.vendors.id = :vendor_id and p.deletedAt is null and p.deleted = false and p.name like %:keyword%")
 	public Page<Products> findProductByVendorAndDeleteAndKeywordPage(@Param("vendor_id") int vendor_id, @Param("keyword") String keyword, Pageable pageable);
+	
+
+	@Query("Select p from Products p RIGHT JOIN p.productReviewses pr ON p.id = pr.products.id where p.vendors.id = :vendor_id and p.deleted is false ORDER BY pr.createdAt DESC")
+	public Page<Products> findProductReviewed(@Param("vendor_id") int vendor_id, Pageable pageable);
+	
 
 
 }

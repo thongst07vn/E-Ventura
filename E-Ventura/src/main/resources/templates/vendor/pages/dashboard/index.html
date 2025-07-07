@@ -19,17 +19,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-3">
-				<div class="card card-body mb-4">
-					<article class="icontext"><span class="icon icon-sm rounded-circle bg-info-light"><i
-								class="text-info material-icons md-people"></i></span>
-						<div class="text">
-							<h6 class="mb-1 card-title">Follower</h6><span th:text="${totalFollowers}">6,982</span><span
-								class="text-sm">Latest update.</span>
-						</div>
-					</article>
-				</div>
-			</div>
+
 			<div class="col-lg-3">
 				<div class="card card-body mb-4">
 					<article class="icontext"><span class="icon icon-sm rounded-circle bg-primary-light"><i
@@ -66,32 +56,93 @@
 					</article>
 				</div>
 			</div>
+			<div class="col-lg-3">
+				<div class="card card-body mb-4">
+					<article class="icontext"><span class="icon icon-sm rounded-circle bg-info-light"><i
+								class="text-info material-icons md-people"></i></span>
+						<div class="text">
+							<h6 class="mb-1 card-title">Follower</h6><span th:text="${totalFollowers}">6,982</span><span
+								class="text-sm">Latest update.</span>
+						</div>
+					</article>
+				</div>
+			</div>
 
 		</div>
 		<div class="row">
-			<div class="col-xl-8 col-lg-12">
+			<div class="col-xl-6 col-lg-12">
 				<div class="card mb-4">
 					<article class="card-body">
-						<h5 class="card-title">Sale statistics</h5>
-						<canvas id="myChart" height="120px"></canvas>
+						<h5 class="card-title"> Top 5 Newest Rated Products</h5>
+						<table class="table table-hover">
+
+							<tbody>
+								<th:block th:each="product : ${products}">
+									<tr>
+
+										<td>
+											<a class="itemside" href="#">
+												<th:block
+													th:if="${product.products.mediases[0].name.contains('https:')}">
+													<img class="img-sm img-thumbnail"
+														th:src="${product.products.mediases[0].name}" alt="Item">
+												</th:block>
+												<th:block
+													th:if="${!product.products.mediases[0].name.contains('https:')}">
+													<img class="img-sm img-thumbnail"
+														th:src="@{'/assets/imgs/items/' + ${product.products.mediases[0].name}}"
+														alt="Item">
+												</th:block>
+												<h6 class="mb-0" th:text="${product.products.name}"></h6>
+											</a>
+										</td>
+										<td class="align-middle">
+											<th:block th:with="displayRating=${product.rating != null ? product.rating : 0},
+														             cappedRating=${displayRating > 5 ? 5 : displayRating},
+														             width=${cappedRating * 20}">
+												<ul class="rating-stars">
+													<li class="stars-active" th:style="'width:' + ${width} + '%'"><img
+															th:src="@{/assets/imgs/icons/stars-active.svg}" alt="stars"
+															style="height: 20px;"></li>
+													<li><img th:src="@{/assets/imgs/icons/starts-disable.svg}"
+															alt="stars" style="height: 20px;"></li>
+												</ul>
+											</th:block>
+
+										</td>
+										<td class="text-end align-middle">
+											<a class="btn btn-md rounded font-sm"
+												th:href="@{'/vendor/productReview/details/' + ${product.products.id}}">Detail</a>
+											<!-- dropdown -->
+										</td>
+									</tr>
+								</th:block>
+
+
+							</tbody>
+						</table>
 					</article>
 				</div>
 
 			</div>
-			<div class="col-xl-4 col-lg-12">
+			<div class="col-xl-6 col-lg-12">
 				<div class="card mb-4">
 					<article class="card-body">
 						<h5 class="card-title">New Follower</h5>
 						<div class="new-member-list">
 							<th:block th:each="follower : ${followers}">
 								<div class="d-flex align-items-center justify-content-between mb-4">
-									<div class="d-flex align-items-center"><img class="avatar" th:src="@{'/assets/imgs/avatars/' + ${follower.users.avatar}}"
-											alt="">
+									<div class="d-flex align-items-center"><img class="avatar"
+											th:src="@{'/assets/imgs/avatars/' + ${follower.users.avatar}}" alt="">
 										<div>
 											<h6 th:text="${follower.users.username}"></h6>
-											<p class="text-muted font-xs" th:text="${#dates.format(follower.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></p>
+											<p class="text-muted font-xs"
+												th:text="${#dates.format(follower.createdAt, 'dd/MM/yyyy HH:mm:ss')}">
+											</p>
 										</div>
-									</div><a class="btn btn-xs" th:href="@{'/vendor/dashboard/userDetails/' + ${follower.users.id}}"><i class="material-icons md-add"></i>
+									</div><a class="btn btn-xs"
+										th:href="@{'/vendor/dashboard/userDetails/' + ${follower.users.id}}"><i
+											class="material-icons md-add"></i>
 										Details</a>
 								</div>
 							</th:block>
@@ -218,8 +269,8 @@
 					<ul class="pagination justify-content-start">
 						<!-- Nút về đầu -->
 						<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'">
-							<a class="page-link" th:href="@{'/vendor/dashboard/home?page=' + ${0}}" aria-label="Next"> <i
-									class="material-icons md-double_arrow"
+							<a class="page-link" th:href="@{'/vendor/dashboard/home?page=' + ${0}}" aria-label="Next">
+								<i class="material-icons md-double_arrow"
 									style="transform: rotate(180deg) translate(15%, -30%);"></i>
 							</a>
 						</li>
