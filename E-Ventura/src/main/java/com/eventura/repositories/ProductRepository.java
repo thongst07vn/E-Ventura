@@ -34,7 +34,7 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	@Query("SELECT p FROM Products p ORDER BY p.price DESC")
     public List<Products> findTopByPriceDesc(Pageable pageable);
 	
-	@Query("from Products where deletedAt IS NULL AND name like %:keyword%")
+	@Query("from Products p JOIN Vendors v ON p.vendors.id = v.id WHERE v.users.deletedAt IS NULL And p.deletedAt IS NULL AND p.name like %:keyword% ")
 	public List<Products>  findByKeyword(@Param("keyword") String keyword,Sort sort);
 	
 	@Query("from Products p JOIN Vendors v ON p.vendors.id = v.id WHERE v.users.deletedAt IS NULL And p.deletedAt IS NULL AND p.name like %:keyword% ")
