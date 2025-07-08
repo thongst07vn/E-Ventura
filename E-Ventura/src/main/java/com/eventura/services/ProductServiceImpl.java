@@ -179,4 +179,22 @@ public class ProductServiceImpl implements ProductService {
 		return top5;
 	}
 
+	@Override
+	public Page<Products> findByPriceRange(double min, double max, String keyword, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findByPriceRangePage(min, max,keyword, pageable);
+	}
+
+	@Override
+	public List<Products> findTopViewProduct() {
+		Pageable pageable = PageRequest.of(0, 10);
+		return productRepository.findTopViewProduct(pageable);
+	}
+
+	@Override
+	public Products findTopByPrice() {
+		Pageable pageable = PageRequest.of(0, 1);
+		return productRepository.findTopByPriceDesc(pageable).get(0);
+	}
+
 }

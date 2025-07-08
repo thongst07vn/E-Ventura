@@ -132,6 +132,9 @@ public class ProductController {
 		modelMap.put("products", products.getContent());
 		modelMap.put("categories", categories);
 		modelMap.put("categoryId", id);
+		modelMap.put("topprice", productService.findTopByPrice().getPrice());
+		modelMap.put("topViewProducts", productService.findTopViewProduct().subList(0, 4));
+		modelMap.put("topViewProducts2", productService.findTopViewProduct().subList(5, 9));
 
 		modelMap.addAttribute("currentPages", page);
 		modelMap.addAttribute("totalPage", products.getTotalPages());
@@ -150,7 +153,32 @@ public class ProductController {
 		modelMap.put("products", products.getContent());
 		modelMap.put("categories", categories);
 		modelMap.put("keyword", keyword);
-
+		modelMap.put("topprice", productService.findTopByPrice().getPrice());
+		modelMap.put("topViewProducts", productService.findTopViewProduct().subList(0, 4));
+		modelMap.put("topViewProducts2", productService.findTopViewProduct().subList(5, 9));
+		
+		modelMap.addAttribute("currentPages", page);
+		modelMap.addAttribute("totalPage", products.getTotalPages());
+		modelMap.addAttribute("lastPageIndex", products.getTotalPages() - 1);
+		modelMap.addAttribute("pageSize", pageSize);
+		return "customer/pages/home/shopgrid";
+	}
+	@GetMapping({ "searchbypricerange" })
+	public String searchByPriceRange(@RequestParam(name="keyword",required = false, defaultValue = "") String keyword,@RequestParam("min-value") double min, @RequestParam("max-value") double max, ModelMap modelMap,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "30") int pageSize,
+			Authentication authentication, @AuthenticationPrincipal UserDetails userDetails) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Products> products = productService.findByPriceRange(min,max,keyword, pageable);
+		List<ProductCategories> categories = categoryService.findAll();
+		modelMap.put("products", products.getContent());
+		modelMap.put("categories", categories);
+		modelMap.put("keyword", keyword);
+		modelMap.put("min", min);
+		modelMap.put("max", max);
+		modelMap.put("topprice", productService.findTopByPrice().getPrice());
+		modelMap.put("topViewProducts", productService.findTopViewProduct().subList(0, 4));
+		modelMap.put("topViewProducts2", productService.findTopViewProduct().subList(5, 9));
+		
 		modelMap.addAttribute("currentPages", page);
 		modelMap.addAttribute("totalPage", products.getTotalPages());
 		modelMap.addAttribute("lastPageIndex", products.getTotalPages() - 1);

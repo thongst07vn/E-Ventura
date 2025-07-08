@@ -24,11 +24,24 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	@Query("Select p from Products p WHERE deletedAt IS NULL order by p.createdAt")
 	public List<Products>  findTopNewProduct(Pageable pageable);
 	
+	@Query("SELECT p FROM Products p " +
+	           "LEFT JOIN p.productReviewses pr " +
+	           "WHERE p.deletedAt IS NULL " +
+	           "GROUP BY p " +
+	           "ORDER BY AVG(pr.rating) DESC, COUNT(pr.comment) DESC")
+	public List<Products> findTopViewProduct(Pageable pageable);
+	
+	@Query("SELECT p FROM Products p ORDER BY p.price DESC")
+    public List<Products> findTopByPriceDesc(Pageable pageable);
+	
 	@Query("from Products where deletedAt IS NULL AND name like %:keyword%")
 	public List<Products>  findByKeyword(@Param("keyword") String keyword,Sort sort);
 	
 	@Query("from Products where deletedAt IS NULL AND name like %:keyword%")
 	public Page<Products>  findByKeywordPage(@Param("keyword") String keyword,Pageable pageable);
+	
+	@Query("from Products where deletedAt IS NULL AND price >= :min AND price <= :max AND name like %:keyword%")
+	public Page<Products>  findByPriceRangePage(@Param("min") double min, @Param("max") double max,@Param("keyword") String keyword,Pageable pageable);
 	
 	@Query("FROM Products p JOIN Vendors v ON p.vendors.id = v.id WHERE v.users.deletedAt IS NULL AND p.deletedAt IS NULL AND p.productCategories.id = :category_id")
 	public Page<Products> findProductByCategoryPage(@Param("category_id") int category_id,Pageable pageable);

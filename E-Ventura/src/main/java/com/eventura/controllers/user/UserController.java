@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,20 +43,33 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2User;
+
+import com.eventura.entities.Districts;
+
 import com.eventura.entities.OrderItems;
 import com.eventura.entities.OrderItemsOrderStatus;
+
 import com.eventura.entities.Orders;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
+import com.eventura.entities.Provinces;
+import com.eventura.entities.Roles;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.entities.Vendors;
+import com.eventura.entities.Wards;
 import com.eventura.helpers.FileHelper;
 import com.eventura.services.AddressService;
 import com.eventura.services.CategoryService;
+
+import com.eventura.services.MailService;
+
 import com.eventura.services.OrderItemService;
 import com.eventura.services.OrderService;
 import com.eventura.services.OrderStatusService;
+
 import com.eventura.services.ProductService;
+import com.eventura.services.RoleService;
 import com.eventura.services.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -65,6 +79,9 @@ import jakarta.servlet.http.HttpSession;
 
 public class UserController {
 
+	@Autowired
+	private RoleService roleService;
+	
 	@Autowired
 	private UserService userService;
 
@@ -78,12 +95,16 @@ public class UserController {
 	private AddressService addressService;
 	
 	@Autowired
+
+	private Environment environment;
+	@Autowired
+	private MailService mailService;
+
 	private OrderService orderService;
 	@Autowired
 	private OrderItemService orderItemService;
 	@Autowired
 	private OrderStatusService orderStatusService;
-
 
 	@GetMapping({ "home", "/" })
 	public String home(ModelMap modelMap, HttpSession session) {
@@ -97,10 +118,150 @@ public class UserController {
 	}
 
 	@GetMapping({ "register" })
-	public String register() {
+	public String register(ModelMap modelMap) {
+		Users user = new Users();
+		UserAddress userAddress = new UserAddress();
+
+		modelMap.put("user", user);
+		modelMap.put("userAddress", userAddress);
+		modelMap.put("provinces", addressService.findAllProvinces());
+		user.setRoles(roleService.findById(3));
+		modelMap.put("user", user);
 		return "customer/pages/login/register";
 	}
+	@PostMapping("register")
+	public String register(@ModelAttribute("user") Users user, @ModelAttribute("userAddress") UserAddress userAddress,			
+			@RequestParam("rePassword") String rePassword,
+			@RequestParam(value = "provinceCode", required = false) String provinceCode,
+			@RequestParam(value = "districtCode", required = false) String districtCode,
+			@RequestParam(value = "wardCode", required = false) String wardCode, RedirectAttributes redirectAttributes,
+			ModelMap modelMap) {
 
+		// Check if first name and last name are empty
+		if (user.getFirstName() == null || user.getFirstName().trim().isEmpty() || user.getLastName() == null
+				|| user.getLastName().trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("msgErrorName", "* Last name or First name cannot be empty.");
+			return "redirect:/customer/register";
+		}
+
+		// Check if phone number is 10 digits
+		if (user.getPhoneNumber() == null || !user.getPhoneNumber().matches("\\d{10}")) {
+			redirectAttributes.addFlashAttribute("msgErrorPhone", "* Phone number must be 10 digits.");
+			return "redirect:/customer/register";
+		}
+
+		if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("msgErrorEmail", "* Email cannot be empty");
+			return "redirect:/customer/register";
+		} else {
+			// Check if email already exists
+			Users existingUser = userService.findByEmail(user.getEmail());
+			if (existingUser != null) {
+				redirectAttributes.addFlashAttribute("msgErrorEmail", "* Email is already in use.");
+				return "redirect:/customer/register";
+			}
+		}
+
+		if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("msgErrorUsername", "* Username cannot be empty");
+			return "redirect:/customer/register";
+		} else {
+			// Check if username already exists
+			Users existingUsername = userService.findByUsername(user.getUsername());
+			if (existingUsername != null) {
+				redirectAttributes.addFlashAttribute("msgErrorUsername", "* Username is already in use.");
+				return "redirect:/customer/register";
+			}
+		}
+
+		// Check if password is between 8 and 16 characters, contains at least 1
+		// uppercase letter and 1 number
+		String password = user.getPassword();
+		String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$";
+
+		if (!password.matches(passwordPattern)) {
+			redirectAttributes.addFlashAttribute("msgErrorPasswordStrength",
+					"Password must be between 8 and 16 characters, and include at least 1 uppercase letter, 1 special Character and 1 number.");
+			return "redirect:/customer/register";
+		}
+
+		// Check if password and confirm password match
+		if (!user.getPassword().equals(rePassword)) {
+			redirectAttributes.addFlashAttribute("msgErrorPassword", "* Password and confirm password do not match.");
+			return "redirect:/customer/register";
+		}
+
+		// Check if Provine / District / Ward is empty
+		if (provinceCode == null || districtCode == null || wardCode == null) {
+			redirectAttributes.addFlashAttribute("msgErrorPDW", "* Province-Districts-Ward cannot be empty");
+			return "redirect:/customer/register";
+		}
+
+		// Check if address is empty
+		if (userAddress.getAddress() == null || userAddress.getAddress().trim().isEmpty()) {
+			redirectAttributes.addFlashAttribute("msgErrorAddress", "* Address cannot be empty.");
+			return "redirect:/customer/register";
+		}
+
+		/* Create and save user */
+		Roles role = new Roles();
+		role.setId(2); // Assuming role ID 2 exists in the database
+		user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+		user.setAvatar("noimg.jpg");
+		user.setCreatedAt(new Date());
+		user.setDeletedAt(new Date());
+		user.setRoles(role);
+
+		// Save user first
+		userService.save(user);
+
+		/* Save user address */
+		Provinces provinces = addressService.findProvinceById(provinceCode);
+		Districts districts = addressService.findDistrictById(districtCode);
+		Wards wards = addressService.findWardById(wardCode);
+		userAddress.setUsers(user);
+		userAddress.setCreatedAt(new Date());
+		userAddress.setProvinces(provinces);
+		userAddress.setDistricts(districts);
+		userAddress.setWards(wards);
+		userAddress.setName("Bao");
+
+		// Save user address
+		
+		if(addressService.save(userAddress)) {
+			// Send verification email
+			String baseUrl = environment.getProperty("base_url");
+			String url = baseUrl + "vendor/account/verify?email=" + user.getEmail();
+
+			String from = environment.getProperty("spring.mail.username");
+			String to = user.getEmail();
+			String subject = "Verify Vendor";
+			String body = "<div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;'>"
+					+ "<h2 style='color: #4CAF50;'>CUSTOMER INFORMATION:</h2>"
+					+ "<div style='background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>"
+					+ "<p><strong>Fullname:</strong> " + user.getFirstName() + " " + user.getLastName() + "</p>"
+					+ "<p><strong>Username:</strong> " + user.getUsername() + "</p>" + "<p><strong>Phone Number:</strong> "
+					+ user.getPhoneNumber() + "</p>" + "<p><strong>Email:</strong> " + user.getEmail() + "</p>"
+					+ "<p><strong>Address:</strong> " + userAddress.getAddress() + ", " + userAddress.getWards().getName()
+					+ ", " + userAddress.getDistricts().getName() + ", " + userAddress.getProvinces().getName() + "</p>"
+					+ "</div>" + "<p>Click <a href='" + url
+					+ "' style='color: #4CAF50;'>here</a> to activate your Vendor Account.</p>" + "</div>";
+			
+			
+
+			if (mailService.send(from, to, subject, body)) {
+				redirectAttributes.addFlashAttribute("sweetAlert", "success");
+				redirectAttributes.addFlashAttribute("message", "Register Sucessfully, Check your email to activate your account.");
+
+			} else {
+				redirectAttributes.addFlashAttribute("sweetAlert", "error");
+				redirectAttributes.addFlashAttribute("message", "Register Failed");
+
+			}
+
+		}	
+		return "redirect:/customer/register";
+	}
 	@GetMapping({ "login" })
 	public String login(@RequestParam(value = "error", required = false) String error, ModelMap modelMap) {
 		if (error != null) {
@@ -427,7 +588,6 @@ public class UserController {
 
         return "customer/pages/account/profile";
 	}
-
 	// User orderTracking
 	 // User orderTracking
     @GetMapping({ "order-tracking/{orderId}/{vendorId}" })
@@ -512,5 +672,4 @@ public class UserController {
         
         return "customer/pages/account/orderTracking"; // Thay đổi tên template nếu cần
     }
-
 }

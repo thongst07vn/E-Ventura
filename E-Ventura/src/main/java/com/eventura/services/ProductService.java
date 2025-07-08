@@ -21,9 +21,15 @@ public interface ProductService {
 
 	public List<Products> findTopNewProduct();
 
+	public List<Products> findTopViewProduct();
+	
+	public Products findTopByPrice();
+
 	public List<Products> findByKeyword(String keyword);
 
 	public Page<Products> findByKeywordPage(String keyword,Pageable pageable);
+	
+	public Page<Products> findByPriceRange(double min, double max, String keyword,Pageable pageable);
 
 	public Page<Products> findAlls(Pageable pageable);
 
