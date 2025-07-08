@@ -194,7 +194,8 @@ public class SecurityConfiguration {
 					"/customer/register",
 					"/login/**", // Allow unauthenticated access to the customer login page
 					"/customer/process-login", // Allow unauthenticated access to the customer login processing URL
-					"/oauth2/**"
+					"/oauth2/**",
+					"/success/**"
 				).permitAll()
 //				.requestMatchers("/customer/**").hasAnyRole("CUSTOMER","OAUTH2_USER") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths
 				.requestMatchers("/customer/**").hasAnyAuthority("ROLE_CUSTOMER","OAUTH2_USER") // Require DOCTOR role for /doctor paths // Require PATIENT role for /patient paths

@@ -40,6 +40,8 @@ import com.eventura.entities.OrderItemsOrderStatusId;
 import com.eventura.entities.Orders;
 import com.eventura.entities.OrdersCampaigns;
 import com.eventura.entities.OrdersCampaignsId;
+import com.eventura.entities.ProductVariants;
+import com.eventura.entities.Products;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
 import com.eventura.entities.VendorEarnings;
@@ -205,7 +207,7 @@ public class CartController {
 		Map<Vendors, List<CartItemsDTO>> groupedCheckoutList = new HashMap<>();
 		Map<Integer, List<Vouchers>> voucherByVendorList = new HashMap<>();
 		List<Vouchers> voucherByEventura = new ArrayList<>();
-
+		
 		List<Coupons> allCoupons = couponsService.findAllCoupons();
 		double subTotal = 0;
 		if (userDetails != null) {
@@ -362,8 +364,8 @@ public class CartController {
 		double oldSubTotal = 0;
 		Vouchers voucher = vouchersService.findById(Integer.parseInt(voucherId));
 		List<Carts> userCarts = cartService.findCartByUserId(Integer.parseInt(userId));
-		for (Carts cart : userCarts) {
-			for (CartItems cartItem : cart.getCartItemses()) {
+		
+			for (CartItems cartItem : cartItems) {
 				if (cartItem.getProducts().getVendors().getId() == Integer.parseInt(vendorId)) {
 					for (Coupons coupon : allCoupons) {
 						if (coupon.getProducts() != null
@@ -385,7 +387,7 @@ public class CartController {
 					}
 				}
 			}
-		}
+		
 
 		boolean voucherIsValid = false;
 		double discountAmount = 0;
@@ -470,10 +472,6 @@ public class CartController {
 		newOrder.setName(
 				newOrder.getUsers().getUsername() + "_Order_" + RandomStringCode.generateRandomAlphaNumeric(8));
 		// Oder Items
-		System.out.println(newOrder.getName());
-		System.out.println(newOrder.getTotalAmount());
-		System.out.println(cartItems);
-		System.out.println(vouchers);
 		// Save Order
 		if (orderService.saveOrder(newOrder)) {
 			// find Order Items
@@ -533,7 +531,12 @@ public class CartController {
 
 						// Find the ProductVariant by ID and append its value
 						String value = productVariantService.findById(Integer.parseInt(variantId)).getValue();
-
+						ProductVariants productVariant = productVariantService.findById(Integer.parseInt(variantId));
+						productVariant.setQuantity(productVariant.getQuantity()-item.getQuantity());
+						if(productVariant.getQuantity() <0) {
+							productVariant.setQuantity(0);
+						}
+						productVariantService.saveProductVariants(productVariant);
 						combinationStringBuilder.append(value);
 
 						// Append a hyphen if it's not the last element
@@ -544,6 +547,12 @@ public class CartController {
 					String combinationString = combinationStringBuilder.toString();
 					CartItemsDTO dto = new CartItemsDTO(item, afterDiscountPrice, originalPrice, hasDiscount,
 							combinationString);
+					Products product = productService.findById(item.getProducts().getId());
+					product.setQuantity(product.getQuantity()-item.getQuantity());
+					if(product.getQuantity()<0) {
+						product.setQuantity(0);
+					}
+					productService.save(product);
 					Vendors vendor = item.getProducts().getVendors();
 					groupedCheckoutList.computeIfAbsent(vendor, k -> new ArrayList<>()).add(dto);
 					// save Order Item

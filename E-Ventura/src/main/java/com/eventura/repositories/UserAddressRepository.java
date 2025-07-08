@@ -14,7 +14,7 @@ import com.eventura.entities.Users;
 @Repository
 public interface UserAddressRepository extends JpaRepository<UserAddress, Integer> {
 
-	@Query("from UserAddress where users.id = :user_id")
+	@Query("from UserAddress where users.id = :user_id Order By createdAt desc")
 	public List<UserAddress> findAddressUser(@Param("user_id") int user_id);
 	
 	@Query("""
