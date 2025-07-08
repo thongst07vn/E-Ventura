@@ -96,11 +96,10 @@ public class UserController {
 	private AddressService addressService;
 	
 	@Autowired
-
 	private Environment environment;
 	@Autowired
 	private MailService mailService;
-
+	@Autowired
 	private OrderService orderService;
 	@Autowired
 	private OrderItemService orderItemService;
