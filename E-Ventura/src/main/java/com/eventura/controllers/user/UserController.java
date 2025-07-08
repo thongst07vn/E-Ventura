@@ -5,18 +5,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -29,6 +42,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.eventura.configurations.AccountOAuth2User;
+import com.eventura.entities.OrderItems;
+import com.eventura.entities.OrderItemsOrderStatus;
+import com.eventura.entities.Orders;
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
 import com.eventura.entities.UserAddress;
@@ -36,6 +52,9 @@ import com.eventura.entities.Users;
 import com.eventura.helpers.FileHelper;
 import com.eventura.services.AddressService;
 import com.eventura.services.CategoryService;
+import com.eventura.services.OrderItemService;
+import com.eventura.services.OrderService;
+import com.eventura.services.OrderStatusService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
 
@@ -54,12 +73,20 @@ public class UserController {
 
 	@Autowired
 	private ProductService productService;
-	
+
 	@Autowired
 	private AddressService addressService;
+	
+	@Autowired
+	private OrderService orderService;
+	@Autowired
+	private OrderItemService orderItemService;
+	@Autowired
+	private OrderStatusService orderStatusService;
+
 
 	@GetMapping({ "home", "/" })
-	public String home(ModelMap modelMap,HttpSession session) {
+	public String home(ModelMap modelMap, HttpSession session) {
 		List<ProductCategories> categories = categoryService.findAll().subList(1, categoryService.findAll().size());
 		List<Products> top10products = productService.findTopNewProduct();
 
@@ -82,12 +109,11 @@ public class UserController {
 		return "customer/pages/login/login";
 	}
 
-
-
 	// User profile
 	@GetMapping({ "profile" })
 	public String profile(Authentication authentication, ModelMap modelMap,
-			@AuthenticationPrincipal UserDetails userDetails,@RequestParam(name="tab",required = false,defaultValue = "orders") String activeTab) {
+			@AuthenticationPrincipal UserDetails userDetails,
+			@RequestParam(name = "tab", required = false, defaultValue = "orders") String activeTab) {
 		if (userDetails != null) {
 			Users user = userService.findByEmail(userDetails.getUsername());
 			List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
@@ -102,78 +128,86 @@ public class UserController {
 		}
 		modelMap.put("addAddressVariable", new UserAddress());
 		modelMap.put("provinces", addressService.findAllProvinces());
-		modelMap.addAttribute("activeTab",activeTab);
+		modelMap.addAttribute("activeTab", activeTab);
+		
+
+
 		return "customer/pages/account/profile";
 	}
 
+		
+
 	@PostMapping({ "edit/{id}" })
 	public String editProfile(@ModelAttribute("user") Users user, Authentication authentication,
-			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("file") MultipartFile file,
+			RedirectAttributes redirectAttributes) {
 
 		Users currentUser = null;
 
-	    // 1. Centralize currentUser retrieval
-	    if (userDetails != null) {
-	        currentUser = userService.findByEmail(userDetails.getUsername());
-	    } else if (authentication != null && authentication.getPrincipal() instanceof AccountOAuth2User) {
-	        AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
-	        currentUser = userService.findByEmail(accountOAuth2User.getEmail());
-	        if(currentUser.getPassword()==null) {
-	        	user.setPassword(BCrypt.hashpw("123456789@T", BCrypt.gensalt()));
-	        }
-	    }
+		// 1. Centralize currentUser retrieval
+		if (userDetails != null) {
+			currentUser = userService.findByEmail(userDetails.getUsername());
+		} else if (authentication != null && authentication.getPrincipal() instanceof AccountOAuth2User) {
+			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+			currentUser = userService.findByEmail(accountOAuth2User.getEmail());
+			if (currentUser.getPassword() == null) {
+				user.setPassword(BCrypt.hashpw("123456789@T", BCrypt.gensalt()));
+			}
+		}
 
-	    // 2. Handle file upload for avatar
-	    if (file != null && !file.isEmpty()) {
-	        try {
-	            String fileName = FileHelper.generateFileName(file.getOriginalFilename());
-	            // Using getFile() might fail if running from a JAR; consider using getResourceAsStream() and Files.copy()
-	            // Or get a path outside of the JAR for persistent storage
-	            File imagesFolder = new ClassPathResource("static/assets/imgs/avatars/").getFile();
-	            Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
-	            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-	            user.setAvatar(fileName);
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            // If file upload fails, fall back to existing avatar if available
-	            if (currentUser != null) {
-	                user.setAvatar(currentUser.getAvatar());
-	            }
-	            // Optionally, rethrow a custom exception or add a logging message
-	        }
-	    } else {
-	        // If no new file is uploaded, keep the existing avatar
-	        if (currentUser != null) {
-	            user.setAvatar(currentUser.getAvatar());
-	        }
-	        // If currentUser is null here, it means no existing user found, avatar would remain null or default
-	    }
+		// 2. Handle file upload for avatar
+		if (file != null && !file.isEmpty()) {
+			try {
+				String fileName = FileHelper.generateFileName(file.getOriginalFilename());
+				// Using getFile() might fail if running from a JAR; consider using
+				// getResourceAsStream() and Files.copy()
+				// Or get a path outside of the JAR for persistent storage
+				File imagesFolder = new ClassPathResource("static/assets/imgs/avatars/").getFile();
+				Path path = Paths.get(imagesFolder.getAbsolutePath() + File.separator + fileName);
+				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+				user.setAvatar(fileName);
+			} catch (Exception e) {
+				e.printStackTrace();
+				// If file upload fails, fall back to existing avatar if available
+				if (currentUser != null) {
+					user.setAvatar(currentUser.getAvatar());
+				}
+				// Optionally, rethrow a custom exception or add a logging message
+			}
+		} else {
+			// If no new file is uploaded, keep the existing avatar
+			if (currentUser != null) {
+				user.setAvatar(currentUser.getAvatar());
+			}
+			// If currentUser is null here, it means no existing user found, avatar would
+			// remain null or default
+		}
 
-	    // 3. Preserve rememberToken and password if currentUser was found
-	    if (currentUser != null) {
-	        user.setRememberToken(currentUser.getRememberToken());
-	        user.setPassword(currentUser.getPassword());
-	        user.setEmail(currentUser.getEmail());
-	        user.setRoles(currentUser.getRoles());
-	    }
-	    
-	    if(userService.save(user)) {
-	    	redirectAttributes.addFlashAttribute("msg","Edit profile success");
-	    	redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-	    	return "redirect:/customer/profile?tab=setting";    	
-	    } else {
-	    	redirectAttributes.addFlashAttribute("msg","Edit profile failed");
-	    	redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-	    	return "redirect:/customer/profile?tab=setting";    	    	
-	    }
+		// 3. Preserve rememberToken and password if currentUser was found
+		if (currentUser != null) {
+			user.setRememberToken(currentUser.getRememberToken());
+			user.setPassword(currentUser.getPassword());
+			user.setEmail(currentUser.getEmail());
+			user.setRoles(currentUser.getRoles());
+		}
+
+		if (userService.save(user)) {
+			redirectAttributes.addFlashAttribute("msg", "Edit profile success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/profile?tab=setting";
+		} else {
+			redirectAttributes.addFlashAttribute("msg", "Edit profile failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/profile?tab=setting";
+		}
 	}
-	
+
 	@PostMapping({ "changepassword" })
 	public String ChangePassword(@RequestParam("newPassword") String newPassword, Authentication authentication,
 			@AuthenticationPrincipal UserDetails userDetails, RedirectAttributes redirectAttributes) {
-		
+
 		Users currentUser = null;
-		
+
 		if (userDetails != null) {
 			currentUser = userService.findByEmail(userDetails.getUsername());
 		} else if (authentication != null && authentication.getPrincipal() instanceof AccountOAuth2User) {
@@ -183,40 +217,44 @@ public class UserController {
 		if (currentUser != null) {
 			currentUser.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
 		}
-		
-		if(userService.save(currentUser)) {
-			redirectAttributes.addFlashAttribute("msg","Change password success");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile?tab=setting";    	
+
+		if (userService.save(currentUser)) {
+			redirectAttributes.addFlashAttribute("msg", "Change password success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/profile?tab=setting";
 		} else {
-			redirectAttributes.addFlashAttribute("msg","Change password failed");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile?tab=setting";    	    	
-		}  	    	
+			redirectAttributes.addFlashAttribute("msg", "Change password failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/profile?tab=setting";
+		}
 	}
-		
-	@PostMapping({"addaddress"})
-	public String AddAddress(@RequestParam("userId") int userId, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
+
+	@PostMapping({ "addaddress" })
+	public String AddAddress(@RequestParam("userId") int userId,
+			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable,
+			RedirectAttributes redirectAttributes) {
 		Users user = userService.findById(userId);
 		addAddressVariable.setUsers(user);
 		addAddressVariable.setCreatedAt(new Date());
-		if(addAddressVariable.getName()==null || addAddressVariable.getName().trim().isEmpty()) {
-			addAddressVariable.setName(user.getUsername());			
+		if (addAddressVariable.getName() == null || addAddressVariable.getName().trim().isEmpty()) {
+			addAddressVariable.setName(user.getUsername());
 		}
-		if(addressService.save(addAddressVariable)) {
-			redirectAttributes.addFlashAttribute("msg","Add address success");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile?tab=setting";    	
+		if (addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg", "Add address success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/profile?tab=setting";
 		} else {
-			redirectAttributes.addFlashAttribute("msg","Add address failed");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile?tab=setting";    	    	
-		} 		    	
+			redirectAttributes.addFlashAttribute("msg", "Add address failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/profile?tab=setting";
+		}
 	}
 
-	
-	@PostMapping({"editaddress"})
-	public String EditAddress(@RequestParam("userId") int userId,@RequestParam("editProvince") String editProvince,@RequestParam("editDistrict") String editDistrict,@RequestParam("editWard") String editWard, @ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes) {
+	@PostMapping({ "editaddress" })
+	public String EditAddress(@RequestParam("userId") int userId, @RequestParam("editProvince") String editProvince,
+			@RequestParam("editDistrict") String editDistrict, @RequestParam("editWard") String editWard,
+			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable,
+			RedirectAttributes redirectAttributes) {
 		Users user = userService.findById(userId);
 		addAddressVariable.setUsers(user);
 		addAddressVariable.setCreatedAt(new Date());
@@ -224,67 +262,64 @@ public class UserController {
 		addAddressVariable.setDistricts(addressService.findDistrictById(editDistrict));
 		addAddressVariable.setWards(addressService.findWardById(editWard));
 
-
-		if(addressService.save(addAddressVariable)) {
-			redirectAttributes.addFlashAttribute("msg","Edit address success");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile?tab=setting";    	
+		if (addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg", "Edit address success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/profile?tab=setting";
 		} else {
-			redirectAttributes.addFlashAttribute("msg","Edit address failed");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile?tab=setting";    	    	
-		} 	
+			redirectAttributes.addFlashAttribute("msg", "Edit address failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/profile?tab=setting";
+		}
 //		return "redirect:/customer/profile";    	    	
-		
+
 	}
-	
-	@PostMapping({"deleteaddress"})
-	public String DeleteAddress(@RequestParam("addressId") int addressId,RedirectAttributes redirectAttributes) {
+
+	@PostMapping({ "deleteaddress" })
+	public String DeleteAddress(@RequestParam("addressId") int addressId, RedirectAttributes redirectAttributes) {
 		UserAddress address = addressService.findById(addressId);
 		address.setDeletedAt(new Date());
 		System.out.println(address.getName());
-		if(addressService.save(address)) {
-			redirectAttributes.addFlashAttribute("msg","Delete address success");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/profile?tab=setting";    	
+		if (addressService.save(address)) {
+			redirectAttributes.addFlashAttribute("msg", "Delete address success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/profile?tab=setting";
 		} else {
-			redirectAttributes.addFlashAttribute("msg","Delete address failed");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/profile?tab=setting";    	    	
-		} 	
+			redirectAttributes.addFlashAttribute("msg", "Delete address failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/profile?tab=setting";
+		}
 //		return "redirect:/customer/profile";    	    	
-		
+
 	}
-	//Check out Address
-	@PostMapping({"addaddressincheckout"})
-	public String AddAddressIncheckout(@RequestParam("userId") int userId, 
-			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable, 
-			RedirectAttributes redirectAttributes,
+
+	// Check out Address
+	@PostMapping({ "addaddressincheckout" })
+	public String AddAddressIncheckout(@RequestParam("userId") int userId,
+			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes,
 			@RequestParam("checkoutItems") String checkoutItems) {
 		Users user = userService.findById(userId);
 		addAddressVariable.setUsers(user);
 		addAddressVariable.setCreatedAt(new Date());
-		if(addAddressVariable.getName()==null || addAddressVariable.getName().trim().isEmpty()) {
-			addAddressVariable.setName(user.getUsername());			
+		if (addAddressVariable.getName() == null || addAddressVariable.getName().trim().isEmpty()) {
+			addAddressVariable.setName(user.getUsername());
 		}
-		if(addressService.save(addAddressVariable)) {
-			redirectAttributes.addFlashAttribute("msg","Add address success");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	
+		if (addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg", "Add address success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/cart/checkout?checkoutItems=" + checkoutItems;
 		} else {
-			redirectAttributes.addFlashAttribute("msg","Add address failed");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	    	
-		} 		    	
+			redirectAttributes.addFlashAttribute("msg", "Add address failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/cart/checkout?checkoutItems=" + checkoutItems;
+		}
 	}
-	
-	@PostMapping({"editaddressincheckout"})
+
+	@PostMapping({ "editaddressincheckout" })
 	public String EditAddressIncheckout(@RequestParam("userId") int userId,
-			@RequestParam("editProvince") String editProvince,
-			@RequestParam("editDistrict") String editDistrict,
-			@RequestParam("editWard") String editWard, 
-			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable, 
-			RedirectAttributes redirectAttributes,
+			@RequestParam("editProvince") String editProvince, @RequestParam("editDistrict") String editDistrict,
+			@RequestParam("editWard") String editWard,
+			@ModelAttribute("addAddressVariable") UserAddress addAddressVariable, RedirectAttributes redirectAttributes,
 			@RequestParam("checkoutItems") String checkoutItems) {
 		Users user = userService.findById(userId);
 		addAddressVariable.setUsers(user);
@@ -293,36 +328,189 @@ public class UserController {
 		addAddressVariable.setDistricts(addressService.findDistrictById(editDistrict));
 		addAddressVariable.setWards(addressService.findWardById(editWard));
 
-
-		if(addressService.save(addAddressVariable)) {
-			redirectAttributes.addFlashAttribute("msg","Edit address success");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	
+		if (addressService.save(addAddressVariable)) {
+			redirectAttributes.addFlashAttribute("msg", "Edit address success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/cart/checkout?checkoutItems=" + checkoutItems;
 		} else {
-			redirectAttributes.addFlashAttribute("msg","Edit address failed");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;     	    	
-		} 	
+			redirectAttributes.addFlashAttribute("msg", "Edit address failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/cart/checkout?checkoutItems=" + checkoutItems;
+		}
 //		return "redirect:/customer/profile";    	    			
 	}
-	
-	@PostMapping({"deleteaddressincheckout"})
+
+	@PostMapping({ "deleteaddressincheckout" })
 	public String DeleteAddressIncheckout(@RequestParam("addressId") int addressId,
-			RedirectAttributes redirectAttributes,
-			@RequestParam("checkoutItems") String checkoutItems) {
+			RedirectAttributes redirectAttributes, @RequestParam("checkoutItems") String checkoutItems) {
 		UserAddress address = addressService.findById(addressId);
 		address.setDeletedAt(new Date());
 		System.out.println(address.getName());
-		if(addressService.save(address)) {
-			redirectAttributes.addFlashAttribute("msg","Delete address success");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-delivered");
-			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;    	
+		if (addressService.save(address)) {
+			redirectAttributes.addFlashAttribute("msg", "Delete address success");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-delivered");
+			return "redirect:/customer/cart/checkout?checkoutItems=" + checkoutItems;
 		} else {
-			redirectAttributes.addFlashAttribute("msg","Delete address failed");
-			redirectAttributes.addFlashAttribute("classedit","label-delivery label-cancel");
-			return "redirect:/customer/cart/checkout?checkoutItems="+ checkoutItems;     	    	
-		} 	
+			redirectAttributes.addFlashAttribute("msg", "Delete address failed");
+			redirectAttributes.addFlashAttribute("classedit", "label-delivery label-cancel");
+			return "redirect:/customer/cart/checkout?checkoutItems=" + checkoutItems;
+		}
 //		return "redirect:/customer/profile";    	    	
-		
+
 	}
+
+	
+	// User Orders
+	@GetMapping({ "orders" })
+	public String orders(Authentication authentication, ModelMap modelMap, Model model,
+			@AuthenticationPrincipal UserDetails userDetails,
+			@RequestParam(name = "tab", required = false, defaultValue = "orders") String activeTab, 
+			@RequestParam(defaultValue = "0") int page) {
+		Users user = new Users();
+
+		if (userDetails != null) {
+			user = userService.findByEmail(userDetails.getUsername());
+			List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
+			modelMap.put("userAdresses", userAdresses);
+			modelMap.put("user", user);
+		} else if (authentication != null) {
+			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+			user = userService.findByEmail(accountOAuth2User.getEmail());
+			List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
+			modelMap.put("userAdresses", userAdresses);
+			modelMap.put("user", user);
+		}
+		modelMap.put("addAddressVariable", new UserAddress());
+		modelMap.put("provinces", addressService.findAllProvinces());
+		modelMap.addAttribute("activeTab", activeTab);
+		 /* ORDER CỦA BẢO */
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Orders> orderPage = orderService.findOrdersByUserId(user.getId(), pageable);
+
+        // Map này sẽ lưu trạng thái mới nhất cho mỗi nhóm vendor trong mỗi Order
+        // Key: Order ID -> Value: (Key: Vendor ID -> Value: Trạng thái mới nhất của nhóm đó)
+        Map<Integer, Map<Integer, OrderItemsOrderStatus>> latestStatusesByOrderAndVendor = new LinkedHashMap<>();
+        // Map này vẫn giữ nguyên cấu trúc cũ để truyền danh sách OrderItems
+        Map<Integer, Map<Integer, List<OrderItems>>> allGroupedOrderItems = new LinkedHashMap<>();
+
+
+        for (Orders order : orderPage) {
+            List<OrderItems> orderItems = orderItemService.findAllOrderItemsByOrderId(order.getId());
+            Map<Integer, List<OrderItems>> groupedByVendor = orderItemService.groupOrderItemsByVendor(orderItems);
+
+            // Xử lý để lấy trạng thái mới nhất cho mỗi nhóm vendor
+            Map<Integer, OrderItemsOrderStatus> vendorLatestStatuses = new LinkedHashMap<>();
+            for (Map.Entry<Integer, List<OrderItems>> vendorEntry : groupedByVendor.entrySet()) {
+                List<OrderItems> itemsForVendor = vendorEntry.getValue();
+                if (!itemsForVendor.isEmpty()) {
+                    OrderItems firstItemInGroup = itemsForVendor.get(0); // Lấy một item bất kỳ trong nhóm
+                    // Tìm trạng thái mới nhất cho item này
+                    OrderItemsOrderStatus latestStatus = firstItemInGroup.getOrderItemsOrderStatuses().stream()
+                            .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
+                            .orElse(null);
+                    vendorLatestStatuses.put(vendorEntry.getKey(), latestStatus);
+                }
+            }
+            latestStatusesByOrderAndVendor.put(order.getId(), vendorLatestStatuses);
+            allGroupedOrderItems.put(order.getId(), groupedByVendor);
+        }
+
+        modelMap.put("groupedOrderItemsByOrder", allGroupedOrderItems);
+        modelMap.put("latestStatusesByOrderAndVendor", latestStatusesByOrderAndVendor); // THÊM MAP NÀY VÀO MODEL
+
+        modelMap.put("orders", orderPage);
+        model.addAttribute("currentPages", page);
+        model.addAttribute("totalPages", orderPage.getTotalPages());
+        model.addAttribute("lastPageIndex", orderPage.getTotalPages() - 1);
+        model.addAttribute("pageSize", pageSize);
+
+        return "customer/pages/account/profile";
+	}
+
+	// User orderTracking
+	 // User orderTracking
+    @GetMapping({ "order-tracking/{orderId}/{vendorId}" })
+    public String orderTracking(Authentication authentication, ModelMap modelMap,
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable("orderId") int orderId,
+            @PathVariable("vendorId") int vendorId,
+            @RequestParam(name = "tab", required = false, defaultValue = "order-tracking") String activeTab) {
+
+        Users user = new Users();
+
+        if (userDetails != null) {
+            user = userService.findByEmail(userDetails.getUsername());
+        } else if (authentication != null) {
+            AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+            user = userService.findByEmail(accountOAuth2User.getEmail());
+        }
+        
+        List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
+        modelMap.put("userAdresses", userAdresses);
+        modelMap.put("user", user);
+        
+        modelMap.put("addAddressVariable", new UserAddress());
+        modelMap.put("provinces", addressService.findAllProvinces());
+        modelMap.addAttribute("activeTab", activeTab);
+
+        // Lấy tất cả OrderItems cho orderId và vendorId cụ thể, với trạng thái đã được tải eager
+        List<OrderItems> orderItems = orderItemService.findAllOrderItemsByOrderIdAndVendorIdWithStatuses(orderId, vendorId);
+
+        // Giả sử chúng ta chỉ cần lịch sử trạng thái của một OrderItem bất kỳ trong nhóm này
+        // (vì trạng thái đơn hàng thường giống nhau cho tất cả các item từ cùng một vendor trong cùng một order)
+        OrderItems representativeItem = null;
+        if (!orderItems.isEmpty()) {
+            representativeItem = orderItems.get(0); // Lấy item đầu tiên làm đại diện
+        }
+
+        List<OrderItemsOrderStatus> sortedStatuses = new ArrayList<>();
+        OrderItemsOrderStatus currentStatus = null;
+        
+		// Tạo danh sách tên status đã xảy ra
+		Set<String> occurredStatusNames = sortedStatuses.stream().map(s -> s.getOrderStatus().getName())
+				.collect(Collectors.toCollection(LinkedHashSet::new));
+
+		// Đưa currentStatus name vào model
+		String currentStatusName = currentStatus != null ? currentStatus.getOrderStatus().getName() : null;
+
+		modelMap.put("occurredStatusNames", occurredStatusNames);
+		modelMap.put("currentStatusName", currentStatusName);
+
+        if (representativeItem != null && representativeItem.getOrderItemsOrderStatuses() != null) {
+            // Sắp xếp các trạng thái theo createdAt tăng dần
+            sortedStatuses = representativeItem.getOrderItemsOrderStatuses().stream()
+                    .sorted(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
+                    .collect(Collectors.toList());
+
+            // Lấy trạng thái mới nhất
+            currentStatus = sortedStatuses.isEmpty() ? null : sortedStatuses.get(sortedStatuses.size() - 1);
+        }
+        
+        Map<String, Date> statusToDateMap = new LinkedHashMap<>();
+        if (sortedStatuses != null) {
+            for (OrderItemsOrderStatus s : sortedStatuses) {
+                statusToDateMap.put(s.getOrderStatus().getName(), s.getCreatedAt());
+            }
+        }
+
+        modelMap.put("statusToDateMap", statusToDateMap);
+
+
+        modelMap.put("orderItemsForTracking", orderItems); // Có thể truyền danh sách item này để hiển thị chi tiết
+        modelMap.put("orderStatusHistory", sortedStatuses); // Truyền lịch sử trạng thái đã sắp xếp
+        modelMap.put("currentOrderStatus", currentStatus); // Truyền trạng thái hiện tại (mới nhất)
+
+        // Bạn cũng có thể truyền OrderId và VendorId lại để sử dụng trong view nếu cần
+        modelMap.put("trackingOrderId", orderId);
+        modelMap.put("trackingVendorId", vendorId);
+        
+        // Thêm thông tin order và vendor nếu cần hiển thị tên, v.v.
+        // Bạn sẽ cần inject OrderService và ProductService/VendorService để lấy các đối tượng này
+        // Ví dụ: modelMap.put("order", orderService.findById(orderId));
+        // Ví dụ: modelMap.put("vendor", vendorService.findById(vendorId)); // Cần inject VendorService
+        
+        return "customer/pages/account/orderTracking"; // Thay đổi tên template nếu cần
+    }
+
 }

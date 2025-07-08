@@ -1218,7 +1218,8 @@
 								<input id="orderTotal" type="hidden" th:field="${newOrder.totalAmount}">						
 								<input id="cartItems" type="hidden"	name="cartItems"/>				
 								<input id="vouchers" type="hidden" name="vouchers"/>				
-								<input id="voucherEventura" type="hidden" name="voucherEventura"/>				
+								<input id="voucherEventura" type="hidden" name="voucherEventura"/>			
+								<input id="shippingAmount" type="hidden" name="shippingAmount">	
 								<div class="row mt-20">
 									<div class="col-lg-6 col-7 mb-20 text-end">&nbsp;</div>
 									<div class="col-lg-6 col-7 mb-20 text-end">
@@ -1319,6 +1320,7 @@
 		                    const durationMinutes = (durationSeconds / 60).toFixed(0); // Chuyển đổi sang phút và làm tròn
 		                    $('#shipping').val((0.2*distanceKm).toFixed(2));
 		                    $('#shipping').text((0.2*distanceKm).toFixed(2));
+							$('#shippingAmount').val((0.2*distanceKm).toFixed(2));
 		                    updateTotal();
 		                    resultElement.textContent = `Khoảng cách ước tính: ${distanceKm} km. Thời gian di chuyển ước tính: ${durationMinutes} phút.`;
 		                } else {

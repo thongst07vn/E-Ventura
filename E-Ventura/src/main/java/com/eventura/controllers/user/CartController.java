@@ -456,7 +456,7 @@ public class CartController {
 	@PostMapping({ "process-checkout" })
 	public String processCheckout(Authentication authentication, @ModelAttribute("newOrder") Orders newOrder,
 			@AuthenticationPrincipal UserDetails userDetails, @RequestParam("cartItems") String cartItems,
-			@RequestParam("vouchers") String vouchers, @RequestParam("voucherEventura") String voucherEventura) {
+			@RequestParam("vouchers") String vouchers, @RequestParam("voucherEventura") String voucherEventura, @RequestParam("shippingAmount") double shippingAmount) {
 		// Order
 		Users user = null;
 		if (userDetails != null) {
@@ -471,6 +471,7 @@ public class CartController {
 		newOrder.setUpdatedAt(new Date());
 		newOrder.setName(
 				newOrder.getUsers().getUsername() + "_Order_" + RandomStringCode.generateRandomAlphaNumeric(8));
+		newOrder.setTotalAmount(newOrder.getTotalAmount() + shippingAmount);
 		// Oder Items
 		// Save Order
 		if (orderService.saveOrder(newOrder)) {
@@ -719,7 +720,8 @@ public class CartController {
 					}
 				}
 				for (Commissions commissions : commissionBeforeTotalVoucher) {
-					System.out.println("save commission amout sau khi  tính toán "+commissions.getAmount());					
+					System.out.println("save commission amout sau khi  tính toán "+commissions.getAmount());		
+					commissions.setAmount(commissions.getAmount() + shippingAmount);
 					if(!commissionsService.saveCommission(commissions)) {
 						System.out.println("save commission wrong "+commissions.getId());
 					}

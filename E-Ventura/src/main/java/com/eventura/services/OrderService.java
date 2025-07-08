@@ -1,6 +1,7 @@
 package com.eventura.services;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,8 @@ public interface OrderService {
 	public Page<Orders> findAlls(Pageable pageable);
 	
 	public boolean saveOrder(Orders order);
+	
+	public Page<Orders> findOrdersByUserId(int userId, Pageable pageable);
+	
+
 }
