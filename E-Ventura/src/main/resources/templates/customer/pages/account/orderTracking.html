@@ -1,24 +1,26 @@
-F<html xmlns:th="http://www.thymeleaf.org"
+<html xmlns:th="http://www.thymeleaf.org"
 	th:replace="~{customer/layouts/layout :: layout('profile', ~{this :: .content-main})}">
 
 <head>
-	<title>Profile</title>
-	
+<title>Profile</title>
+
 </head>
 
 <body>
 	<main class="main content-main">
 		<style>
-			.list-steps .item-step .rounded-step .icon-step.step-5{
-				background-image: url(/assets/imgs/page/account/cancel.svg);
-				background-repeat: no-repeat;
-				background-position: center;
-			}
-				.cancel-active {
-					background-image: url(/assets/imgs/page/account/cancel_active.svg) !important;
-					background-color: #dc3545 !important;
-				}
-			</style>
+.list-steps .item-step .rounded-step .icon-step.step-5 {
+	background-image: url(/assets/imgs/page/account/cancel.svg);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.cancel-active {
+	background-image: url(/assets/imgs/page/account/cancel_active.svg)
+		!important;
+	background-color: #dc3545 !important;
+}
+</style>
 		<section class="section-box shop-template mt-30">
 			<div class="container box-account-template">
 				<h3>
@@ -35,97 +37,299 @@ F<html xmlns:th="http://www.thymeleaf.org"
 				<div class="box-tabs mb-100">
 					<ul class="nav nav-tabs nav-tabs-account" role="tablist">
 
-						<li>
-							<a th:href="@{/customer/orders?tab=orders}"
-								th:classappend="${activeTab == 'orders' ? 'active' : ''}">Orders</a>
+						<li><a th:href="@{/customer/orders?tab=orders}"
+							th:classappend="${activeTab == 'orders' ? 'active' : ''}">Orders</a>
 						</li>
 
-						<li>
-							<a th:href="@{/customer/profile?tab=setting}"
-								th:classappend="${activeTab == 'setting' ? 'active' : ''}">Setting</a>
+						<li><a th:href="@{/customer/profile?tab=setting}"
+							th:classappend="${activeTab == 'setting' ? 'active' : ''}">Setting</a>
 						</li>
 
 					</ul>
 					<div class="border-bottom mt-20 mb-40"></div>
 					<div class="tab-content mt-30">
 
-				
+
 						<div class="tab-pane fade"
 							th:classappend="${activeTab == 'order-tracking' ? 'active show' : ''}"
-							id="tab-order-tracking" role="tabpanel" aria-labelledby="tab-order-tracking">
+							id="tab-order-tracking" role="tabpanel"
+							aria-labelledby="tab-order-tracking">
 
 							<h3 class="mb-10">
-								<span class="color-success">International
-									shipping</span>
+								<span class="color-success">International shipping</span>
 							</h3>
 							<div class="table-responsive">
 								<div class="list-steps">
-								    <div class="item-step">
-								        <div class="rounded-step">
-								            <div class="icon-step step-1" th:classappend="${statusToDateMap.containsKey('Ordered')} ? ' active' : ''"></div>
-								            <h6 class="mb-5">Ordered</h6>
-											<p class="font-md color-gray-500"
-											   th:if="${statusToDateMap['Ordered']} != null"
-											   th:text="${#dates.format(statusToDateMap['Ordered'], 'dd MMMM yyyy')}"></p>
-
-											<p class="font-md color-gray-500"
-											   th:unless="${statusToDateMap['Ordered']} != null">N/A</p>
-							        </div>
-								    </div>
-								    <div class="item-step">
-								        <div class="rounded-step">
-								            <div class="icon-step step-2" th:classappend="${statusToDateMap.containsKey('Confirmed')} ? ' active' : ''"></div>
-								            <h6 class="mb-5">Confirmed</h6>
-											<p class="font-md color-gray-500"
-											   th:if="${statusToDateMap['Confirmed']} != null"
-											   th:text="${#dates.format(statusToDateMap['Confirmed'], 'dd MMMM yyyy')}"></p>
-
-											<p class="font-md color-gray-500"
-											   th:unless="${statusToDateMap['Ordered']} != null">N/A</p>
-							        </div>
-								    </div>
-								    <div class="item-step">
-								        <div class="rounded-step">
-								            <div class="icon-step step-3" th:classappend="${statusToDateMap.containsKey('Delivering')} ? ' active' : ''"></div>
-								            <h6 class="mb-5">Delivering</h6>
-											<p class="font-md color-gray-500"
-											   th:if="${statusToDateMap['Delivering']} != null"
-											   th:text="${#dates.format(statusToDateMap['Delivering'], 'dd MMMM yyyy')}"></p>
-
-											<p class="font-md color-gray-500"
-											   th:unless="${statusToDateMap['Ordered']} != null">N/A</p>							        </div>
-								    </div>
-								    <div class="item-step">
-								        <div class="rounded-step">
-								            <div class="icon-step step-4" th:classappend="${statusToDateMap.containsKey('Received')} ? ' active' : ''"></div>
-								            <h6 class="mb-5">Received</h6>
-											<p class="font-md color-gray-500"
-											   th:if="${statusToDateMap['Received']} != null"
-											   th:text="${#dates.format(statusToDateMap['Received'], 'dd MMMM yyyy')}"></p>
-
-											<p class="font-md color-gray-500"
-											   th:unless="${statusToDateMap['Ordered']} != null">N/A</p>							        </div>
-								    </div>
 									<div class="item-step">
 										<div class="rounded-step">
-											<div class="icon-step step-5" th:classappend="${statusToDateMap.containsKey('Canceled')} ? 'cancel-active' : ''">
+											<div class="icon-step step-1"
+												th:classappend="${statusToDateMap.containsKey('Ordered')} ? ' active' : ''"></div>
+											<h6 class="mb-5">Ordered</h6>
+											<p class="font-md color-gray-500"
+												th:if="${statusToDateMap['Ordered']} != null"
+												th:text="${#dates.format(statusToDateMap['Ordered'], 'dd MMMM yyyy')}"></p>
+
+											<p class="font-md color-gray-500"
+												th:unless="${statusToDateMap['Ordered']} != null">N/A</p>
+										</div>
+									</div>
+									<div class="item-step">
+										<div class="rounded-step">
+											<div class="icon-step step-2"
+												th:classappend="${statusToDateMap.containsKey('Confirmed')} ? ' active' : ''"></div>
+											<h6 class="mb-5">Confirmed</h6>
+											<p class="font-md color-gray-500"
+												th:if="${statusToDateMap['Confirmed']} != null"
+												th:text="${#dates.format(statusToDateMap['Confirmed'], 'dd MMMM yyyy')}"></p>
+
+											<p class="font-md color-gray-500"
+												th:unless="${statusToDateMap['Ordered']} != null">N/A</p>
+										</div>
+									</div>
+									<div class="item-step">
+										<div class="rounded-step">
+											<div class="icon-step step-3"
+												th:classappend="${statusToDateMap.containsKey('Delivering')} ? ' active' : ''"></div>
+											<h6 class="mb-5">Delivering</h6>
+											<p class="font-md color-gray-500"
+												th:if="${statusToDateMap['Delivering']} != null"
+												th:text="${#dates.format(statusToDateMap['Delivering'], 'dd MMMM yyyy')}"></p>
+
+											<p class="font-md color-gray-500"
+												th:unless="${statusToDateMap['Ordered']} != null">N/A</p>
+										</div>
+									</div>
+									<div class="item-step">
+										<div class="rounded-step">
+											<div class="icon-step step-4"
+												th:classappend="${statusToDateMap.containsKey('Received')} ? ' active' : ''"></div>
+											<h6 class="mb-5">Received</h6>
+											<p class="font-md color-gray-500"
+												th:if="${statusToDateMap['Received']} != null"
+												th:text="${#dates.format(statusToDateMap['Received'], 'dd MMMM yyyy')}"></p>
+
+											<p class="font-md color-gray-500"
+												th:unless="${statusToDateMap['Ordered']} != null">N/A</p>
+										</div>
+									</div>
+									<div class="item-step">
+										<div class="rounded-step">
+											<div class="icon-step step-5"
+												th:classappend="${statusToDateMap.containsKey('Canceled')} ? 'cancel-active' : ''">
 											</div>
 											<h6 class="mb-5">Canceled</h6>
 											<p class="font-md color-gray-500"
-											   th:if="${statusToDateMap['Canceled']} != null"
-											   th:text="${#dates.format(statusToDateMap['Canceled'], 'dd MMMM yyyy')}"></p>
+												th:if="${statusToDateMap['Canceled']} != null"
+												th:text="${#dates.format(statusToDateMap['Canceled'], 'dd MMMM yyyy')}"></p>
 
 											<p class="font-md color-gray-500"
-											   th:unless="${statusToDateMap['Ordered']} != null">N/A</p>																		
+												th:unless="${statusToDateMap['Ordered']} != null">N/A</p>
 										</div>
 									</div>
 
 								</div>
 
 							</div>
-							
+
 						</div>
+						<div class="rating-section card shadow-sm mb-4"
+							th:if="${statusToDateMap.containsKey('Received')}">
+							<div class="card-header bg-white">
+								<h4 class="mb-0">Rate Your Purchase</h4>
+							</div>
+							<div class="card-body">
+								<div class="mb-4 pb-3 border-bottom">
+									<h5 class="mb-3">
+										Rate the Vendor: <span class="fw-bold text-info mx-3"
+											th:text="${vendor.name}">Vendor Name</span>
+									</h5>
+									<div>
+										<img
+											th:src="@{${vendor.users.avatar.contains('https:') ? vendor.users.avatar : '/assets/imgs/avatars/' + vendor.users.avatar}}"
+											style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;"
+											class="img-thumbnail" alt="Item">
+									</div>
+									<div class="d-flex align-items-center mb-2">
+										<div class="rating-stars me-3" data-entity-type="vendor"
+											th:data-entity-id="${vendor.id}">
+											<span class="star fs-4 text-secondary" data-value="1">&#9733;</span>
+											<span class="star fs-4 text-secondary" data-value="2">&#9733;</span>
+											<span class="star fs-4 text-secondary" data-value="3">&#9733;</span>
+											<span class="star fs-4 text-secondary" data-value="4">&#9733;</span>
+											<span class="star fs-4 text-secondary" data-value="5">&#9733;</span>
+										</div>
+										<small class="text-muted" id="vendorRatingText">Click
+											stars to rate</small>
+									</div>
+									<div class="mb-3"></div>
+									<button class="btn btn-success" onclick="submitRating(this)">Submit
+										Vendor Rating</button>
+								</div>
+
+								<div id="productRatingSection" hidden>
+									<h5 class="mb-3">Rate the Products:</h5>
+									<div th:each="orderItem : ${orderItemsForTracking}"
+										class="mb-3 pb-3 border-bottom-dashed product-rating-item">
+										<div class="d-flex align-items-center mb-2">
+											<img
+												th:src="@{${orderItem.products.mediases[0].name.contains('https:') ? orderItem.products.mediases[0].name : '/assets/imgs/items/' + orderItem.products.mediases[0].name}}"
+												style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;"
+												class="img-thumbnail" alt="Item">
+											<div>
+												<p class="fw-bold mb-1 mx-3"
+													th:text="${orderItem.products.name}"></p>
+											</div>
+										</div>
+										<div class="d-flex align-items-center mb-2">
+											<div class="rating-stars me-3" data-entity-type="product"
+												th:data-entity-id="${orderItem.products.id}">
+												<span class="star fs-4 text-secondary" data-value="1">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="2">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="3">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="4">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="5">&#9733;</span>
+											</div>
+											<small class="text-muted"
+												id="productRatingText_[[${orderItem.products.id}]]">Click
+												stars to rate</small>
+										</div>
+										<div class="mb-3">
+											<textarea class="form-control" rows="2"
+												placeholder="Write a review for this product..."
+												aria-label="Product review textarea"></textarea>
+										</div>
+										<button class="btn btn-primary" onclick="submitRating(this)">Submit
+											Product Rating</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<script>
+						    document.addEventListener('DOMContentLoaded', function() {
+						        const ratingContainers = document.querySelectorAll('.rating-stars');
+						        const productRatingSectionDiv = document.getElementById('productRatingSection');
 						
+						        ratingContainers.forEach(container => {
+						            const stars = container.querySelectorAll('.star');
+						            const feedbackTextId = container.dataset.entityType === 'vendor' ? 'vendorRatingText' : `productRatingText_${container.dataset.entityId}`;
+						            const feedbackTextElement = document.getElementById(feedbackTextId);
+						
+						            stars.forEach(star => {
+						                star.addEventListener('click', function() {
+						                    const value = parseInt(this.dataset.value);
+						                    const parent = this.closest('.rating-stars');
+						                    const starsInParent = parent.querySelectorAll('.star');
+						
+						                    starsInParent.forEach(s => {
+						                        if (parseInt(s.dataset.value) <= value) {
+						                            s.classList.add('text-warning');
+						                            s.classList.remove('text-secondary');
+						                        } else {
+						                            s.classList.remove('text-warning');
+						                            s.classList.add('text-secondary');
+						                        }
+						                    });
+						                    parent.dataset.rating = value;
+						                    if (feedbackTextElement) {
+						                        feedbackTextElement.textContent = `${value} of 5 stars selected`;
+						                    }
+						                });
+						
+						                star.addEventListener('mouseover', function() {
+						                    if (container.dataset.rating) return;
+						                    const value = parseInt(this.dataset.value);
+						                    stars.forEach(s => {
+						                        if (parseInt(s.dataset.value) <= value) {
+						                            s.classList.add('text-info');
+						                            s.classList.remove('text-secondary');
+						                        } else {
+						                            s.classList.remove('text-info');
+						                            s.classList.add('text-secondary');
+						                        }
+						                    });
+						                     if (feedbackTextElement) {
+						                        feedbackTextElement.textContent = `Rate ${value} stars`;
+						                    }
+						                });
+						
+						                star.addEventListener('mouseout', function() {
+						                    if (container.dataset.rating) return;
+						                    stars.forEach(s => {
+						                        s.classList.remove('text-info');
+						                        s.classList.add('text-secondary');
+						                    });
+						                    if (feedbackTextElement) {
+						                        feedbackTextElement.textContent = 'Click stars to rate';
+						                    }
+						                });
+						            });
+						        });
+						    });
+						
+						    function submitRating(button) {
+						        const ratingItem = button.closest('.mb-4.pb-3.border-bottom, .mb-3.pb-3.border-bottom-dashed');
+						        const ratingStarsContainer = ratingItem.querySelector('.rating-stars');
+						        const rating = ratingStarsContainer.dataset.rating;
+						        const reviewText = ratingItem.querySelector('textarea') ? ratingItem.querySelector('textarea').value : '';
+						        const entityType = ratingStarsContainer.dataset.entityType;
+						        const entityId = ratingStarsContainer.dataset.entityId;
+						
+						        if (!rating) {
+						            Swal.fire({
+						                icon: 'warning',
+						                title: 'Oops!',
+						                text: 'Please select a star rating before submitting.',
+						                confirmButtonText: 'Got it'
+						            });
+						            return;
+						        }
+						
+						        console.log(`Submitting rating for ${entityType} (ID: ${entityId}):`);
+						        console.log(`Rating: ${rating} stars`);
+						        console.log(`Review: "${reviewText}"`);
+						
+						        // Simulate AJAX call success
+						        setTimeout(() => {
+						            if (entityType === 'vendor') {
+						                const productRatingSectionDiv = document.getElementById('productRatingSection');
+						                if (productRatingSectionDiv) {
+						                    productRatingSectionDiv.hidden = false;
+						                }
+						                Swal.fire({
+						                    icon: 'success',
+						                    title: 'Submitted!',
+						                    text: 'Vendor rating submitted successfully! You can now rate products.',
+						                    confirmButtonText: 'Great!'
+						                });
+						            } else {
+						                Swal.fire({
+						                    icon: 'success',
+						                    title: 'Submitted!',
+						                    text: `Rating for ${entityType} (ID: ${entityId}) submitted: ${rating} stars, "${reviewText}"`,
+						                    confirmButtonText: 'Done'
+						                });
+						            }
+						
+						            ratingStarsContainer.querySelectorAll('.star').forEach(s => s.style.pointerEvents = 'none');
+						            if (ratingItem.querySelector('textarea')) {
+						                ratingItem.querySelector('textarea').readOnly = true;
+						            }
+						            button.disabled = true;
+						            button.classList.remove('btn-success', 'btn-primary');
+						            button.classList.add('btn-secondary');
+						            button.textContent = 'Rating Submitted';
+						
+						            const feedbackTextId = ratingStarsContainer.dataset.entityType === 'vendor' ? 'vendorRatingText' : `productRatingText_${ratingStarsContainer.dataset.entityId}`;
+						            const feedbackTextElement = document.getElementById(feedbackTextId);
+						            if (feedbackTextElement) {
+						                feedbackTextElement.textContent = 'Thank you for your feedback!';
+						                feedbackTextElement.classList.remove('text-muted');
+						                feedbackTextElement.classList.add('text-success');
+						            }
+						        }, 500);
+						    }
+						</script>
 					</div>
 				</div>
 			</div>
@@ -139,14 +343,15 @@ F<html xmlns:th="http://www.thymeleaf.org"
 							Discount
 						</h3>
 						<p class="font-lg color-white">
-							Get E-mail updates about our latest shop and <span class="font-lg-bold">special
-								offers.</span>
+							Get E-mail updates about our latest shop and <span
+								class="font-lg-bold">special offers.</span>
 						</p>
 					</div>
 					<div class="col-lg-4 col-md-5 col-sm-12">
 						<div class="box-form-newsletter mt-15">
 							<form class="form-newsletter">
-								<input class="input-newsletter font-xs" value="" placeholder="Your email Address">
+								<input class="input-newsletter font-xs" value=""
+									placeholder="Your email Address">
 								<button class="btn btn-brand-2">Sign Up</button>
 							</form>
 						</div>
@@ -154,192 +359,231 @@ F<html xmlns:th="http://www.thymeleaf.org"
 				</div>
 			</div>
 		</section>
-		<div class="modal fade" id="ModalFiltersForm" tabindex="-1" aria-hidden="true" style="display: none;">
+		<div class="modal fade" id="ModalFiltersForm" tabindex="-1"
+			aria-hidden="true" style="display: none;">
 			<div class="modal-dialog modal-xl">
 				<div class="modal-content apply-job-form">
 					<div class="modal-header">
 						<h5 class="modal-title color-gray-1000 filters-icon">Addvance
 							Fillters</h5>
-						<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button class="btn-close" type="button" data-bs-dismiss="modal"
+							aria-label="Close"></button>
 					</div>
 					<div class="modal-body p-30">
 						<div class="row">
 							<div class="col-w-1">
 								<h6 class="color-gray-900 mb-0">Brands</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
-												class="text-small">Apple</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Samsung</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Baseus</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Remax</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Handtown</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Elecom</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Razer</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Auto
+									<li><label class="cb-container"> <input
+											type="checkbox" checked="checked"><span
+											class="text-small">Apple</span><span class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Samsung</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Baseus</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Remax</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Handtown</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Elecom</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Razer</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Auto
 												Focus</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Nillkin</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Logitech</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">ChromeBook</span><span class="checkmark"></span>
-										</label></li>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Nillkin</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Logitech</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">ChromeBook</span><span
+											class="checkmark"></span>
+									</label></li>
 								</ul>
 							</div>
 							<div class="col-w-1">
 								<h6 class="color-gray-900 mb-0">Special offers</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">On
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">On
 												sale</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
-												class="text-small">FREE shipping</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">Big
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox" checked="checked"><span
+											class="text-small">FREE shipping</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Big
 												deals</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Shop
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Shop
 												Mall</span><span class="checkmark"></span>
-										</label></li>
+									</label></li>
 								</ul>
 								<h6 class="color-gray-900 mb-0 mt-40">Ready to ship in</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">1
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">1
 												business day</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
-												class="text-small">1&ndash;3 business days</span><span
-												class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">in
-												1
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox" checked="checked"><span
+											class="text-small">1&ndash;3 business days</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">in 1
 												week</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Shipping
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Shipping
 												now</span><span class="checkmark"></span>
-										</label></li>
+									</label></li>
 								</ul>
 							</div>
 							<div class="col-w-1">
 								<h6 class="color-gray-900 mb-0">Ordering options</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Accepts
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Accepts
 												gift cards</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Customizable</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
-												class="text-small">Can be gift-wrapped</span><span
-												class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Installment
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Customizable</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox" checked="checked"><span
+											class="text-small">Can be gift-wrapped</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Installment
 												0%</span><span class="checkmark"></span>
-										</label></li>
+									</label></li>
 								</ul>
 								<h6 class="color-gray-900 mb-0 mt-40">Rating</h6>
 								<ul class="list-checkbox">
 									<li class="mb-5"><a href="#"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><span
-												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(5
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><span
+											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(5
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><span
-												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(4
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><span
+											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(4
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><span
-												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(3
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><span
+											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(3
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><span
-												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(2
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><span
+											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(2
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-												alt="Ecom"><span
-												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(1
+											th:src="@{/client/assets/imgs/template/icons/star.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><img
+											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+											alt="Ecom"><span
+											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(1
 												star)</span></a></li>
 								</ul>
 							</div>
 							<div class="col-w-2">
 								<h6 class="color-gray-900 mb-0">Material</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Nylon
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Nylon
 												(8)</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Tempered
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Tempered
 												Glass (5)</span><span class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
-												class="text-small">Liquid Silicone Rubber (5)</span><span
-												class="checkmark"></span>
-										</label></li>
-									<li><label class="cb-container"> <input type="checkbox"><span
-												class="text-small">Aluminium
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox" checked="checked"><span
+											class="text-small">Liquid Silicone Rubber (5)</span><span
+											class="checkmark"></span>
+									</label></li>
+									<li><label class="cb-container"> <input
+											type="checkbox"><span class="text-small">Aluminium
 												Alloy (3)</span><span class="checkmark"></span>
-										</label></li>
+									</label></li>
 								</ul>
 								<h6 class="color-gray-900 mb-20 mt-40">Product tags</h6>
 								<div>
-									<a class="btn btn-border mr-5" href="#">Games</a><a class="btn btn-border mr-5"
-										href="#">Electronics</a><a class="btn btn-border mr-5" href="#">Video</a><a
-										class="btn btn-border mr-5" href="#">Cellphone</a><a class="btn btn-border mr-5"
-										href="#">Indoor</a><a class="btn btn-border mr-5" href="#">VGA Card</a><a
-										class="btn btn-border mr-5" href="#">USB</a><a class="btn btn-border mr-5"
-										href="#">Lightning</a><a class="btn btn-border mr-5" href="#">Camera</a>
+									<a class="btn btn-border mr-5" href="#">Games</a><a
+										class="btn btn-border mr-5" href="#">Electronics</a><a
+										class="btn btn-border mr-5" href="#">Video</a><a
+										class="btn btn-border mr-5" href="#">Cellphone</a><a
+										class="btn btn-border mr-5" href="#">Indoor</a><a
+										class="btn btn-border mr-5" href="#">VGA Card</a><a
+										class="btn btn-border mr-5" href="#">USB</a><a
+										class="btn btn-border mr-5" href="#">Lightning</a><a
+										class="btn btn-border mr-5" href="#">Camera</a>
 								</div>
 							</div>
 						</div>
@@ -352,10 +596,12 @@ F<html xmlns:th="http://www.thymeleaf.org"
 				</div>
 			</div>
 		</div>
-		<div class="modal fade" id="ModalQuickview" tabindex="-1" aria-hidden="true" style="display: none;">
+		<div class="modal fade" id="ModalQuickview" tabindex="-1"
+			aria-hidden="true" style="display: none;">
 			<div class="modal-dialog modal-xl">
 				<div class="modal-content apply-job-form">
-					<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button class="btn-close" type="button" data-bs-dismiss="modal"
+						aria-label="Close"></button>
 					<div class="modal-body p-30">
 						<div class="row">
 							<div class="col-lg-6">
@@ -364,31 +610,38 @@ F<html xmlns:th="http://www.thymeleaf.org"
 										<div class="detail-gallery">
 											<div class="product-image-slider-2">
 												<figure class="border-radius-10">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
 														alt="product image">
 												</figure>
 											</div>
@@ -396,43 +649,50 @@ F<html xmlns:th="http://www.thymeleaf.org"
 										<div class="slider-nav-thumbnails-2">
 											<div>
 												<div class="item-thumb">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+													<img
+														th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
 														alt="product image">
 												</div>
 											</div>
@@ -441,12 +701,12 @@ F<html xmlns:th="http://www.thymeleaf.org"
 								</div>
 								<div class="box-tags">
 									<div class="d-inline-block mr-25">
-										<span class="font-sm font-medium color-gray-900">Category:</span><a class="link"
-											href="#">Smartphones</a>
+										<span class="font-sm font-medium color-gray-900">Category:</span><a
+											class="link" href="#">Smartphones</a>
 									</div>
 									<div class="d-inline-block">
-										<span class="font-sm font-medium color-gray-900">Tags:</span><a class="link"
-											href="#">Blue</a>,<a class="link" href="#">Smartphone</a>
+										<span class="font-sm font-medium color-gray-900">Tags:</span><a
+											class="link" href="#">Blue</a>,<a class="link" href="#">Smartphone</a>
 									</div>
 								</div>
 							</div>
@@ -459,11 +719,16 @@ F<html xmlns:th="http://www.thymeleaf.org"
 											class="byAUthor color-gray-900 font-xs font-medium"
 											href="shop-vendor-list.html"> Ecom Tech</a>
 										<div class="rating d-inline-block">
-											<img th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><span
+											<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}"
+												alt="Ecom"><span
 												class="font-xs color-gray-500 font-medium"> (65
 												reviews)</span>
 										</div>
@@ -489,23 +754,26 @@ F<html xmlns:th="http://www.thymeleaf.org"
 										</p>
 										<ul class="list-colors">
 											<li class="disabled"><img
-													th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
-													alt="Ecom" title="Pink"></li>
-											<li><img th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
-													alt="Ecom" title="Gold"></li>
-											<li><img th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
-													alt="Ecom" title="Pink Gold"></li>
-											<li><img th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
-													alt="Ecom" title="Silver"></li>
+												th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+												alt="Ecom" title="Pink"></li>
+											<li><img
+												th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+												alt="Ecom" title="Gold"></li>
+											<li><img
+												th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+												alt="Ecom" title="Pink Gold"></li>
+											<li><img
+												th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+												alt="Ecom" title="Silver"></li>
 											<li class="active"><img
-													th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
-													alt="Ecom" title="Pink Gold"></li>
+												th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+												alt="Ecom" title="Pink Gold"></li>
 											<li class="disabled"><img
-													th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
-													alt="Ecom" title="Black"></li>
+												th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+												alt="Ecom" title="Black"></li>
 											<li class="disabled"><img
-													th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
-													alt="Ecom" title="Red"></li>
+												th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+												alt="Ecom" title="Red"></li>
 										</ul>
 									</div>
 									<div class="box-product-style-size mt-10">
