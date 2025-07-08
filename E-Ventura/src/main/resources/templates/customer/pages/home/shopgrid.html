@@ -360,7 +360,7 @@
 												<div th:each="topProduct : ${topViewProducts}"
 													class="card-grid-style-2 card-grid-none-border border-bottom mb-10">
 													<div class="image-box">
-														<a href="shop-single-product-3.html">
+														<a th:href="@{'/product/productdetails/'+${topProduct.id}}">
 														<th:block
 															th:if="${topProduct.mediases[0].name.contains('https:')}">
 															<img th:src="${topProduct.mediases[0].name}" alt="Ecom">
@@ -376,7 +376,7 @@
 													</div>
 													<div class="info-right">
 														<a class="color-brand-3 font-xs-bold"
-															href="shop-single-product-3.html" th:text="${topProduct.name}"></a>
+															th:href="@{'/product/productdetails/'+${topProduct.id}}" th:text="${topProduct.name}"></a>
 														
 														<div class="price-info">
 															<strong class="font-md-bold color-brand-3 price-main">$<th:block th:text="${topProduct.price}"></th:block></strong>
@@ -388,7 +388,7 @@
 												<div th:each="topProduct : ${topViewProducts2}"
 													class="card-grid-style-2 card-grid-none-border border-bottom mb-10">
 													<div class="image-box">
-														<a href="shop-single-product-3.html">
+														<a th:href="@{'/product/productdetails/'+${topProduct.id}}">
 														<th:block
 															th:if="${topProduct.mediases[0].name.contains('https:')}">
 															<img th:src="${topProduct.mediases[0].name}" alt="Ecom">
@@ -404,7 +404,7 @@
 													</div>
 													<div class="info-right">
 														<a class="color-brand-3 font-xs-bold"
-															href="shop-single-product-3.html" th:text="${topProduct.name}"></a>
+															th:href="@{'/product/productdetails/'+${topProduct.id}}" th:text="${topProduct.name}"></a>
 														
 														<div class="price-info">
 															<strong class="font-md-bold color-brand-3 price-main">$<th:block th:text="${topProduct.price}"></th:block></strong>
