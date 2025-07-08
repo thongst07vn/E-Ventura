@@ -928,7 +928,7 @@
 										            for(var amount of vendorMap.values()){
 										            	discount += parseFloat(amount);
 										            }
-										        	$('#subTotalText').html(discount);
+										        	$('#subTotalText').html(discount.toFixed(2));
 										        	updateTotal();
 										    		$('#chooseVoucherModal_[[${vendorItems.key.id}]]').modal('hide');
 										    		
@@ -1033,7 +1033,7 @@
 									</div>
 									<div class="col-lg-6 col-6 text-end d-flex justify-content-end">
 										<span class="font-lg-bold color-brand-3">$</span>
-										<div class="font-lg-bold color-brand-3" th:text=${subTotal}></div>
+										<div class="font-lg-bold color-brand-3" th:text="${#numbers.formatDecimal(subTotal, 0, 'COMMA', 2, 'POINT')}"></div>
 									</div>
 									<div class="col-lg-6 col-6" >
 										<span class="font-md-bold color-brand-3">&nbsp;</span>
@@ -1052,7 +1052,7 @@
 										<div
 											class="col-lg-6 col-6 text-end d-flex justify-content-end">
 											<span class="font-lg-bold color-brand-3">$</span>
-											<div class="font-lg-bold color-brand-3" th:text=${0}></div>
+											<div id="shipping"class="font-lg-bold color-brand-3"></div>
 										</div>
 									</div>
 									<!-- choose voucher total -->
@@ -1076,8 +1076,8 @@
 										if($('#totalDiscountAmount').text() != '0'){
 											total -= parseFloat($('#totalDiscountAmount').text());
 										}
-										$('#total').html(total);
-										$('#orderTotal').val(parseFloat(total));
+										$('#total').html((total + parseFloat($('#shipping').val())).toFixed(2));
+										$('#orderTotal').val((total + parseFloat($('#shipping').val())).toFixed(2));
 									}
 									function updateTotalVoucher(){
 								        const selectedVoucherId = $('input[name="voucherForEventura"]:checked').attr('id').split('_')[1];
@@ -1094,7 +1094,7 @@
 									                success: function(response) {
 									                    if (response.success) {
 									                     	console.log(response.discountAmount);
-															$('#totalDiscountAmount').text(response.discountAmount);
+															$('#totalDiscountAmount').text(response.discountAmount.toFixed(2));
 															$('#voucherEventura').val(selectedVoucherId);
 															console.log($('#voucherEventura').val());
 															updateTotal();
@@ -1205,15 +1205,15 @@
 										</div>
 										<div class="col-lg-6 col-6 text-end d-flex justify-content-end">
 											<span class="font-lg-bold color-brand-3">$</span>
-											<h4 id="total" class="font-lg-bold color-brand-3" th:text="${total}"></h4>
+											<h4 id="total" class="font-lg-bold color-brand-3" th:text="${#numbers.formatDecimal(total, 0, 'COMMA', 2, 'POINT')}"></h4>
 										</div>
 										
 									</div>
 								</div>
 							</div>
-							<form method="post" th:action="@{/customer/cart/process-checkout}">		
-								<input type="hidden" th:field="${newOrder.paymentMethod}">						
-								<input type="hidden" th:field="${newOrder.userAddress}">						
+							<form id="placeanorderForm" method="post" th:action="@{/customer/cart/process-checkout}">		
+								<input id="newOrderPaymentMethod" type="hidden" th:field="${newOrder.paymentMethod}">						
+								<input id="newOrderAddress" type="hidden" th:field="${newOrder.userAddress}">						
 													
 								<input id="orderTotal" type="hidden" th:field="${newOrder.totalAmount}">						
 								<input id="cartItems" type="hidden"	name="cartItems"/>				
@@ -1222,19 +1222,127 @@
 								<div class="row mt-20">
 									<div class="col-lg-6 col-7 mb-20 text-end">&nbsp;</div>
 									<div class="col-lg-6 col-7 mb-20 text-end">
-										<button class="btn btn-buy w-auto arrow-next"
-											type="submit">Place an Order</button>
+										<button class="btn btn-buy w-auto arrow-next" id="placeanorder"
+											type="button">Place an Order</button>
 									</div>
 								</div>
-							</form>							
+							</form>
+							<div class="container" hidden>
+						            <input type="text" id="startAddress" placeholder="Ví dụ: 123 Đường ABC, Quận 1, TP.HCM" value="Nhà thờ Đức Bà Sài Gòn">
+						            <input type="text" id="endAddress" placeholder="Ví dụ: 456 Đường XYZ, Quận 5, TP.HCM" value="Chợ Bến Thành">
+						        <button onclick="calculateDistance()">Tính Khoảng Cách</button>
+						
+						        <p id="result">Nhập địa chỉ và nhấn "Tính Khoảng Cách"</p>
+						    </div>
+														
 						</div>
 					</div>
 				</div>
+				<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 				<script>
-					$(document).ready(function(){
-						var cartItemIds = []; 
+				  // THAY THẾ 'YOUR_OPENCAGE_API_KEY' BẰNG API KEY THỰC CỦA BẠN TẠI ĐÂY
+				  
+		        const OPENCAGE_API_KEY = '3ec3c746f9d6482f8caf078f7056c875';
+		
+		        // Hàm chuyển đổi tên địa điểm thành tọa độ (kinh độ, vĩ độ) sử dụng OpenCage
+		        async function geocode(locationName) {
+		            // URL của OpenCage API. Thay thế YOUR_OPENCAGE_API_KEY bằng khóa API của bạn.
+		            const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(locationName)}&key=${OPENCAGE_API_KEY}&limit=1&no_annotations=1&language=vi`;
+		            try {
+		                const response = await fetch(url);
+		                if (!response.ok) {
+		                    // Xử lý lỗi HTTP từ API
+		                    const errorData = await response.json();
+		                    console.error(`OpenCage API returned an error: ${response.status} ${response.statusText}`, errorData);
+		                    return null;
+		                }
+		                const data = await response.json();
+		
+		                // Kiểm tra xem có kết quả nào không và truy cập dữ liệu tọa độ
+		                if (data && data.results && data.results.length > 0) {
+		                    const firstResult = data.results[0].geometry;
+		                    return { lat: firstResult.lat, lon: firstResult.lng }; // OpenCage trả về lng cho kinh độ
+		                }
+		            } catch (error) {
+		                console.error('Lỗi khi chuyển đổi địa điểm (geocode với OpenCage):', error);
+		            }
+		            return null; // Trả về null nếu không tìm thấy hoặc có lỗi
+		        }
+		
+		        // Hàm chính để tính toán khoảng cách (không thay đổi phần này)
+		        async function calculateDistance() {
+		            const startAddress = '35/6 Đường D5, Phường 25, Bình Thạnh, Hồ Chí Minh 72308, Việt Nam';
+		            const endAddress = document.getElementById('endAddress').value.trim();
+		            const resultElement = document.getElementById('result');
+		
+		            if (!startAddress || !endAddress) {
+		                resultElement.textContent = 'Vui lòng nhập đầy đủ cả hai địa chỉ.';
+		                resultElement.classList.add('error');
+		                return;
+		            }
+		
+		            resultElement.textContent = 'Đang tính toán...';
+		            resultElement.classList.remove('error'); // Remove error class if previously set
+		
+		            try {
+		                // Bước 1: Geocoding - Chuyển đổi địa chỉ thành tọa độ
+		                const startCoords = await geocode(startAddress);
+		                const endCoords = await geocode(endAddress);
+		
+		                if (!startCoords) {
+		                    resultElement.textContent = `Không tìm thấy tọa độ cho địa chỉ bắt đầu: "${startAddress}". Vui lòng nhập địa chỉ cụ thể hơn hoặc kiểm tra chính tả.`;
+		                    resultElement.classList.add('error');
+		                    return;
+		                }
+		                if (!endCoords) {
+		                    resultElement.textContent = `Không tìm thấy tọa độ cho địa chỉ kết thúc: "${endAddress}". Vui lòng nhập địa chỉ cụ thể hơn hoặc kiểm tra chính tả.`;
+		                    resultElement.classList.add('error');
+		                    return;
+		                }
+		
+		                // Bước 2: Gọi API định tuyến OSRM để lấy khoảng cách (vẫn giữ nguyên OSRM)
+		                // Định dạng tọa độ cho OSRM là kinh độ,vĩ độ
+		                const startLngLat = `${startCoords.lon},${startCoords.lat}`;
+		                const endLngLat = `${endCoords.lon},${endCoords.lat}`;
+		
+		                // Sử dụng profile 'driving' cho ô tô. overview=false để không lấy chi tiết tuyến đường.
+		                const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${startLngLat};${endLngLat}?overview=false`;
+		
+		                const osrmResponse = await fetch(osrmUrl);
+		                const osrmData = await osrmResponse.json();
+		
+		                if (osrmData.code === 'Ok' && osrmData.routes.length > 0) {
+		                    const distanceMeters = osrmData.routes[0].distance; // Khoảng cách tính bằng mét
+		                    const durationSeconds = osrmData.routes[0].duration; // Thời gian tính bằng giây
+		
+		                    const distanceKm = (distanceMeters / 1000).toFixed(2); // Chuyển đổi sang km và làm tròn 2 chữ số thập phân
+		                    const durationMinutes = (durationSeconds / 60).toFixed(0); // Chuyển đổi sang phút và làm tròn
+		                    $('#shipping').val((0.2*distanceKm).toFixed(2));
+		                    $('#shipping').text((0.2*distanceKm).toFixed(2));
+		                    updateTotal();
+		                    resultElement.textContent = `Khoảng cách ước tính: ${distanceKm} km. Thời gian di chuyển ước tính: ${durationMinutes} phút.`;
+		                } else {
+		                    resultElement.textContent = 'Không tìm thấy tuyến đường giữa hai địa chỉ này. Vui lòng kiểm tra lại địa chỉ và đảm bảo chúng có thể tiếp cận được bằng đường bộ.';
+		                    resultElement.classList.add('error');
+		                    console.error('Lỗi từ OSRM:', osrmData.code, osrmData.message);
+		                }
+		            } catch (error) {
+		                resultElement.textContent = 'Có lỗi xảy ra khi tính toán khoảng cách. Vui lòng thử lại.';
+		                resultElement.classList.add('error');
+		                console.error('Lỗi tổng quát:', error);
+		            }
+		        }
+
+					$(document).ready(async function(){
 						
-						
+						//Map
+						// Hàm chuyển đổi tên địa điểm thành tọa độ (kinh độ, vĩ độ)
+				        var newOrderAddress = $('#newOrderAddress').val();
+						console.log(newOrderAddress);
+				        $('#endAddress').val(newOrderAddress);
+				        await calculateDistance();
+						//paypal
+						var cartItemIds = []; 												
 						$('.cartItemId').each(function() {
 							cartItemIds.push($(this).val());						    
 						});
@@ -1247,12 +1355,62 @@
 					        $('.payment-clickable').removeClass('onselected-checkout');
 
 					        $(this).addClass('onselected-checkout');
+					        var selectedId = $('.payment-clickable.onselected-checkout').attr('id').split('-')[1];
+					        if(selectedId == 'cod'){
+					        	$('#newOrderPaymentMethod').val('COD');
+					        } else if (selectedId == 'paypal'){
+					        	$('#newOrderPaymentMethod').val('PAYPAL');				        	
+					        }
 						});
-						$('.card-clickable').on('click',function(){
+						$('.card-clickable').on('click',async function(){
 							
 					        $('.card-clickable').removeClass('onselected-checkout');
-
 					        $(this).addClass('onselected-checkout');
+					        const addressText = $(this).find('small').text().trim();
+					        
+					        $('#endAddress').val(addressText);
+					        $('#endAddress').text(addressText);
+					       
+					        await calculateDistance();
+						});
+						$('#placeanorder').on('click',async function(){
+							var selectedId = $('.payment-clickable.onselected-checkout').attr('id').split('-')[1];
+							if(selectedId == 'cod'){
+								$('#placeanorderForm').submit();
+							} else if(selectedId == 'paypal'){
+								var amount = $('#total').text();
+								var cartItemsValue = $('#cartItems').val();
+								var vouchersValue = $('#vouchers').val();
+								var voucherEventuraValue = $('#voucherEventura').val();
+								var userIdValue = '[[${user.id}]]';
+								console.log("id value:" + userIdValue);
+								let newOrder = {
+									paymentMethod: $('#newOrderPaymentMethod').val(),
+									totalAmount: $('#orderTotal').val(),
+									userAddress: $('#newOrderAddress').val()
+								} 
+								try {
+									let response = await fetch("/paypal/pay?amount=" + amount +"&cartItems="+cartItemsValue+"&vouchers="+vouchersValue+"&voucherEventura="+voucherEventuraValue+"&userId="+userIdValue, { // Corrected URL here
+						                method: "POST",
+						                headers: {
+						                    "Content-Type": "application/json" // Very important!
+						                },
+						                body: JSON.stringify(newOrder)	
+						            });
+
+						            let result = await response.text();
+						            
+						            if (result.includes("Redirect to:")) {
+						                let url = result.replace("Redirect to: ", "").trim();
+						                $('#placeanorderForm').submit();
+						                window.location.href = url; // Redirect to PayPal						                
+						            }
+
+						        } catch (error) {
+						            console.error("Error:", error);
+						           
+						        }
+							}
 						});
 					});
 				</script>
