@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.eventura.dtos.OrderVendorDTO;
 import com.eventura.entities.Orders;
+import com.eventura.entities.Products;
 import com.eventura.entities.VendorProductCategory;
 
 @Repository
@@ -77,6 +78,9 @@ public interface OrderRepository extends JpaRepository<Orders, Integer> {
 		    GROUP BY o.id, o.name, o.paymentMethod,  o.createdAt, oios.orderStatus
 		""")
 	Page<OrderVendorDTO> findByKeyword(@Param("vendorId") int vendorId, @Param("keyword") String keyword, Pageable pageable);
+	
+	@Query("from Orders where users.id = :userId")
+	Page<Orders>  findOrdersByUserId(@Param("userId") int userId, Pageable pageable);
 
 }
 

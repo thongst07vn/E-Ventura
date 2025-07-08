@@ -38,7 +38,7 @@
 												</figure>
 												<figure class="border-radius-10"
 													th:if="${!img.name.contains('http')}">
-													<img th:src="@{'/assets/imgs/others/'+${img.name}}"
+													<img th:src="@{'/assets/imgs/items/'+${img.name}}"
 														alt="product image">
 												</figure>
 											</th:block>
@@ -57,7 +57,7 @@
 											</div>
 											<div th:if="${!img.name.contains('http')}">
 												<div class="item-thumb" style="height: fit; width: fit;">
-													<img th:src="@{'/assets/imgs/others/'+${img.name}}"
+													<img th:src="@{'/assets/imgs/items/'+${img.name}}"
 														alt="product image">
 												</div>
 											</div>

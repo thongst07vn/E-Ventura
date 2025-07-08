@@ -59,6 +59,12 @@ public class OrderServiceImpl implements OrderService {
 		}
 	}
 
+	@Override
+	public Page<Orders> findOrdersByUserId(int userId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return orderRepository.findOrdersByUserId(userId, pageable);
+	}
+
 	
 	
 	

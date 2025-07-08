@@ -2,7 +2,8 @@
 	th:replace="~{customer/layouts/layout :: layout('profile', ~{this :: .content-main})}">
 
 <head>
-<title>Profile</title>
+	<title>Profile</title>
+	
 </head>
 
 <body>
@@ -23,185 +24,137 @@
 				<div class="box-tabs mb-100">
 					<ul class="nav nav-tabs nav-tabs-account" role="tablist">
 
-						<li><a th:classappend="${activeTab == 'orders' ? 'active' : ''}" href="#tab-orders" data-bs-toggle="tab"
-							role="tab" aria-controls="tab-orders" th:aria-selected="${activeTab == 'orders' ? 'true' : 'false'}">Orders</a></li>
-						<li><a th:classappend="${activeTab == 'order-tracking' ? 'active' : ''}" href="#tab-order-tracking" data-bs-toggle="tab"
-							role="tab" aria-controls="tab-order-tracking" 
-							th:aria-selected="${activeTab == 'order-tracking' ? 'true' : 'false'}">Order Tracking</a></li>
-						<li><a th:classappend="${activeTab == 'setting' ? 'active' : ''}" href="#tab-setting" data-bs-toggle="tab" role="tab"
-							aria-controls="tab-setting" th:aria-selected="${activeTab == 'setting' ? 'true' : 'false'}">Setting</a></li>
+						<li>
+							<a th:href="@{/customer/orders?tab=orders}"
+								th:classappend="${activeTab == 'orders' ? 'active' : ''}">Orders</a>
+						</li>
+
+						<li>
+							<a th:href="@{/customer/profile?tab=setting}"
+								th:classappend="${activeTab == 'setting' ? 'active' : ''}">Setting</a>
+						</li>
+
 					</ul>
 					<div class="border-bottom mt-20 mb-40"></div>
 					<div class="tab-content mt-30">
 
-						<div class="tab-pane fade" th:classappend="${activeTab == 'orders' ? 'active show' : ''}" id="tab-orders"
-							role="tabpanel" aria-labelledby="tab-orders">
-							<div class="box-orders">
+						<div class="tab-pane fade" th:classappend="${activeTab == 'orders' ? 'active show' : ''}"
+							id="tab-orders" role="tabpanel" aria-labelledby="tab-orders">
+							<div class="box-orders" th:each="order : ${orders}">
 								<div class="head-orders">
 									<div class="head-left">
-										<h5 class="mr-20">Order ID: #EWFDSAF1321655</h5>
-										<span class="font-md color-brand-3 mr-20">Date: 18
-											September 2022</span><span class="label-delivery">Delivery in
-											progress</span>
-									</div>
-									<div class="head-right">
-										<a class="btn btn-buy font-sm-bold w-auto">View Order</a>
+										<h5 class="mr-20">Order Name: <th:block th:text="${order.name}"></th:block>
+										</h5>
+
+										<span class="font-md color-brand-3 mr-20">
+											<th:block
+												th:text="${#dates.format(order.createdAt, 'EEE, dd MMM,YYYY, hh:mm a')}">
+											</th:block>
+										</span>
 									</div>
 								</div>
-								<div class="body-orders">
-									<div class="list-orders">
-										<div class="item-orders">
-											<div class="image-orders">
-												<img th:src="@{/client/assets/imgs/page/account/img-1.png}"
-													alt="Ecom">
+
+								<div class="body-orders" th:with="vendorMap=${groupedOrderItemsByOrder[order.id]}">
+									<div class="box-orders" th:each="entry : ${vendorMap}" >
+										<div class="head-orders">
+											<div class="head-left">
+												<h5>Vendor: <th:block th:text="${entry.value[0].products.vendors.name}">
+													</th:block>
+												</h5>
+
+
+												<span
+													th:with="latestStatus=${latestStatusesByOrderAndVendor[order.id][entry.key]}"
+													th:text="${latestStatus != null ? latestStatus.orderStatus.name : 'N/A'}"
+													th:class="|badge rounded-pill font-md fw-bold mx-5 ${
+							                            latestStatus != null && latestStatus.orderStatus.name == 'Received' ? 'alert-success' :
+							                            latestStatus != null && latestStatus.orderStatus.name == 'Canceled' ? 'alert-danger' :
+							                            latestStatus != null && latestStatus.orderStatus.name == 'Ordered' ? 'alert-info' :
+							                            latestStatus != null && latestStatus.orderStatus.name == 'Confirmed' ? 'alert-primary' :
+							                            latestStatus != null && latestStatus.orderStatus.name == 'Delivering' ? 'alert-warning' :
+							                            'alert-secondary'
+							                          }|">
+												</span>
+
 											</div>
-											<div class="info-orders">
-												<h5>Samsung 36" French door 28 cu. ft. Smart Energy
-													Star Refrigerator</h5>
-											</div>
-											<div class="quantity-orders">
-												<h5>Quantity: 01</h5>
-											</div>
-											<div class="price-orders">
-												<h3>$2.51</h3>
-											</div>
+											<div class="head-right float-right"><a class="btn btn-buy font-sm-bold w-auto" th:href="@{'/customer/order-tracking/' + ${order.id} + '/' + ${entry.value[0].products.vendors.id}}">View Order Tracking</a></div>
+
 										</div>
-										<div class="item-orders">
-											<div class="image-orders">
-												<img th:src="@{/client/assets/imgs/page/account/img-1.png}"
-													alt="Ecom">
-											</div>
-											<div class="info-orders">
-												<h5>Samsung 36" French door 28 cu. ft. Smart Energy
-													Star Refrigerator</h5>
-											</div>
-											<div class="quantity-orders">
-												<h5>Quantity: 01</h5>
-											</div>
-											<div class="price-orders">
-												<h3>$2.51</h3>
+
+										<div class="list-orders mt-10 mb-10 mx-4">
+											<div class="item-orders" th:each="item : ${entry.value}">
+												<div class="image-orders">
+													<img th:src="@{${item.products.mediases[0].name.contains('https:') ? item.products.mediases[0].name : '/assets/imgs/items/' + item.products.mediases[0].name}}"
+														class="img-sm img-thumbnail" alt="Item">
+												</div>
+												<div class="info-orders">
+													<h5 th:text="${item.products.name}"></h5>
+												</div>
+												<div class="quantity-orders">
+													<h5 th:text="'Quantity: ' + ${item.quantity}"></h5>
+												</div>
+												<div class="price-orders">
+													<h3 th:text="'$' + ${item.price}"></h3>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="box-orders">
-								<div class="head-orders">
-									<div class="head-left">
-										<h5 class="mr-20">Order ID: #EWFDSAF1321655</h5>
-										<span class="font-md color-brand-3 mr-20">Date: 18
-											September 2022</span><span class="label-delivery label-delivered">Delivered</span>
-									</div>
-									<div class="head-right">
-										<a class="btn btn-buy font-sm-bold w-auto">View Order</a>
-									</div>
-								</div>
-								<div class="body-orders">
-									<div class="list-orders">
-										<div class="item-orders">
-											<div class="image-orders">
-												<img th:src="@{/client/assets/imgs/page/account/img-1.png}"
-													alt="Ecom">
-											</div>
-											<div class="info-orders">
-												<h5>Samsung 36" French door 28 cu. ft. Smart Energy
-													Star Refrigerator</h5>
-											</div>
-											<div class="quantity-orders">
-												<h5>Quantity: 01</h5>
-											</div>
-											<div class="price-orders">
-												<h3>$2.51</h3>
-											</div>
-										</div>
-										<div class="item-orders">
-											<div class="image-orders">
-												<img th:src="@{/client/assets/imgs/page/account/img-1.png}"
-													alt="Ecom">
-											</div>
-											<div class="info-orders">
-												<h5>Samsung 36" French door 28 cu. ft. Smart Energy
-													Star Refrigerator</h5>
-											</div>
-											<div class="quantity-orders">
-												<h5>Quantity: 01</h5>
-											</div>
-											<div class="price-orders">
-												<h3>$2.51</h3>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="box-orders">
-								<div class="head-orders">
-									<div class="head-left">
-										<h5 class="mr-20">Order ID: #EWFDSAF1321655</h5>
-										<span class="font-md color-brand-3 mr-20">Date: 18
-											September 2022</span><span class="label-delivery label-cancel">Cancel</span>
-									</div>
-									<div class="head-right">
-										<a class="btn btn-buy font-sm-bold w-auto">View Order</a>
-									</div>
-								</div>
-								<div class="body-orders">
-									<div class="list-orders">
-										<div class="item-orders">
-											<div class="image-orders">
-												<img th:src="@{/client/assets/imgs/page/product/sp1.png}"
-													alt="Ecom">
-											</div>
-											<div class="info-orders">
-												<h5>Samsung 36" French door 28 cu. ft. Smart Energy
-													Star Refrigerator</h5>
-											</div>
-											<div class="quantity-orders">
-												<h5>Quantity: 01</h5>
-											</div>
-											<div class="price-orders">
-												<h3>$2.51</h3>
-											</div>
-										</div>
-										<div class="item-orders">
-											<div class="image-orders">
-												<img th:src="@{/client/assets/imgs/page/product/sp2.png}"
-													alt="Ecom">
-											</div>
-											<div class="info-orders">
-												<h5>Samsung 36" French door 28 cu. ft. Smart Energy
-													Star Refrigerator</h5>
-											</div>
-											<div class="quantity-orders">
-												<h5>Quantity: 01</h5>
-											</div>
-											<div class="price-orders">
-												<h3>$2.51</h3>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+
 							<nav>
-								<ul class="pagination">
-									<li class="page-item"><a class="page-link page-prev"
-										href="#"></a></li>
-									<li class="page-item"><a class="page-link" href="#">1</a></li>
-									<li class="page-item"><a class="page-link active" href="#">2</a></li>
-									<li class="page-item"><a class="page-link" href="#">3</a></li>
-									<li class="page-item"><a class="page-link" href="#">4</a></li>
-									<li class="page-item"><a class="page-link" href="#">5</a></li>
-									<li class="page-item"><a class="page-link" href="#">6</a></li>
-									<li class="page-item"><a class="page-link page-next"
-										href="#"></a></li>
-								</ul>
+								<th:block th:if="${!#lists.isEmpty(orders)}">
+									<ul class="pagination">
+										<!-- nút về đầu -->
+										<li class="page-item" th:classappend="${currentPages == 0} ? 'hidden'"><a
+												class="page-link" aria-label="Back to start"
+												th:href="@{'/customer/orders?tab=orders&page='+${0}}">
+												<div style="font-size: 30;">&laquo;</div>
+											</a></li>
+										<!-- nút về trước -->
+										<li class="page-item" th:classappend="${currentPages == 0} ? 'disabled'"><a
+												th:href="@{'/customer/orders?tab=orders&page=' + ${currentPages-1}}"
+												class="page-link" aria-label="Previous">
+												<div style="font-size: 30;">&lsaquo;</div>
+											</a></li>
+										<!-- Các trang -->
+										<th:block th:each="i : ${#numbers.sequence(0, lastPageIndex)}">
+
+											<li class="page-item" th:classappend="${i} == ${currentPages} ? 'active'"><a
+													class="page-link"
+													th:href="@{'/customer/orders?tab=orders&page=' + ${i}}"
+													th:text="${i + 1}"></a></li>
+										</th:block>
+
+										<!-- Nút tiếp -->
+										<li class="page-item"
+											th:classappend="${currentPages + 1 >= totalPages} ? 'disabled'">
+											<a class="page-link"
+												th:href="@{'/customer/orders?tab=orders&page=' + ${currentPages+1}}"
+												aria-label="Next">
+												<div style="font-size: 30;">&rsaquo;</div>
+											</a>
+										</li>
+										<!-- Nút tới cuối -->
+										<li class="page-item"
+											th:classappend="${currentPages + 1 >= totalPages}? 'hidden' ">
+											<a class="page-link"
+												th:href="@{'/customer/orders?tab=orders&page=' + ${lastPageIndex}}"
+												aria-label="Next">
+												<div style="font-size: 30;">&raquo;</div>
+											</a>
+										</li>
+									</ul>
+								</th:block>
 							</nav>
 						</div>
-						<div class="tab-pane fade" th:classappend="${activeTab == 'order-tracking' ? 'active show' : ''}" id="tab-order-tracking" role="tabpanel"
-							aria-labelledby="tab-order-tracking">
+						<div class="tab-pane fade"
+							th:classappend="${activeTab == 'order-tracking' ? 'active show' : ''}"
+							id="tab-order-tracking" role="tabpanel" aria-labelledby="tab-order-tracking">
 							<p class="font-md color-gray-600">
 								To track your order please enter your OrderID in the box below
-								and press "Track" button. This was given to you on<br
-									class="d-none d-lg-block">your receipt and in the
+								and press "Track" button. This was given to you on<br class="d-none d-lg-block">your
+								receipt and in the
 								confirmation email you should have received.
 							</p>
 							<div class="row mt-30">
@@ -234,94 +187,50 @@
 									<div class="item-step">
 										<div class="rounded-step">
 											<div class="icon-step step-1 active"></div>
-											<h6 class="mb-5">Order Placed</h6>
+											<h6 class="mb-5">Ordered</h6>
 											<p class="font-md color-gray-500">15 August 2022</p>
 										</div>
 									</div>
 									<div class="item-step">
 										<div class="rounded-step">
 											<div class="icon-step step-2 active"></div>
-											<h6 class="mb-5">In Producttion</h6>
+											<h6 class="mb-5">Confirmed</h6>
 											<p class="font-md color-gray-500">16 August 2022</p>
 										</div>
 									</div>
 									<div class="item-step">
 										<div class="rounded-step">
 											<div class="icon-step step-3 active"></div>
-											<h6 class="mb-5">International shipping</h6>
+											<h6 class="mb-5">Delivering</h6>
 											<p class="font-md color-gray-500">17 August 2022</p>
 										</div>
 									</div>
 									<div class="item-step">
 										<div class="rounded-step">
 											<div class="icon-step step-4"></div>
-											<h6 class="mb-5">Shipping Final Mile</h6>
+											<h6 class="mb-5">Received</h6>
 											<p class="font-md color-gray-500">18 August 2022</p>
 										</div>
 									</div>
 									<div class="item-step">
 										<div class="rounded-step">
 											<div class="icon-step step-5"></div>
-											<h6 class="mb-5">Delivered</h6>
+											<h6 class="mb-5">Cancel</h6>
 											<p class="font-md color-gray-500">19 August 2022</p>
 										</div>
 									</div>
 								</div>
 							</div>
-							<div class="list-features">
-								<ul>
-									<li>09:10 25 August 2022: Delivery in progress</li>
-									<li>08:25 25 August 2022: The order has arrived at
-										warehouse 05-YBI Marvel LM Hub</li>
-									<li>05:44 25 August 2022: Order has been shipped</li>
-									<li>04:51 25 August 2022: The order has arrived at Marvel
-										SOC warehouse</li>
-									<li>20:54 18 August 2022: Order has been shipped</li>
-									<li>18:21 17 August 2022: The order has arrived at Marvel
-										SOC warehouse</li>
-									<li>17:09 17 August 2022: Order has been shipped</li>
-									<li>15:23 17 August 2022: The order has arrived at
-										warehouse 20-HNI Marvel 2 SOC</li>
-									<li>12:42 16 August 2022: Successful pick up</li>
-									<li>10:44 15 August 2022: The sender is preparing the
-										goods</li>
-								</ul>
-							</div>
-							<h3>Package Location</h3>
-							<div class="map-account">
-								<iframe
-									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193548.25784139088!2d-74.12251055507726!3d40.71380001554004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2zVGjDoG5oIHBo4buRIE5ldyBZb3JrLCBUaeG7g3UgYmFuZyBOZXcgWW9yaywgSG9hIEvhu7M!5e0!3m2!1svi!2s!4v1664974174994!5m2!1svi!2s"
-									style="border: 0;" allowfullscreen="" loading="lazy"
-									referrerpolicy="no-referrer-when-downgrade"></iframe>
-							</div>
-							<div class="row">
-								<div class="col-lg-6">
-									<p class="color-gray-500 mb-20">Maecenas porttitor augue
-										sit amet nibh venenatis bibendum. Morbi lorem elit, fringilla
-										quis libero vitae, tincidunt commodo purus. Quisque diam nisi,
-										tincidunt sed vehicula nec, fermentum vitae lectus. Curabitur
-										sit amet sagittis libero. Pellentesque cursus turpis at ipsum
-										luctus tempor.</p>
-								</div>
-								<div class="col-lg-6">
-									<p class="color-gray-500 mb-20">Ut auctor varius nisl,
-										scelerisque dictum justo maximus ut. Fusce rhoncus, augue sed
-										molestie consectetur, leo felis ultricies erat, nec lobortis
-										enim dui eu justo. Pellentesque aliquam hendrerit venenatis.
-										Integer efficitur bibendum lectus sed sollicitudin.
-										Suspendisse faucibus posuere euismod.</p>
-								</div>
-							</div>
+							
 						</div>
-						<div class="tab-pane fade" th:classappend="${activeTab == 'setting' ? 'active show' : ''}" id="tab-setting" role="tabpanel"
-							aria-labelledby="tab-setting">
+						<div class="tab-pane fade" th:classappend="${activeTab == 'setting' ? 'active show' : ''}"
+							id="tab-setting" role="tabpanel" aria-labelledby="tab-setting">
 							<div class="card">
 								<div class="card-body">
 									<div class="row gx-5">
 										<div class="col-lg-12">
 											<section class="content-body p-xl-4">
-												<form method="post"
-													th:action="@{'/customer/edit/' + ${user.id}}"
+												<form method="post" th:action="@{'/customer/edit/' + ${user.id}}"
 													enctype="multipart/form-data">
 													<div class="row">
 														<div class="col-lg-8">
@@ -329,15 +238,16 @@
 																<div class="col-6 mb-3">
 																	<label class="form-label">First name</label> <input
 																		class="form-control" type="text"
-																		placeholder="Type here" th:field="${user.firstName}"
+																		placeholder="Type here"
+																		th:field="${user.firstName}"
 																		required="required">
 																</div>
 																<!-- col .//-->
 																<div class="col-6 mb-3">
 																	<label class="form-label">Last name</label> <input
 																		class="form-control" type="text"
-																		placeholder="Type here" th:field="${user.lastName}"
-																		required="required">
+																		placeholder="Type here"
+																		th:field="${user.lastName}" required="required">
 																</div>
 																<!-- col .//-->
 																<div class="col-lg-6 mb-3">
@@ -351,7 +261,8 @@
 																	<label class="form-label">Phone</label> <input
 																		class="form-control" type="tel"
 																		placeholder="+1234567890"
-																		th:field="${user.phoneNumber}" required="required">
+																		th:field="${user.phoneNumber}"
+																		required="required">
 																</div>
 																<div class="col-lg-6 mb-3">
 																	<label class="form-label">Username</label> <input
@@ -362,7 +273,8 @@
 																<div class="col-lg-6 mb-3">
 																	<label class="form-label">Birthday</label> <input
 																		class="form-control" type="date"
-																		th:field="${user.birthOfDate}" required="required">
+																		th:field="${user.birthOfDate}"
+																		required="required">
 																</div>
 																<!-- col .//-->
 
@@ -388,71 +300,71 @@
 
 																	<script type="text/javascript">
 																		document
-																				.addEventListener(
-																						'DOMContentLoaded',
-																						function() {
-																							const actualFileInput = document
-																									.getElementById('actualFileInput');
-																							const uploadButton = document
-																									.getElementById('uploadButton');
-																							const userAvatar = document
-																									.getElementById('userAvatar'); // Get the image element
+																			.addEventListener(
+																				'DOMContentLoaded',
+																				function () {
+																					const actualFileInput = document
+																						.getElementById('actualFileInput');
+																					const uploadButton = document
+																						.getElementById('uploadButton');
+																					const userAvatar = document
+																						.getElementById('userAvatar'); // Get the image element
 
-																							// Store the previous object URL to revoke it later for memory management
-																							let currentObjectURL = null;
+																					// Store the previous object URL to revoke it later for memory management
+																					let currentObjectURL = null;
 
-																							// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
-																							uploadButton
-																									.addEventListener(
-																											'click',
-																											function(
-																													event) {
-																												event
-																														.preventDefault(); // Prevent the default anchor link behavior
-																												actualFileInput
-																														.click(); // Programmatically click the hidden file input
-																											});
+																					// When the 'Upload' anchor is clicked, trigger a click on the hidden file input
+																					uploadButton
+																						.addEventListener(
+																							'click',
+																							function (
+																								event) {
+																								event
+																									.preventDefault(); // Prevent the default anchor link behavior
+																								actualFileInput
+																									.click(); // Programmatically click the hidden file input
+																							});
 
-																							// When a file is selected in the hidden input, update the display and the image src
-																							actualFileInput
-																									.addEventListener(
-																											'change',
-																											function() {
-																												if (this.files
-																														&& this.files.length > 0) {
-																													const selectedFile = this.files[0];
+																					// When a file is selected in the hidden input, update the display and the image src
+																					actualFileInput
+																						.addEventListener(
+																							'change',
+																							function () {
+																								if (this.files
+																									&& this.files.length > 0) {
+																									const selectedFile = this.files[0];
 
-																													// Create a URL for the selected file
-																													const fileURL = URL
-																															.createObjectURL(selectedFile);
+																									// Create a URL for the selected file
+																									const fileURL = URL
+																										.createObjectURL(selectedFile);
 
-																													// If there was a previous object URL, revoke it to free up memory
-																													if (currentObjectURL) {
-																														URL
-																																.revokeObjectURL(currentObjectURL);
-																													}
-																													currentObjectURL = fileURL; // Store the new object URL
+																									// If there was a previous object URL, revoke it to free up memory
+																									if (currentObjectURL) {
+																										URL
+																											.revokeObjectURL(currentObjectURL);
+																									}
+																									currentObjectURL = fileURL; // Store the new object URL
 
-																													// Set the src of the image to the new file URL
-																													userAvatar.src = fileURL;
+																									// Set the src of the image to the new file URL
+																									userAvatar.src = fileURL;
 
-																												}
-																											});
+																								}
+																							});
 
-																							// Optional: Store the initial avatar URL if you ever want to revert
-																							// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
+																					// Optional: Store the initial avatar URL if you ever want to revert
+																					// userAvatar.dataset.originalSrc = userAvatar.src; // Add this after userAvatar is defined
 
-																							// Clean up object URLs when the page unloads to prevent memory leaks
-																							window
-																									.addEventListener(
-																											'beforeunload',
-																											function() {
-																												if (currentObjectURL) {
-																													URL
-																															.revokeObjectURL(currentObjectURL);
-																												}
-																											});
-																						});
+																					// Clean up object URLs when the page unloads to prevent memory leaks
+																					window
+																						.addEventListener(
+																							'beforeunload',
+																							function () {
+																								if (currentObjectURL) {
+																									URL
+																										.revokeObjectURL(currentObjectURL);
+																								}
+																							});
+																				});
 																	</script>
 																</figcaption>
 															</figure>
@@ -467,9 +379,9 @@
 												<div class="col-lg-12 mb-3">
 													<div class="mt-40">
 														<h4 class="mb-10">Shipping adress</h4>
-														<button class="btn btn-buy w-auto h5 font-md-bold"
-															type="button" id="addAddressButton"
-															data-bs-toggle="modal" data-bs-target="#addAddressModal">+
+														<button class="btn btn-buy w-auto h5 font-md-bold" type="button"
+															id="addAddressButton" data-bs-toggle="modal"
+															data-bs-target="#addAddressModal">+
 															Add address</button>
 														<!-- Modal -->
 														<div class="modal fade" id="addAddressModal" tabindex="-1"
@@ -477,10 +389,12 @@
 															<div class="modal-dialog">
 																<div class="modal-content">
 																	<div class="modal-header">
-																		<h1 class="modal-title fs-5" id="exampleModalLabel">Add
+																		<h1 class="modal-title fs-5"
+																			id="exampleModalLabel">Add
 																			address</h1>
 																		<button type="button" class="btn-close"
-																			data-bs-dismiss="modal" aria-label="Close"></button>
+																			data-bs-dismiss="modal"
+																			aria-label="Close"></button>
 																	</div>
 																	<div class="modal-body">
 																		<form method="post"
@@ -490,30 +404,49 @@
 																				<div class="col-lg-12">
 																					<div class="row gx-3">
 																						<div class="col-lg-12 mb-3">
-																							<input class="form-control mb-2" type="text"
-																								name="userId" th:value="${user.id}"
-																								required="required" hidden> <label
-																								class="form-label">Location name</label> <input
-																								class="form-control mb-2" type="text"
+																							<input
+																								class="form-control mb-2"
+																								type="text"
+																								name="userId"
+																								th:value="${user.id}"
+																								required="required"
+																								hidden> <label
+																								class="form-label">Location
+																								name</label> <input
+																								class="form-control mb-2"
+																								type="text"
 																								id="addAddressName"
 																								th:field="${addAddressVariable.name}"
 																								required="required"
 																								placeholder="Your address name to easy remember">
-																							<label class="form-label">Address</label> <input
-																								class="form-control mb-2" type="text"
+																							<label
+																								class="form-label">Address</label>
+																							<input
+																								class="form-control mb-2"
+																								type="text"
 																								id="addressInput"
 																								th:field="${addAddressVariable.address}"
-																								required="required" placeholder="123 street 123">
-																							<div id="addressError" class="text-danger mb-2"
-																								style="display: none;"></div>
+																								required="required"
+																								placeholder="123 street 123">
+																							<div id="addressError"
+																								class="text-danger mb-2"
+																								style="display: none;">
+																							</div>
 																							<div class="row">
-																								<div class="col-md-12 mb-2">
+																								<div
+																									class="col-md-12 mb-2">
 																									<!-- Province -->
-																									<select class="form-select" id="provinceSelect"
+																									<select
+																										class="form-select"
+																										id="provinceSelect"
 																										th:field="${addAddressVariable.provinces.code}">
-																										<option value="" selected>Select
-																											province/city</option>
-																										<option th:each="province : ${provinces}"
+																										<option value=""
+																											selected>
+																											Select
+																											province/city
+																										</option>
+																										<option
+																											th:each="province : ${provinces}"
 																											th:value="${province.code}"
 																											th:text="${province.administrativeUnits.shortName}+' '+${province.name}">
 																										</option>
@@ -521,36 +454,58 @@
 
 																								</div>
 
-																								<div class="col-md-6 mb-2">
+																								<div
+																									class="col-md-6 mb-2">
 																									<!-- District -->
-																									<select class="form-select" id="districtSelect"
+																									<select
+																										class="form-select"
+																										id="districtSelect"
 																										th:field="${addAddressVariable.districts.code}">
-																										<option value="" disabled selected>Select
-																											district</option>
-																										<option th:each="district : ${districts}"
+																										<option value=""
+																											disabled
+																											selected>
+																											Select
+																											district
+																										</option>
+																										<option
+																											th:each="district : ${districts}"
 																											th:value="${district.code}"
 																											th:text="${district.shortName}+' '+${district.name}">
 																										</option>
 																									</select>
 																								</div>
-																								<div class="col-md-6 mb-2">
+																								<div
+																									class="col-md-6 mb-2">
 																									<!-- Ward -->
-																									<select class="form-select" id="wardSelect"
+																									<select
+																										class="form-select"
+																										id="wardSelect"
 																										th:field="${addAddressVariable.wards.code}">
-																										<option value="" disabled selected>Select
-																											ward</option>
-																										<option th:each="ward : ${wards}"
+																										<option value=""
+																											disabled
+																											selected>
+																											Select
+																											ward
+																										</option>
+																										<option
+																											th:each="ward : ${wards}"
 																											th:value="${ward.code}"
 																											th:text="${ward.shortName}+' '+${ward.name}">
 																										</option>
 																									</select>
 																								</div>
-																								<div id="provinceError" class="text-danger mb-2"
-																									style="display: none;"></div>
-																								<div id="districtError" class="text-danger mb-2"
-																									style="display: none;"></div>
-																								<div id="wardError" class="text-danger mb-2"
-																									style="display: none;"></div>
+																								<div id="provinceError"
+																									class="text-danger mb-2"
+																									style="display: none;">
+																								</div>
+																								<div id="districtError"
+																									class="text-danger mb-2"
+																									style="display: none;">
+																								</div>
+																								<div id="wardError"
+																									class="text-danger mb-2"
+																									style="display: none;">
+																								</div>
 																							</div>
 																						</div>
 
@@ -565,8 +520,10 @@
 																		<button type="button"
 																			class="btn btn-cart-delete w-auto"
 																			data-bs-dismiss="modal">Close</button>
-																		<button type="button" class="btn btn-cart w-auto"
-																			id="addAddressSubmitButton">Save changes</button>
+																		<button type="button"
+																			class="btn btn-cart w-auto"
+																			id="addAddressSubmitButton">Save
+																			changes</button>
 																	</div>
 																</div>
 															</div>
@@ -577,45 +534,45 @@
 																const provinceSelect = document.getElementById("provinceSelect");
 																const districtSelect = document.getElementById("districtSelect");
 																const wardSelect = document.getElementById("wardSelect");
-																
+
 																const addressInput = document.getElementById("addressInput");
 																const addAddressModal = document.getElementById('addAddressModal');
 																const addressError = document.getElementById("addressError");
 																const provinceError = document.getElementById("provinceError");
 																const districtError = document.getElementById("districtError");
 																const wardError = document.getElementById("wardError");
-																
+
 																function isBlank(str) {
-														            return str === null || str.trim() === '';
-														        }
-																
+																	return str === null || str.trim() === '';
+																}
+
 																provinceSelect.addEventListener("change", function () {
 																	const provinceCode = this.value;
 																	districtSelect.innerHTML = '<option selected disabled>Loading...</option>';
 																	wardSelect.innerHTML = '<option selected disabled>Ward</option>';
 																	wardSelect.disabled = true;
-													
+
 																	fetch(`/api/address/districts?provinceCode=${provinceCode}`)
-																	    .then(response => response.json())
-																	    .then(data => {
-																	        console.log(data);
-																	        // Clear existing options BEFORE adding new ones
-																	        districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
-																	        data.forEach(district => {
-																	            const option = document.createElement("option");
-																	            option.value = district.code;
-																	            option.text = district.shortName+ ' ' + district.name;
-																	            districtSelect.appendChild(option);
-																	        });
-																	        districtSelect.disabled = false;
-																	    })
-																	    .catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
+																		.then(response => response.json())
+																		.then(data => {
+																			console.log(data);
+																			// Clear existing options BEFORE adding new ones
+																			districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
+																			data.forEach(district => {
+																				const option = document.createElement("option");
+																				option.value = district.code;
+																				option.text = district.shortName + ' ' + district.name;
+																				districtSelect.appendChild(option);
+																			});
+																			districtSelect.disabled = false;
+																		})
+																		.catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
 																});
-													
+
 																districtSelect.addEventListener("change", function () {
 																	const districtCode = this.value;
 																	wardSelect.innerHTML = '<option selected disabled>Loading...</option>';
-													
+
 																	fetch(`/api/address/wards?districtCode=${districtCode}`)
 																		.then(response => response.json())
 																		.then(data => {
@@ -623,125 +580,125 @@
 																			data.forEach(ward => {
 																				const option = document.createElement("option");
 																				option.value = ward.code;
-																				option.text = ward.shortName+ ' ' + ward.name;
+																				option.text = ward.shortName + ' ' + ward.name;
 																				wardSelect.appendChild(option);
 																			});
 																			wardSelect.disabled = false;
 																		});
 																});
-																addAddressModal.addEventListener('hidden.bs.modal',function(){
-																	if(addressInput.value != null){
+																addAddressModal.addEventListener('hidden.bs.modal', function () {
+																	if (addressInput.value != null) {
 																		addressInput.value = '';
 																	}
 																	provinceSelect.value = '';
 																	// Reset district select
-														            districtSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
-														           districtSelect.disabled = false; // Enable it so it's not stuck disabled
-													
-														           // Reset ward select
-														           wardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
-														            wardSelect.disabled = true;
+																	districtSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
+																	districtSelect.disabled = false; // Enable it so it's not stuck disabled
+
+																	// Reset ward select
+																	wardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
+																	wardSelect.disabled = true;
 																});
 																addAddressSubmitButton.addEventListener('click', function (event) {
-														            // Prevent the default form submission for now
-														            event.preventDefault();
-													
-														            let isValid = true;
-													
-														            // Validate Address Input
-														            if (isBlank(addressInput.value)) {
-														                addressInput.classList.add('is-invalid'); // Add Bootstrap validation error style
-														                addressError.textContent = 'Address cannot be empty or just spaces.';
-														                addressError.style.display = 'block';
-														                isValid = false;
-														            } else {
-														                addressInput.classList.remove('is-invalid');
-														                addressError.style.display = 'none';
-														                addressError.textContent = '';
-														            }
-														            //province error
-														            if (provinceSelect.value === '') {
-															            provinceSelect.classList.add('is-invalid');
-															            provinceError.textContent = 'Province and city cannot be empty.';
-														                provinceError.style.display = 'block';
-															            isValid = false;
-															        } else {
-															            provinceSelect.classList.remove('is-invalid');
-															            provinceError.style.display = 'none';
-														                provinceError.textContent = '';
-															        }
-														            //district error
-														            if (districtSelect.value === '') {
-														            	districtSelect.classList.add('is-invalid');
-														            	districtError.textContent = 'District cannot be empty.';
-														                districtError.style.display = 'block';
-															            isValid = false;
-															        } else {
-															        	districtSelect.classList.remove('is-invalid');
-															        	districtError.style.display = 'none';
-														                districtError.textContent = '';
-															        }
-														            //ward error
-														            if (wardSelect.value === '') {
-															            wardSelect.classList.add('is-invalid');
-															            wardError.textContent = 'Ward cannot be empty.';
-														                wardError.style.display = 'block';
-															            isValid = false;
-															        } else {
-															            wardSelect.classList.remove('is-invalid');
-															            wardError.style.display = 'none';
-														                wardError.textContent = '';
-															        }
-													
-													
-														            if (isValid) {
-														                document.getElementById('addAddressForm').submit();
-														            }
-														        });
-													
-														        // --- Clear data when modal closes ---
-														        addAddressModal.addEventListener('hidden.bs.modal', function () {
-														            // Clear the address input
-														            addressInput.value = '';
-														            addressInput.classList.remove('is-invalid'); // Remove error styles
-														            addressError.style.display = 'none';
-														            addressError.textContent = '';
-													
-														            // Reset province select
-														            provinceSelect.value = ''; // Or set to the value of your default "Select province/city" option
-														            districtSelect.innerHTML = '<option value="" disabled selected>Select province/city</option>';
-														            provinceSelect.classList.remove('is-invalid'); // Remove error styles
-													
-														            // Reset district select
-														            districtSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
-														            districtSelect.disabled = false;
-														            districtSelect.classList.remove('is-invalid'); // Remove error styles
-													
-														            // Reset ward select
-														            wardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
-														            wardSelect.disabled = true;
-														            wardSelect.classList.remove('is-invalid'); // Remove error styles
-														        });
-													
-														        // Optional: Remove validation errors as user types/changes
-														        addressInput.addEventListener('input', function() {
-														            if (!isBlank(this.value)) {
-														                this.classList.remove('is-invalid');
-														                addressError.style.display = 'none';
-														                addressError.textContent = '';
-														            }
-														        });
-														        provinceSelect.addEventListener('change', function() {
-														            this.classList.remove('is-invalid');
-														        });
-														        districtSelect.addEventListener('change', function() {
-														            this.classList.remove('is-invalid');
-														        });
-														        wardSelect.addEventListener('change', function() {
-														            this.classList.remove('is-invalid');
-														        });
+																	// Prevent the default form submission for now
+																	event.preventDefault();
+
+																	let isValid = true;
+
+																	// Validate Address Input
+																	if (isBlank(addressInput.value)) {
+																		addressInput.classList.add('is-invalid'); // Add Bootstrap validation error style
+																		addressError.textContent = 'Address cannot be empty or just spaces.';
+																		addressError.style.display = 'block';
+																		isValid = false;
+																	} else {
+																		addressInput.classList.remove('is-invalid');
+																		addressError.style.display = 'none';
+																		addressError.textContent = '';
+																	}
+																	//province error
+																	if (provinceSelect.value === '') {
+																		provinceSelect.classList.add('is-invalid');
+																		provinceError.textContent = 'Province and city cannot be empty.';
+																		provinceError.style.display = 'block';
+																		isValid = false;
+																	} else {
+																		provinceSelect.classList.remove('is-invalid');
+																		provinceError.style.display = 'none';
+																		provinceError.textContent = '';
+																	}
+																	//district error
+																	if (districtSelect.value === '') {
+																		districtSelect.classList.add('is-invalid');
+																		districtError.textContent = 'District cannot be empty.';
+																		districtError.style.display = 'block';
+																		isValid = false;
+																	} else {
+																		districtSelect.classList.remove('is-invalid');
+																		districtError.style.display = 'none';
+																		districtError.textContent = '';
+																	}
+																	//ward error
+																	if (wardSelect.value === '') {
+																		wardSelect.classList.add('is-invalid');
+																		wardError.textContent = 'Ward cannot be empty.';
+																		wardError.style.display = 'block';
+																		isValid = false;
+																	} else {
+																		wardSelect.classList.remove('is-invalid');
+																		wardError.style.display = 'none';
+																		wardError.textContent = '';
+																	}
+
+
+																	if (isValid) {
+																		document.getElementById('addAddressForm').submit();
+																	}
+																});
+
+																// --- Clear data when modal closes ---
+																addAddressModal.addEventListener('hidden.bs.modal', function () {
+																	// Clear the address input
+																	addressInput.value = '';
+																	addressInput.classList.remove('is-invalid'); // Remove error styles
+																	addressError.style.display = 'none';
+																	addressError.textContent = '';
+
+																	// Reset province select
+																	provinceSelect.value = ''; // Or set to the value of your default "Select province/city" option
+																	districtSelect.innerHTML = '<option value="" disabled selected>Select province/city</option>';
+																	provinceSelect.classList.remove('is-invalid'); // Remove error styles
+
+																	// Reset district select
+																	districtSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
+																	districtSelect.disabled = false;
+																	districtSelect.classList.remove('is-invalid'); // Remove error styles
+
+																	// Reset ward select
+																	wardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
+																	wardSelect.disabled = true;
+																	wardSelect.classList.remove('is-invalid'); // Remove error styles
+																});
+
+																// Optional: Remove validation errors as user types/changes
+																addressInput.addEventListener('input', function () {
+																	if (!isBlank(this.value)) {
+																		this.classList.remove('is-invalid');
+																		addressError.style.display = 'none';
+																		addressError.textContent = '';
+																	}
+																});
+																provinceSelect.addEventListener('change', function () {
+																	this.classList.remove('is-invalid');
+																});
+																districtSelect.addEventListener('change', function () {
+																	this.classList.remove('is-invalid');
+																});
+																wardSelect.addEventListener('change', function () {
+																	this.classList.remove('is-invalid');
+																});
 															});
-															</script>
+														</script>
 
 														<th:block th:each="userAdress, i : ${userAdresses}">
 															<div th:if="${userAdress.deletedAt == null}"
@@ -749,14 +706,17 @@
 																<div class="card-body bg-light">
 																	<article class="box mb-3 bg-light">
 																		<a class="btn btn-cart w-auto float-end changeAddress"
-																			th:data-address-id="${userAdress.id}">Change</a> <a
-																			class="float-end" href="#">&nbsp;&nbsp;&nbsp;</a> <a
+																			th:data-address-id="${userAdress.id}">Change</a>
+																		<a class="float-end"
+																			href="#">&nbsp;&nbsp;&nbsp;</a> <a
 																			class="btn btn-cart-delete w-auto float-end deleteAddress"
 																			th:data-address-id="${userAdress.id}">Delete</a>
 																		<h6 th:text="${userAdress.name}"></h6>
-																		<small class="text-muted d-block" style="width: 70%">
+																		<small class="text-muted d-block"
+																			style="width: 70%">
 																			<th:block
-																				th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}"></th:block>
+																				th:text="${userAdress.address}+' '+${userAdress.wards.administrativeUnits.shortName}+' '+${userAdress.wards.name}+' '+${userAdress.districts.administrativeUnits.shortName}+' '+${userAdress.districts.name}+' '+${userAdress.provinces.administrativeUnits.shortName}+' '+${userAdress.provinces.name}">
+																			</th:block>
 																		</small>
 																	</article>
 																</div>
@@ -765,13 +725,13 @@
 
 													</div>
 												</div>
-												<div class="modal fade" id="deleteAddressModal"
-													tabindex="-1" aria-labelledby="editAddressModal"
-													aria-hidden="true">
+												<div class="modal fade" id="deleteAddressModal" tabindex="-1"
+													aria-labelledby="editAddressModal" aria-hidden="true">
 													<div class="modal-dialog">
 														<div class="modal-content">
 															<div class="modal-header">
-																<h1 class="modal-title fs-5" id="exampleModalLabel">Delete
+																<h1 class="modal-title fs-5" id="exampleModalLabel">
+																	Delete
 																	address</h1>
 																<button type="button" class="btn-close"
 																	data-bs-dismiss="modal" aria-label="Close"></button>
@@ -812,34 +772,46 @@
 																		<div class="col-lg-12">
 																			<div class="row gx-3">
 																				<div class="col-lg-12 mb-3">
-																					<input class="form-control mb-2" type="text"
+																					<input class="form-control mb-2"
+																						type="text"
 																						id="addAddressVariable"
 																						th:field="${addAddressVariable.id}"
-																						required="required" hidden> <input
-																						class="form-control mb-2" type="text"
-																						name="userId" th:value="${user.id}"
-																						required="required" hidden> <label
-																						class="form-label">Location name</label> <input
-																						class="form-control mb-2" type="text"
-																						id="editAddressName"
+																						required="required" hidden>
+																					<input class="form-control mb-2"
+																						type="text" name="userId"
+																						th:value="${user.id}"
+																						required="required" hidden>
+																					<label class="form-label">Location
+																						name</label> <input
+																						class="form-control mb-2"
+																						type="text" id="editAddressName"
 																						th:field="${addAddressVariable.name}"
 																						required="required"
 																						placeholder="your address name to easy to remember edit">
-																					<label class="form-label">Address</label> <input
-																						class="form-control mb-2" type="text"
+																					<label
+																						class="form-label">Address</label>
+																					<input class="form-control mb-2"
+																						type="text"
 																						id="editaddressInput"
 																						th:field="${addAddressVariable.address}"
-																						required="required" placeholder="123 street 123">
-																					<div id="editaddressError" class="text-danger mb-2"
+																						required="required"
+																						placeholder="123 street 123">
+																					<div id="editaddressError"
+																						class="text-danger mb-2"
 																						style="display: none;"></div>
 																					<div class="row">
 																						<div class="col-md-12 mb-2">
 																							<!-- Province -->
 																							<select class="form-select"
-																								id="editprovinceSelect" name="editProvince">
-																								<option id="editprovinceOption" value=""
-																									selected>Select province/city</option>
-																								<option th:each="province : ${provinces}"
+																								id="editprovinceSelect"
+																								name="editProvince">
+																								<option
+																									id="editprovinceOption"
+																									value="" selected>
+																									Select province/city
+																								</option>
+																								<option
+																									th:each="province : ${provinces}"
 																									th:value="${province.code}"
 																									th:text="${province.administrativeUnits.shortName}+' '+${province.name}">
 																								</option>
@@ -850,10 +822,15 @@
 																						<div class="col-md-6 mb-2">
 																							<!-- District -->
 																							<select class="form-select"
-																								id="editdistrictSelect" name="editDistrict">
-																								<option id="editdistrictOption" value=""
-																									selected>Select district</option>
-																								<option th:each="district : ${districts}"
+																								id="editdistrictSelect"
+																								name="editDistrict">
+																								<option
+																									id="editdistrictOption"
+																									value="" selected>
+																									Select district
+																								</option>
+																								<option
+																									th:each="district : ${districts}"
 																									th:value="${district.code}"
 																									th:text="${district.shortName}+' '+${district.name}">
 																								</option>
@@ -861,22 +838,33 @@
 																						</div>
 																						<div class="col-md-6 mb-2">
 																							<!-- Ward -->
-																							<select class="form-select" id="editwardSelect"
+																							<select class="form-select"
+																								id="editwardSelect"
 																								name="editWard">
-																								<option id="editwardOption" value="" selected>Select
+																								<option
+																									id="editwardOption"
+																									value="" selected>
+																									Select
 																									ward</option>
-																								<option th:each="ward : ${wards}"
+																								<option
+																									th:each="ward : ${wards}"
 																									th:value="${ward.code}"
 																									th:text="${ward.shortName}+' '+${ward.name}">
 																								</option>
 																							</select>
 																						</div>
 																						<div id="editprovinceError"
-																							class="text-danger mb-2" style="display: none;"></div>
+																							class="text-danger mb-2"
+																							style="display: none;">
+																						</div>
 																						<div id="editdistrictError"
-																							class="text-danger mb-2" style="display: none;"></div>
-																						<div id="editwardError" class="text-danger mb-2"
-																							style="display: none;"></div>
+																							class="text-danger mb-2"
+																							style="display: none;">
+																						</div>
+																						<div id="editwardError"
+																							class="text-danger mb-2"
+																							style="display: none;">
+																						</div>
 																					</div>
 																				</div>
 
@@ -902,45 +890,45 @@
 														const editprovinceSelect = document.getElementById("editprovinceSelect");
 														const editdistrictSelect = document.getElementById("editdistrictSelect");
 														const editwardSelect = document.getElementById("editwardSelect");
-														
+
 														const editaddressInput = document.getElementById("editaddressInput");
 														const editAddressModal = document.getElementById('editAddressModal');
 														const editaddressError = document.getElementById("editaddressError");
 														const editprovinceError = document.getElementById("editprovinceError");
 														const editdistrictError = document.getElementById("editdistrictError");
 														const editwardError = document.getElementById("editwardError");
-														
+
 														function isBlank(str) {
-												            return str === null || str.trim() === '';
-												        }
-														
+															return str === null || str.trim() === '';
+														}
+
 														editprovinceSelect.addEventListener("change", function () {
 															const provinceCode = this.value;
 															editdistrictSelect.innerHTML = '<option selected disabled>Loading...</option>';
 															editwardSelect.innerHTML = '<option selected disabled>Ward</option>';
 															editwardSelect.disabled = true;
-											
+
 															fetch(`/api/address/districts?provinceCode=${provinceCode}`)
-															    .then(response => response.json())
-															    .then(data => {
-															        console.log(data);
-															        // Clear existing options BEFORE adding new ones
-															        editdistrictSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
-															        data.forEach(district => {
-															            const option = document.createElement("option");
-															            option.value = district.code;
-															            option.text = district.shortName+ ' ' + district.name;
-															            editdistrictSelect.appendChild(option);
-															        });
-															        editdistrictSelect.disabled = false;
-															    })
-															    .catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
+																.then(response => response.json())
+																.then(data => {
+																	console.log(data);
+																	// Clear existing options BEFORE adding new ones
+																	editdistrictSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
+																	data.forEach(district => {
+																		const option = document.createElement("option");
+																		option.value = district.code;
+																		option.text = district.shortName + ' ' + district.name;
+																		editdistrictSelect.appendChild(option);
+																	});
+																	editdistrictSelect.disabled = false;
+																})
+																.catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
 														});
-											
+
 														editdistrictSelect.addEventListener("change", function () {
 															const districtCode = this.value;
 															editwardSelect.innerHTML = '<option selected disabled>Loading...</option>';
-											
+
 															fetch(`/api/address/wards?districtCode=${districtCode}`)
 																.then(response => response.json())
 																.then(data => {
@@ -948,136 +936,136 @@
 																	data.forEach(ward => {
 																		const option = document.createElement("option");
 																		option.value = ward.code;
-																		option.text = ward.shortName+ ' ' + ward.name;
+																		option.text = ward.shortName + ' ' + ward.name;
 																		editwardSelect.appendChild(option);
 																	});
 																	editwardSelect.disabled = false;
 																});
 														});
-														editAddressModal.addEventListener('hidden.bs.modal',function(){
-															if(editaddressInput.value != null){
+														editAddressModal.addEventListener('hidden.bs.modal', function () {
+															if (editaddressInput.value != null) {
 																editaddressInput.value = '';
 															}
 															editprovinceSelect.value = '';
 															// Reset district select
-												            editdistrictSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
-												           editdistrictSelect.disabled = false; // Enable it so it's not stuck disabled
-											
-												           // Reset ward select
-												           editwardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
-												            editwardSelect.disabled = true;
+															editdistrictSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
+															editdistrictSelect.disabled = false; // Enable it so it's not stuck disabled
+
+															// Reset ward select
+															editwardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
+															editwardSelect.disabled = true;
 														});
 														editAddressSubmitButton.addEventListener('click', function (event) {
-												            // Prevent the default form submission for now
-												            event.preventDefault();
-											
-												            let isValid = true;
-											
-												            // Validate Address Input
-												            if (isBlank(editaddressInput.value)) {
-												            	editaddressInput.classList.add('is-invalid'); // Add Bootstrap validation error style
-												            	editaddressError.textContent = 'Address cannot be empty or just spaces.';
-												            	editaddressError.style.display = 'block';
-												                isValid = false;
-												            } else {
-												            	editaddressInput.classList.remove('is-invalid');
-												            	editaddressError.style.display = 'none';
-												            	editaddressError.textContent = '';
-												            }
-												            //province error
-												            if (editprovinceSelect.value === '') {
-												            	editprovinceSelect.classList.add('is-invalid');
-												            	editprovinceError.textContent = 'Province and city cannot be empty.';
-												            	editprovinceError.style.display = 'block';
-													            isValid = false;
-													        } else {
-													        	editprovinceSelect.classList.remove('is-invalid');
-													        	editprovinceError.style.display = 'none';
-													        	editprovinceError.textContent = '';
-													        }
-												            //district error
-												            if (editdistrictSelect.value === '') {
-												            	editdistrictSelect.classList.add('is-invalid');
-												            	editdistrictError.textContent = 'District cannot be empty.';
-												            	editdistrictError.style.display = 'block';
-													            isValid = false;
-													        } else {
-													        	editdistrictSelect.classList.remove('is-invalid');
-													        	editdistrictError.style.display = 'none';
-													        	editdistrictError.textContent = '';
-													        }
-												            //ward error
-												            if (editwardSelect.value === '') {
-												            	editwardSelect.classList.add('is-invalid');
-												            	editwardError.textContent = 'Ward cannot be empty.';
-												            	editwardError.style.display = 'block';
-													            isValid = false;
-													        } else {
-													        	editwardSelect.classList.remove('is-invalid');
-													        	editwardError.style.display = 'none';
-													        	editwardError.textContent = '';
-													        }
-											
-											
-												            if (isValid) {
-												                document.getElementById('editAddressForm').submit();
-												            }
-												        });
-											
-												        // --- Clear data when modal closes ---
-												        editAddressModal.addEventListener('hidden.bs.modal', function () {
-												            // Clear the address input
-												            editaddressInput.value = '';
-												            editaddressInput.classList.remove('is-invalid'); // Remove error styles
-												            editaddressError.style.display = 'none';
-												            editaddressError.textContent = '';
-											
-												            // Reset province select
-												            editprovinceSelect.value = ''; // Or set to the value of your default "Select province/city" option
-												            editdistrictSelect.innerHTML = '<option value="" disabled selected>Select province/city</option>';
-												            editprovinceSelect.classList.remove('is-invalid'); // Remove error styles
-											
-												            // Reset district select
-												            editdistrictSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
-												            editdistrictSelect.disabled = false;
-												            editdistrictSelect.classList.remove('is-invalid'); // Remove error styles
-											
-												            // Reset ward select
-												            editwardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
-												            editwardSelect.disabled = true;
-												            editwardSelect.classList.remove('is-invalid'); // Remove error styles
-												        });
-											
-												        // Optional: Remove validation errors as user types/changes
-												        editaddressInput.addEventListener('input', function() {
-												            if (!isBlank(this.value)) {
-												                this.classList.remove('is-invalid');
-												                editaddressError.style.display = 'none';
-												                editaddressError.textContent = '';
-												            }
-												        });
-												        editprovinceSelect.addEventListener('change', function() {
-												            this.classList.remove('is-invalid');
-												        });
-												        editdistrictSelect.addEventListener('change', function() {
-												            this.classList.remove('is-invalid');
-												        });
-												        editwardSelect.addEventListener('change', function() {
-												            this.classList.remove('is-invalid');
-												        });
+															// Prevent the default form submission for now
+															event.preventDefault();
+
+															let isValid = true;
+
+															// Validate Address Input
+															if (isBlank(editaddressInput.value)) {
+																editaddressInput.classList.add('is-invalid'); // Add Bootstrap validation error style
+																editaddressError.textContent = 'Address cannot be empty or just spaces.';
+																editaddressError.style.display = 'block';
+																isValid = false;
+															} else {
+																editaddressInput.classList.remove('is-invalid');
+																editaddressError.style.display = 'none';
+																editaddressError.textContent = '';
+															}
+															//province error
+															if (editprovinceSelect.value === '') {
+																editprovinceSelect.classList.add('is-invalid');
+																editprovinceError.textContent = 'Province and city cannot be empty.';
+																editprovinceError.style.display = 'block';
+																isValid = false;
+															} else {
+																editprovinceSelect.classList.remove('is-invalid');
+																editprovinceError.style.display = 'none';
+																editprovinceError.textContent = '';
+															}
+															//district error
+															if (editdistrictSelect.value === '') {
+																editdistrictSelect.classList.add('is-invalid');
+																editdistrictError.textContent = 'District cannot be empty.';
+																editdistrictError.style.display = 'block';
+																isValid = false;
+															} else {
+																editdistrictSelect.classList.remove('is-invalid');
+																editdistrictError.style.display = 'none';
+																editdistrictError.textContent = '';
+															}
+															//ward error
+															if (editwardSelect.value === '') {
+																editwardSelect.classList.add('is-invalid');
+																editwardError.textContent = 'Ward cannot be empty.';
+																editwardError.style.display = 'block';
+																isValid = false;
+															} else {
+																editwardSelect.classList.remove('is-invalid');
+																editwardError.style.display = 'none';
+																editwardError.textContent = '';
+															}
+
+
+															if (isValid) {
+																document.getElementById('editAddressForm').submit();
+															}
+														});
+
+														// --- Clear data when modal closes ---
+														editAddressModal.addEventListener('hidden.bs.modal', function () {
+															// Clear the address input
+															editaddressInput.value = '';
+															editaddressInput.classList.remove('is-invalid'); // Remove error styles
+															editaddressError.style.display = 'none';
+															editaddressError.textContent = '';
+
+															// Reset province select
+															editprovinceSelect.value = ''; // Or set to the value of your default "Select province/city" option
+															editdistrictSelect.innerHTML = '<option value="" disabled selected>Select province/city</option>';
+															editprovinceSelect.classList.remove('is-invalid'); // Remove error styles
+
+															// Reset district select
+															editdistrictSelect.innerHTML = '<option value="" disabled selected>Select district</option>';
+															editdistrictSelect.disabled = false;
+															editdistrictSelect.classList.remove('is-invalid'); // Remove error styles
+
+															// Reset ward select
+															editwardSelect.innerHTML = '<option value="" disabled selected>Select ward</option>';
+															editwardSelect.disabled = true;
+															editwardSelect.classList.remove('is-invalid'); // Remove error styles
+														});
+
+														// Optional: Remove validation errors as user types/changes
+														editaddressInput.addEventListener('input', function () {
+															if (!isBlank(this.value)) {
+																this.classList.remove('is-invalid');
+																editaddressError.style.display = 'none';
+																editaddressError.textContent = '';
+															}
+														});
+														editprovinceSelect.addEventListener('change', function () {
+															this.classList.remove('is-invalid');
+														});
+														editdistrictSelect.addEventListener('change', function () {
+															this.classList.remove('is-invalid');
+														});
+														editwardSelect.addEventListener('change', function () {
+															this.classList.remove('is-invalid');
+														});
 													});
-													</script>
+												</script>
 
 												<script
 													th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
 												<script>
-													$(document).ready(function(){
-														$('.deleteAddress').on('click',function(event){
+													$(document).ready(function () {
+														$('.deleteAddress').on('click', function (event) {
 															event.preventDefault();
 															var deleteAddressId = $(this).data('address-id');
 															$('#deleteAddressInput').val(deleteAddressId);
-															if(deleteAddressId){
-																$('#deleteAddressSubmitButton').on('click',function(){
+															if (deleteAddressId) {
+																$('#deleteAddressSubmitButton').on('click', function () {
 																	$('#deleteAddressForm').submit();
 																});
 															}
@@ -1086,121 +1074,121 @@
 													});
 												</script>
 
-												<script>                                                
-													$(document).ready(function() {
-													    $('.changeAddress').on('click', function(event) {
-													        event.preventDefault(); // Prevent default button behavior if it's a link
-													
-													        // Get the address ID from a data attribute
-													        var editAddressId = $(this).data('address-id');
-													        // Set the address ID to a hidden input field
-													        document.getElementById('addAddressVariable').value = editAddressId;
-													
-													        if (editAddressId) {
-													            $.ajax({
-													                url: '/customer/api/address/geteditaddress', // Your Spring Boot endpoint URL
-													                type: 'GET',
-													                data: { editAddressId: editAddressId },
-													                success: async function(userAddress) { // Made the success function asynchronous
-													                    // Check if data is received and is not null
-													                    if (userAddress) {
-													                        // Populate simple input fields
-													                        $('#editAddressForm input[name="name"]').val(userAddress.name);
-													                        $('#editAddressForm input[name="address"]').val(userAddress.address);
-																			
-													                        // --- Step 1: Populate Provinces ---
-													                        if (userAddress.provinces) {
-													                            $('#editprovinceSelect').val(userAddress.provincesCode);
-													                            $('#editprovinceSelect').trigger('change');                          
-													                            console.log($('#editprovinceSelect'));
-													                            // No need to trigger change here if we are programmatically fetching districts/wards
-													                            // unless there's another independent listener for real-time user selection updates.
-													                        }
-													                        // --- Step 2: Populate Districts (after provinces are set) ---
-													                        if (userAddress.districts && userAddress.provincesCode) {
-													                            try {
-													                                const response = await fetch(`/api/address/districts?provinceCode=${userAddress.provincesCode}`);
-													                                const data = await response.json();
-																					
-													                              
-													                                
-													                                data.forEach(district => {
-													                                    const option = document.createElement("option");
-													                                    option.value = district.code;
-													                                    option.text = district.shortName + ' ' + district.name;
-													                                    editdistrictSelect.appendChild(option);
-													                                });
-													                                editdistrictSelect.disabled = false; // Enable the district dropdown
-													                                
-													                                // Set the current district value AFTER all options are loaded
-													                                $('#editdistrictSelect').val(userAddress.districtsCode);                              
-													                                $('#editdistrictSelect').trigger('change');
-													                               // Ensure value is also set for option
-													                            } catch (error) {
-													                                console.error('Error fetching districts:', error);
-													                            }
-													                        }
-													
-													                        // --- Step 3: Populate Wards (after districts are set) ---
-													                        // Ensure userAddress.districtsCode is used for the API call
-													                        if (userAddress.wards && userAddress.districtsCode) { 
-													                            try {
-													                                const response = await fetch(`/api/address/wards?districtCode=${userAddress.districtsCode}`);
-													                                const data = await response.json();
-													
-													                                const editwardSelect = document.getElementById('editwardSelect'); // Ensure this ID matches your HTML
-													                                editwardSelect.innerHTML = '<option selected disabled>Ward</option>'; // Keep the default option
-													                                
-													                                data.forEach(ward => {
-													                                    const option = document.createElement("option");
-													                                    option.value = ward.code;
-													                                    option.text = ward.shortName + ' ' + ward.name;
-													                                    editwardSelect.appendChild(option);
-													                                });
-													                                editwardSelect.disabled = false; // Enable the ward dropdown
-													                                
-													                                // Set the current ward value AFTER all options are loaded
-													                                $('#editwardSelect').val(userAddress.wardsCode);
-													                                $('#editwardSelect').trigger('change');
-													                                // Set the text for a display element, if it exists
-													                                // Ensure value is also set for option
-													                            } catch (error) {
-													                                console.error('Error fetching wards:', error);
-													                            }
-													                        }
-													
-													                        // Show the modal after all dropdowns are potentially populated
-													                        $('#editAddressModal').modal('show');
-													                         
-													                        // Handle hidden ID input for form submission
-													                        if ($('#addAddressForm input[name="id"]').length === 0) { // Check if an ID input already exists
-													                            $('#addAddressForm').prepend('<input type="hidden" name="id" value="' + userAddress.id + '">');
-													                        } else {
-													                            $('#addAddressForm input[name="id"]').val(userAddress.id);
-													                        }
-													
-													                    } else {
-													                        console.error('No address data received.');
-													                        // Use a custom message box instead of alert()
-													                        // You would need to implement a custom modal or div for this.
-													                        // For demonstration, a console log is used.
-													                        console.log('Error: Could not retrieve address data.'); 
-													                    }
-													                },
-													                error: function(xhr, status, error) {
-													                    console.error("AJAX Error:", status, error);
-													                    // Use a custom message box instead of alert()
-													                    console.log('Error loading address for editing. Please try again.');
-													                }
-													            });
-													        } else {
-													            console.error("No address ID found for editing.");
-													            // Use a custom message box instead of alert()
-													            console.log('Cannot edit address: No ID provided.');
-													        }
-													    });
+												<script>
+													$(document).ready(function () {
+														$('.changeAddress').on('click', function (event) {
+															event.preventDefault(); // Prevent default button behavior if it's a link
+
+															// Get the address ID from a data attribute
+															var editAddressId = $(this).data('address-id');
+															// Set the address ID to a hidden input field
+															document.getElementById('addAddressVariable').value = editAddressId;
+
+															if (editAddressId) {
+																$.ajax({
+																	url: '/customer/api/address/geteditaddress', // Your Spring Boot endpoint URL
+																	type: 'GET',
+																	data: {editAddressId: editAddressId},
+																	success: async function (userAddress) { // Made the success function asynchronous
+																		// Check if data is received and is not null
+																		if (userAddress) {
+																			// Populate simple input fields
+																			$('#editAddressForm input[name="name"]').val(userAddress.name);
+																			$('#editAddressForm input[name="address"]').val(userAddress.address);
+
+																			// --- Step 1: Populate Provinces ---
+																			if (userAddress.provinces) {
+																				$('#editprovinceSelect').val(userAddress.provincesCode);
+																				$('#editprovinceSelect').trigger('change');
+																				console.log($('#editprovinceSelect'));
+																				// No need to trigger change here if we are programmatically fetching districts/wards
+																				// unless there's another independent listener for real-time user selection updates.
+																			}
+																			// --- Step 2: Populate Districts (after provinces are set) ---
+																			if (userAddress.districts && userAddress.provincesCode) {
+																				try {
+																					const response = await fetch(`/api/address/districts?provinceCode=${userAddress.provincesCode}`);
+																					const data = await response.json();
+
+
+
+																					data.forEach(district => {
+																						const option = document.createElement("option");
+																						option.value = district.code;
+																						option.text = district.shortName + ' ' + district.name;
+																						editdistrictSelect.appendChild(option);
+																					});
+																					editdistrictSelect.disabled = false; // Enable the district dropdown
+
+																					// Set the current district value AFTER all options are loaded
+																					$('#editdistrictSelect').val(userAddress.districtsCode);
+																					$('#editdistrictSelect').trigger('change');
+																					// Ensure value is also set for option
+																				} catch (error) {
+																					console.error('Error fetching districts:', error);
+																				}
+																			}
+
+																			// --- Step 3: Populate Wards (after districts are set) ---
+																			// Ensure userAddress.districtsCode is used for the API call
+																			if (userAddress.wards && userAddress.districtsCode) {
+																				try {
+																					const response = await fetch(`/api/address/wards?districtCode=${userAddress.districtsCode}`);
+																					const data = await response.json();
+
+																					const editwardSelect = document.getElementById('editwardSelect'); // Ensure this ID matches your HTML
+																					editwardSelect.innerHTML = '<option selected disabled>Ward</option>'; // Keep the default option
+
+																					data.forEach(ward => {
+																						const option = document.createElement("option");
+																						option.value = ward.code;
+																						option.text = ward.shortName + ' ' + ward.name;
+																						editwardSelect.appendChild(option);
+																					});
+																					editwardSelect.disabled = false; // Enable the ward dropdown
+
+																					// Set the current ward value AFTER all options are loaded
+																					$('#editwardSelect').val(userAddress.wardsCode);
+																					$('#editwardSelect').trigger('change');
+																					// Set the text for a display element, if it exists
+																					// Ensure value is also set for option
+																				} catch (error) {
+																					console.error('Error fetching wards:', error);
+																				}
+																			}
+
+																			// Show the modal after all dropdowns are potentially populated
+																			$('#editAddressModal').modal('show');
+
+																			// Handle hidden ID input for form submission
+																			if ($('#addAddressForm input[name="id"]').length === 0) { // Check if an ID input already exists
+																				$('#addAddressForm').prepend('<input type="hidden" name="id" value="' + userAddress.id + '">');
+																			} else {
+																				$('#addAddressForm input[name="id"]').val(userAddress.id);
+																			}
+
+																		} else {
+																			console.error('No address data received.');
+																			// Use a custom message box instead of alert()
+																			// You would need to implement a custom modal or div for this.
+																			// For demonstration, a console log is used.
+																			console.log('Error: Could not retrieve address data.');
+																		}
+																	},
+																	error: function (xhr, status, error) {
+																		console.error("AJAX Error:", status, error);
+																		// Use a custom message box instead of alert()
+																		console.log('Error loading address for editing. Please try again.');
+																	}
+																});
+															} else {
+																console.error("No address ID found for editing.");
+																// Use a custom message box instead of alert()
+																console.log('Cannot edit address: No ID provided.');
+															}
+														});
 													});
-													</script>
+												</script>
 
 												<div class="row" style="max-width: 920px">
 													<div class="col-md">
@@ -1213,30 +1201,45 @@
 
 																	<!-- modal -->
 																	<div class="modal fade" id="changePasswordModel"
-																		tabindex="-1" aria-labelledby="exampleModalLabel"
+																		tabindex="-1"
+																		aria-labelledby="exampleModalLabel"
 																		aria-hidden="true">
 																		<div class="modal-dialog">
 																			<div class="modal-content">
 																				<div class="modal-header">
-																					<h1 class="modal-title fs-5" id="exampleModalLabel">Change
+																					<h1 class="modal-title fs-5"
+																						id="exampleModalLabel">Change
 																						password</h1>
-																					<button type="button" class="btn-close"
-																						data-bs-dismiss="modal" aria-label="Close"></button>
+																					<button type="button"
+																						class="btn-close"
+																						data-bs-dismiss="modal"
+																						aria-label="Close"></button>
 																				</div>
 																				<div class="modal-body">
 																					<form method="post"
 																						th:action="@{/customer/changepassword}"
 																						id="changepasswordform">
-																						<label class="form-label">Current password</label>
-																						<input class="form-control" type="password"
-																							id="oldPassword" required="required"> <label
-																							class="form-label">New password</label> <input
-																							class="form-control" type="password"
-																							id="newPassword" name="newPassword"
+																						<label
+																							class="form-label">Current
+																							password</label>
+																						<input class="form-control"
+																							type="password"
+																							id="oldPassword"
 																							required="required"> <label
-																							class="form-label">Enter new password
-																							again</label> <input class="form-control" type="password"
-																							id="newRePassword" required="required">
+																							class="form-label">New
+																							password</label> <input
+																							class="form-control"
+																							type="password"
+																							id="newPassword"
+																							name="newPassword"
+																							required="required"> <label
+																							class="form-label">Enter new
+																							password
+																							again</label> <input
+																							class="form-control"
+																							type="password"
+																							id="newRePassword"
+																							required="required">
 																					</form>
 
 																				</div>
@@ -1244,112 +1247,114 @@
 																					<button type="button"
 																						class="btn btn-cart-delete w-auto"
 																						data-bs-dismiss="modal">Close</button>
-																					<button type="button" class="btn btn-cart w-auto"
-																						id="saveChangePassword">Save changes</button>
+																					<button type="button"
+																						class="btn btn-cart w-auto"
+																						id="saveChangePassword">Save
+																						changes</button>
 																				</div>
 																			</div>
 																		</div>
 																	</div>
 																	<script type="text/javascript">
-	document.getElementById("saveChangePassword").addEventListener("click",async ()  =>{
-		try {
-			var feedback = [];
-			const minLength = 8; // Example: Minimum length requirement
-		    const hasNumber = /\d/; // Regular expression to check for at least one digit (0-9)
-		    const hasUppercase = /[A-Z]/; // Regular expression to check for at least one uppercase letter (A-Z)
-		    const hasSpecialChar = /[!@#$%^&*()_+]/;
-			
-			var oldPassword = document.getElementById("oldPassword");
-			var newPassword = document.getElementById("newPassword");
-			var newRePassword = document.getElementById("newRePassword");
-		    const response = await fetch('/api/password/checkpassword', { // Your backend API endpoint
-		        method: 'POST',
-		        headers: {
-		            'Content-Type': 'application/json',
-		            // If using Spring Security CSRF, uncomment and add your token:
-		            // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
-		        },
-		        body: JSON.stringify({
-		        	inputPassword: oldPassword.value
-		        })
-		    });
+																		document.getElementById("saveChangePassword").addEventListener("click", async () => {
+																			try {
+																				var feedback = [];
+																				const minLength = 8; // Example: Minimum length requirement
+																				const hasNumber = /\d/; // Regular expression to check for at least one digit (0-9)
+																				const hasUppercase = /[A-Z]/; // Regular expression to check for at least one uppercase letter (A-Z)
+																				const hasSpecialChar = /[!@#$%^&*()_+]/;
 
-		    const responseData = await response.json(); // Assuming your backend returns JSON
-			const checkrepassword = newPassword.value == newRePassword.value;
-		    if (responseData.ok && checkrepassword) { 		      
-		        Swal.fire({ // Using SweetAlert2 for success message (if still included)
-		            icon: 'success',
-		            title: 'Success!',
-		            text: responseData.message || 'Password updated successfully!',
-		            confirmButtonText: 'OK'
-		        }).then(() => {
-		            changePasswordModal.hide(); // Hide the modal on success
-		        });
+																				var oldPassword = document.getElementById("oldPassword");
+																				var newPassword = document.getElementById("newPassword");
+																				var newRePassword = document.getElementById("newRePassword");
+																				const response = await fetch('/api/password/checkpassword', { // Your backend API endpoint
+																					method: 'POST',
+																					headers: {
+																						'Content-Type': 'application/json',
+																						// If using Spring Security CSRF, uncomment and add your token:
+																						// 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
+																					},
+																					body: JSON.stringify({
+																						inputPassword: oldPassword.value
+																					})
+																				});
 
-		    }
-		    if(!responseData)
-		    { // HTTP status 400, 500, etc.
-		        // Server-side validation failed (e.g., incorrect current password)
-		        	oldPassword.classList.add('is-invalid');
-		        	feedback.push("Incorrect current password.");
-		            // The modal remains open because we don't call changePasswordModal.hide() here		       
-		    }
-		    if(!checkrepassword)
-		    { // HTTP status 400, 500, etc.
-		        // Server-side validation failed (e.g., incorrect current password)
-		    		newRePassword.classList.add('is-invalid');
-		    		feedback.push("Incorrect re password.");
-		            // The modal remains open because we don't call changePasswordModal.hide() here		       
-		    }
-		    if (newPassword.value.length < minLength) {
-		        feedback.push("Password must be at least 8 characters long.");
-		    }
+																				const responseData = await response.json(); // Assuming your backend returns JSON
+																				const checkrepassword = newPassword.value == newRePassword.value;
+																				if (responseData.ok && checkrepassword) {
+																					Swal.fire({ // Using SweetAlert2 for success message (if still included)
+																						icon: 'success',
+																						title: 'Success!',
+																						text: responseData.message || 'Password updated successfully!',
+																						confirmButtonText: 'OK'
+																					}).then(() => {
+																						changePasswordModal.hide(); // Hide the modal on success
+																					});
 
-		    if (!hasNumber.test(newPassword.value)) {
-		        feedback.push("Password must contain at least one number.");
-		    }
+																				}
+																				if (!responseData) { // HTTP status 400, 500, etc.
+																					// Server-side validation failed (e.g., incorrect current password)
+																					oldPassword.classList.add('is-invalid');
+																					feedback.push("Incorrect current password.");
+																					// The modal remains open because we don't call changePasswordModal.hide() here		       
+																				}
+																				if (!checkrepassword) { // HTTP status 400, 500, etc.
+																					// Server-side validation failed (e.g., incorrect current password)
+																					newRePassword.classList.add('is-invalid');
+																					feedback.push("Incorrect re password.");
+																					// The modal remains open because we don't call changePasswordModal.hide() here		       
+																				}
+																				if (newPassword.value.length < minLength) {
+																					feedback.push("Password must be at least 8 characters long.");
+																				}
 
-		    if (!hasUppercase.test(newPassword.value)) {
-		        feedback.push("Password must contain at least one uppercase letter.");
-		    }
+																				if (!hasNumber.test(newPassword.value)) {
+																					feedback.push("Password must contain at least one number.");
+																				}
 
-		    if (!hasSpecialChar.test(newPassword.value)) {
-		        feedback.push("Password must contain at least one special character (e.g., !@#$%^&*).");
-		    }
-		    if(feedback.length === 0 && checkrepassword && responseData){
-		    	document.getElementById("changepasswordform").submit();
-		    	//Swal.fire({
-			     //   icon: 'success',
-			      //  title: 'Change password success!',
-			     //   confirmButtonText: 'OK'
-			    //});
-		    } else {
-		    	let errorMessage = '';
-		    	for(let i=0; i<feedback.length ; i++){
-		    		errorMessage += feedback[i] + '<br/>'
-		    	}
-		    	 Swal.fire({
-				        icon: 'error',
-				        title: 'Error!',
-				        html: errorMessage,
-				        confirmButtonText: 'OK'
-				    });
-		    }
-		} catch (error) {
-		    console.error('Network or unexpected error:', error);
-		    Swal.fire({
-		        icon: 'error',
-		        title: 'Error!',
-		        text: 'A network error occurred. Please try again later.',
-		        confirmButtonText: 'OK'
-		    });
-		}
-	});
-</script>
+																				if (!hasUppercase.test(newPassword.value)) {
+																					feedback.push("Password must contain at least one uppercase letter.");
+																				}
+
+																				if (!hasSpecialChar.test(newPassword.value)) {
+																					feedback.push("Password must contain at least one special character (e.g., !@#$%^&*).");
+																				}
+																				if (feedback.length === 0 && checkrepassword && responseData) {
+																					document.getElementById("changepasswordform").submit();
+																					//Swal.fire({
+																					//   icon: 'success',
+																					//  title: 'Change password success!',
+																					//   confirmButtonText: 'OK'
+																					//});
+																				} else {
+																					let errorMessage = '';
+																					for (let i = 0; i < feedback.length; i++) {
+																						errorMessage += feedback[i] + '<br/>'
+																					}
+																					Swal.fire({
+																						icon: 'error',
+																						title: 'Error!',
+																						html: errorMessage,
+																						confirmButtonText: 'OK'
+																					});
+																				}
+																			} catch (error) {
+																				console.error('Network or unexpected error:', error);
+																				Swal.fire({
+																					icon: 'error',
+																					title: 'Error!',
+																					text: 'A network error occurred. Please try again later.',
+																					confirmButtonText: 'OK'
+																				});
+																			}
+																		});
+																	</script>
 
 																	<h6>Password</h6>
-																	<small class="text-muted d-block" style="width: 70%">You
-																		can reset or change your password by clicking here</small>
+																	<small class="text-muted d-block"
+																		style="width: 70%">You
+																		can reset or change your password by clicking
+																		here</small>
 																</article>
 															</div>
 														</div>
@@ -1360,10 +1365,13 @@
 														<div class="card">
 															<div class="card-body bg-light">
 																<article class="box mb-3">
-																	<a class="btn btn-cart w-auto float-end" href="#">Deactivate</a>
+																	<a class="btn btn-cart w-auto float-end"
+																		href="#">Deactivate</a>
 																	<h6>Remove account</h6>
-																	<small class="text-muted d-block" style="width: 70%">Once
-																		you delete your account, there is no going back.</small>
+																	<small class="text-muted d-block"
+																		style="width: 70%">Once
+																		you delete your account, there is no going
+																		back.</small>
 																</article>
 															</div>
 														</div>
@@ -1395,15 +1403,14 @@
 							Discount
 						</h3>
 						<p class="font-lg color-white">
-							Get E-mail updates about our latest shop and <span
-								class="font-lg-bold">special offers.</span>
+							Get E-mail updates about our latest shop and <span class="font-lg-bold">special
+								offers.</span>
 						</p>
 					</div>
 					<div class="col-lg-4 col-md-5 col-sm-12">
 						<div class="box-form-newsletter mt-15">
 							<form class="form-newsletter">
-								<input class="input-newsletter font-xs" value=""
-									placeholder="Your email Address">
+								<input class="input-newsletter font-xs" value="" placeholder="Your email Address">
 								<button class="btn btn-brand-2">Sign Up</button>
 							</form>
 						</div>
@@ -1411,231 +1418,192 @@
 				</div>
 			</div>
 		</section>
-		<div class="modal fade" id="ModalFiltersForm" tabindex="-1"
-			aria-hidden="true" style="display: none;">
+		<div class="modal fade" id="ModalFiltersForm" tabindex="-1" aria-hidden="true" style="display: none;">
 			<div class="modal-dialog modal-xl">
 				<div class="modal-content apply-job-form">
 					<div class="modal-header">
 						<h5 class="modal-title color-gray-1000 filters-icon">Addvance
 							Fillters</h5>
-						<button class="btn-close" type="button" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+						<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body p-30">
 						<div class="row">
 							<div class="col-w-1">
 								<h6 class="color-gray-900 mb-0">Brands</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input
-											type="checkbox" checked="checked"><span
-											class="text-small">Apple</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Samsung</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Baseus</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Remax</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Handtown</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Elecom</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Razer</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Auto
+									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
+												class="text-small">Apple</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Samsung</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Baseus</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Remax</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Handtown</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Elecom</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Razer</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Auto
 												Focus</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Nillkin</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Logitech</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">ChromeBook</span><span
-											class="checkmark"></span>
-									</label></li>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Nillkin</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Logitech</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">ChromeBook</span><span class="checkmark"></span>
+										</label></li>
 								</ul>
 							</div>
 							<div class="col-w-1">
 								<h6 class="color-gray-900 mb-0">Special offers</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">On
+									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">On
 												sale</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox" checked="checked"><span
-											class="text-small">FREE shipping</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Big
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
+												class="text-small">FREE shipping</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">Big
 												deals</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Shop
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Shop
 												Mall</span><span class="checkmark"></span>
-									</label></li>
+										</label></li>
 								</ul>
 								<h6 class="color-gray-900 mb-0 mt-40">Ready to ship in</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">1
+									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">1
 												business day</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox" checked="checked"><span
-											class="text-small">1&ndash;3 business days</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">in 1
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
+												class="text-small">1&ndash;3 business days</span><span
+												class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span class="text-small">in
+												1
 												week</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Shipping
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Shipping
 												now</span><span class="checkmark"></span>
-									</label></li>
+										</label></li>
 								</ul>
 							</div>
 							<div class="col-w-1">
 								<h6 class="color-gray-900 mb-0">Ordering options</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Accepts
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Accepts
 												gift cards</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Customizable</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox" checked="checked"><span
-											class="text-small">Can be gift-wrapped</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Installment
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Customizable</span><span class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
+												class="text-small">Can be gift-wrapped</span><span
+												class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Installment
 												0%</span><span class="checkmark"></span>
-									</label></li>
+										</label></li>
 								</ul>
 								<h6 class="color-gray-900 mb-0 mt-40">Rating</h6>
 								<ul class="list-checkbox">
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><span
-											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(5
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><span
+												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(5
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><span
-											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(4
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><span
+												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(4
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><span
-											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(3
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><span
+												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(3
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><span
-											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(2
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><span
+												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(2
 												stars)</span></a></li>
 									<li class="mb-5"><a href="#"><img
-											th:src="@{/client/assets/imgs/template/icons/star.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><img
-											th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
-											alt="Ecom"><span
-											class="ml-10 font-xs color-gray-500 d-inline-block align-top">(1
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star-gray.svg}"
+												alt="Ecom"><span
+												class="ml-10 font-xs color-gray-500 d-inline-block align-top">(1
 												star)</span></a></li>
 								</ul>
 							</div>
 							<div class="col-w-2">
 								<h6 class="color-gray-900 mb-0">Material</h6>
 								<ul class="list-checkbox">
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Nylon
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Nylon
 												(8)</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Tempered
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Tempered
 												Glass (5)</span><span class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox" checked="checked"><span
-											class="text-small">Liquid Silicone Rubber (5)</span><span
-											class="checkmark"></span>
-									</label></li>
-									<li><label class="cb-container"> <input
-											type="checkbox"><span class="text-small">Aluminium
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox" checked="checked"><span
+												class="text-small">Liquid Silicone Rubber (5)</span><span
+												class="checkmark"></span>
+										</label></li>
+									<li><label class="cb-container"> <input type="checkbox"><span
+												class="text-small">Aluminium
 												Alloy (3)</span><span class="checkmark"></span>
-									</label></li>
+										</label></li>
 								</ul>
 								<h6 class="color-gray-900 mb-20 mt-40">Product tags</h6>
 								<div>
-									<a class="btn btn-border mr-5" href="#">Games</a><a
-										class="btn btn-border mr-5" href="#">Electronics</a><a
-										class="btn btn-border mr-5" href="#">Video</a><a
-										class="btn btn-border mr-5" href="#">Cellphone</a><a
-										class="btn btn-border mr-5" href="#">Indoor</a><a
-										class="btn btn-border mr-5" href="#">VGA Card</a><a
-										class="btn btn-border mr-5" href="#">USB</a><a
-										class="btn btn-border mr-5" href="#">Lightning</a><a
-										class="btn btn-border mr-5" href="#">Camera</a>
+									<a class="btn btn-border mr-5" href="#">Games</a><a class="btn btn-border mr-5"
+										href="#">Electronics</a><a class="btn btn-border mr-5" href="#">Video</a><a
+										class="btn btn-border mr-5" href="#">Cellphone</a><a class="btn btn-border mr-5"
+										href="#">Indoor</a><a class="btn btn-border mr-5" href="#">VGA Card</a><a
+										class="btn btn-border mr-5" href="#">USB</a><a class="btn btn-border mr-5"
+										href="#">Lightning</a><a class="btn btn-border mr-5" href="#">Camera</a>
 								</div>
 							</div>
 						</div>
@@ -1648,12 +1616,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal fade" id="ModalQuickview" tabindex="-1"
-			aria-hidden="true" style="display: none;">
+		<div class="modal fade" id="ModalQuickview" tabindex="-1" aria-hidden="true" style="display: none;">
 			<div class="modal-dialog modal-xl">
 				<div class="modal-content apply-job-form">
-					<button class="btn-close" type="button" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+					<button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
 					<div class="modal-body p-30">
 						<div class="row">
 							<div class="col-lg-6">
@@ -1662,38 +1628,31 @@
 										<div class="detail-gallery">
 											<div class="product-image-slider-2">
 												<figure class="border-radius-10">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
 														alt="product image">
 												</figure>
 												<figure class="border-radius-10">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
 														alt="product image">
 												</figure>
 											</div>
@@ -1701,50 +1660,43 @@
 										<div class="slider-nav-thumbnails-2">
 											<div>
 												<div class="item-thumb">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
 														alt="product image">
 												</div>
 											</div>
 											<div>
 												<div class="item-thumb">
-													<img
-														th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+													<img th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
 														alt="product image">
 												</div>
 											</div>
@@ -1753,12 +1705,12 @@
 								</div>
 								<div class="box-tags">
 									<div class="d-inline-block mr-25">
-										<span class="font-sm font-medium color-gray-900">Category:</span><a
-											class="link" href="#">Smartphones</a>
+										<span class="font-sm font-medium color-gray-900">Category:</span><a class="link"
+											href="#">Smartphones</a>
 									</div>
 									<div class="d-inline-block">
-										<span class="font-sm font-medium color-gray-900">Tags:</span><a
-											class="link" href="#">Blue</a>,<a class="link" href="#">Smartphone</a>
+										<span class="font-sm font-medium color-gray-900">Tags:</span><a class="link"
+											href="#">Blue</a>,<a class="link" href="#">Smartphone</a>
 									</div>
 								</div>
 							</div>
@@ -1771,16 +1723,11 @@
 											class="byAUthor color-gray-900 font-xs font-medium"
 											href="shop-vendor-list.html"> Ecom Tech</a>
 										<div class="rating d-inline-block">
-											<img th:src="@{/client/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><img
-												th:src="@{/client/assets/imgs/template/icons/star.svg}"
-												alt="Ecom"><span
+											<img th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><img
+												th:src="@{/client/assets/imgs/template/icons/star.svg}" alt="Ecom"><span
 												class="font-xs color-gray-500 font-medium"> (65
 												reviews)</span>
 										</div>
@@ -1806,26 +1753,23 @@
 										</p>
 										<ul class="list-colors">
 											<li class="disabled"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
-												alt="Ecom" title="Pink"></li>
-											<li><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
-												alt="Ecom" title="Gold"></li>
-											<li><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
-												alt="Ecom" title="Pink Gold"></li>
-											<li><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
-												alt="Ecom" title="Silver"></li>
+													th:src="@{/client/assets/imgs/page/product/img-gallery-1.jpg}"
+													alt="Ecom" title="Pink"></li>
+											<li><img th:src="@{/client/assets/imgs/page/product/img-gallery-2.jpg}"
+													alt="Ecom" title="Gold"></li>
+											<li><img th:src="@{/client/assets/imgs/page/product/img-gallery-3.jpg}"
+													alt="Ecom" title="Pink Gold"></li>
+											<li><img th:src="@{/client/assets/imgs/page/product/img-gallery-4.jpg}"
+													alt="Ecom" title="Silver"></li>
 											<li class="active"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
-												alt="Ecom" title="Pink Gold"></li>
+													th:src="@{/client/assets/imgs/page/product/img-gallery-5.jpg}"
+													alt="Ecom" title="Pink Gold"></li>
 											<li class="disabled"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
-												alt="Ecom" title="Black"></li>
+													th:src="@{/client/assets/imgs/page/product/img-gallery-6.jpg}"
+													alt="Ecom" title="Black"></li>
 											<li class="disabled"><img
-												th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
-												alt="Ecom" title="Red"></li>
+													th:src="@{/client/assets/imgs/page/product/img-gallery-7.jpg}"
+													alt="Ecom" title="Red"></li>
 										</ul>
 									</div>
 									<div class="box-product-style-size mt-10">

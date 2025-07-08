@@ -1,6 +1,11 @@
 package com.eventura.services;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.eventura.dtos.OrderVendorDTO;
 import com.eventura.entities.OrderItems;
+import com.eventura.entities.OrderItemsOrderStatus;
 import com.eventura.repositories.OrderItemRepository;
 import com.eventura.repositories.OrderRepository;
 
@@ -87,4 +93,46 @@ public class OrderItemServiceImpl implements OrderItemService{
 		// TODO Auto-generated method stub
 		return orderItemRepository.findOrderItemsByOrderIdAndVendorId(orderIds, vendorId);
 	}
+
+	
+	@Override
+	public Map<Integer, List<OrderItems>> groupOrderItemsByVendor(List<OrderItems> items) {
+		items.sort(Comparator.comparing((OrderItems item) -> {
+			return item.getOrderItemsOrderStatuses().stream()
+				.map(status -> status.getCreatedAt())
+				.max(Date::compareTo)
+				.orElse(new Date(0));
+		}).reversed());
+
+		Map<Integer, List<OrderItems>> grouped = new LinkedHashMap<>();
+		for (OrderItems item : items) {
+			Integer vendorId = item.getProducts().getVendors().getId();
+			grouped.computeIfAbsent(vendorId, k -> new ArrayList<>()).add(item);
+		}
+		return grouped;
+	}
+	
+	 @Override // THÊM @Override VÀ TRIỂN KHAI PHƯƠNG THỨC NÀY
+    public OrderItemsOrderStatus getLatestStatusForOrderItem(OrderItems orderItem) {
+        return orderItem.getOrderItemsOrderStatuses().stream()
+                .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
+                .orElse(null);
+    }
+
+	 @Override
+	    public List<OrderItems> findAllOrderItemsByOrderIdAndStatus(int orderId) {
+	        // SỬ DỤNG PHƯƠNG THỨC JOIN FETCH Ở ĐÂY
+	        return orderItemRepository.findOrderItemsByOrderIdWithStatuses(orderId);
+	    }
+
+	@Override
+    public List<OrderItems> findAllOrderItemsByOrderIdAndVendorIdWithStatuses(int orderId, int vendorId) {
+        return orderItemRepository.findOrderItemsByOrderIdAndVendorId(orderId, vendorId);
+    }
+	
+
+
+
+
+
 }

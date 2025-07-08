@@ -64,5 +64,15 @@ public interface OrderItemRepository extends JpaRepository<OrderItems, Integer> 
 			  WHERE oi.orders.id = :orderId and v.id = :vendorId
 		""")
 	List<OrderItems> findOrderItemsByOrderIdAndVendorId(@Param("orderId") Integer orderId, @Param("vendorId") Integer vendorId);
+	
+	 // Thêm phương thức này để tải OrderItems cùng với các trạng thái của nó
+    @Query("SELECT oi FROM OrderItems oi JOIN oi.orderItemsOrderStatuses WHERE oi.orders.id = :orderId")
+    List<OrderItems> findOrderItemsByOrderIdWithStatuses(@Param("orderId") int orderId);
+    
+    @Query("FROM OrderItems oi JOIN oi.products p WHERE oi.orders.id = :orderId and p.vendors.id = :vendorId")
+    List<OrderItems> findOrderItemsByOrderIdAndVendorId(int orderId, int vendorId); // Đảm bảo phương thức này có sẵn nếu cần.
+
+
+
 }
 
