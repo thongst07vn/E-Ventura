@@ -13,6 +13,7 @@ $(document).ready(function () {
             thousand: ",",
             prefix: "$"
         });
+		console.log(/*[[${topprice}]]*/);
         noUiSlider.create(rangeSlider, {
             start: [16, 173],
             step: 1,

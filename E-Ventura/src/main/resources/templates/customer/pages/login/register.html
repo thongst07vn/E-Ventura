@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport"
-	content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="msapplication-TileColor" content="#0E0E0E">
-<meta name="template-color" content="#0E0E0E">
-<meta name="description" content="Index page">
-<meta name="keywords" content="index, page">
-<meta name="author" content="">
-<link rel="shortcut icon" type="image/x-icon"
-	th:href="@{/assets/imgs/template/favicon.svg}">
-<link th:href="@{/client/assets/css/style.css}" rel="stylesheet">
-<title>Register - Ecom Marketplace Template</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="msapplication-TileColor" content="#0E0E0E">
+	<meta name="template-color" content="#0E0E0E">
+	<meta name="description" content="Index page">
+	<meta name="keywords" content="index, page">
+	<meta name="author" content="">
+	<link rel="shortcut icon" type="image/x-icon" th:href="@{/client/assets/imgs/template/favicon.svg}">
+	<link th:href="@{/client/assets/css/style.css}" rel="stylesheet">
+	<title>Register - Ecom Marketplace Template</title>
 </head>
+
 <body>
 	<header class="header sticky-bar">
 		<div class="container">
@@ -22,211 +22,269 @@
 				<div class="header-left">
 					<div class="header-logo">
 						<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
-							th:src="@{/assets/imgs/template/logo.svg}"></a>
+								th:src="@{/assets/imgs/template/logo.svg}"></a>
 					</div>
 
 				</div>
 			</div>
 		</div>
 	</header>
-	<div
-		class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
-		<div class="mobile-header-wrapper-inner">
-			<div class="mobile-header-content-area">
-				<div class="mobile-logo">
-					<a class="d-flex" href="index.html"><img alt="Ecom"
-						th:src="@{/assets/imgs/template/logo.svg}"></a>
-				</div>
-				<div class="perfect-scroll">
-					<div class="mobile-menu-wrap mobile-header-border">
-						<nav class="mt-15">
-							<ul class="mobile-menu font-heading">
-								<li class="has-children"><a class="active"
-									href="index.html">Home</a>
-									<ul class="sub-menu">
-										<li><a href="index.html">Homepage - 1</a></li>
-										<li><a href="index-2.html">Homepage - 2</a></li>
-										<li><a href="index-3.html">Homepage - 3</a></li>
-										<li><a href="index-4.html">Homepage - 4</a></li>
-										<li><a href="index-5.html">Homepage - 5</a></li>
-										<li><a href="index-6.html">Homepage - 6</a></li>
-										<li><a href="index-7.html">Homepage - 7</a></li>
-										<li><a href="index-8.html">Homepage - 8</a></li>
-										<li><a href="index-9.html">Homepage - 9</a></li>
-										<li><a href="index-10.html">Homepage - 10</a></li>
-									</ul></li>
-								<li class="has-children"><a href="shop-grid.html">Shop</a>
-									<ul class="sub-menu">
-										<li><a href="shop-grid.html">Shop Grid</a></li>
-										<li><a href="shop-grid-2.html">Shop Grid 2</a></li>
-										<li><a href="shop-list.html">Shop List</a></li>
-										<li><a href="shop-list-2.html">Shop List 2</a></li>
-										<li><a href="shop-fullwidth.html">Shop Fullwidth</a></li>
-										<li><a href="shop-single-product.html">Single Product</a></li>
-										<li><a href="shop-single-product-2.html">Single
-												Product 2</a></li>
-										<li><a href="shop-single-product-3.html">Single
-												Product 3</a></li>
-										<li><a href="shop-single-product-4.html">Single
-												Product 4</a></li>
-										<li><a href="shop-cart.html">Shop Cart</a></li>
-										<li><a href="shop-checkout.html">Shop Checkout</a></li>
-										<li><a href="shop-compare.html">Shop Compare</a></li>
-										<li><a href="shop-wishlist.html">Shop Wishlist</a></li>
-									</ul></li>
-								<li class="has-children"><a href="shop-vendor-list.html">Vendors</a>
-									<ul class="sub-menu">
-										<li><a href="shop-vendor-list.html">Vendors Listing</a></li>
-										<li><a href="shop-vendor-single.html">Vendor Single</a></li>
-									</ul></li>
-								<li class="has-children"><a href="#">Pages</a>
-									<ul class="sub-menu">
-										<li><a href="page-about-us.html">About Us</a></li>
-										<li><a href="page-contact.html">Contact Us</a></li>
-										<li><a href="page-careers.html">Careers</a></li>
-										<li><a href="page-term.html">Term and Condition</a></li>
-										<li><a href="page-register.html">Register</a></li>
-										<li><a href="page-login.html">Login</a></li>
-										<li><a href="page-404.html">Error 404</a></li>
-									</ul></li>
-								<li class="has-children"><a href="blog.html">Blog</a>
-									<ul class="sub-menu">
-										<li><a href="blog.html">Blog Grid</a></li>
-										<li><a href="blog-2.html">Blog Grid 2</a></li>
-										<li><a href="blog-list.html">Blog List</a></li>
-										<li><a href="blog-big.html">Blog Big</a></li>
-										<li><a href="blog-single.html">Blog Single - Left
-												sidebar</a></li>
-										<li><a href="blog-single-2.html">Blog Single - Right
-												sidebar</a></li>
-										<li><a href="blog-single-3.html">Blog Single - No
-												sidebar</a></li>
-									</ul></li>
-								<li><a href="page-contact.html">Contact</a></li>
-							</ul>
-						</nav>
-					</div>
-					<div class="mobile-account">
-						<div class="mobile-header-top">
-							<div class="user-account">
-								<a href="page-account.html"><img
-									th:src="@{/assets/imgs/template/ava_1.png}" alt="Ecom"></a>
-								<div class="content">
-									<h6 class="user-name">
-										Hello<span class="text-brand"> Steven !</span>
-									</h6>
-									<p class="font-xs text-muted">You have 3 new messages</p>
-								</div>
-							</div>
-						</div>
-						<ul class="mobile-menu">
-							<li><a href="page-account.html">My Account</a></li>
-							<li><a href="page-account.html">Order Tracking</a></li>
-							<li><a href="page-account.html">My Orders</a></li>
-							<li><a href="page-account.html">My Wishlist</a></li>
-							<li><a href="page-account.html">Setting</a></li>
-							<li><a href="page-login.html">Sign out</a></li>
-						</ul>
-					</div>
-					<div class="mobile-banner">
-						<div class="bg-5 block-iphone">
-							<span class="color-brand-3 font-sm-lh32">Starting from
-								$899</span>
-							<h3 class="font-xl mb-10">iPhone 12 Pro 128Gb</h3>
-							<p class="font-base color-brand-3 mb-10">Special Sale</p>
-							<a class="btn btn-arrow" href="shop-grid.html">learn more</a>
-						</div>
-					</div>
-					<div class="site-copyright color-gray-400 mt-30">
-						Copyright 2022 &copy; Ecom - Marketplace Template.<br>Designed
-						by<a href="http://alithemes.com" target="_blank">&nbsp;
-							AliThemes</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-		
+
 	<main class="main">
 		<section class="section-box shop-template mt-60">
 			<div class="container">
 				<div class="row mb-100">
-					<div class="col-lg-3"></div>
-					<div class="col-lg-6">
-						<h3>Create an account</h3>
-						<p class="font-md color-gray-500">Access to all features. No
-							credit card required.</p>
-							<form method="post" th:action="@{/customer/register}">
+					<div class="col-lg-2"></div>
+					<div class="col-lg-8">
+						<form method="POST" th:action="@{/customer/register}" id="registerForm">
+
+							<h3>Create an account</h3>
+							<h5 th:text="${msg}" class="text-success"></h5>
 							<div class="form-register mt-30 mb-30">
-							<div class="row">
-								<div class="col-6">
-									<div class="form-group">
-										<label class="mb-5 font-sm color-gray-700">First Name</label>
-										<input class="form-control" type="text"
-											placeholder="Steven job">
+								<div class="row">
+									<div class="form-group col-6">
+										<label class="mb-5 font-sm color-gray-700">Last Name </label>
+										<input class="form-control" type="text" th:field="${user.lastName}"
+											id="lastName" name="lastName" required>
+										<div class="invalid-feedback">Please enter Last Name</div>
+									</div>
+									<div class="form-group col-6">
+										<label class="mb-5 font-sm color-gray-700">First Name <span></span></label>
+										<input class="form-control" type="text" th:field="${user.firstName}"
+											id="firstName" name="firstName" required>
+										<div class="invalid-feedback">Please enter First Name Name</div>
+
 									</div>
 								</div>
-								<div class="col-6">
-									<div class="form-group">
-										<label class="mb-5 font-sm color-gray-700">Last Name</label> <input
-											class="form-control" type="text" placeholder="Steven job">
+								<div class="form-group">
+									<label class="mb-5 font-sm color-gray-700">Phone Number</label>
+									<input class="form-control" type="text" th:field="${user.phoneNumber}"
+										id="phoneNumber" name="phoneNumber" required>
+									<div class="invalid-feedback">Please enter Phone Number</div>
+
+								</div>
+								<div class="form-group">
+									<label class="mb-5 font-sm color-gray-700">Email</label>
+									<input class="form-control" type="email" th:field="${user.email}" id="email"
+										name="email" required>
+									<div class="invalid-feedback">Please enter Email</div>
+
+								</div>
+								<div class="form-group">
+									<label class="mb-5 font-sm color-gray-700">Username</label>
+									<input class="form-control" type="text" th:field="${user.username}" id="username"
+										name="username" required>
+									<div class="invalid-feedback">Please enter Username</div>
+
+								</div>
+								<div class="invalid-feedback-password">Password and Re-Password do not match</div>
+								<div class="form-group">
+									<label class="mb-5 font-sm color-gray-700">Password </label>
+									<input class="form-control" type="password" th:field="${user.password}"
+										id="password" name="password" required>
+									<div class="invalid-feedback" id="password-feedback">Please enter Password</div>
+								</div>
+
+								<div class="form-group">
+									<label class="mb-5 font-sm color-gray-700">Re-Password </label>
+									<input class="form-control" type="password" name="rePassword" id="rePassword"
+										required>
+									<div class="invalid-feedback" id="repassword-feedback">Please enter Re-Password
+									</div>
+									<div class="invalid-feedback" id="password-match-feedback" style="display: none;">
+										Password and Re-Password do not match
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="mb-5 font-sm color-gray-700">Address </label>
+									<input class="form-control" type="text" th:field="${userAddress.address}"
+										id="address" name="address" required>
+									<div class="invalid-feedback">Please select Address</div>
+
+								</div>
+								<div class="form-group">
+									<div class="row">
+										<div class="form-group col-4">
+											<label class="mb-5 font-sm color-gray-700">Provinces </label>
+											<select class="form-select" id="provinceSelect" name="provinceCode"
+												required>
+												<option selected disabled value="">Provinces</option>
+												<option th:each="province : ${provinces}" th:value="${province.code}"
+													th:text="${province.administrativeUnits.shortName + ' ' + province.name}"
+													th:selected="${province.code == selectedProvinceCode}">
+												</option>
+											</select>
+											<div class="invalid-feedback">Please select Province</div>
+										</div>
+
+										<div class="form-group col-4">
+											<label class="mb-5 font-sm color-gray-700">District </label>
+											<select class="form-select" id="districtSelect" name="districtCode"
+												required>
+												<option selected disabled value="">District</option>
+												<!-- Các quận sẽ được thêm vào qua JavaScript -->
+											</select>
+											<div class="invalid-feedback">Please select District</div>
+										</div>
+
+										<div class="form-group col-4">
+											<label class="mb-5 font-sm color-gray-700">Ward </label>
+											<select class="form-select" id="wardSelect" name="wardCode" required>
+												<option selected disabled value="">Ward</option>
+												<!-- Các phường sẽ được thêm vào qua JavaScript -->
+											</select>
+											<div class="invalid-feedback">Please select Ward</div>
+										</div>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="mb-5 font-sm color-gray-700">Username *</label> <input
-									class="form-control" type="text" placeholder="stevenjob">
+								<input class="font-md-bold btn btn-buy" type="submit" value="Sign Up"
+									id="formButtonRegister">
 							</div>
-							<div class="form-group" id="emailRegister">
-								<label class="form-label mb-2 font-sm color-gray-700">Email</label>
-								<!-- Bootstrap Input Group for button inside/adjacent to input -->
-								<div class="input-group">
-									<input class="form-control" type="text"
-										placeholder="stevenjob@gmail.com">
-									<button class="btn btn-primary"
-										style="background-color: #425A8B; border: 1px solid #8C9EC5;"
-										type="button">Send</button>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="mb-5 font-sm color-gray-700">Email Code</label> <input
-									class="form-control" type="text" placeholder="Email code">
-							</div>
+						</form>
 
-
-							<div class="form-group">
-								<label class="mb-5 font-sm color-gray-700">Password *</label> <input
-									class="form-control" type="password"
-									placeholder="******************">
-							</div>
-							<div class="form-group">
-								<label class="mb-5 font-sm color-gray-700">Re-Password *</label>
-								<input class="form-control" type="password"
-									placeholder="******************">
-							</div>
-							<div class="form-group">
-								<label> <input class="checkagree" type="checkbox">By
-									clicking Register button, you agree our terms and policy,
-								</label>
-							</div>
-							<div class="form-group">
-								<input class="font-md-bold btn btn-buy" type="submit"
-									value="Sign Up">
-							</div>
-							</form>
-							<div class="mt-20">
-								<span class="font-xs color-gray-500 font-medium">Already
-									have an account?</span><a class="font-xs color-brand-3 font-medium"
-									th:href="@{/customer/login}"> Sign In</a>
-							</div>
-						</div>
-					
-							
-						
 					</div>
 
 				</div>
 			</div>
+			<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+			<script>
+				$(document).ready(function () {
+					const $registerForm = $('#registerForm');
+					const $formButtonRegister = $('#formButtonRegister');
+					const $password = $('#password'); // Khai báo biến $password và $rePassword một lần ở đây
+					const $rePassword = $('#rePassword');
+
+					$formButtonRegister.on('click', function (event) {
+						event.preventDefault();
+
+						// Reset previous validation states
+						$registerForm.find('.form-control').removeClass('is-invalid');
+						$registerForm.find('.invalid-feedback').text(''); // Clear custom messages
+						$('#password-match-feedback').hide().text(''); // Ẩn và xóa lỗi khớp mật khẩu
+
+						let isValid = true; // Flag để theo dõi tổng thể form hợp lệ hay không
+
+						// 1. Validate ALL required fields (bao gồm cả password và rePassword)
+						$registerForm.find('[required]').each(function () {
+							const $input = $(this);
+							// Kiểm tra giá trị rỗng hoặc chỉ toàn khoảng trắng
+							if (!$input.val().trim()) {
+								$input.addClass('is-invalid');
+								// Đặt thông báo lỗi cụ thể dựa trên ID
+								if ($input.attr('id') === 'firstName') {
+									$input.next('.invalid-feedback').text('Please enter a first name.');
+								} else if ($input.attr('id') === 'lastName') {
+									$input.next('.invalid-feedback').text('Please enter a last name.');
+								} else if ($input.attr('id') === 'phoneNumber') {
+									$input.next('.invalid-feedback').text('Please enter a phone number. ');
+								} else if ($input.attr('id') === 'email') {
+									$input.next('.invalid-feedback').text('Please enter an email. ');
+								} else if ($input.attr('id') === 'username') {
+									$input.next('.invalid-feedback').text('Please enter a username. ');
+								} else if ($input.attr('id') === 'password') {
+									// Mật khẩu sẽ được xử lý riêng cho phần khớp, nhưng vẫn cần bắt lỗi rỗng ở đây
+									$('#password-feedback').text('Please enter a password.');
+								} else if ($input.attr('id') === 'rePassword') {
+									// Re-password cũng vậy
+									$('#repassword-feedback').text('Please enter a re-password.');
+								} else if ($input.attr('id') === 'provinceSelect') {
+									$input.next('.invalid-feedback').text('Please select a province.');
+								} else if ($input.attr('id') === 'districtSelect') {
+									$input.next('.invalid-feedback').text('Please select a district.');
+								} else if ($input.attr('id') === 'wardSelect') {
+									$input.next('.invalid-feedback').text('Please select a ward.');
+								} else if ($input.attr('id') === 'address') {
+									$input.next('.invalid-feedback').text('Please enter an address. ');
+								} else if ($input.attr('id') === 'vendorName') {
+									$input.next('.invalid-feedback').text('Please enter a vendor name.');
+								} else if ($input.attr('id') === 'vendorContactName') {
+									$input.next('.invalid-feedback').text('Please enter a vendor contact name. ');
+								} else if ($input.attr('id') === 'vendorContactEmail') {
+									$input.next('.invalid-feedback').text('Please enter a vendor contact email. ');
+								} else if ($input.attr('id') === 'vendorSettingId') {
+									$input.next('.invalid-feedback').text('Please select a vendor type. ');
+								}
+								isValid = false; // Nếu có bất kỳ trường required nào trống, form không hợp lệ
+							}
+						});
+
+						// 2. Validate password match (CHỈ SAU KHI tất cả các trường required đã được kiểm tra)
+						// Chỉ kiểm tra khớp nếu cả hai trường mật khẩu không rỗng
+						if ($password.val().trim() && $rePassword.val().trim()) {
+							if ($password.val() !== $rePassword.val()) {
+								$password.addClass('is-invalid');
+								$rePassword.addClass('is-invalid');
+								$('#password-match-feedback').text('Password and Re-Password do not match.').show();
+								isValid = false; // Mật khẩu không khớp -> form không hợp lệ
+							}
+						}
+						// Nếu một trong hai hoặc cả hai mật khẩu rỗng, lỗi 'required' đã được bắt ở bước 1.
+						// Không cần `else if` phức tạp ở đây.
+
+						// 3. Nếu tất cả các validation pass, submit the form
+						if (isValid) {
+							$registerForm.submit();
+						}
+					});
+					// ... (phần code cho province/district/ward change listeners và SweetAlert) ...
+				});
+
+
+			</script>
+
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+			<script>
+				document.addEventListener("DOMContentLoaded", function () {
+					const provinceSelect = document.getElementById("provinceSelect");
+					const districtSelect = document.getElementById("districtSelect");
+					const wardSelect = document.getElementById("wardSelect");
+
+					provinceSelect.addEventListener("change", function () {
+						const provinceCode = this.value;
+						districtSelect.innerHTML = '<option selected disabled>Loading...</option>';
+						wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+						wardSelect.disabled = true;
+
+						fetch(`/api/address/districts?provinceCode=${provinceCode}`)
+							.then(response => response.json())
+							.then(data => {
+								console.log(data);
+								// Clear existing options BEFORE adding new ones
+								districtSelect.innerHTML = '<option selected disabled>District</option>'; // Keep the default "District" option
+								data.forEach(district => {
+									const option = document.createElement("option");
+									option.value = district.code;
+									option.text = district.name;
+									districtSelect.appendChild(option);
+								});
+								districtSelect.disabled = false;
+							})
+							.catch(error => console.error('Error fetching districts:', error)); // Always good to handle errors
+					});
+
+					districtSelect.addEventListener("change", function () {
+						const districtCode = this.value;
+						wardSelect.innerHTML = '<option selected disabled>Loading...</option>';
+
+						fetch(`/api/address/wards?districtCode=${districtCode}`)
+							.then(response => response.json())
+							.then(data => {
+								wardSelect.innerHTML = '<option selected disabled>Ward</option>';
+								data.forEach(ward => {
+									const option = document.createElement("option");
+									option.value = ward.code;
+									option.text = ward.name;
+									wardSelect.appendChild(option);
+								});
+								wardSelect.disabled = false;
+							});
+					});
+				});
+			</script>
 		</section>
 
 	</main>
@@ -234,8 +292,7 @@
 
 	<script th:src="@{/client/assets/js/vendors/modernizr-3.6.0.min.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
-	<script
-		th:src="@{/client/assets/js/vendors/jquery-migrate-3.3.0.min.js}"></script>
+	<script th:src="@{/client/assets/js/vendors/jquery-migrate-3.3.0.min.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/bootstrap.bundle.min.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/waypoints.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/wow.js}"></script>
@@ -256,4 +313,5 @@
 	<script th:src="@{/client/assets/js/main.js?v=3.0.0}"></script>
 	<script th:src="@{/client/assets/js/shop.js?v=1.2.1}"></script>
 </body>
+
 </html>
