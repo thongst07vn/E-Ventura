@@ -64,20 +64,19 @@
 
 								</div>
 								<div class="form-group">
-									<label class="mb-5 font-sm color-gray-700">Email</label>
+									<label class="mb-5 font-sm color-gray-700">Email <span th:text="${msgErrorEmail}" class="text-danger"></span></label>
 									<input class="form-control" type="email" th:field="${user.email}" id="email"
 										name="email" required>
 									<div class="invalid-feedback">Please enter Email</div>
 
 								</div>
 								<div class="form-group">
-									<label class="mb-5 font-sm color-gray-700">Username</label>
+									<label class="mb-5 font-sm color-gray-700">Username <span th:text="${msgErrorUsername}" class="text-danger"></span></label>
 									<input class="form-control" type="text" th:field="${user.username}" id="username"
 										name="username" required>
 									<div class="invalid-feedback">Please enter Username</div>
 
 								</div>
-								<div class="invalid-feedback-password">Password and Re-Password do not match</div>
 								<div class="form-group">
 									<label class="mb-5 font-sm color-gray-700">Password </label>
 									<input class="form-control" type="password" th:field="${user.password}"
@@ -283,6 +282,25 @@
 								wardSelect.disabled = false;
 							});
 					});
+				});
+			</script>
+			
+			<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+			<script>
+				// JavaScript to display SweetAlert2 based on flash attributes
+				document.addEventListener('DOMContentLoaded', function () {
+					const sweetAlertStatus = '[[${sweetAlert}]]'; // Access the flash attribute
+					const sweetAlertMessage = '[[${message}]]'; // Access the flash attribute
+
+					if (sweetAlertStatus && sweetAlertMessage) {
+						Swal.fire({
+							icon: sweetAlertStatus, // 'success' or 'error'
+							title: sweetAlertStatus === 'success' ? 'Success!' : 'Oops...',
+							text: sweetAlertMessage,
+							showConfirmButton: false,
+							timer: 3000 // Automatically close after 3 seconds
+						});
+					}
 				});
 			</script>
 		</section>

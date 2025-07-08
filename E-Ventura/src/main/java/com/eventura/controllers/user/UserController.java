@@ -157,7 +157,8 @@ public class UserController {
 			// Check if email already exists
 			Users existingUser = userService.findByEmail(user.getEmail());
 			if (existingUser != null) {
-				redirectAttributes.addFlashAttribute("msgErrorEmail", "* Email is already in use.");
+				redirectAttributes.addFlashAttribute("sweetAlert", "error");
+				redirectAttributes.addFlashAttribute("message", "* Email is already in use.");
 				return "redirect:/customer/register";
 			}
 		}
@@ -169,7 +170,8 @@ public class UserController {
 			// Check if username already exists
 			Users existingUsername = userService.findByUsername(user.getUsername());
 			if (existingUsername != null) {
-				redirectAttributes.addFlashAttribute("msgErrorUsername", "* Username is already in use.");
+				redirectAttributes.addFlashAttribute("sweetAlert", "error");
+				redirectAttributes.addFlashAttribute("message", "* Username is already in use.");
 				return "redirect:/customer/register";
 			}
 		}
