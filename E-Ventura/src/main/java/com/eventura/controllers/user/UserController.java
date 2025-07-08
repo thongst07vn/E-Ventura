@@ -57,6 +57,7 @@ import com.eventura.services.OrderService;
 import com.eventura.services.OrderStatusService;
 import com.eventura.services.ProductService;
 import com.eventura.services.UserService;
+import com.eventura.services.VendorService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -83,6 +84,8 @@ public class UserController {
 	private OrderItemService orderItemService;
 	@Autowired
 	private OrderStatusService orderStatusService;
+	@Autowired
+	private VendorService vendorService;
 
 
 	@GetMapping({ "home", "/" })
@@ -500,15 +503,16 @@ public class UserController {
         modelMap.put("orderItemsForTracking", orderItems); // Có thể truyền danh sách item này để hiển thị chi tiết
         modelMap.put("orderStatusHistory", sortedStatuses); // Truyền lịch sử trạng thái đã sắp xếp
         modelMap.put("currentOrderStatus", currentStatus); // Truyền trạng thái hiện tại (mới nhất)
-
+        
         // Bạn cũng có thể truyền OrderId và VendorId lại để sử dụng trong view nếu cần
         modelMap.put("trackingOrderId", orderId);
         modelMap.put("trackingVendorId", vendorId);
-        
+        modelMap.put("vendor", vendorService.findById(vendorId));
         // Thêm thông tin order và vendor nếu cần hiển thị tên, v.v.
         // Bạn sẽ cần inject OrderService và ProductService/VendorService để lấy các đối tượng này
         // Ví dụ: modelMap.put("order", orderService.findById(orderId));
         // Ví dụ: modelMap.put("vendor", vendorService.findById(vendorId)); // Cần inject VendorService
+        
         
         return "customer/pages/account/orderTracking"; // Thay đổi tên template nếu cần
     }
