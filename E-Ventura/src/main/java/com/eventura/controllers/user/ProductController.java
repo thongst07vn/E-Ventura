@@ -170,6 +170,7 @@ public class ProductController {
 		cartItem.setProductVariants(productVariantService.findById(productVariantId));
 		cartItem.setQuantity(quantity);
 		cartItem.setCreatedAt(new Date());
+		cartItem.setUpdatedAt(new Date());
 		Users user = null;
 		if (userDetails != null) {
 			user = userService.findByEmail(userDetails.getUsername());
@@ -212,6 +213,7 @@ public class ProductController {
 			
 			newCart.setUsers(user);
 			newCart.setCreatedAt(new Date());
+			newCart.setUpdatedAt(new Date());
 			if(cartService.saveCart(newCart)) {
 				cartItem.setCarts(newCart);
 				if(cartService.saveCartItems(cartItem)) {
