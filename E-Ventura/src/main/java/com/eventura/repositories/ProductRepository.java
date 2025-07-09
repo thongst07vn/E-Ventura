@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	@Query("SELECT p FROM Products p ORDER BY p.price DESC")
     public List<Products> findTopByPriceDesc(Pageable pageable);
 	
-	@Query("from Products where deletedAt IS NULL AND name like %:keyword%")
+	@Query("from Products p JOIN Vendors v ON p.vendors.id = v.id WHERE v.users.deletedAt IS NULL And p.deletedAt IS NULL AND p.name like %:keyword% ")
 	public List<Products>  findByKeyword(@Param("keyword") String keyword,Sort sort);
 	
 	@Query("from Products p JOIN Vendors v ON p.vendors.id = v.id WHERE v.users.deletedAt IS NULL And p.deletedAt IS NULL AND p.name like %:keyword% ")
@@ -68,5 +68,13 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	public Page<Products> findProductReviewed(@Param("vendor_id") int vendor_id, Pageable pageable);
 	
 
-
+	@Query("from Products p where p.vendors.id = :vendor_id and p.deleted = false")
+	public Page<Products> findProductByVendorAndDeletePage1(@Param("vendor_id") int vendor_id, Pageable pageable);
+	
+	@Query("from Products p where p.vendors.id = :vendor_id and p.deleted = false and p.name like %:keyword%")
+	public Page<Products> findProductByVendorAndDeleteAndKeywordPage1(@Param("vendor_id") int vendor_id, @Param("keyword") String keyword, Pageable pageable);
+	
+	@Query("from Products p where p.vendors.id = :vendor_id and p.deleted = false and p.productCategories.id = :category_id")
+	public Page<Products> findProductByVendorAndDeleteAndCategoryPage1(@Param("vendor_id") int vendor_id, @Param("category_id") int category_id, Pageable pageable);
+	
 }

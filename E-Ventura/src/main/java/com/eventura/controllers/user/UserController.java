@@ -242,7 +242,7 @@ public class UserController {
 		if (addressService.save(userAddress)) {
 			// Send verification email
 			String baseUrl = environment.getProperty("base_url");
-			String url = baseUrl + "vendor/account/verify?email=" + user.getEmail();
+			String url = baseUrl + "customer/verify?email=" + user.getEmail();
 
 			String from = environment.getProperty("spring.mail.username");
 			String to = user.getEmail();
@@ -402,7 +402,28 @@ public class UserController {
 	    // userService.invalidateToken(token); // Mark token as used/invalidated
 
 	   
-	    
+  }
+	
+	/* Verify */
+	@GetMapping({ "verify" })
+	public String verify(@RequestParam("email") String email, RedirectAttributes redirectAttributes) {
+
+		Users user = userService.findByEmail(email);
+		if (user == null) {
+			redirectAttributes.addFlashAttribute("msgActive", "Tài khoản không hợp lệ1");
+			return "redirect:/vendor/account/login";
+		} else {
+			if (userService.save(user)) {
+				redirectAttributes.addFlashAttribute("sweetAlert", "success");
+				redirectAttributes.addFlashAttribute("message", "Verify Successfully");
+			} else {
+				redirectAttributes.addFlashAttribute("sweetAlert", "error");
+				redirectAttributes.addFlashAttribute("message", "Failed");
+				
+			}
+		}
+		return "redirect:/customer/login";
+
 	}
 	
 	@GetMapping({ "login" })

@@ -71,6 +71,12 @@ public interface ProductService {
 	
 	public Page<Products> find5ProductReviewed(int vendorId);
 
+	public Page<Products> findProductByVendorAndDeletePage1(int id, Pageable pageable);
+	
+	public Page<Products> findProductByVendorAndDeleteAndKeywordPage1(int vendorId, String keyword, Pageable pageable);
+
+	public Page<Products> findProductByVendorAndDeleteAndCategoryPage1(int vendorId, int categoryId, Pageable pageable);
+
 
 
 
