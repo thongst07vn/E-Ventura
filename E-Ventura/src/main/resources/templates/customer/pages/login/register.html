@@ -257,7 +257,7 @@
 								data.forEach(district => {
 									const option = document.createElement("option");
 									option.value = district.code;
-									option.text = district.name;
+									option.text = district.shortName + ' ' + district.name;
 									districtSelect.appendChild(option);
 								});
 								districtSelect.disabled = false;
@@ -276,7 +276,7 @@
 								data.forEach(ward => {
 									const option = document.createElement("option");
 									option.value = ward.code;
-									option.text = ward.name;
+									option.text = ward.shortName + ' ' + ward.name;
 									wardSelect.appendChild(option);
 								});
 								wardSelect.disabled = false;

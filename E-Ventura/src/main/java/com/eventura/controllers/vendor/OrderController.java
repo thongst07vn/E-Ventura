@@ -163,6 +163,8 @@ public class OrderController {
 
 		modelMap.put("userAddresses", userAddressService.findUserAddressesByOrderId(orderId));
 		modelMap.put("totalAmount", orderItemService.findTotalAmountByOrderIdAndVendorId(orderId, vendorId));
+		modelMap.put("shippingAmount", order.getTotalAmount() - orderItemService.findTotalAmountByOrderIdAndVendorId(orderId, vendorId));
+
 
 		/* Truyền lại orderId */
 		modelMap.put("orderId", orderId);

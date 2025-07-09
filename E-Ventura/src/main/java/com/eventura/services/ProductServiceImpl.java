@@ -196,5 +196,23 @@ public class ProductServiceImpl implements ProductService {
 		Pageable pageable = PageRequest.of(0, 1);
 		return productRepository.findTopByPriceDesc(pageable).get(0);
 	}
+	
+	@Override
+	public Page<Products> findProductByVendorAndDeletePage1(int id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findProductByVendorAndDeletePage1(id, pageable);
+	}
+	
+	@Override
+	public Page<Products> findProductByVendorAndDeleteAndKeywordPage1(int vendorId, String keyword, Pageable pageable) {
+		// TODO productRepository-generated method stub
+		return productRepository.findProductByVendorAndDeleteAndKeywordPage1(vendorId, keyword, pageable);
+	}
+	
+	@Override
+	public Page<Products> findProductByVendorAndDeleteAndCategoryPage1(int vendorId, int categoryId, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return productRepository.findProductByVendorAndDeleteAndCategoryPage1(vendorId, categoryId, pageable);
+	}
 
 }

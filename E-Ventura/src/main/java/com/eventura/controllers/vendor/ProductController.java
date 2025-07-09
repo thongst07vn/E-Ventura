@@ -72,12 +72,12 @@ public class ProductController {
 
 		int pageSize = 10;
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
+		Page<Products> productPage = productService.findProductByVendorAndDeletePage1(vendorId, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		// Lặp qua productPage và thêm các ProductDTO vào List
 		for (Products product : productPage) {
-			if (product.getDeletedAt() == null && !product.isDeleted()) {
+			if (!product.isDeleted()) {
 
 				if (!productService.findProductReview(product.getId()).isEmpty()) {
 					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
@@ -111,11 +111,11 @@ public class ProductController {
 		Page<Products> productPage;
 
 		if (categoryId == 0) {
-			productPage = productService.findProductByVendorAndDeletePage(vendorId, pageable);
+			productPage = productService.findProductByVendorAndDeletePage1(vendorId, pageable);
 			List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 			for (Products product : productPage) {
-				if (product.getDeletedAt() == null && !product.isDeleted()) {
+				if (!product.isDeleted()) {
 
 					if (!productService.findProductReview(product.getId()).isEmpty()) {
 						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
@@ -131,11 +131,11 @@ public class ProductController {
 			modelMap.put("products", productDTOPage.getContent());
 //			map.put("products", productPage.getContent());
 		} else {
-			productPage = productService.findProductByVendorAndDeleteAndCategoryPage(vendorId, categoryId, pageable);
+			productPage = productService.findProductByVendorAndDeleteAndCategoryPage1(vendorId, categoryId, pageable);
 			List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 			for (Products product : productPage) {
-				if (product.getDeletedAt() == null && !product.isDeleted()) {
+				if (!product.isDeleted()) {
 					if (!productService.findProductReview(product.getId()).isEmpty()) {
 						productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
 					} else {
@@ -167,13 +167,13 @@ public class ProductController {
 		modelMap.put("currentPage", "product");
 		Integer vendorId = (Integer) session.getAttribute("vendorId");
 
-		int pageSize = 10;
+		int pageSize = 10; 
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Products> productPage = productService.findProductByVendorAndDeleteAndKeywordPage(vendorId, keyword, pageable);
+		Page<Products> productPage = productService.findProductByVendorAndDeleteAndKeywordPage1(vendorId, keyword, pageable);
 		List<ProductDTO> productDTOList = new ArrayList<ProductDTO>();
 
 		for (Products product : productPage) {
-			if (product.getDeletedAt() == null) {
+			if (!product.isDeleted()) {
 				if (!productService.findProductReview(product.getId()).isEmpty()) {
 					productDTOList.add(new ProductDTO(product, productService.avgProductReview(product.getId())));
 				} else {
@@ -255,7 +255,7 @@ public class ProductController {
 
 		product.setCreatedAt(new Date());
 		product.setUpdatedAt(new Date());
-		product.setDeletedAt(null);
+		product.setDeletedAt(new Date());
 
 		/* IMAGE */
 		// Lưu product trước để có ID
