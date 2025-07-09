@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
+import com.eventura.app.dto.ProductCategoryDto;
 import com.eventura.app.dto.ProductDto;
 
 @Configuration
@@ -40,7 +42,26 @@ public class ModelMapperConfiguration {
 				map().setCreatedAt(source.getCreatedAt());
 			}
 		});
-		
+		Converter<String, String> converterPhotoToPhotourl = new AbstractConverter<String, String>() {
+
+			@Override
+			protected String convert(String source) {
+				return environment.getProperty("image_url") + source;
+			}
+		};
+		mapper.typeMap(ProductCategories.class, ProductCategoryDto.class).addMappings(m -> {
+			m.using(converterPhotoToPhotourl).map(ProductCategories::getPhoto, ProductCategoryDto::setPhoto);
+		});
+		mapper.addMappings(new PropertyMap<ProductCategories, ProductCategoryDto>() {
+			@Override
+			protected void configure() {
+				map().setId(source.getId());
+				map().setName(source.getName());
+				map().setDeletedAt(source.getDeletedAt());
+				map().setUpdatedAt(source.getUpdatedAt());
+				map().setCreatedAt(source.getCreatedAt());
+			}
+		});
 
 		return mapper;
 

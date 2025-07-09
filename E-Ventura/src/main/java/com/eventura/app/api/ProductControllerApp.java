@@ -39,6 +39,14 @@ public class ProductControllerApp {
 			return new ResponseEntity<List<ProductDto>>(HttpStatus.BAD_REQUEST);
 		}
 	}
+	@GetMapping(value = "findbycategoryid/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ProductDto>> findByCategoryId(@PathVariable("id") int id) {
+		try {
+			return new ResponseEntity<List<ProductDto>>(productService.findByCategoryId(id), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductDto>>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	@GetMapping(value = "findbyid/{id}", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ProductDto> findById(@PathVariable("id") int id) {
 		try {

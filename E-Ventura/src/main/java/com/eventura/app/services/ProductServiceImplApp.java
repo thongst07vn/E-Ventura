@@ -39,5 +39,10 @@ public class ProductServiceImplApp implements ProductServiceApp{
 		}
 		return null;
 	}
+
+	@Override
+	public List<ProductDto> findByCategoryId(int id) {
+		return modelMapper.map(productRepository.findProductByCategory(id,Sort.by("createdAt").descending()),  new TypeToken<List<ProductDto>>(){}.getType());
+	}
 	
 }
