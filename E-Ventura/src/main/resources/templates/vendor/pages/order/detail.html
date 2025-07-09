@@ -27,30 +27,21 @@
 								4:34PM</b></small></div>
 					<form id="changeStatusForm" method="POST" th:action="@{/vendor/order/changeStatus}">
 						<div class="col-lg-6 col-md-6 ms-auto text-md-end">
-							<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="statusId" id="statusSelect">
-							    <option 
-							        th:value="1" 
-							        th:text="Ordered" 
-							        th:selected="${selectedStatusId == 1}" 
-							        th:disabled="${selectedStatusId != 1}" 
-							    ></option>
+							<select class="form-select d-inline-block mb-lg-0 mb-15 mw-200" name="statusId"
+								id="statusSelect">
+								<option th:value="1" th:text="Ordered" th:selected="${selectedStatusId == 1}"
+									th:disabled="${selectedStatusId != 1}"></option>
 
-							    <option 
-							        th:value="2" 
-							        th:text="Confirm" 
-							        th:selected="${selectedStatusId == 2}" 
-							        th:disabled="${selectedStatusId >= 2 or selectedStatusId == 5}" 
-							        ></option>
+								<option th:value="2" th:text="Confirm" th:selected="${selectedStatusId == 2}"
+									th:disabled="${selectedStatusId >= 2 or selectedStatusId == 5}"></option>
 
-							    <option 
-							        th:value="5" 
-							        th:text="Cancelled" 
-							        th:selected="${selectedStatusId == 5}"
-							        th:disabled="${selectedStatusId >= 3 and selectedStatusId != 5}" 
-							        ></option>
+								<option th:value="5" th:text="Cancelled" th:selected="${selectedStatusId == 5}"
+									th:disabled="${selectedStatusId >= 3 and selectedStatusId != 5}"></option>
 
-							    <option th:if="${selectedStatusId == 3}" th:value="3" th:text="Delivering" th:selected="true" disabled></option>
-							    <option th:if="${selectedStatusId == 4}" th:value="4" th:text="Received" th:selected="true" disabled></option>
+								<option th:if="${selectedStatusId == 3}" th:value="3" th:text="Delivering"
+									th:selected="true" disabled></option>
+								<option th:if="${selectedStatusId == 4}" th:value="4" th:text="Received"
+									th:selected="true" disabled></option>
 							</select>
 							<input type="hidden" name="orderId" th:value="${order.id}">
 					</form>
@@ -87,153 +78,151 @@
 						// Ví dụ: location.reload();
 					}
 				</script>
-		</div>
-		</div>
-		</header>
-		<div class="card-body">
-			<div class="row mb-50 mt-20 order-info-wrap">
-				<div class="col-4">
-					<article class="icontext align-items-start"><span
-							class="icon icon-sm rounded-circle bg-primary-light"><i
-								class="text-primary material-icons md-person"></i></span>
-						<div class="text">
-							<h6 class="mb-1">Customer</h6>
-							<p class="mb-1" th:text="${order.users.username}">
-							</p>
-							<p class="mb-1" th:text="${order.users.email}"></p>
+			</header>
+			<div class="card-body">
+				<div class="row mb-50 mt-20 order-info-wrap">
+					<div class="col-4">
+						<article class="icontext align-items-start"><span
+								class="icon icon-sm rounded-circle bg-primary-light"><i
+									class="text-primary material-icons md-person"></i></span>
+							<div class="text">
+								<h6 class="mb-1">Customer</h6>
+								<p class="mb-1" th:text="${order.users.username}">
+								</p>
+								<p class="mb-1" th:text="${order.users.email}"></p>
 
-						</div>
-					</article>
-				</div>
-				<div class="col-4">
-					<article class="icontext align-items-start">
-						<span class="icon icon-sm rounded-circle bg-primary-light"><i
-								class="text-primary material-icons md-local_shipping"></i></span>
-						<div class="text text-start">
-							<h6 class="mb-1">Order info</h6>
-							<p class="mb-1">
-								Pay method:
-								<th:block th:text="${order.paymentMethod}"></th:block>
-								<br>
-							</p>
-							<p class="mb-1">
-								Pay date:
-								<th:block th:text="${#dates.format(order.paymentDate, 'EEE, dd MMM, yyyy, hh:mm a')}">
-								</th:block>
-								<br>
-							</p>
-						</div>
-					</article>
-				</div>
-				<div class="col-4">
-					<article class="icontext align-items-start"><span
-							class="icon icon-sm rounded-circle bg-primary-light"><i
-								class="text-primary material-icons md-place"></i></span>
-						<div class="text">
-							<h6 class="mb-1">Deliver to</h6>
-							<p class="mb-1" th:text="${order.userAddress}"></p>
-
-						</div>
-					</article>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="table-responsive">
-						<table class="table">
-							<thead>
-								<tr>
-									<th width="30%">Product</th>
-									<th width="15%">Variant</th>
-									<th width="20%">Unit Price</th>
-									<th width="15%">Quantity</th>
-									<th class="text-end" width="20%">Total</th>
-								</tr>
-							</thead>
-							<tbody>
-								<th:block th:each="orderItem : ${orderItems}">
-									<tr>
-										<td>
-											<a class="itemside" href="#">
-												<div class="left">
-													<th:block
-														th:if="${orderItem.products.mediases[0].name.contains('https:')}">
-														<img class="img-sm img-thumbnail"
-															th:src="${orderItem.products.mediases[0].name}" alt="Item">
-													</th:block>
-													<th:block
-														th:if="${!orderItem.products.mediases[0].name.contains('https:')}">
-														<img class="img-sm img-thumbnail"
-															th:src="@{'/assets/imgs/items/' + ${orderItem.products.mediases[0].name}}"
-															alt="Item">
-													</th:block>
-												</div>
-												<div class="info"
-													th:text="${orderItem.products != null ? orderItem.products.name : 'N/A'}">
-													T-shirt
-												</div>
-											</a>
-										</td>
-										<td
-											th:text="${orderItem.productVariants != null ? orderItem.productVariants.value : 'N/A'}">
-											Red</td>
-										<td th:text="${orderItem.price}"> $44.25</td>
-										<td th:text="${orderItem.quantity}"> 2</td>
-										<td th:text="${orderItem.price * orderItem.quantity}" class="text-end"> $99.50
-										</td>
-									</tr>
-								</th:block>
-
-
-							</tbody>
-
-						</table>
-
-
+							</div>
+						</article>
 					</div>
-					<div class="row">
-						<div class="col-md-4">
-							<div class="box shadow-sm bg-light">
-								<h6 class="mb-15">Payment info</h6>
-								<p><img class="border" th:src="@{/assets/imgs/card-brands/2.png}" height="20"> Master
-									Card **** **** 4768<br> Business
-									name: Grand Market LLC<br> Phone: +1 (800) 555-154-52</p>
+					<div class="col-4">
+						<article class="icontext align-items-start">
+							<span class="icon icon-sm rounded-circle bg-primary-light"><i
+									class="text-primary material-icons md-local_shipping"></i></span>
+							<div class="text text-start">
+								<h6 class="mb-1">Order info</h6>
+								<p class="mb-1">
+									Pay method:
+									<th:block th:text="${order.paymentMethod}"></th:block>
+									<br>
+								</p>
+								<p class="mb-1">
+									Pay date:
+									<th:block
+										th:text="${#dates.format(order.paymentDate, 'EEE, dd MMM, yyyy, hh:mm a')}">
+									</th:block>
+									<br>
+								</p>
+							</div>
+						</article>
+					</div>
+					<div class="col-4">
+						<article class="icontext align-items-start"><span
+								class="icon icon-sm rounded-circle bg-primary-light"><i
+									class="text-primary material-icons md-place"></i></span>
+							<div class="text">
+								<h6 class="mb-1">Deliver to</h6>
+								<p class="mb-1" th:text="${order.userAddress}"></p>
+
+							</div>
+						</article>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th width="30%">Product</th>
+										<th width="15%" class="text-center">Variant</th>
+										<th width="20%" class="text-center">Unit Price</th>
+										<th width="15%" class="text-center">Quantity</th>
+										<th class="text-end" width="20%">Total</th>
+									</tr>
+								</thead>
+								<tbody>
+									<th:block th:each="orderItem : ${orderItems}">
+										<tr>
+											<td class="align-middle text-center">
+												<a class="itemside" href="#">
+													<div class="left">
+														<th:block
+															th:if="${orderItem.products.mediases[0].name.contains('https:')}">
+															<img class="img-sm img-thumbnail"
+																th:src="${orderItem.products.mediases[0].name}"
+																alt="Item">
+														</th:block>
+														<th:block
+															th:if="${!orderItem.products.mediases[0].name.contains('https:')}">
+															<img class="img-sm img-thumbnail"
+																th:src="@{'/assets/imgs/items/' + ${orderItem.products.mediases[0].name}}"
+																alt="Item">
+														</th:block>
+													</div>
+													<div class="info"
+														th:text="${orderItem.products != null ? orderItem.products.name : 'N/A'}">
+														T-shirt
+													</div>
+												</a>
+											</td>
+											<td  class="align-middle text-center"
+												th:text="${orderItem.productVariants != null ? orderItem.productVariants.value : 'N/A'}">
+												Red</td>
+											<td class="align-middle text-center" th:text="${orderItem.price}"> $44.25</td>
+											<td class="align-middle text-center" th:text="${orderItem.quantity}"> 2</td>
+											<td class="align-middle text-end" th:text="${orderItem.price * orderItem.quantity}" >
+												$99.50
+											</td>
+										</tr>
+									</th:block>
+
+
+								</tbody>
+
+							</table>
+
+
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+
+							</div>
+							<div class="col-md-2">
+
+							</div>
+
+							<div class="col-md-6">
+								<article class="float-end">
+									<dl class="dlist">
+										<dt>Subtotal:</dt>
+										<dd th:text="${totalAmount}">$973.35</dd>
+									</dl>
+									<dl class="dlist">
+										<dt>Shipping cost:</dt>
+										<dd th:text="${shippingAmount}">$10.00</dd>
+									</dl>
+									<dl class="dlist">
+										<dt>Grand total:</dt>
+										<dd><b class="h5" th:text="${order.totalAmount}">$983.00</b></dd>
+									</dl>
+									<dl class="dlist">
+										<dt class="text-muted">Payment Method:</dt>
+										<dd><span class="badge rounded-pill alert-success text-success"
+												th:text="${order.paymentMethod}">
+											</span></dd>
+									</dl>
+								</article>
 							</div>
 						</div>
-						<div class="col-md-2">
-
-						</div>
-
-						<div class="col-md-6">
-							<article class="float-end">
-								<dl class="dlist">
-									<dt>Subtotal:</dt>
-									<dd th:text="${totalAmount}">$973.35</dd>
-								</dl>
-								<dl class="dlist">
-									<dt>Shipping cost:</dt>
-									<dd>$10.00</dd>
-								</dl>
-								<dl class="dlist">
-									<dt>Grand total:</dt>
-									<dd><b class="h5">$983.00</b></dd>
-								</dl>
-								<dl class="dlist">
-									<dt class="text-muted">Status:</dt>
-									<dd><span class="badge rounded-pill alert-success text-success">Payment
-											done</span></dd>
-								</dl>
-							</article>
-						</div>
 					</div>
-					<br><br>
-					<a class="btn btn-primary" th:href="@{'/vendor/order/tracking/' + ${orderId}}">View Order
-						Tracking</a>
-				</div>
 
+				</div>
 			</div>
+
 		</div>
-		</div>
+
+
+
 
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
@@ -253,6 +242,5 @@
 				}
 			});
 		</script>
-	</section>
 	</section>
 </body>

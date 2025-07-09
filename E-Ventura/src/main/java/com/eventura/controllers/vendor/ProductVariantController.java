@@ -90,6 +90,9 @@ public class ProductVariantController  {
 
 		
 		if(productVariantService.saveProductVariants(productVariant)) {
+			Products product1 = productService.findById(productId);
+			product1.setDeletedAt(null);
+			productService.save(product1);
 			redirectAttributes.addFlashAttribute("sweetAlert", "success");
 			redirectAttributes.addFlashAttribute("message", "Add Variant Successfully");
 		}else {
