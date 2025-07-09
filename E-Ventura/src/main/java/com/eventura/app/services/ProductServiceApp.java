@@ -9,4 +9,5 @@ public interface ProductServiceApp {
 	public List<ProductDto> findByKeyword(String keyword);
 	
 	public ProductDto findById(int id);
+	public List<ProductDto> findByCategoryId(int id);
 }
