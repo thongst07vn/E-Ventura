@@ -11,11 +11,8 @@
 			<div class="breadcrumbs-div">
 				<div class="container">
 					<ul class="breadcrumb">
-						<li><a class="font-xs color-gray-1000" href="index.html">Home</a></li>
-						<li><a class="font-xs color-gray-500" href="shop-grid.html">Electronics</a></li>
-						<li><a class="font-xs color-gray-500" href="shop-grid.html">Cell
-								phone</a></li>
-						<li><a class="font-xs color-gray-500" href="shop-grid.html">Accessories</a></li>
+						<li><a class="font-xs color-gray-1000" th:href="@{/customer/home}">Home</a></li>
+						<li><a class="font-xs color-gray-500" th:href="@{'/product/productdetails/'+${product.id}}" th:text="${product.name}"></a></li>
 					</ul>
 				</div>
 			</div>

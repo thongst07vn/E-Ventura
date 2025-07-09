@@ -18,6 +18,7 @@ public interface OrderStatusService {
 	public List<OrderItemsOrderStatus> findItemStatusAll();
 	
 	public OrderStatus findById(int id);
+	public OrderStatus findByName(String name);
 	
 	public boolean saveOrderItemsOrderStatus(OrderItemsOrderStatus orderItemsOrderStatus);
 }

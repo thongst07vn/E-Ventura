@@ -60,4 +60,10 @@ public class OrderStatusServiceImpl implements OrderStatusService{
 		}
 	}
 
+	@Override
+	public OrderStatus findByName(String name) {
+		// TODO Auto-generated method stub
+		return orderStatusRepository.findByName(name);
+	}
+
 }

@@ -2,25 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<meta name="msapplication-TileColor" content="#0E0E0E">
-	<meta name="template-color" content="#0E0E0E">
-	<meta name="description" content="Index page">
-	<meta name="keywords" content="index, page">
-	<meta name="author" content="">
-	<link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/imgs/template/favicon.svg}">
-	<link th:href="@{/client/assets/css/style.css?v=3.0.0}" rel="stylesheet">
-	<title>Login - Ecom Marketplace Template</title>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="msapplication-TileColor" content="#0E0E0E">
+<meta name="template-color" content="#0E0E0E">
+<meta name="description" content="Index page">
+<meta name="keywords" content="index, page">
+<meta name="author" content="">
+<link rel="shortcut icon" type="image/x-icon"
+	th:href="@{/assets/imgs/template/favicon.svg}">
+<link th:href="@{/client/assets/css/style.css?v=3.0.0}" rel="stylesheet">
+<title>Login - Ecom Marketplace Template</title>
 </head>
 
 <body>
 	<div id="preloader-active">
-		<div class="preloader d-flex align-items-center justify-content-center">
+		<div
+			class="preloader d-flex align-items-center justify-content-center">
 			<div class="preloader-inner position-relative">
 				<div class="text-center">
-					<img class="mb-10" th:src="@{/assets/imgs/template/favicon.svg}" alt="Ecom">
+					<img class="mb-10" th:src="@{/assets/imgs/template/favicon.svg}"
+						alt="Ecom">
 					<div class="preloader-dots"></div>
 				</div>
 			</div>
@@ -33,31 +37,33 @@
 				<div class="header-left">
 					<div class="header-logo">
 						<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
-								th:src="@{/assets/imgs/template/logo.svg}"></a>
+							th:src="@{/assets/imgs/template/logo.svg}"></a>
 					</div>
 
 				</div>
 			</div>
 		</div>
 	</header>
-	<div class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
+	<div
+		class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
 		<div class="mobile-header-wrapper-inner">
 			<div class="mobile-header-content-area">
 				<div class="mobile-logo">
 					<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
-							th:src="@{/assets/imgs/template/logo.svg}"></a>
+						th:src="@{/assets/imgs/template/logo.svg}"></a>
 				</div>
 
 			</div>
 		</div>
 	</div>
 
-	<div class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
+	<div
+		class="mobile-header-active mobile-header-wrapper-style perfect-scrollbar">
 		<div class="mobile-header-wrapper-inner">
 			<div class="mobile-header-content-area">
 				<div class="mobile-logo">
 					<a class="d-flex" th:href="@{/customer/home}"><img alt="Ecom"
-							th:src="@{/assets/imgs/template/logo.svg}"></a>
+						th:src="@{/assets/imgs/template/logo.svg}"></a>
 				</div>
 
 			</div>
@@ -75,8 +81,8 @@
 						<form method="POST" th:action="@{/customer/process-login}">
 							<div class="form-register mt-30 mb-30">
 								<div class="form-group">
-									<label class="mb-5 font-sm color-gray-700">Email / Phone
-										/ Username *</label> <input class="form-control" type="text"
+									<label class="mb-5 font-sm color-gray-700">Email /
+										Phone / Username *</label> <input class="form-control" type="text"
 										name="email">
 								</div>
 								<div class="form-group">
@@ -86,28 +92,61 @@
 								<div class="row">
 									<div class="col-lg-6">
 										<div class="form-group">
-											<label class="color-gray-500 font-xs"> <input class="checkagree"
-													type="checkbox">Remember me
+											<label class="color-gray-500 font-xs"> <input
+												class="checkagree" type="checkbox">Remember me
 											</label>
 										</div>
 									</div>
 									<div class="col-lg-6 text-end">
 										<div class="form-group">
-											<a class="font-xs color-gray-500" href="#">Forgot your
-												password?</a>
+											<a class="font-xs color-gray-500" href="#"
+												data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot
+												your password?</a>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
-									<input class="font-md-bold btn btn-buy" type="submit" value="Sign In">
+									<input class="font-md-bold btn btn-buy" type="submit"
+										value="Sign In">
 								</div>
 								<div class="mt-20">
-									<span class="font-xs color-gray-500 font-medium">Have not
-										an account?</span><a class="font-xs color-brand-3 font-medium"
+									<span class="font-xs color-gray-500 font-medium">Have
+										not an account?</span><a class="font-xs color-brand-3 font-medium"
 										th:href="@{/customer/register}">Sign Up</a>
 								</div>
 							</div>
 						</form>
+						<div class="modal fade" id="forgotPasswordModal" tabindex="-1"
+							aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="forgotPasswordModalLabel">Forgot
+											your password?</h5>
+										<button type="button" class="btn-close"
+											data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										<p>Please enter your email address. We will send you a
+											link to reset your password.</p>
+										<form method="POST" th:action="@{/customer/forgot-password}">
+											<div class="mb-3">
+												<label for="forgotEmailInput" class="form-label">Email
+													Address</label> <input type="email" class="form-control"
+													id="forgotEmailInput" name="forgotEmailInput" placeholder="name@example.com"
+													required>
+											</div>
+											<button type="submit" class="btn btn-primary">Send
+												Reset Link</button>
+										</form>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Close</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="col-lg-4">
 						<div class="box-login-social pt-65 pl-50">
@@ -115,17 +154,14 @@
 							<div class="box-button-login mt-25">
 								<a th:href="@{/oauth2/authorization/google}"
 									class="btn btn-login font-md-bold color-brand-3 mb-15">Sign
-									in with<img th:src="@{/assets/imgs/page/account/google.svg}" alt="Ecom">
+									in with<img th:src="@{/assets/imgs/page/account/google.svg}"
+									alt="Ecom">
 								</a><a th:href="@{/oauth2/authorization/facebook}"
 									class="btn btn-login font-md-bold color-brand-3 mb-15">Sign
 									in with<span class="color-blue font-md-bold">&nbsp;Facebook</span>
 								</a>
 							</div>
-							<div class="mt-10 text-center">
-								<span class="font-xs color-gray-900">Buying for work?</span><a
-									class="color-brand-1 font-xs" th:href="@{/vendor/login}">Create a free
-									business account</a>
-							</div>
+
 						</div>
 					</div>
 				</div>
@@ -136,7 +172,8 @@
 
 	<script th:src="@{/client/assets/js/vendors/modernizr-3.6.0.min.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/jquery-3.6.0.min.js}"></script>
-	<script th:src="@{/client/assets/js/vendors/jquery-migrate-3.3.0.min.js}"></script>
+	<script
+		th:src="@{/client/assets/js/vendors/jquery-migrate-3.3.0.min.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/bootstrap.bundle.min.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/waypoints.js}"></script>
 	<script th:src="@{/client/assets/js/vendors/wow.js}"></script>

@@ -126,7 +126,6 @@
 										th:if="${groupedOrderItems != null and not #maps.isEmpty(groupedOrderItems)}">
 										<th:block th:each="vendorEntry : ${groupedOrderItems}">
 											<tr class="table-group-divider vendor-row-header">
-
 												<td colspan="10" class="table-primary py-2"><strong>Vendor
 														Name: <span th:text="${vendorNames.get(vendorEntry.key)}"></span>
 												</strong> <span class="badge rounded-pill vendor-status-badge"
@@ -134,12 +133,12 @@
 													th:data-vendor-id="${vendorEntry.key}"
 													th:data-current-status="${vendorLatestStatuses.get(vendorEntry.key)}"
 													th:classappend="${vendorLatestStatuses.get(vendorEntry.key) == 'Ordered' ? 'alert-info' :
-                   (vendorLatestStatuses.get(vendorEntry.key) == 'Confirmed' ? 'alert-primary' :
-                   (vendorLatestStatuses.get(vendorEntry.key) == 'Delivering' ? 'alert-warning' :
-                   (vendorLatestStatuses.get(vendorEntry.key) == 'Received' ? 'alert-success' :
-                   (vendorLatestStatuses.get(vendorEntry.key) == 'Canceled' ? 'alert-danger' : ''))))}"
+                               (vendorLatestStatuses.get(vendorEntry.key) == 'Confirmed' ? 'alert-primary' :
+                               (vendorLatestStatuses.get(vendorEntry.key) == 'Delivering' ? 'alert-warning' :
+                               (vendorLatestStatuses.get(vendorEntry.key) == 'Received' ? 'alert-success' :
+                               (vendorLatestStatuses.get(vendorEntry.key) == 'Canceled' ? 'alert-danger' : ''))))}"
 													th:text="${vendorLatestStatuses.get(vendorEntry.key)}">Vendor
-														Status</span></td>
+														Status </span></td>
 											</tr>
 											<tr th:each="orderItem : ${vendorEntry.value}">
 												<td><a class="itemside"
@@ -147,8 +146,8 @@
 														<div class="left">
 															<img class="img-xs img-thumbnail"
 																th:src="${orderItem.products.mediases != null and not orderItem.products.mediases.empty and orderItem.products.mediases[0].name.contains('https:') ?
-                                   orderItem.products.mediases[0].name :
-                                   (orderItem.products.mediases != null and not orderItem.products.mediases.empty ? '/assets/imgs/items/' + orderItem.products.mediases[0].name : '/assets/imgs/placeholder.jpg')}"
+                                       orderItem.products.mediases[0].name :
+                                       (orderItem.products.mediases != null and not orderItem.products.mediases.empty ? '/assets/imgs/items/' + orderItem.products.mediases[0].name : '/assets/imgs/placeholder.jpg')}"
 																alt="Item" width="40" height="40">
 														</div>
 														<div class="info">
@@ -161,14 +160,10 @@
 													th:id="'status-' + ${orderItem.id}"
 													th:data-order-item-id="${orderItem.id}"
 													th:data-vendor-id="${orderItem.products.vendors.id}"
-													th:data-current-status="${vendorLatestStatuses.get(orderItem.products.vendors.id)}"
-													th:classappend="${vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Ordered' ? 'alert-info' :
-                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Confirmed' ? 'alert-primary' :
-                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Delivering' ? 'alert-warning' :
-                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Received' ? 'alert-success' :
-                                       (vendorLatestStatuses.get(orderItem.products.vendors.id) == 'Canceled' ? 'alert-danger' : ''))))}"
-													th:text="${vendorLatestStatuses.get(orderItem.products.vendors.id)}">Trạng
-														thái</span></td>
+													th:data-current-status="${orderItemSpecificStatuses.get(orderItem.id)}"
+													th:classappend="${orderItemSpecificStatuses.get(orderItem.id) == 'Ordered' ? 'alert-info' : (orderItemSpecificStatuses.get(orderItem.id) == 'Confirmed' ? 'alert-primary' : (orderItemSpecificStatuses.get(orderItem.id) == 'Delivering' ? 'alert-warning' : (orderItemSpecificStatuses.get(orderItem.id) == 'Received' ? 'alert-success' : (orderItemSpecificStatuses.get(orderItem.id) == 'Canceled' ? 'alert-danger' : ''))))}"
+													th:text="${orderItemSpecificStatuses.get(orderItem.id)}">Trạng
+														thái </span></td>
 											</tr>
 										</th:block>
 									</th:block>
@@ -191,16 +186,48 @@
 		<script th:src="@{/admin/assets/js/vendors/jquery-3.6.0.min.js}"></script>
 		<script>
 		    $(document).ready(function() {
-		        // Handle double-click on vendor status badge
+		        // Helper function to update badge classes
+		        function updateBadgeClasses($element, newStatus) {
+		            $element.removeClass('alert-info alert-primary alert-warning alert-success alert-danger');
+		            if (newStatus === 'Ordered') {
+		                $element.addClass('alert-info');
+		            } else if (newStatus === 'Confirmed') {
+		                $element.addClass('alert-primary');
+		            } else if (newStatus === 'Delivering') {
+		                $element.addClass('alert-warning');
+		            } else if (newStatus === 'Received') {
+		                $element.addClass('alert-success');
+		            } else if (newStatus === 'Canceled') {
+		                $element.addClass('alert-danger');
+		            }
+		        }
+		
+		        // --- Existing Vendor Status Logic ---
 		        $('.vendor-status-badge').dblclick(function() {
 		            const $this = $(this);
 		            const vendorId = $this.data('vendor-id');
 		            const currentStatus = $this.data('current-status');
 		            let newStatus = '';
 		
+		            // Get all order item IDs for this vendor currently displayed
+		            const orderItemIdsForVendor = $(`.order-item-status[data-vendor-id='${vendorId}']`).map(function() {
+		                return $(this).data('order-item-id');
+		            }).get(); // .get() converts jQuery object to a native array
+		
+		            if (orderItemIdsForVendor.length === 0) {
+		                Swal.fire({
+		                    title: 'No Items',
+		                    text: 'No order items found for this vendor to update.',
+		                    icon: 'info',
+		                    confirmButtonText: 'OK'
+		                });
+		                return; // Exit if no items
+		            }
+		
 		            if (currentStatus === 'Confirmed') {
 		                newStatus = 'Delivering';
-		                updateVendorOrderStatus(vendorId, newStatus, $this);
+		                // Call the new bulk update function
+		                updateBulkOrderItemStatus(orderItemIdsForVendor, newStatus, $this);
 		            } else if (currentStatus === 'Delivering') {
 		                Swal.fire({
 		                    title: 'Change Vendor Order Status',
@@ -220,19 +247,20 @@
 		                }).then((result) => {
 		                    if (result.isConfirmed) {
 		                        newStatus = 'Received';
-		                        updateVendorOrderStatus(vendorId, newStatus, $this);
+		                        updateBulkOrderItemStatus(orderItemIdsForVendor, newStatus, $this);
 		                    } else if (result.isDenied) {
 		                        newStatus = 'Canceled';
-		                        updateVendorOrderStatus(vendorId, newStatus, $this);
+		                        updateBulkOrderItemStatus(orderItemIdsForVendor, newStatus, $this);
 		                    }
 		                });
 		            }
 		        });
 		
-		        function updateVendorOrderStatus(vendorId, newStatus, $vendorBadgeElement) {
+		        // NEW function to update multiple order items for a vendor
+		        function updateBulkOrderItemStatus(orderItemIds, newStatus, $vendorBadgeElement) {
 		            Swal.fire({
 		                title: 'Updating...',
-		                text: 'Please wait while we update the order status for this vendor.',
+		                text: 'Please wait while we update the order status for this vendor\'s items.',
 		                allowOutsideClick: false,
 		                didOpen: () => {
 		                    Swal.showLoading();
@@ -240,35 +268,48 @@
 		            });
 		
 		            $.ajax({
-		                url: '/admin/order-items/update-status-by-vendor', // New endpoint for vendor-level update
+		                url: '/admin/order-items/update-bulk-status', // New endpoint
 		                type: 'POST',
 		                contentType: 'application/json',
 		                data: JSON.stringify({
-		                    vendorId: vendorId,
-		                    newStatus: newStatus
+		                    orderItemIds: orderItemIds, // Send the array of IDs
+		                    newStatusName: newStatus
 		                }),
 		                success: function(response) {
 		                    Swal.close();
 		                    if (response.success) {
-		                        // Update the vendor badge
+		                        // Update the vendor badge (overall status for display)
 		                        $vendorBadgeElement.text(newStatus);
 		                        $vendorBadgeElement.data('current-status', newStatus);
 		                        updateBadgeClasses($vendorBadgeElement, newStatus);
 		
 		                        // Update all individual order item badges for this vendor
-		                        $(`.order-item-status[data-vendor-id='${vendorId}']`).each(function() {
-		                            const $itemBadge = $(this);
-		                            $itemBadge.text(newStatus);
-		                            $itemBadge.data('current-status', newStatus);
-		                            updateBadgeClasses($itemBadge, newStatus);
+		                        // Select only those whose IDs were part of the update request
+		                        orderItemIds.forEach(function(id) {
+		                            const $itemBadge = $(`#status-${id}`); // Select by specific ID
+		                            if ($itemBadge.length) { // Check if the element exists
+		                                $itemBadge.text(newStatus);
+		                                $itemBadge.data('current-status', newStatus);
+		                                updateBadgeClasses($itemBadge, newStatus);
+		                            }
 		                        });
 		
 		                        Swal.fire({
 		                            title: 'Success!',
-		                            text: 'Order status for vendor updated successfully to ' + newStatus + '!',
+		                            text: 'Order status for vendor items updated successfully to ' + newStatus + '!',
 		                            icon: 'success',
 		                            confirmButtonText: 'OK'
 		                        });
+		                        // Optional: If there were partial failures, display them
+		                        if (response.partialSuccess) {
+		                            Swal.fire({
+		                                title: 'Partial Success!',
+		                                text: response.message,
+		                                icon: 'warning',
+		                                confirmButtonText: 'OK'
+		                            });
+		                        }
+		
 		                    } else {
 		                        Swal.fire({
 		                            title: 'Error!',
@@ -291,20 +332,102 @@
 		            });
 		        }
 		
-		        // Helper function to update badge classes
-		        function updateBadgeClasses($element, newStatus) {
-		            $element.removeClass('alert-info alert-primary alert-warning alert-success alert-danger');
-		            if (newStatus === 'Ordered') {
-		                $element.addClass('alert-info');
-		            } else if (newStatus === 'Confirmed') {
-		                $element.addClass('alert-primary');
-		            } else if (newStatus === 'Delivering') {
-		                $element.addClass('alert-warning');
-		            } else if (newStatus === 'Received') {
-		                $element.addClass('alert-success');
-		            } else if (newStatus === 'Canceled') {
-		                $element.addClass('alert-danger');
+		        // --- Individual Order Item Status Logic (NO CHANGE, as it already updates one item) ---
+		        $('.order-item-status').dblclick(function() {
+		            const $this = $(this);
+		            const orderItemId = $this.data('order-item-id');
+		            const currentStatus = $this.data('current-status');
+		            let newStatus = '';
+		
+		            // Define the status flow for individual items
+		            if (currentStatus === 'Ordered') {
+		                newStatus = 'Confirmed';
+		                updateSingleOrderItemStatus(orderItemId, newStatus, $this);
+		            } else if (currentStatus === 'Confirmed') {
+		                newStatus = 'Delivering';
+		                updateSingleOrderItemStatus(orderItemId, newStatus, $this);
+		            } else if (currentStatus === 'Delivering') {
+		                Swal.fire({
+		                    title: 'Change Item Order Status',
+		                    text: "What's the next status for this item?",
+		                    icon: 'question',
+		                    showCancelButton: true,
+		                    showDenyButton: true, // For 'Canceled' option
+		                    confirmButtonText: 'Received',
+		                    denyButtonText: 'Canceled', // Option to cancel
+		                    cancelButtonText: 'Keep Delivering', // Option to not change
+		                    reverseButtons: true,
+		                    customClass: {
+		                        confirmButton: 'swal2-confirm',
+		                        denyButton: 'swal2-deny',
+		                        cancelButton: 'swal2-cancel'
+		                    }
+		                }).then((result) => {
+		                    if (result.isConfirmed) {
+		                        newStatus = 'Received';
+		                        updateSingleOrderItemStatus(orderItemId, newStatus, $this);
+		                    } else if (result.isDenied) {
+		                        newStatus = 'Canceled';
+		                        updateSingleOrderItemStatus(orderItemId, newStatus, $this);
+		                    }
+		                    // If result.isDismissed (e.g., user clicked outside or Cancel), do nothing.
+		                });
 		            }
+		            // You can add more conditions here for other statuses if needed (e.g., directly cancel from any state)
+		        });
+		
+		        function updateSingleOrderItemStatus(orderItemId, newStatus, $itemBadgeElement) {
+		            Swal.fire({
+		                title: 'Updating...',
+		                text: 'Please wait while we update the status for this item.',
+		                allowOutsideClick: false,
+		                didOpen: () => {
+		                    Swal.showLoading();
+		                }
+		            });
+		
+		            $.ajax({
+		                url: '/admin/order-item/update-status', // This is the existing endpoint for single item update
+		                type: 'POST',
+		                contentType: 'application/json',
+		                data: JSON.stringify({
+		                    orderItemId: orderItemId,
+		                    newStatusName: newStatus
+		                }),
+		                success: function(response) {
+		                    Swal.close();
+		                    if (response.success) {
+		                        // Update only the specific item badge
+		                        $itemBadgeElement.text(newStatus);
+		                        $itemBadgeElement.data('current-status', newStatus);
+		                        updateBadgeClasses($itemBadgeElement, newStatus);
+		
+		                        Swal.fire({
+		                            title: 'Success!',
+		                            text: 'Item status updated successfully to ' + newStatus + '!',
+		                            icon: 'success',
+		                            confirmButtonText: 'OK'
+		                        });
+		                    } else {
+		                        Swal.fire({
+		                            title: 'Error!',
+		                            text: 'Failed to update item status: ' + response.message,
+		                            icon: 'error',
+		                            confirmButtonText: 'OK'
+		                        });
+		                    }
+		                },
+		                error: function(xhr, status, error) {
+		                    Swal.close();
+		                    Swal.fire({
+		                        title: 'Error!',
+		                        text: 'An error occurred while updating item status. Please try again.',
+		                        icon: 'error',
+		                        confirmButtonText: 'OK'
+		                    });
+		                    console.error("AJAX Error: ", xhr.responseText);
+		                }
+		            });
 		        }
 		    });
 		</script>

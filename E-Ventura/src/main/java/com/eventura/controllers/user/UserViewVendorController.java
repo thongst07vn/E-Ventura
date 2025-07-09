@@ -146,10 +146,10 @@ public class UserViewVendorController {
 			Users user = userService.findByEmail(userDetails.getUsername());
 			VendorReviews vendorReviews = vendorReviewService.findVendorReviewByUserAndVendorId(vendorId, user.getId());
 			if (vendorReviews != null) {
-				if (!vendorReviews.isFollow()) {
-					vendorReviews.setFollow(true);
-				} else {
+				if (vendorReviews.isFollow()) {
 					vendorReviews.setFollow(false);
+				} else {
+					vendorReviews.setFollow(true);
 				}
 			} else {
 				if ("follow".equals(actionType)) {
@@ -165,9 +165,9 @@ public class UserViewVendorController {
 			VendorReviews vendorReviews = vendorReviewService.findVendorReviewByUserAndVendorId(vendorId, user.getId());
 			if (vendorReviews != null) {
 				if (!vendorReviews.isFollow()) {
-					vendorReviews.setFollow(false);
-				} else {
 					vendorReviews.setFollow(true);
+				} else {
+					vendorReviews.setFollow(false);
 				}
 			} else {
 				if ("follow".equals(actionType)) {
