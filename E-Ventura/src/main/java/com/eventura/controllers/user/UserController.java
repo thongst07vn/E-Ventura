@@ -51,14 +51,17 @@ import com.eventura.entities.OrderItemsOrderStatus;
 
 import com.eventura.entities.Orders;
 import com.eventura.entities.ProductCategories;
+import com.eventura.entities.ProductReviews;
 import com.eventura.entities.Products;
 import com.eventura.entities.Provinces;
 import com.eventura.entities.Roles;
 import com.eventura.entities.UserAddress;
 import com.eventura.entities.Users;
+import com.eventura.entities.VendorReviews;
 import com.eventura.entities.Vendors;
 import com.eventura.entities.Wards;
 import com.eventura.helpers.FileHelper;
+import com.eventura.helpers.RandomStringCode;
 import com.eventura.services.AddressService;
 import com.eventura.services.CategoryService;
 
@@ -71,6 +74,7 @@ import com.eventura.services.OrderStatusService;
 import com.eventura.services.ProductService;
 import com.eventura.services.RoleService;
 import com.eventura.services.UserService;
+import com.eventura.services.VendorReviewService;
 import com.eventura.services.VendorService;
 
 import jakarta.servlet.http.HttpSession;
@@ -82,7 +86,7 @@ public class UserController {
 
 	@Autowired
 	private RoleService roleService;
-	
+
 	@Autowired
 	private UserService userService;
 
@@ -94,7 +98,7 @@ public class UserController {
 
 	@Autowired
 	private AddressService addressService;
-	
+
 	@Autowired
 	private Environment environment;
 	@Autowired
@@ -107,6 +111,8 @@ public class UserController {
 	private OrderStatusService orderStatusService;
 	@Autowired
 	private VendorService vendorService;
+	@Autowired
+	private VendorReviewService vendorReviewService;
 
 	@GetMapping({ "home", "/" })
 	public String home(ModelMap modelMap, HttpSession session) {
@@ -131,8 +137,9 @@ public class UserController {
 		modelMap.put("user", user);
 		return "customer/pages/login/register";
 	}
+
 	@PostMapping("register")
-	public String register(@ModelAttribute("user") Users user, @ModelAttribute("userAddress") UserAddress userAddress,			
+	public String register(@ModelAttribute("user") Users user, @ModelAttribute("userAddress") UserAddress userAddress,
 			@RequestParam("rePassword") String rePassword,
 			@RequestParam(value = "provinceCode", required = false) String provinceCode,
 			@RequestParam(value = "districtCode", required = false) String districtCode,
@@ -231,8 +238,8 @@ public class UserController {
 		userAddress.setName("Bao");
 
 		// Save user address
-		
-		if(addressService.save(userAddress)) {
+
+		if (addressService.save(userAddress)) {
 			// Send verification email
 			String baseUrl = environment.getProperty("base_url");
 			String url = baseUrl + "customer/verify?email=" + user.getEmail();
@@ -244,18 +251,18 @@ public class UserController {
 					+ "<h2 style='color: #4CAF50;'>CUSTOMER INFORMATION:</h2>"
 					+ "<div style='background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>"
 					+ "<p><strong>Fullname:</strong> " + user.getFirstName() + " " + user.getLastName() + "</p>"
-					+ "<p><strong>Username:</strong> " + user.getUsername() + "</p>" + "<p><strong>Phone Number:</strong> "
-					+ user.getPhoneNumber() + "</p>" + "<p><strong>Email:</strong> " + user.getEmail() + "</p>"
-					+ "<p><strong>Address:</strong> " + userAddress.getAddress() + ", " + userAddress.getWards().getName()
-					+ ", " + userAddress.getDistricts().getName() + ", " + userAddress.getProvinces().getName() + "</p>"
+					+ "<p><strong>Username:</strong> " + user.getUsername() + "</p>"
+					+ "<p><strong>Phone Number:</strong> " + user.getPhoneNumber() + "</p>"
+					+ "<p><strong>Email:</strong> " + user.getEmail() + "</p>" + "<p><strong>Address:</strong> "
+					+ userAddress.getAddress() + ", " + userAddress.getWards().getName() + ", "
+					+ userAddress.getDistricts().getName() + ", " + userAddress.getProvinces().getName() + "</p>"
 					+ "</div>" + "<p>Click <a href='" + url
 					+ "' style='color: #4CAF50;'>here</a> to activate your Vendor Account.</p>" + "</div>";
-			
-			
 
 			if (mailService.send(from, to, subject, body)) {
 				redirectAttributes.addFlashAttribute("sweetAlert", "success");
-				redirectAttributes.addFlashAttribute("message", "Register Sucessfully, Check your email to activate your account.");
+				redirectAttributes.addFlashAttribute("message",
+						"Register Sucessfully, Check your email to activate your account.");
 
 			} else {
 				redirectAttributes.addFlashAttribute("sweetAlert", "error");
@@ -263,9 +270,139 @@ public class UserController {
 
 			}
 
-		}	
+		}
 		return "redirect:/customer/register";
 	}
+	//reset-pass
+	@PostMapping("forgot-password")
+	public String forgotPassword(@RequestParam("forgotEmailInput") String forgotEmailInput, RedirectAttributes redirectAttributes,
+	        ModelMap modelMap) {
+
+	    // 1. Find the user by email (assuming a UserService or UserRepository)
+	    // You need to implement this part based on your user management.
+	    // For example: User user = userService.findByEmail(forgotEmailInput);
+	    // If user is not found, you might want to return a specific message,
+	    // but for security, often you'd send a generic "if an account exists..." message
+	    // to prevent email enumeration.
+
+	    // For demonstration, let's assume the email is valid and we're just sending the email.
+	    // In a real app, you'd check if a user exists for forgotEmailInput.
+
+	    // 2. Generate a unique, time-limited token
+	    // This token should be stored in your database along with its expiry date,
+	    // linked to the user's account.
+	    String resetToken = RandomStringCode.generateRandomAlphaNumeric(10); // Basic token generation
+	    Users user = userService.findByEmail(forgotEmailInput);
+	    user.setRememberToken(resetToken);
+	    userService.save(user);
+	    // You would save this token to the database along with its expiry.
+	    // E.g., userService.createPasswordResetTokenForUser(user, resetToken);
+
+	    // 3. Construct the reset URL with the token
+	    String baseUrl = environment.getProperty("base_url");
+	    // Ensure baseUrl ends with a slash if not already handled.
+	    String url = baseUrl + "customer/change-password?token=" + resetToken+"&email="+forgotEmailInput; // Changed to token
+
+	    String from = environment.getProperty("spring.mail.username");
+	    String to = forgotEmailInput;
+	    String subject = "Password Reset Request for Your Account";
+	    String body = "<div style='font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;'>"
+	            + "<h2 style='color: #4CAF50;'>PASSWORD RESET REQUEST:</h2>"
+	            + "<div style='background-color: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);'>"
+	            + "<p>Hello,</p>" // You might not have the user's name readily here, or fetch it
+	            + "<p>We received a request to reset the password for your account associated with the email address: <strong>" + forgotEmailInput + "</strong>.</p>"
+	            + "<p>If you made this request, please click the link below to reset your password:</p>"
+	            + "<p style='text-align: center; margin: 20px 0;'>"
+	            + "<a href='" + url + "' style='display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: #ffffff; text-decoration: none; border-radius: 5px;'>"
+	            + "Reset Your Password"
+	            + "</a>"
+	            + "</p>"
+	            + "<p>This link will expire in **24 hours**. (Make sure to implement this expiry check in your backend)</p>"
+	            + "<p>If you did not request a password reset, please ignore this email. Your password will remain unchanged.</p>"
+	            + "</div>"
+	            + "<p style='font-size: 12px; color: #888; text-align: center; margin-top: 20px;'>&copy; Your Company Name " + java.time.Year.now().getValue() + "</p>"
+	            + "</div>";
+
+	    if (mailService.send(from, to, subject, body)) {
+	        redirectAttributes.addFlashAttribute("sweetAlert", "success");
+	        // Correct message for password reset request
+	        redirectAttributes.addFlashAttribute("message",
+	                "If an account with that email exists, a password reset link has been sent to " + forgotEmailInput + ".");
+	        
+	    } else {
+	        redirectAttributes.addFlashAttribute("sweetAlert", "error");
+	        redirectAttributes.addFlashAttribute("message", "Failed to send password reset email. Please try again later.");
+	    }
+	    
+	    // Redirect to a more appropriate page, e.g., login or a confirmation page
+	    return "redirect:/customer/login"; // Or a page that just says "Check your email"
+	}
+	@GetMapping("change-password")
+	public String changePassword(@RequestParam("token") String resetToken,@RequestParam("email") String email, RedirectAttributes redirectAttributes,
+	        ModelMap modelMap) {
+
+	    // 1. Validate the resetToken
+	    // You'd have a service method to find and validate the token.
+	    // For example: PasswordResetToken token = userService.getPasswordResetToken(resetToken);
+	    // If token is null, expired, or invalid, redirect with an error.
+
+	    // For demonstration:
+	    boolean isValidToken = true; // Replace with actual token validation logic
+	    // You'd also get the user associated with this token to display their email or username
+	    // String userEmail = token.getUser().getEmail(); // If you stored user with token
+
+	    if (isValidToken) { // Replace with actual token validation
+	        modelMap.addAttribute("resetToken", resetToken); // Pass token to the view
+	        modelMap.addAttribute("email",email);
+	        // Optionally, pass the email associated with the token to pre-fill or display
+	        // modelMap.addAttribute("userEmail", userEmail);
+	        return "customer/pages/account/changepassword";
+	    } else {
+	        redirectAttributes.addFlashAttribute("sweetAlert", "error");
+	        redirectAttributes.addFlashAttribute("message", "Invalid or expired password reset link.");
+	        return "redirect:/customer/login"; // Or another appropriate page
+	    }
+	}
+	@PostMapping("update-password")
+	public String updatePassword(@RequestParam("token") String resetToken,@RequestParam("email") String email,
+	                             @RequestParam("newPassword") String newPassword,
+	                             @RequestParam("confirmNewPassword") String confirmNewPassword,
+	                             RedirectAttributes redirectAttributes) {
+		
+	    // 1. Validate the token again (important for security)
+	    // 2. Validate that newPassword and confirmNewPassword match
+	    // 3. Update the user's password in the database (encrypt it!)
+	    // 4. Invalidate the reset token after successful password change
+		System.out.println("cc");
+	    if (!newPassword.equals(confirmNewPassword)) {
+	        redirectAttributes.addFlashAttribute("sweetAlert", "error");
+	        redirectAttributes.addFlashAttribute("message", "New password and confirmation do not match.");
+	        // Redirect back to the change password page with the token
+	        return "redirect:/customer/change-password?token=" + resetToken;
+	    }
+	    Users user = userService.findByEmail(email);
+	    if(resetToken.equals(user.getRememberToken())) {
+	    	user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+	    	user.setRememberToken(null);
+	    	userService.save(user);
+	    	redirectAttributes.addFlashAttribute("sweetAlert", "success");
+	 	    redirectAttributes.addFlashAttribute("message", "Your password has been successfully reset. Please login with your new password.");
+	 	   return "redirect:/customer/login";
+	    }else {
+	    	redirectAttributes.addFlashAttribute("sweetAlert", "error");
+	        redirectAttributes.addFlashAttribute("message", "token wrong.");
+	        return "redirect:/customer/change-password?token=" + resetToken;
+	    }
+	    
+	    // Example of token validation and password update (you need to implement this fully)
+	    // PasswordResetToken token = userService.getPasswordResetToken(resetToken);
+	    // if (token == null || token.isExpired() || !token.isValid()) { ... error ... }
+	    // User user = token.getUser();
+	    // userService.updatePassword(user, newPassword); // Encrypt password here!
+	    // userService.invalidateToken(token); // Mark token as used/invalidated
+
+	   
+  }
 	
 	/* Verify */
 	@GetMapping({ "verify" })
@@ -286,6 +423,7 @@ public class UserController {
 			}
 		}
 		return "redirect:/customer/login";
+
 	}
 	
 	@GetMapping({ "login" })
@@ -316,13 +454,9 @@ public class UserController {
 		modelMap.put("addAddressVariable", new UserAddress());
 		modelMap.put("provinces", addressService.findAllProvinces());
 		modelMap.addAttribute("activeTab", activeTab);
-		
-
 
 		return "customer/pages/account/profile";
 	}
-
-		
 
 	@PostMapping({ "edit/{id}" })
 	public String editProfile(@ModelAttribute("user") Users user, Authentication authentication,
@@ -546,12 +680,11 @@ public class UserController {
 
 	}
 
-	
 	// User Orders
 	@GetMapping({ "orders" })
 	public String orders(Authentication authentication, ModelMap modelMap, Model model,
 			@AuthenticationPrincipal UserDetails userDetails,
-			@RequestParam(name = "tab", required = false, defaultValue = "orders") String activeTab, 
+			@RequestParam(name = "tab", required = false, defaultValue = "orders") String activeTab,
 			@RequestParam(defaultValue = "0") int page) {
 		Users user = new Users();
 
@@ -570,133 +703,213 @@ public class UserController {
 		modelMap.put("addAddressVariable", new UserAddress());
 		modelMap.put("provinces", addressService.findAllProvinces());
 		modelMap.addAttribute("activeTab", activeTab);
-		 /* ORDER CỦA BẢO */
-        int pageSize = 5;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Page<Orders> orderPage = orderService.findOrdersByUserId(user.getId(), pageable);
+		/* ORDER CỦA BẢO */
+		int pageSize = 5;
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<Orders> orderPage = orderService.findOrdersByUserId(user.getId(), pageable);
 
-        // Map này sẽ lưu trạng thái mới nhất cho mỗi nhóm vendor trong mỗi Order
-        // Key: Order ID -> Value: (Key: Vendor ID -> Value: Trạng thái mới nhất của nhóm đó)
-        Map<Integer, Map<Integer, OrderItemsOrderStatus>> latestStatusesByOrderAndVendor = new LinkedHashMap<>();
-        // Map này vẫn giữ nguyên cấu trúc cũ để truyền danh sách OrderItems
-        Map<Integer, Map<Integer, List<OrderItems>>> allGroupedOrderItems = new LinkedHashMap<>();
+		// Map này sẽ lưu trạng thái mới nhất cho mỗi nhóm vendor trong mỗi Order
+		// Key: Order ID -> Value: (Key: Vendor ID -> Value: Trạng thái mới nhất của
+		// nhóm đó)
+		Map<Integer, Map<Integer, OrderItemsOrderStatus>> latestStatusesByOrderAndVendor = new LinkedHashMap<>();
+		// Map này vẫn giữ nguyên cấu trúc cũ để truyền danh sách OrderItems
+		Map<Integer, Map<Integer, List<OrderItems>>> allGroupedOrderItems = new LinkedHashMap<>();
 
+		for (Orders order : orderPage) {
+			List<OrderItems> orderItems = orderItemService.findAllOrderItemsByOrderId(order.getId());
+			Map<Integer, List<OrderItems>> groupedByVendor = orderItemService.groupOrderItemsByVendor(orderItems);
 
-        for (Orders order : orderPage) {
-            List<OrderItems> orderItems = orderItemService.findAllOrderItemsByOrderId(order.getId());
-            Map<Integer, List<OrderItems>> groupedByVendor = orderItemService.groupOrderItemsByVendor(orderItems);
+			// Xử lý để lấy trạng thái mới nhất cho mỗi nhóm vendor
+			Map<Integer, OrderItemsOrderStatus> vendorLatestStatuses = new LinkedHashMap<>();
+			for (Map.Entry<Integer, List<OrderItems>> vendorEntry : groupedByVendor.entrySet()) {
+				List<OrderItems> itemsForVendor = vendorEntry.getValue();
+				if (!itemsForVendor.isEmpty()) {
+					OrderItems firstItemInGroup = itemsForVendor.get(0); // Lấy một item bất kỳ trong nhóm
+					// Tìm trạng thái mới nhất cho item này
+					OrderItemsOrderStatus latestStatus = firstItemInGroup.getOrderItemsOrderStatuses().stream()
+							.max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt)).orElse(null);
+					vendorLatestStatuses.put(vendorEntry.getKey(), latestStatus);
+				}
+			}
+			latestStatusesByOrderAndVendor.put(order.getId(), vendorLatestStatuses);
+			allGroupedOrderItems.put(order.getId(), groupedByVendor);
+		}
 
-            // Xử lý để lấy trạng thái mới nhất cho mỗi nhóm vendor
-            Map<Integer, OrderItemsOrderStatus> vendorLatestStatuses = new LinkedHashMap<>();
-            for (Map.Entry<Integer, List<OrderItems>> vendorEntry : groupedByVendor.entrySet()) {
-                List<OrderItems> itemsForVendor = vendorEntry.getValue();
-                if (!itemsForVendor.isEmpty()) {
-                    OrderItems firstItemInGroup = itemsForVendor.get(0); // Lấy một item bất kỳ trong nhóm
-                    // Tìm trạng thái mới nhất cho item này
-                    OrderItemsOrderStatus latestStatus = firstItemInGroup.getOrderItemsOrderStatuses().stream()
-                            .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
-                            .orElse(null);
-                    vendorLatestStatuses.put(vendorEntry.getKey(), latestStatus);
-                }
-            }
-            latestStatusesByOrderAndVendor.put(order.getId(), vendorLatestStatuses);
-            allGroupedOrderItems.put(order.getId(), groupedByVendor);
-        }
+		modelMap.put("groupedOrderItemsByOrder", allGroupedOrderItems);
+		modelMap.put("latestStatusesByOrderAndVendor", latestStatusesByOrderAndVendor); // THÊM MAP NÀY VÀO MODEL
 
-        modelMap.put("groupedOrderItemsByOrder", allGroupedOrderItems);
-        modelMap.put("latestStatusesByOrderAndVendor", latestStatusesByOrderAndVendor); // THÊM MAP NÀY VÀO MODEL
+		modelMap.put("orders", orderPage);
+		model.addAttribute("currentPages", page);
+		model.addAttribute("totalPages", orderPage.getTotalPages());
+		model.addAttribute("lastPageIndex", orderPage.getTotalPages() - 1);
+		model.addAttribute("pageSize", pageSize);
 
-        modelMap.put("orders", orderPage);
-        model.addAttribute("currentPages", page);
-        model.addAttribute("totalPages", orderPage.getTotalPages());
-        model.addAttribute("lastPageIndex", orderPage.getTotalPages() - 1);
-        model.addAttribute("pageSize", pageSize);
-
-        return "customer/pages/account/profile";
+		return "customer/pages/account/profile";
 	}
+
 	// User orderTracking
-	 // User orderTracking
-    @GetMapping({ "order-tracking/{orderId}/{vendorId}" })
-    public String orderTracking(Authentication authentication, ModelMap modelMap,
-            @AuthenticationPrincipal UserDetails userDetails,
-            @PathVariable("orderId") int orderId,
-            @PathVariable("vendorId") int vendorId,
-            @RequestParam(name = "tab", required = false, defaultValue = "order-tracking") String activeTab) {
+	@GetMapping({ "order-tracking/{orderId}/{vendorId}" })
+	public String orderTracking(Authentication authentication, ModelMap modelMap,
+			@AuthenticationPrincipal UserDetails userDetails, @PathVariable("orderId") int orderId,
+			@PathVariable("vendorId") int vendorId,
+			@RequestParam(name = "tab", required = false, defaultValue = "order-tracking") String activeTab) {
 
-        Users user = new Users();
+		Users user = new Users();
 
-        if (userDetails != null) {
-            user = userService.findByEmail(userDetails.getUsername());
-        } else if (authentication != null) {
-            AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
-            user = userService.findByEmail(accountOAuth2User.getEmail());
-        }
-        
-        List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
-        modelMap.put("userAdresses", userAdresses);
-        modelMap.put("user", user);
-        
-        modelMap.put("addAddressVariable", new UserAddress());
-        modelMap.put("provinces", addressService.findAllProvinces());
-        modelMap.addAttribute("activeTab", activeTab);
+		if (userDetails != null) {
+			user = userService.findByEmail(userDetails.getUsername());
+		} else if (authentication != null) {
+			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+			user = userService.findByEmail(accountOAuth2User.getEmail());
+		}
 
-        // Lấy tất cả OrderItems cho orderId và vendorId cụ thể, với trạng thái đã được tải eager
-        List<OrderItems> orderItems = orderItemService.findAllOrderItemsByOrderIdAndVendorIdWithStatuses(orderId, vendorId);
+		List<UserAddress> userAdresses = userService.findAddressUser(user.getId());
+		modelMap.put("userAdresses", userAdresses);
+		modelMap.put("user", user);
 
-        // Giả sử chúng ta chỉ cần lịch sử trạng thái của một OrderItem bất kỳ trong nhóm này
-        // (vì trạng thái đơn hàng thường giống nhau cho tất cả các item từ cùng một vendor trong cùng một order)
-        OrderItems representativeItem = null;
-        if (!orderItems.isEmpty()) {
-            representativeItem = orderItems.get(0); // Lấy item đầu tiên làm đại diện
-        }
+		modelMap.put("addAddressVariable", new UserAddress());
+		modelMap.put("provinces", addressService.findAllProvinces());
+		modelMap.addAttribute("activeTab", activeTab);
 
-        List<OrderItemsOrderStatus> sortedStatuses = new ArrayList<>();
-        OrderItemsOrderStatus currentStatus = null;
-        
-		// Tạo danh sách tên status đã xảy ra
-		Set<String> occurredStatusNames = sortedStatuses.stream().map(s -> s.getOrderStatus().getName())
-				.collect(Collectors.toCollection(LinkedHashSet::new));
+		List<OrderItems> orderItems = orderItemService.findAllOrderItemsByOrderIdAndVendorIdWithStatuses(orderId,
+				vendorId);
 
-		// Đưa currentStatus name vào model
+		OrderItems representativeItem = null;
+		if (!orderItems.isEmpty()) {
+			representativeItem = orderItems.get(0);
+		}
+
+		List<OrderItemsOrderStatus> sortedStatuses = new ArrayList<>();
+		OrderItemsOrderStatus currentStatus = null;
+
+		Set<String> occurredStatusNames = new LinkedHashSet<>(); // Changed to LinkedHashSet to maintain insertion order
+
+		if (representativeItem != null && representativeItem.getOrderItemsOrderStatuses() != null) {
+			sortedStatuses = representativeItem.getOrderItemsOrderStatuses().stream()
+					.sorted(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt)).collect(Collectors.toList());
+
+			currentStatus = sortedStatuses.isEmpty() ? null : sortedStatuses.get(sortedStatuses.size() - 1);
+
+			// Populate occurredStatusNames from sortedStatuses
+			sortedStatuses.forEach(s -> occurredStatusNames.add(s.getOrderStatus().getName()));
+		}
+
 		String currentStatusName = currentStatus != null ? currentStatus.getOrderStatus().getName() : null;
 
 		modelMap.put("occurredStatusNames", occurredStatusNames);
 		modelMap.put("currentStatusName", currentStatusName);
 
-        if (representativeItem != null && representativeItem.getOrderItemsOrderStatuses() != null) {
-            // Sắp xếp các trạng thái theo createdAt tăng dần
-            sortedStatuses = representativeItem.getOrderItemsOrderStatuses().stream()
-                    .sorted(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
-                    .collect(Collectors.toList());
+		Map<String, Date> statusToDateMap = new LinkedHashMap<>();
+		if (sortedStatuses != null) {
+			for (OrderItemsOrderStatus s : sortedStatuses) {
+				statusToDateMap.put(s.getOrderStatus().getName(), s.getCreatedAt());
+			}
+		}
 
-            // Lấy trạng thái mới nhất
-            currentStatus = sortedStatuses.isEmpty() ? null : sortedStatuses.get(sortedStatuses.size() - 1);
-        }
-        
-        Map<String, Date> statusToDateMap = new LinkedHashMap<>();
-        if (sortedStatuses != null) {
-            for (OrderItemsOrderStatus s : sortedStatuses) {
-                statusToDateMap.put(s.getOrderStatus().getName(), s.getCreatedAt());
-            }
-        }
+		// Fetch existing vendor review for the current user and vendor
+		VendorReviews existingVendorReview = vendorReviewService.findVendorReviewByUserAndVendorId(vendorId,
+				user.getId());
+		modelMap.put("existingVendorReview", existingVendorReview);
 
-        modelMap.put("statusToDateMap", statusToDateMap);
+		// Fetch existing product reviews for the current user and order items
+		Map<Integer, ProductReviews> existingProductReviews = new HashMap<>();
+		boolean allProductsReviewed = true; // Assume all products are reviewed initially
+		for (OrderItems item : orderItems) {
+			ProductReviews pr = productService.findProductReviewByUserAndProductId(user.getId(),
+					item.getProducts().getId());
+			if (pr != null) {
+				existingProductReviews.put(item.getProducts().getId(), pr);
+				if (pr.getRating() == 0) { // If any product has a 0 rating, they are not all reviewed
+					allProductsReviewed = false;
+				}
+			} else {
+				allProductsReviewed = false; // If a product has no review, they are not all reviewed
+			}
+		}
+		modelMap.put("existingProductReviews", existingProductReviews);
+		modelMap.put("allProductsReviewed", allProductsReviewed); // New model attribute
 
+		modelMap.put("statusToDateMap", statusToDateMap);
 
-        modelMap.put("orderItemsForTracking", orderItems); // Có thể truyền danh sách item này để hiển thị chi tiết
-        modelMap.put("orderStatusHistory", sortedStatuses); // Truyền lịch sử trạng thái đã sắp xếp
-        modelMap.put("currentOrderStatus", currentStatus); // Truyền trạng thái hiện tại (mới nhất)
-        
-        // Bạn cũng có thể truyền OrderId và VendorId lại để sử dụng trong view nếu cần
-        modelMap.put("trackingOrderId", orderId);
-        modelMap.put("trackingVendorId", vendorId);
-        modelMap.put("vendor", vendorService.findById(vendorId));
-        // Thêm thông tin order và vendor nếu cần hiển thị tên, v.v.
-        // Bạn sẽ cần inject OrderService và ProductService/VendorService để lấy các đối tượng này
-        // Ví dụ: modelMap.put("order", orderService.findById(orderId));
-        // Ví dụ: modelMap.put("vendor", vendorService.findById(vendorId)); // Cần inject VendorService
-        
-        
-        return "customer/pages/account/orderTracking"; // Thay đổi tên template nếu cần
-    }
+		modelMap.put("orderItemsForTracking", orderItems);
+		modelMap.put("orderStatusHistory", sortedStatuses);
+		modelMap.put("currentOrderStatus", currentStatus);
+
+		modelMap.put("trackingOrderId", orderId);
+		modelMap.put("trackingVendorId", vendorId);
+		modelMap.put("vendor", vendorService.findById(vendorId));
+
+		return "customer/pages/account/orderTracking";
+	}
+
+	// rating
+	@PostMapping("/rating")
+	public String handleSubmitRating(@RequestParam("entityType") String entityType,
+			@RequestParam("entityId") int entityId, @RequestParam("rating") Integer rating,
+			@RequestParam(value = "review", required = false) String review, RedirectAttributes redirectAttributes,
+			@RequestParam("orderId") int orderId, @RequestParam("vendorId") int vendorId, Authentication authentication,
+			@AuthenticationPrincipal UserDetails userDetails) {
+
+		Users user = new Users();
+
+		if (userDetails != null) {
+			user = userService.findByEmail(userDetails.getUsername());
+		} else if (authentication != null) {
+			AccountOAuth2User accountOAuth2User = (AccountOAuth2User) authentication.getPrincipal();
+			user = userService.findByEmail(accountOAuth2User.getEmail());
+		}
+
+		if ("vendor".equals(entityType)) {
+			VendorReviews vendorReviews = vendorReviewService.findVendorReviewByUserAndVendorId(vendorId, user.getId());
+
+			// Only allow rating if no existing valid rating is found
+			if (vendorReviews == null || vendorReviews.getRating() == 0) { // Check for null or an unrated placeholder
+				if (vendorReviews == null) {
+					vendorReviews = new VendorReviews(user, vendorService.findById(vendorId), rating, false, new Date(),
+							new Date());
+				} else {
+					// If a placeholder exists with rating 0, update it
+					vendorReviews.setRating(rating);
+					vendorReviews.setUpdatedAt(new Date()); // Update timestamp
+				}
+				vendorReviewService.save(vendorReviews);
+				redirectAttributes.addFlashAttribute("successMessage", "Vendor rated successfully!");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "You have already rated this vendor.");
+			}
+		} else if ("product".equals(entityType)) {
+			ProductReviews productReviews = productService.findProductReviewByUserAndProductId(user.getId(), entityId);
+
+			// Only allow rating if no existing valid rating is found for the product
+			if (productReviews == null || productReviews.getRating() == 0) {
+				if (productReviews == null) {
+					productReviews = new ProductReviews();
+					productReviews.setUsers(user);
+					productReviews.setProducts(productService.findById(entityId));
+					productReviews.setRating(rating);
+					productReviews.setComment(review);
+					productReviews.setCreatedAt(new Date());
+					productReviews.setUpdatedAt(new Date());
+				} else {
+					// If a placeholder exists with rating 0, update it
+					productReviews.setRating(rating);
+					productReviews.setComment(review);
+					productReviews.setUpdatedAt(new Date());
+				}
+				productService.saveProductReview(productReviews);
+				redirectAttributes.addFlashAttribute("successMessage", "Product rated successfully!");
+			} else {
+				redirectAttributes.addFlashAttribute("errorMessage", "You have already rated this product.");
+			}
+		}
+
+		System.out.println("entityId: " + entityId);
+		System.out.println("entityType: " + entityType);
+		System.out.println("rating: " + rating);
+		System.out.println("review: " + review);
+		System.out.println("orderId: " + orderId);
+		System.out.println("vendorId: " + vendorId);
+
+		return "redirect:/customer/order-tracking/" + orderId + "/" + vendorId;
+	}
 }

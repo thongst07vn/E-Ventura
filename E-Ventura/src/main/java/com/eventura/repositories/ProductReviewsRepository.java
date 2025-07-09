@@ -12,11 +12,15 @@ import org.springframework.stereotype.Repository;
 
 import com.eventura.entities.ProductReviews;
 import com.eventura.entities.Products;
+import com.eventura.entities.VendorReviews;
 
 @Repository
 public interface ProductReviewsRepository extends JpaRepository<ProductReviews, Integer> {
 	@Query("FROM ProductReviews WHERE products.id = :id")
 	public List<ProductReviews>  findProductReview(@Param("id") int id);
+	
+	@Query("FROM ProductReviews WHERE products.id = :productId AND users.id = :userId")
+	public ProductReviews  findProductReviewByUserAndProductId(@Param("productId") int productId,@Param("userId") int userId);
 	
 	@Query("select count(pr) from ProductReviews pr where pr.products.id = :id")
 	public int countProductReview(@Param("id") int id);

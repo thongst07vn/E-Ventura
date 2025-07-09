@@ -140,33 +140,57 @@
 							<div class="card-body">
 								<div class="mb-4 pb-3 border-bottom">
 									<h5 class="mb-3">
-										Rate the Vendor: <span class="fw-bold text-info mx-3"
-											th:text="${vendor.name}">Vendor Name</span>
+										Rate the Vendor: <a class="fw-bold text-info mx-3" th:href="@{'/customer/vendor/'+${vendor.id}}"
+											th:text="${vendor.name}">Vendor Name</a>
 									</h5>
 									<div>
 										<img
 											th:src="@{${vendor.users.avatar.contains('https:') ? vendor.users.avatar : '/assets/imgs/avatars/' + vendor.users.avatar}}"
 											style="width: 100px; height: 100px; object-fit: cover; border-radius: 4px;"
-											class="img-thumbnail" alt="Item">
+											class="img-thumbnail" alt="Vendor Avatar">
 									</div>
-									<div class="d-flex align-items-center mb-2">
-										<div class="rating-stars me-3" data-entity-type="vendor"
-											th:data-entity-id="${vendor.id}">
-											<span class="star fs-4 text-secondary" data-value="1">&#9733;</span>
-											<span class="star fs-4 text-secondary" data-value="2">&#9733;</span>
-											<span class="star fs-4 text-secondary" data-value="3">&#9733;</span>
-											<span class="star fs-4 text-secondary" data-value="4">&#9733;</span>
-											<span class="star fs-4 text-secondary" data-value="5">&#9733;</span>
+									<div
+										th:if="${existingVendorReview != null and existingVendorReview.rating > 0}">
+										<p class="mb-1">You have already rated this vendor:</p>
+										<div class="rating-stars display-only"
+											th:data-rating="${existingVendorReview.rating}">
+											<span th:each="i : ${#numbers.sequence(1, 5)}"
+												class="star fs-4"
+												th:classappend="${i le existingVendorReview.rating} ? 'text-warning' : 'text-secondary'">&#9733;</span>
 										</div>
-										<small class="text-muted" id="vendorRatingText">Click
-											stars to rate</small>
+										<small class="text-muted">Your rating: <span
+											th:text="${existingVendorReview.rating}"></span> of 5 stars
+										</small>
 									</div>
-									<div class="mb-3"></div>
-									<button class="btn btn-success" onclick="submitRating(this)">Submit
-										Vendor Rating</button>
+									<form th:action="@{/customer/rating}" method="POST"
+										class="rating-form vendor-rating-form"
+										th:unless="${existingVendorReview != null and existingVendorReview.rating > 0}">
+										<input type="hidden" name="entityType" value="vendor" /> <input
+											type="hidden" name="entityId" th:value="${vendor.id}" /> <input
+											type="hidden" name="rating" class="selected-rating" value="0" />
+										<input type="hidden" name="vendorId" th:value="${vendor.id}" />
+										<input type="hidden" name="orderId"
+											th:value="${trackingOrderId}" />
+										<div class="d-flex align-items-center mb-2">
+											<div class="rating-stars me-3" data-entity-type="vendor"
+												th:data-entity-id="${vendor.id}">
+												<span class="star fs-4 text-secondary" data-value="1">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="2">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="3">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="4">&#9733;</span>
+												<span class="star fs-4 text-secondary" data-value="5">&#9733;</span>
+											</div>
+											<small class="text-muted" id="vendorRatingText">Click
+												stars to rate</small>
+										</div>
+										<div class="mb-3"></div>
+										<button type="submit" class="btn btn-success submit-btn">Submit
+											Vendor Rating</button>
+									</form>
 								</div>
 
-								<div id="productRatingSection" hidden>
+								<div id="productRatingSection"
+									th:hidden="${existingVendorReview == null or existingVendorReview.rating == 0}">
 									<h5 class="mb-3">Rate the Products:</h5>
 									<div th:each="orderItem : ${orderItemsForTracking}"
 										class="mb-3 pb-3 border-bottom-dashed product-rating-item">
@@ -180,26 +204,58 @@
 													th:text="${orderItem.products.name}"></p>
 											</div>
 										</div>
-										<div class="d-flex align-items-center mb-2">
-											<div class="rating-stars me-3" data-entity-type="product"
-												th:data-entity-id="${orderItem.products.id}">
-												<span class="star fs-4 text-secondary" data-value="1">&#9733;</span>
-												<span class="star fs-4 text-secondary" data-value="2">&#9733;</span>
-												<span class="star fs-4 text-secondary" data-value="3">&#9733;</span>
-												<span class="star fs-4 text-secondary" data-value="4">&#9733;</span>
-												<span class="star fs-4 text-secondary" data-value="5">&#9733;</span>
+										<div
+											th:with="productReview=${existingProductReviews.get(orderItem.products.id)}">
+											<div
+												th:if="${productReview != null and productReview.rating > 0}">
+												<p class="mb-1">You have already rated this product:</p>
+												<div class="rating-stars display-only"
+													th:data-rating="${productReview.rating}">
+													<span th:each="i : ${#numbers.sequence(1, 5)}"
+														class="star fs-4"
+														th:classappend="${i le productReview.rating} ? 'text-warning' : 'text-secondary'">&#9733;</span>
+												</div>
+												<small class="text-muted">Your rating: <span
+													th:text="${productReview.rating}"></span> of 5 stars
+												</small>
+												<div
+													th:if="${productReview.comment != null and !productReview.comment.isEmpty()}"
+													class="mt-2">
+													<p class="mb-0 fw-bold">Your Review:</p>
+													<p th:text="${productReview.comment}"></p>
+												</div>
 											</div>
-											<small class="text-muted"
-												id="productRatingText_[[${orderItem.products.id}]]">Click
-												stars to rate</small>
+											<form th:action="@{/customer/rating}" method="POST"
+												class="rating-form product-rating-form"
+												th:unless="${productReview != null and productReview.rating > 0}">
+												<input type="hidden" name="entityType" value="product" /> <input
+													type="hidden" name="entityId"
+													th:value="${orderItem.products.id}" /> <input type="hidden"
+													name="rating" class="selected-rating" value="0" /> <input
+													type="hidden" name="vendorId" th:value="${vendor.id}" /> <input
+													type="hidden" name="orderId" th:value="${trackingOrderId}" />
+												<div class="d-flex align-items-center mb-2">
+													<div class="rating-stars me-3" data-entity-type="product"
+														th:data-entity-id="${orderItem.products.id}">
+														<span class="star fs-4 text-secondary" data-value="1">&#9733;</span>
+														<span class="star fs-4 text-secondary" data-value="2">&#9733;</span>
+														<span class="star fs-4 text-secondary" data-value="3">&#9733;</span>
+														<span class="star fs-4 text-secondary" data-value="4">&#9733;</span>
+														<span class="star fs-4 text-secondary" data-value="5">&#9733;</span>
+													</div>
+													<small class="text-muted"
+														th:id="productRatingText_ + ${orderItem.products.id}">Click
+														stars to rate</small>
+												</div>
+												<div class="mb-3">
+													<textarea class="form-control" rows="2"
+														placeholder="Write a review for this product..."
+														aria-label="Product review textarea" name="review"></textarea>
+												</div>
+												<button type="submit" class="btn btn-primary submit-btn">Submit
+													Product Rating</button>
+											</form>
 										</div>
-										<div class="mb-3">
-											<textarea class="form-control" rows="2"
-												placeholder="Write a review for this product..."
-												aria-label="Product review textarea"></textarea>
-										</div>
-										<button class="btn btn-primary" onclick="submitRating(this)">Submit
-											Product Rating</button>
 									</div>
 								</div>
 							</div>
@@ -207,13 +263,15 @@
 
 						<script>
 						    document.addEventListener('DOMContentLoaded', function() {
-						        const ratingContainers = document.querySelectorAll('.rating-stars');
-						        const productRatingSectionDiv = document.getElementById('productRatingSection');
+						        const ratingContainers = document.querySelectorAll('.rating-stars:not(.display-only)');
 						
+						        // --- Handle star interactions for new ratings ---
 						        ratingContainers.forEach(container => {
 						            const stars = container.querySelectorAll('.star');
 						            const feedbackTextId = container.dataset.entityType === 'vendor' ? 'vendorRatingText' : `productRatingText_${container.dataset.entityId}`;
 						            const feedbackTextElement = document.getElementById(feedbackTextId);
+						            const parentForm = container.closest('form');
+						            const selectedRatingInput = parentForm ? parentForm.querySelector('.selected-rating') : null;
 						
 						            stars.forEach(star => {
 						                star.addEventListener('click', function() {
@@ -224,20 +282,24 @@
 						                    starsInParent.forEach(s => {
 						                        if (parseInt(s.dataset.value) <= value) {
 						                            s.classList.add('text-warning');
-						                            s.classList.remove('text-secondary');
+						                            s.classList.remove('text-secondary', 'text-info'); // Also remove text-info on click
 						                        } else {
-						                            s.classList.remove('text-warning');
+						                            s.classList.remove('text-warning', 'text-info');
 						                            s.classList.add('text-secondary');
 						                        }
 						                    });
-						                    parent.dataset.rating = value;
+						                    parent.dataset.rating = value; // Store in data attribute for display logic
+						                    if (selectedRatingInput) {
+						                        selectedRatingInput.value = value; // Set value for form submission
+						                    }
 						                    if (feedbackTextElement) {
 						                        feedbackTextElement.textContent = `${value} of 5 stars selected`;
 						                    }
 						                });
 						
 						                star.addEventListener('mouseover', function() {
-						                    if (container.dataset.rating) return;
+						                    // Prevent hover changes if a rating is already selected
+						                    if (container.dataset.rating && parseInt(container.dataset.rating) > 0) return;
 						                    const value = parseInt(this.dataset.value);
 						                    stars.forEach(s => {
 						                        if (parseInt(s.dataset.value) <= value) {
@@ -248,15 +310,33 @@
 						                            s.classList.add('text-secondary');
 						                        }
 						                    });
-						                     if (feedbackTextElement) {
+						                    if (feedbackTextElement) {
 						                        feedbackTextElement.textContent = `Rate ${value} stars`;
 						                    }
 						                });
 						
 						                star.addEventListener('mouseout', function() {
-						                    if (container.dataset.rating) return;
+						                    // Revert to selected state if a rating is selected
+						                    if (container.dataset.rating && parseInt(container.dataset.rating) > 0) {
+						                        const selectedValue = parseInt(container.dataset.rating);
+						                        stars.forEach(s => {
+						                            if (parseInt(s.dataset.value) <= selectedValue) {
+						                                s.classList.add('text-warning');
+						                                s.classList.remove('text-secondary', 'text-info');
+						                            } else {
+						                                s.classList.remove('text-warning', 'text-info');
+						                                s.classList.add('text-secondary');
+						                            }
+						                        });
+						                        if (feedbackTextElement) {
+						                            feedbackTextElement.textContent = `${selectedValue} of 5 stars selected`;
+						                        }
+						                        return;
+						                    }
+						
+						                    // Revert to default state if no rating is selected
 						                    stars.forEach(s => {
-						                        s.classList.remove('text-info');
+						                        s.classList.remove('text-info', 'text-warning');
 						                        s.classList.add('text-secondary');
 						                    });
 						                    if (feedbackTextElement) {
@@ -265,70 +345,27 @@
 						                });
 						            });
 						        });
-						    });
 						
-						    function submitRating(button) {
-						        const ratingItem = button.closest('.mb-4.pb-3.border-bottom, .mb-3.pb-3.border-bottom-dashed');
-						        const ratingStarsContainer = ratingItem.querySelector('.rating-stars');
-						        const rating = ratingStarsContainer.dataset.rating;
-						        const reviewText = ratingItem.querySelector('textarea') ? ratingItem.querySelector('textarea').value : '';
-						        const entityType = ratingStarsContainer.dataset.entityType;
-						        const entityId = ratingStarsContainer.dataset.entityId;
+						        // --- Handle form submission (error trapping) ---
+						        const ratingForms = document.querySelectorAll('.rating-form');
+						        ratingForms.forEach(form => {
+						            form.addEventListener('submit', function(event) {
+						                const selectedRatingInput = form.querySelector('.selected-rating');
+						                const rating = parseInt(selectedRatingInput.value);
 						
-						        if (!rating) {
-						            Swal.fire({
-						                icon: 'warning',
-						                title: 'Oops!',
-						                text: 'Please select a star rating before submitting.',
-						                confirmButtonText: 'Got it'
-						            });
-						            return;
-						        }
-						
-						        console.log(`Submitting rating for ${entityType} (ID: ${entityId}):`);
-						        console.log(`Rating: ${rating} stars`);
-						        console.log(`Review: "${reviewText}"`);
-						
-						        // Simulate AJAX call success
-						        setTimeout(() => {
-						            if (entityType === 'vendor') {
-						                const productRatingSectionDiv = document.getElementById('productRatingSection');
-						                if (productRatingSectionDiv) {
-						                    productRatingSectionDiv.hidden = false;
+						                if (rating === 0) {
+						                    event.preventDefault(); // Prevent form submission
+						                    Swal.fire({
+						                        icon: 'warning',
+						                        title: 'Oops!',
+						                        text: 'Please select a star rating before submitting.',
+						                        confirmButtonText: 'Got it'
+						                    });
+						                    return; // Stop further processing
 						                }
-						                Swal.fire({
-						                    icon: 'success',
-						                    title: 'Submitted!',
-						                    text: 'Vendor rating submitted successfully! You can now rate products.',
-						                    confirmButtonText: 'Great!'
-						                });
-						            } else {
-						                Swal.fire({
-						                    icon: 'success',
-						                    title: 'Submitted!',
-						                    text: `Rating for ${entityType} (ID: ${entityId}) submitted: ${rating} stars, "${reviewText}"`,
-						                    confirmButtonText: 'Done'
-						                });
-						            }
-						
-						            ratingStarsContainer.querySelectorAll('.star').forEach(s => s.style.pointerEvents = 'none');
-						            if (ratingItem.querySelector('textarea')) {
-						                ratingItem.querySelector('textarea').readOnly = true;
-						            }
-						            button.disabled = true;
-						            button.classList.remove('btn-success', 'btn-primary');
-						            button.classList.add('btn-secondary');
-						            button.textContent = 'Rating Submitted';
-						
-						            const feedbackTextId = ratingStarsContainer.dataset.entityType === 'vendor' ? 'vendorRatingText' : `productRatingText_${ratingStarsContainer.dataset.entityId}`;
-						            const feedbackTextElement = document.getElementById(feedbackTextId);
-						            if (feedbackTextElement) {
-						                feedbackTextElement.textContent = 'Thank you for your feedback!';
-						                feedbackTextElement.classList.remove('text-muted');
-						                feedbackTextElement.classList.add('text-success');
-						            }
-						        }, 500);
-						    }
+						            });
+						        });
+						    });
 						</script>
 					</div>
 				</div>

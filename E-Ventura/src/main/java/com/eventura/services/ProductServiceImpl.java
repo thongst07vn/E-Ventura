@@ -21,10 +21,10 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
-	
+
 	@Autowired
 	private ProductReviewsRepository productReviewsRepository;
-	
+
 	@Autowired
 	private ProductAttributeRepository productAttributeRepository;
 
@@ -50,9 +50,9 @@ public class ProductServiceImpl implements ProductService {
 	public Products findById(int id) {
 		// TODO Auto-generated method stub
 		return productRepository.findById(id).get();
-  }
-  
-  @Override
+	}
+
+	@Override
 	public List<Products> findTopNewProduct() {
 		Pageable topten = PageRequest.of(0, 10, Sort.by("createdAt"));
 		return productRepository.findTopNewProduct(topten);
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<Products> findByCategoryIdPage(int id, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return productRepository.findProductByCategoryPage(id,pageable);
+		return productRepository.findProductByCategoryPage(id, pageable);
 	}
 
 	@Override
@@ -98,6 +98,7 @@ public class ProductServiceImpl implements ProductService {
 		// TODO Auto-generated method stub
 		return productReviewsRepository.avgProductReview(id);
 	}
+
 	@Override
 	public Page<Products> findByVendorCategoryPage(int vendorId, int categoryId, Pageable pageable) {
 		// TODO Auto-generated method stub
@@ -122,9 +123,8 @@ public class ProductServiceImpl implements ProductService {
 		}
 	}
 
-
 	public List<ProductAttributes> findProductAttributeByProductId(int id) {
-		
+
 		return productAttributeRepository.findDistinctByProductId(id);
 	}
 
@@ -163,7 +163,7 @@ public class ProductServiceImpl implements ProductService {
 		// TODO productRepository-generated method stub
 		return productRepository.findProductByVendorAndDeleteAndKeywordPage(vendorId, keyword, pageable);
 	}
-	
+
 	@Override
 	public Page<Products> findProductReviewed(int vendorId, Pageable pageable) {
 		// TODO productRepository-generated method stub
@@ -182,7 +182,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Page<Products> findByPriceRange(double min, double max, String keyword, Pageable pageable) {
 		// TODO Auto-generated method stub
-		return productRepository.findByPriceRangePage(min, max,keyword, pageable);
+		return productRepository.findByPriceRangePage(min, max, keyword, pageable);
 	}
 
 	@Override
@@ -213,6 +213,23 @@ public class ProductServiceImpl implements ProductService {
 	public Page<Products> findProductByVendorAndDeleteAndCategoryPage1(int vendorId, int categoryId, Pageable pageable) {
 		// TODO Auto-generated method stub
 		return productRepository.findProductByVendorAndDeleteAndCategoryPage1(vendorId, categoryId, pageable);
+	}
+
+	@Override
+	public ProductReviews findProductReviewByUserAndProductId(int productId, int userId) {
+		// TODO Auto-generated method stub
+		return productReviewsRepository.findProductReviewByUserAndProductId(productId, userId);
+	}
+
+	@Override
+	public boolean saveProductReview(ProductReviews productReviews) {
+		// TODO Auto-generated method stub
+		try {
+			productReviewsRepository.save(productReviews);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 }

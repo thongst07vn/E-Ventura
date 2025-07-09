@@ -24,11 +24,7 @@ public interface ProductRepository extends JpaRepository<Products, Integer> {
 	@Query("Select p from Products p WHERE deletedAt IS NULL order by p.createdAt")
 	public List<Products>  findTopNewProduct(Pageable pageable);
 	
-	@Query("SELECT p FROM Products p " +
-	           "LEFT JOIN p.productReviewses pr " +
-	           "WHERE p.deletedAt IS NULL " +
-	           "GROUP BY p " +
-	           "ORDER BY AVG(pr.rating) DESC, COUNT(pr.comment) DESC")
+		@Query("SELECT p FROM Products p LEFT JOIN p.productReviewses pr JOIN p.vendors v WHERE v.users.deletedAt IS NULL AND p.deletedAt IS NULL GROUP BY p ORDER BY AVG(pr.rating) DESC, COUNT(pr.comment) DESC")
 	public List<Products> findTopViewProduct(Pageable pageable);
 	
 	@Query("SELECT p FROM Products p ORDER BY p.price DESC")
