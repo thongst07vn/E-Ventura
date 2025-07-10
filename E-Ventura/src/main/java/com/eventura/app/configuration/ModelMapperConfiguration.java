@@ -11,8 +11,10 @@ import org.springframework.core.env.Environment;
 
 import com.eventura.entities.ProductCategories;
 import com.eventura.entities.Products;
+import com.eventura.entities.Users;
 import com.eventura.app.dto.ProductCategoryDto;
 import com.eventura.app.dto.ProductDto;
+import com.eventura.app.dto.UserDto;
 
 @Configuration
 public class ModelMapperConfiguration {
@@ -60,6 +62,25 @@ public class ModelMapperConfiguration {
 				map().setDeletedAt(source.getDeletedAt());
 				map().setUpdatedAt(source.getUpdatedAt());
 				map().setCreatedAt(source.getCreatedAt());
+			}
+		});
+		
+		mapper.addMappings(new PropertyMap<Users, UserDto>() {
+
+			@Override
+			protected void configure() {
+				map().setId(source.getId());
+				map().setRoleId(source.getRoles().getId());
+				map().setFirstName(source.getFirstName());
+				map().setLastName(source.getLastName());
+				map().setAvatar(source.getAvatar());
+				map().setUsername(source.getUsername());
+				map().setEmail(source.getEmail());
+				map().setRememberToken(source.getRememberToken());
+				map().setPassword(source.getPassword());
+				map().setBirthOfDate(source.getBirthOfDate());
+				map().setCreatedAt(source.getCreatedAt());
+				map().setDeletedAt(source.getDeletedAt());
 			}
 		});
 
