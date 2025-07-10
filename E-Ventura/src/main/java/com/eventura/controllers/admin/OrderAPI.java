@@ -1,6 +1,7 @@
 package com.eventura.controllers.admin; // Adjust package as needed
 
-import com.eventura.dtos.OrderStatusUpdateRequest;
+import com.eventura.dtos.OrderItemBulkStatusUpdateDTO;
+import com.eventura.dtos.OrderItemStatusUpdateDTO;
 import com.eventura.dtos.StatusUpdateResponse;
 import com.eventura.dtos.UpdateVendorStatusRequest;
 import com.eventura.entities.OrderItems;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,78 +35,118 @@ public class OrderAPI {
 	private OrderItemService orderItemService;
 	@Autowired
 	private OrderStatusRepository orderStatusRepository;
+
 	@PostMapping("/update-status")
-	public ResponseEntity<?> updateOrderItemStatus(@RequestBody OrderStatusUpdateRequest request) {
+	public ResponseEntity<Map<String, Object>> updateOrderItemStatus(@RequestBody OrderItemStatusUpdateDTO dto) {
+		Map<String, Object> response = new HashMap<>();
 		try {
-			System.out.println(request.getOrderItemId());
-			OrderItems orderItems = orderItemService.findById(request.getOrderItemId());
-			System.out.println(orderItems);
-			OrderItemsOrderStatusId orderItemsOrderStatusId = new OrderItemsOrderStatusId();
-			if("Delivering".equals(request.getNewStatus())) {				
-				orderItemsOrderStatusId = new OrderItemsOrderStatusId(orderItems.getId(),orderStatusService.findById(3).getId());
-			}else if ("Received".equals(request.getNewStatus())) {
-				orderItemsOrderStatusId = new OrderItemsOrderStatusId(orderItems.getId(),orderStatusService.findById(4).getId());
-			} else if ("Canceled".equals(request.getNewStatus())) {
-				orderItemsOrderStatusId = new OrderItemsOrderStatusId(orderItems.getId(),orderStatusService.findById(5).getId());
-			} 
-			OrderItemsOrderStatus orderItemsOrderStatus = new OrderItemsOrderStatus(orderItemsOrderStatusId, orderItems, orderStatusService.findById(1), new Date());
-			if(!orderStatusService.saveOrderItemsOrderStatus(orderItemsOrderStatus)) {							
-				System.out.println("save order item order status wrong " + orderItems.getId());						
+			// 1. Find the OrderItem
+			OrderItems optionalOrderItem = orderItemService.findById(dto.getOrderItemId());
+			if (optionalOrderItem == null) {
+				response.put("success", false);
+				response.put("message", "Order Item not found with ID: " + dto.getOrderItemId());
+				return ResponseEntity.badRequest().body(response);
 			}
-			return ResponseEntity.ok().body(new StatusUpdateResponse(true, "Status updated successfully"));
+
+			// 2. Find the new OrderStatus by name
+			OrderStatus optionalNewStatus = orderStatusService.findByName(dto.getNewStatusName());
+			if (optionalNewStatus != null) {
+				response.put("success", false);
+				response.put("message", "Status not found: " + dto.getNewStatusName());
+				return ResponseEntity.badRequest().body(response);
+			}
+
+			// 3. Create a new OrderItemsOrderStatus entry
+			OrderItemsOrderStatusId orderItemsOrderStatusId = new OrderItemsOrderStatusId(optionalOrderItem.getId(),
+					optionalNewStatus.getId());
+			OrderItemsOrderStatus newOrderItemStatus = new OrderItemsOrderStatus();
+			newOrderItemStatus.setId(orderItemsOrderStatusId);
+			newOrderItemStatus.setOrderItems(optionalOrderItem);
+			newOrderItemStatus.setOrderStatus(optionalNewStatus);
+			newOrderItemStatus.setCreatedAt(new Date()); // Set current timestamp
+
+			orderStatusService.saveOrderItemsOrderStatus(newOrderItemStatus); // Save the new status entry
+
+			response.put("success", true);
+			response.put("message", "Order item status updated successfully.");
+			return ResponseEntity.ok(response);
+
 		} catch (Exception e) {
-			// Handle exceptions (e.g., order item not found, invalid status)
-			e.printStackTrace();
-			return ResponseEntity.status(500)
-					.body(new StatusUpdateResponse(false, "Error updating status: " + e.getMessage()));
+			response.put("success", false);
+			response.put("message", "An error occurred: " + e.getMessage());
+			return ResponseEntity.status(500).body(response);
 		}
 	}
-	@PostMapping("update-status-by-vendor")
-    public ResponseEntity<StatusUpdateResponse> updateStatusByVendor(@RequestBody UpdateVendorStatusRequest request) {
-        try {
-            // 1. Get all order items for the given vendor
-            List<OrderItems> orderItems = orderItemService.findAllOrderItemsByVendorId(request.getVendorId());
 
-            if (orderItems.isEmpty()) {
-                return ResponseEntity.badRequest().body(new StatusUpdateResponse(false, "No order items found for this vendor."));
-            }
+	@PostMapping("update-bulk-status")
+	public ResponseEntity<Map<String, Object>> updateOrderItemBulkStatus(
+			@RequestBody OrderItemBulkStatusUpdateDTO dto) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			if (dto.getOrderItemIds() == null || dto.getOrderItemIds().isEmpty()) {
+				response.put("success", false);
+				response.put("message", "No order item IDs provided for update.");
+				return ResponseEntity.badRequest().body(response);
+			}
 
-            // Determine the target status ID based on the newStatus string
-            int targetStatusId;
-            if ("Delivering".equals(request.getNewStatus())) {
-                targetStatusId = 3; // Corresponds to your orderStatusService.findById(3)
-            } else if ("Received".equals(request.getNewStatus())) {
-                targetStatusId = 4; // Corresponds to your orderStatusService.findById(4)
-            } else if ("Canceled".equals(request.getNewStatus())) {
-                targetStatusId = 5; // Corresponds to your orderStatusService.findById(5)
-            } else {
-                return ResponseEntity.badRequest().body(new StatusUpdateResponse(false, "Invalid new status: " + request.getNewStatus()));
-            }
+			// Find the new OrderStatus by name
+			OrderStatus newStatus = orderStatusService.findByName(dto.getNewStatusName());
+			if (newStatus == null) {
+				response.put("success", false);
+				response.put("message", "Status not found: " + dto.getNewStatusName());
+				return ResponseEntity.badRequest().body(response);
+			}
 
-            // Fetch the OrderStatus entity once for efficiency
-            OrderStatus targetStatus = orderStatusService.findById(targetStatusId);
-            if (targetStatus == null) {
-                return ResponseEntity.status(500).body(new StatusUpdateResponse(false, "Target status with ID " + targetStatusId + " not found."));
-            }
+			int updatedCount = 0;
+			List<String> failedUpdates = new ArrayList<>();
 
-            // 3. Update the status for each order item
-            for (OrderItems item : orderItems) {
-                OrderItemsOrderStatusId orderItemsOrderStatusId = new OrderItemsOrderStatusId(item.getId(), targetStatus.getId());
-                OrderItemsOrderStatus orderItemsOrderStatus = new OrderItemsOrderStatus(orderItemsOrderStatusId, item, targetStatus, new Date());
+			for (Integer orderItemId : dto.getOrderItemIds()) {
+				OrderItems orderItem = orderItemService.findById(orderItemId);
+				if (orderItem != null) {
+					try {
+						OrderItemsOrderStatusId orderItemsOrderStatusId = new OrderItemsOrderStatusId(orderItem.getId(),
+								newStatus.getId());
+						OrderItemsOrderStatus newOrderItemStatus = new OrderItemsOrderStatus();
+						newOrderItemStatus.setId(orderItemsOrderStatusId);
+						newOrderItemStatus.setOrderItems(orderItem);
+						newOrderItemStatus.setOrderStatus(newStatus);
+						newOrderItemStatus.setCreatedAt(new Date());
 
-                // Assuming saveOrderItemsOrderStatus handles creating a new entry or updating correctly
-                if (!orderStatusService.saveOrderItemsOrderStatus(orderItemsOrderStatus)) {
-                    System.out.println("Failed to save order item order status for item ID: " + item.getId());
-                    // You might choose to return an error here, or continue and log individual failures
-                }
-            }
+						orderStatusService.saveOrderItemsOrderStatus(newOrderItemStatus);
+						updatedCount++;
+					} catch (Exception e) {
+						// Log the error for this specific item but continue with others
+						System.err.println(
+								"Failed to update status for OrderItem ID " + orderItemId + ": " + e.getMessage());
+						failedUpdates.add("ID " + orderItemId + ": " + e.getMessage());
+					}
+				} else {
+					failedUpdates.add("ID " + orderItemId + ": Not found");
+				}
+			}
 
-            return ResponseEntity.ok().body(new StatusUpdateResponse(true, "Vendor order status updated successfully."));
+			if (updatedCount > 0) {
+				response.put("success", true);
+				response.put("message", "Successfully updated status for " + updatedCount + " order items.");
+				if (!failedUpdates.isEmpty()) {
+					response.put("partialSuccess", true);
+					response.put("failedUpdates", failedUpdates);
+					response.put("message", response.get("message") + " Some items failed to update: "
+							+ String.join(", ", failedUpdates));
+				}
+				return ResponseEntity.ok(response);
+			} else {
+				response.put("success", false);
+				response.put("message",
+						"No order items were updated. Possible reasons: items not found or all updates failed. Details: "
+								+ String.join(", ", failedUpdates));
+				return ResponseEntity.status(500).body(response);
+			}
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500)
-                    .body(new StatusUpdateResponse(false, "An error occurred: " + e.getMessage()));
-        }
-    }
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "An unexpected error occurred: " + e.getMessage());
+			return ResponseEntity.status(500).body(response);
+		}
+	}
 }

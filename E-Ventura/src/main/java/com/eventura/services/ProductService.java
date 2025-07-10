@@ -40,6 +40,10 @@ public interface ProductService {
 
 	public List<ProductReviews> findProductReview(int id);
 	
+	public ProductReviews findProductReviewByUserAndProductId(int productId, int userId);
+	
+	public boolean saveProductReview(ProductReviews productReviews);
+	
 	public int countProductReview(int id);
 
 	public double avgProductReview(int id);

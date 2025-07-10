@@ -531,43 +531,55 @@ public class AdminController {
 
 	@GetMapping("order/detail/{id}")
 	public String orderDetail(Model model, ModelMap modelMap, @PathVariable("id") int id,
-	        @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int pageSize) {
-	    Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-	    Page<OrderItems> orderPage = orderItemService.findAllOrderItemsByOrderIdPage(id, pageable);
-	    Orders order = orderService.findOrderByOrderId(id);
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+		Page<OrderItems> orderPage = orderItemService.findAllOrderItemsByOrderIdPage(id, pageable);
+		Orders order = orderService.findOrderByOrderId(id);
 
-	    // 1. Group OrderItems by Vendor ID
-	    // Assumption: orderItem.getProducts().getVendorId() returns ID of the vendor
-	    Map<Integer, List<OrderItems>> orderItemsByVendorId = orderPage.getContent().stream()
-	            .collect(Collectors.groupingBy(item -> item.getProducts().getVendors().getId()));
+		// 1. Group OrderItems by Vendor ID
+		Map<Integer, List<OrderItems>> orderItemsByVendorId = orderPage.getContent().stream()
+				.collect(Collectors.groupingBy(item -> item.getProducts().getVendors().getId()));
 
-	    // 2. Prepare data for the view
-	    Map<Integer, String> vendorLatestStatuses = new HashMap<>(); // Key: Vendor ID, Value: Latest Status Name
-	    Map<Integer, String> vendorNames = new HashMap<>(); // Key: Vendor ID, Value: Vendor Name
-	    Map<Integer, List<OrderItems>> groupedOrderItems = new LinkedHashMap<>(); // To maintain order for display
+		// 2. Prepare data for the view
+		Map<Integer, String> vendorLatestStatuses = new HashMap<>(); // Key: Vendor ID, Value: Latest Status Name
+		Map<Integer, String> vendorNames = new HashMap<>(); // Key: Vendor ID, Value: Vendor Name
+		Map<Integer, List<OrderItems>> groupedOrderItems = new LinkedHashMap<>(); // To maintain order for display
+		// NEW: Map to store the latest status for each individual OrderItem
+		Map<Integer, String> orderItemSpecificStatuses = new HashMap<>();
 
-	    orderItemsByVendorId.forEach((vendorId, items) -> {
-	        vendorNames.put(vendorId, items.get(0).getProducts().getVendors().getName()); // Get vendor name
-	        groupedOrderItems.put(vendorId, items);
+		orderItemsByVendorId.forEach((vendorId, items) -> {
+			vendorNames.put(vendorId, items.get(0).getProducts().getVendors().getName()); // Get vendor name
+			groupedOrderItems.put(vendorId, items);
 
-	        // Determine the overall status for the vendor block
-	        // For simplicity, let's assume the status of the first item represents the vendor's status initially,
-	        // or you might want more complex logic (e.g., "Mixed" if statuses differ, or the "lowest" status)
-	        // For now, we'll get the latest status of the first item for the vendor block display.
-	        List<OrderItemsOrderStatus> statuses = orderStatusService.findStatusByOrderItemId(items.get(0).getId());
-	        String latestStatus = statuses.stream()
-	                .max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
-	                .map(ois -> ois.getOrderStatus().getName())
-	                .orElse("N/A");
-	        vendorLatestStatuses.put(vendorId, latestStatus);
-	    });
+			// Determine the overall status for the vendor block (still based on the first
+			// item for simplicity,
+			// or you could implement a more complex "overall vendor status" logic here)
+			List<OrderItemsOrderStatus> vendorStatuses = orderStatusService
+					.findStatusByOrderItemId(items.get(0).getId());
+			String latestVendorStatus = vendorStatuses.stream()
+					.max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
+					.map(ois -> ois.getOrderStatus().getName()).orElse("N/A");
+			vendorLatestStatuses.put(vendorId, latestVendorStatus);
 
-	    modelMap.put("order", order);
-	    modelMap.put("groupedOrderItems", groupedOrderItems);
-	    modelMap.put("vendorLatestStatuses", vendorLatestStatuses);
-	    modelMap.put("vendorNames", vendorNames);
-	    model.addAttribute("currentPage", "order");
-	    return "admin/page/order/detail";
+			// Populate the specific status for EACH order item
+			items.forEach(orderItem -> {
+				List<OrderItemsOrderStatus> itemStatuses = orderStatusService
+						.findStatusByOrderItemId(orderItem.getId());
+				String latestItemStatus = itemStatuses.stream()
+						.max(Comparator.comparing(OrderItemsOrderStatus::getCreatedAt))
+						.map(ois -> ois.getOrderStatus().getName()).orElse("N/A");
+				orderItemSpecificStatuses.put(orderItem.getId(), latestItemStatus);
+			});
+		});
+
+		modelMap.put("order", order);
+		modelMap.put("groupedOrderItems", groupedOrderItems);
+		modelMap.put("vendorLatestStatuses", vendorLatestStatuses);
+		modelMap.put("vendorNames", vendorNames);
+		// NEW: Add the map containing specific order item statuses to the model
+		modelMap.put("orderItemSpecificStatuses", orderItemSpecificStatuses);
+		model.addAttribute("currentPage", "order");
+		return "admin/page/order/detail";
 	}
 
 	// ======= USER_CUSTOMER ========
@@ -888,28 +900,31 @@ public class AdminController {
 		model.addAttribute("currentPage", "coupon");
 		return "admin/page/coupon/list";
 	}
+
 	@GetMapping("coupon/detail/{id}")
 	public String couponDetails(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int pageSize, @PathVariable("id")int campaignId) {
+			@RequestParam(defaultValue = "5") int pageSize, @PathVariable("id") int campaignId) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "redemptionDate"));
-		List<CouponsCampaigns> couponCampaigns = campaignRedeemtionService.findAllCouponsCampaignsByCouponsIdWithredeemUsedQty(campaignId);
+		List<CouponsCampaigns> couponCampaigns = campaignRedeemtionService
+				.findAllCouponsCampaignsByCouponsIdWithredeemUsedQty(campaignId);
 		Page<OrdersCampaigns> orderCampaignPage;
 
 		// Check if the list is not empty before trying to get the first element
 		if (couponCampaigns != null && !couponCampaigns.isEmpty()) { // Added !vouchersCampaigns.isEmpty()
-		    // It's good practice to also check if getCampaignRedemptions() is not null
-		    // though the NoSuchElementException is specifically from getFirst()
-		    if (couponCampaigns.get(0).getCampaignRedemptions() != null) {
-		        orderCampaignPage = campaignRedeemtionService.findOrderByCampaignRedeem(couponCampaigns.get(0).getCampaignRedemptions().getId(), pageable);
-		        // It's possible findOrderByCampaignRedeem returns null, so handle that
-		        if (orderCampaignPage == null) {
-		            orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
-		        }
-		    } else {
-		        orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
-		    }
+			// It's good practice to also check if getCampaignRedemptions() is not null
+			// though the NoSuchElementException is specifically from getFirst()
+			if (couponCampaigns.get(0).getCampaignRedemptions() != null) {
+				orderCampaignPage = campaignRedeemtionService
+						.findOrderByCampaignRedeem(couponCampaigns.get(0).getCampaignRedemptions().getId(), pageable);
+				// It's possible findOrderByCampaignRedeem returns null, so handle that
+				if (orderCampaignPage == null) {
+					orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+				}
+			} else {
+				orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+			}
 		} else {
-		    orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+			orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
 		}
 		modelMap.put("orderCampaigns", orderCampaignPage.getContent());
 		model.addAttribute("currentPages", page);
@@ -920,6 +935,7 @@ public class AdminController {
 		model.addAttribute("currentPage", "coupon");
 		return "admin/page/coupon/detail";
 	}
+
 	// ======= Promotion_coupon ========
 	@GetMapping("voucher/list")
 	public String voucherList(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
@@ -991,7 +1007,8 @@ public class AdminController {
 			SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy");
 			CampaignRedemptions campaignRedemptions = new CampaignRedemptions("", new Date(), new Date());
 			if (campaignRedeemtionService.saveCampaignRedeemtion(campaignRedemptions)) {
-				campaignRedemptions.setCampaignName("voucher_admin_"+campaignRedemptions.getId()+"_"+ formatter.format(vouchers.getCreatedAt()));
+				campaignRedemptions.setCampaignName("voucher_admin_" + campaignRedemptions.getId() + "_"
+						+ formatter.format(vouchers.getCreatedAt()));
 				campaignRedeemtionService.saveCampaignRedeemtion(campaignRedemptions);
 				for (int i = 0; i < vouchers.getQuantity(); i++) {
 					VouchersCampaigns vouchersCampaigns = new VouchersCampaigns(
@@ -1015,28 +1032,31 @@ public class AdminController {
 		}
 
 	}
+
 	@GetMapping("voucher/detail/{id}")
 	public String voucherDetails(Model model, ModelMap modelMap, @RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "5") int pageSize, @PathVariable("id")int campaignId) {
+			@RequestParam(defaultValue = "5") int pageSize, @PathVariable("id") int campaignId) {
 		Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "redemptionDate"));
-		List<VouchersCampaigns> vouchersCampaigns = campaignRedeemtionService.findAllVouchersCampaignsByVouchersIdWithredeemUsedQty(campaignId);
+		List<VouchersCampaigns> vouchersCampaigns = campaignRedeemtionService
+				.findAllVouchersCampaignsByVouchersIdWithredeemUsedQty(campaignId);
 		Page<OrdersCampaigns> orderCampaignPage;
 
 		// Check if the list is not empty before trying to get the first element
 		if (vouchersCampaigns != null && !vouchersCampaigns.isEmpty()) { // Added !vouchersCampaigns.isEmpty()
-		    // It's good practice to also check if getCampaignRedemptions() is not null
-		    // though the NoSuchElementException is specifically from getFirst()
-		    if (vouchersCampaigns.get(0).getCampaignRedemptions() != null) {
-		        orderCampaignPage = campaignRedeemtionService.findOrderByCampaignRedeem(vouchersCampaigns.get(0).getCampaignRedemptions().getId(), pageable);
-		        // It's possible findOrderByCampaignRedeem returns null, so handle that
-		        if (orderCampaignPage == null) {
-		            orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
-		        }
-		    } else {
-		        orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
-		    }
+			// It's good practice to also check if getCampaignRedemptions() is not null
+			// though the NoSuchElementException is specifically from getFirst()
+			if (vouchersCampaigns.get(0).getCampaignRedemptions() != null) {
+				orderCampaignPage = campaignRedeemtionService
+						.findOrderByCampaignRedeem(vouchersCampaigns.get(0).getCampaignRedemptions().getId(), pageable);
+				// It's possible findOrderByCampaignRedeem returns null, so handle that
+				if (orderCampaignPage == null) {
+					orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+				}
+			} else {
+				orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+			}
 		} else {
-		    orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
+			orderCampaignPage = new PageImpl<>(Collections.emptyList(), pageable, 0);
 		}
 		modelMap.put("orderCampaigns", orderCampaignPage.getContent());
 		model.addAttribute("currentPages", page);
