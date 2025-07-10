@@ -229,7 +229,7 @@ public class AccountController {
 		}
 
 		
-		return "redirect:/vendor/account/register";
+		return "redirect:/vendor/account/login";
 	}
 
 	private void setModelMap(ModelMap modelMap, Users user, UserAddress userAddress, Vendors vendor) {

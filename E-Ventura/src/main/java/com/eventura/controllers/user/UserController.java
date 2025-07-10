@@ -270,8 +270,9 @@ public class UserController {
 
 			}
 
-		}
-		return "redirect:/customer/register";
+		}	
+		return "redirect:/customer/login";
+
 	}
 	//reset-pass
 	@PostMapping("forgot-password")
