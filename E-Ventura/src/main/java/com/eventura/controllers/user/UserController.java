@@ -264,7 +264,7 @@ public class UserController {
 			}
 
 		}	
-		return "redirect:/customer/register";
+		return "redirect:/customer/login";
 	}
 	
 	/* Verify */
